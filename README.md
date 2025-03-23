@@ -1,1 +1,1 @@
-@print_there_bot
+Адрес бота: @print_there_bot
