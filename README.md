@@ -1,6 +1,1 @@
-
-Адрес my/2 бота: @print_there_bot
-
-
-Hello world
-
+Адрес бота: @print_there_bot
