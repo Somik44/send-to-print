@@ -1,5 +1,5 @@
-Адрес my бота: @print_there_bot
 
+Адрес my/2 бота: @print_there_bot
 
 
 Hello world
