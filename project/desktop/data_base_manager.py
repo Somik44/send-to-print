@@ -18,7 +18,9 @@ db_config = {
     'raise_on_warnings': True
 }
 
-output_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'received_orders')
+# Явно указываем абсолютный путь и создаем папку
+output_dir = os.path.abspath('C:\\python_projects\\send-to-print\\project\\desktop\\for_file')
+os.makedirs(output_dir, exist_ok=True)
 
 
 def save_to_db(order_data):
@@ -94,50 +96,50 @@ def save_to_db(order_data):
 
 
 def download_blob():
-    print(f"Рабочая папка: {os.getcwd()}")
-    print(f"Папка для файлов: {output_dir}")
-    print(f"Доступ на запись: {os.access(output_dir, os.W_OK)}")
-    """Загружает заказы из БД и сохраняет файлы в указанную папку"""
     try:
-        # Создаем папку (если не существует)
-        os.makedirs(output_dir, exist_ok=True)
-        logging.info(f"Используется папка: {output_dir}")
-
         connection = mysql.connector.connect(**db_config)
         cursor = connection.cursor(dictionary=True)
 
-        cursor.execute("SELECT ... FROM `order` WHERE status = 'получен'")
+        cursor.execute("""
+            SELECT ID, ID_shop, price, note, con_code, file, color, status, file_extension 
+            FROM `order` 
+            WHERE status = 'получен'
+        """)
+
         orders = cursor.fetchall()
 
         for order in orders:
-            if order['file']:
+            if order['file'] and order['file'] is not None:
                 try:
-                    # Формируем имя файла
-                    ext = order['file_extension'].lstrip('.') if order['file_extension'] else 'bin'
+                    # Безопасное получение расширения файла
+                    ext = 'bin'  # Значение по умолчанию
+                    if order.get('file_extension'):
+                        ext = str(order['file_extension']).lstrip('.')
+
                     filename = f"order_{order['ID']}.{ext}"
-                    full_path = os.path.join(output_dir, filename)
+                    filepath = os.path.join(output_dir, filename)
 
-                    # Сохраняем файл
-                    with open(full_path, 'wb') as f:
-                        f.write(order['file'])
+                    # Защищенная запись файла
+                    with open(filepath, 'wb') as f:
+                        if isinstance(order['file'], bytes):
+                            f.write(order['file'])
+                        else:
+                            f.write(order['file'].encode())
 
-                    # Для GUI сохраняем полный путь
-                    order['file_path'] = full_path
-                    logging.info(f"Файл сохранен: {full_path}")
+                    order['file_path'] = filepath  # Сохраняем абсолютный путь
 
                 except Exception as e:
-                    logging.error(f"Ошибка сохранения: {str(e)}")
+                    logging.error(f"Error saving file {order.get('ID', '?')}: {str(e)}")
                     continue
 
         return orders
 
-    except Exception as err:
-        logging.error(f"Ошибка загрузки: {str(err)}")
-        raise
+    except Exception as e:
+        logging.error(f"Database error: {str(e)}")
+        return []
     finally:
         if 'cursor' in locals(): cursor.close()
         if 'connection' in locals(): connection.close()
-
 
 
 
