@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtCore import QThread, pyqtSignal
 from PyQt5.QtGui import QFont, QIcon
-from data_base_manager import save_to_db
+import data_base_manager_desktop
 
 
 class DatabaseLoader(QThread):

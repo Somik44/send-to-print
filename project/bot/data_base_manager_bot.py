@@ -37,19 +37,18 @@ def save_to_db(order_data):
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
         """
 
-        #  1. Чтение файла в бинарном формате
+        # 1. Получаем путь к файлу и проверяем его существование
         file_path = os.path.join(os.getcwd(), order_data['file_path'])
-
-        # Логирование пути к файлу
         logging.info(f"Путь к файлу: {file_path}")
 
         if not os.path.exists(file_path):
             raise FileNotFoundError(f"Файл {file_path} не найден.")
 
-            # 2. Получаем расширение файла из имени
-            _, file_extension = os.path.splitext(file_path)
-            file_extension = file_extension.lstrip('.')  # Удаляем точку (".pdf" → "pdf")
+        # 2. Получаем расширение файла из имени (это должно быть ВНЕ блока if)
+        _, file_extension = os.path.splitext(order_data['file_path'])
+        file_extension = file_extension.lstrip('.')  # Удаляем точку (".pdf" → "pdf")
 
+        # 3. Чтение файла в бинарном формате
         with open(file_path, 'rb') as file:
             file_data = file.read()
 
@@ -62,7 +61,7 @@ def save_to_db(order_data):
             file_data,  # file (бинарные данные файла)
             order_data['color'],  # color (цвет печати)
             'получен',  # status (статус заказа)
-            file_extension.lower()
+            file_extension.lower()  # file_extension (расширение файла)
         )
 
         # Логирование данных для вставки
@@ -92,51 +91,6 @@ def save_to_db(order_data):
         if 'connection' in locals():
             connection.close()
 
-
-def download_blob():
-    print(f"Рабочая папка: {os.getcwd()}")
-    print(f"Папка для файлов: {output_dir}")
-    print(f"Доступ на запись: {os.access(output_dir, os.W_OK)}")
-    """Загружает заказы из БД и сохраняет файлы в указанную папку"""
-    try:
-        # Создаем папку (если не существует)
-        os.makedirs(output_dir, exist_ok=True)
-        logging.info(f"Используется папка: {output_dir}")
-
-        connection = mysql.connector.connect(**db_config)
-        cursor = connection.cursor(dictionary=True)
-
-        cursor.execute("SELECT ... FROM `order` WHERE status = 'получен'")
-        orders = cursor.fetchall()
-
-        for order in orders:
-            if order['file']:
-                try:
-                    # Формируем имя файла
-                    ext = order['file_extension'].lstrip('.') if order['file_extension'] else 'bin'
-                    filename = f"order_{order['ID']}.{ext}"
-                    full_path = os.path.join(output_dir, filename)
-
-                    # Сохраняем файл
-                    with open(full_path, 'wb') as f:
-                        f.write(order['file'])
-
-                    # Для GUI сохраняем полный путь
-                    order['file_path'] = full_path
-                    logging.info(f"Файл сохранен: {full_path}")
-
-                except Exception as e:
-                    logging.error(f"Ошибка сохранения: {str(e)}")
-                    continue
-
-        return orders
-
-    except Exception as err:
-        logging.error(f"Ошибка загрузки: {str(err)}")
-        raise
-    finally:
-        if 'cursor' in locals(): cursor.close()
-        if 'connection' in locals(): connection.close()
 
 
 

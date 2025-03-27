@@ -9,7 +9,7 @@ from PyPDF2 import PdfReader
 import pythoncom
 import win32com.client
 from decimal import Decimal
-from data_base_manager import save_to_db
+from data_base_manager_bot import save_to_db
 
 API_TOKEN = '7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ'
 bot = telebot.TeleBot(API_TOKEN)
