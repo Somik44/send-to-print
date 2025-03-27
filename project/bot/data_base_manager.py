@@ -1,4 +1,4 @@
-import queue
+
 import mysql.connector
 import threading
 import os
@@ -18,6 +18,8 @@ db_config = {
     'raise_on_warnings': True
 }
 
+output_dir = '/путь/к/папке'
+
 
 def save_to_db(order_data):
     """
@@ -31,11 +33,11 @@ def save_to_db(order_data):
         cursor = connection.cursor()
 
         query = """
-        INSERT INTO `order` (ID_shop, price, note, con_code, file, color, status)
-        VALUES (%s, %s, %s, %s, %s, %s, %s)
+        INSERT INTO `order` (ID_shop, price, note, con_code, file, color, status, file_extension)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
         """
 
-        # Чтение файла в бинарном формате
+        #  1. Чтение файла в бинарном формате
         file_path = os.path.join(os.getcwd(), order_data['file_path'])
 
         # Логирование пути к файлу
@@ -43,6 +45,10 @@ def save_to_db(order_data):
 
         if not os.path.exists(file_path):
             raise FileNotFoundError(f"Файл {file_path} не найден.")
+
+            # 2. Получаем расширение файла из имени
+            _, file_extension = os.path.splitext(file_path)
+            file_extension = file_extension.lstrip('.')  # Удаляем точку (".pdf" → "pdf")
 
         with open(file_path, 'rb') as file:
             file_data = file.read()
@@ -55,7 +61,8 @@ def save_to_db(order_data):
             int(order_data['check_number']),  # con_code (код заказа)
             file_data,  # file (бинарные данные файла)
             order_data['color'],  # color (цвет печати)
-            'получен'  # status (статус заказа)
+            'получен',  # status (статус заказа)
+            file_extension.lower()
         )
 
         # Логирование данных для вставки
@@ -84,4 +91,60 @@ def save_to_db(order_data):
             cursor.close()
         if 'connection' in locals():
             connection.close()
+
+def download_blob():
+    try:
+        logging.info(f"Подключение к базе данных: {db_config}")
+
+        connection = mysql.connector.connect(**db_config)
+
+        cursor = connection.cursor()
+        cursor.execute("SELECT ID, file,  file_extension FROM `order`")
+
+        for (ID, file,  file_extension) in cursor:
+            if file_extension:
+                # Убираем точку, если она есть (например, ".pdf" → "pdf")
+                clean_extension = file_extension.lstrip('.')
+                filename = f'order_{order_id}.{clean_extension}'
+            else:
+                # Расширение по умолчанию, если его нет в БД
+                filename = f'order_{order_id}.bin'
+
+                # Полный путь к файлу
+                filepath = os.path.join(output_dir, filename)
+
+                # Запись BLOB-данных в файл
+                with open(filename, 'wb') as f:
+                    f.write(file_blob)
+                print(f'Файл {filename} сохранен')
+
+        print("Все файлы экспортированы")
+
+
+    except mysql.connector.Error as err:
+        logging.error(f"Ошибка MySQL: {err}")
+        logging.error(f"SQL запрос: {query}")
+        logging.error(f"Значения: {values}")
+        raise
+
+    except FileNotFoundError as err:
+        logging.error(f"Ошибка файла: {err}")
+        raise
+
+
+    except Exception as err:
+        logging.error(f"Ошибка при сохранении заказа в базу данных: {err}", exc_info=True)
+        raise
+
+
+    finally:
+        if 'cursor' in locals():
+            cursor.close()
+        if 'connection' in locals():
+            connection.close()
+
+
+
+
+
 
