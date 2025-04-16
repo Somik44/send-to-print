@@ -14,7 +14,7 @@ app = Flask(__name__)
 CORS(app)
 
 # Конфигурация
-app.config['UPLOAD_FOLDER'] = os.path.abspath('D:\\projects_py\\projectsWithGit\\send-to-print\\project\\api\\uploads')
+app.config['UPLOAD_FOLDER'] = os.path.abspath('C:\\send_to_ptint\\send-to-print\\project\\api\\uploads')
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 # Пул соединений MySQL
@@ -22,7 +22,7 @@ db_pool = mysql.connector.pooling.MySQLConnectionPool(
     pool_name="api_pool",
     pool_size=15,
     user='root',
-    password='Qwerty123',
+    password='3465',
     host='localhost',
     database='send_to_print'
 )

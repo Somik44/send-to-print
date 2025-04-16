@@ -11,7 +11,7 @@ import win32com.client
 from datetime import datetime
 
 API_URL = "http://localhost:5000/api"
-DOWNLOAD_DIR = os.path.abspath('D:\\projects_py\\projectsWithGit\\send-to-print\\project\\desktop\\downloads')
+DOWNLOAD_DIR = os.path.abspath('C:\\send_to_ptint\\send-to-print\\project\\desktop\\dowlands')
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
 logging.basicConfig(
@@ -205,9 +205,14 @@ class FileReceiverApp(QWidget):
         btn_code.setFixedSize(185, 30)
         btn_code.clicked.connect(lambda: self.show_code(order))
 
+        btn_order_end = QPushButton("Заказ выдан")
+        btn_code.setFixedSize(185, 30)
+        btn_order_end.clicked.connect(lambda: self.order_end(order))
+
         layout.addWidget(label)
         layout.addWidget(btn_print)
         layout.addWidget(btn_code)
+        layout.addWidget(btn_order_end)
         widget.setLayout(layout)
         return widget
 
@@ -224,22 +229,15 @@ class FileReceiverApp(QWidget):
                     f.write(chunk)
 
             # Печать
-            ext = os.path.splitext(filename)[1].lower()
-            if ext in ('.doc', '.docx'):
+            try:
                 os.startfile(filepath)
-            elif ext == '.pdf':
-                subprocess.Popen([
-                    "C:\\Users\\petry\\AppData\\Local\\Yandex\\YandexBrowser\\Application\\browser.exe",
-                    f'file:///{filepath}',
-                    '--print'
-                ])
-            else:
-                raise ValueError(f"Неподдерживаемый формат: {ext}")
+            except Exception as e:
+                print(f"Ошибка при открытии файла: {str(e)}")
 
             # Удаление через 30 сек
-            time.sleep(30)
-            if os.path.exists(filepath):
-                os.remove(filepath)
+            # time.sleep(30)
+            # if os.path.exists(filepath):
+            #     os.remove(filepath)
 
         except Exception as e:
             QMessageBox.critical(self, "Ошибка", f"Ошибка: {str(e)}")
@@ -249,6 +247,28 @@ class FileReceiverApp(QWidget):
         msg.setWindowTitle("Код заказа")
         msg.setText(f"Код для получения: {order['con_code']}")
         msg.exec_()
+
+    def order_end(self, order):
+        filename = order['file_path']  # Получаем имя файла из объекта заказа
+        filepath = os.path.join(DOWNLOAD_DIR, filename)
+        if os.path.exists(filepath):
+            try:
+                os.remove(filepath)
+                print(f"Файл {filename} успешно удален.")
+                self.remove_order_widget(order)  # Удаляем виджет, передавая объект заказа
+            except Exception as e:
+                print(f"Ошибка при удалении файла: {str(e)}")
+        else:
+            print(f"Файл {filename} не найден.")
+
+    def remove_order_widget(self, order):
+        for i in range(self.ready_list.count()):
+            item = self.ready_list.item(i)
+            # Проверяем, соответствует ли текст метки номеру заказа
+            if self.ready_list.itemWidget(item).findChild(
+                    QLabel).text() == f"Заказ №{order['ID']} готов: {order['file_path']}":
+                self.ready_list.takeItem(i)
+                break
 
 
 if __name__ == '__main__':
