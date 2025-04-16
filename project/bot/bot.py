@@ -18,12 +18,12 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 API_TOKEN = '7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ'
-UPLOAD_FOLDER = os.path.abspath('D:\\projects_py\\projectsWithGit\\send-to-print\\project\\api\\uploads')
+UPLOAD_FOLDER = os.path.abspath('C:\\send_to_ptint\\send-to-print\\project\\api\\uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 DB_CONFIG = {
     'user': 'root',
-    'password': 'Qwerty123',
+    'password': '3465',
     'host': 'localhost',
     'database': 'send_to_print',
     'pool_name': 'bot_pool',
