@@ -666,3 +666,4 @@ KeyError: 'ID_shop'
 2025-04-19 16:19:29,524 - urllib3.connectionpool - DEBUG - https://api.telegram.org:443 "GET /bot7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ/getUpdates?offset=161352663&timeout=20 HTTP/1.1" 200 23
 2025-04-19 16:19:49,579 - urllib3.connectionpool - DEBUG - https://api.telegram.org:443 "GET /bot7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ/getUpdates?offset=161352663&timeout=20 HTTP/1.1" 200 23
 2025-04-19 16:20:09,636 - urllib3.connectionpool - DEBUG - https://api.telegram.org:443 "GET /bot7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ/getUpdates?offset=161352663&timeout=20 HTTP/1.1" 200 23
+ 7a7ace67668064c57f10318c89ca4e9f99df551a
