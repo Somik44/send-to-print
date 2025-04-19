@@ -2017,3 +2017,29 @@
 2025-04-16 17:39:38,601 - INFO - 127.0.0.1 - - [16/Apr/2025 17:39:38] "GET /api/files/order_15.docx HTTP/1.1" 200 -
 2025-04-16 17:39:50,015 - INFO - 127.0.0.1 - - [16/Apr/2025 17:39:50] "GET /api/orders?status=received HTTP/1.1" 200 -
 2025-04-16 17:40:02,055 - INFO - 127.0.0.1 - - [16/Apr/2025 17:40:02] "GET /api/orders?status=received HTTP/1.1" 200 -
+2025-04-19 16:17:11,354 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.0.113:5000
+2025-04-19 16:17:11,354 - INFO - [33mPress CTRL+C to quit[0m
+2025-04-19 16:17:11,356 - INFO -  * Restarting with stat
+2025-04-19 16:17:11,732 - WARNING -  * Debugger is active!
+2025-04-19 16:17:11,734 - INFO -  * Debugger PIN: 103-430-654
+2025-04-19 16:17:11,771 - INFO - 127.0.0.1 - - [19/Apr/2025 16:17:11] "GET /api/orders?status=received HTTP/1.1" 200 -
+2025-04-19 16:17:23,834 - INFO - 127.0.0.1 - - [19/Apr/2025 16:17:23] "GET /api/orders?status=received HTTP/1.1" 200 -
+2025-04-19 16:17:35,885 - INFO - 127.0.0.1 - - [19/Apr/2025 16:17:35] "GET /api/orders?status=received HTTP/1.1" 200 -
+2025-04-19 16:17:47,937 - INFO - 127.0.0.1 - - [19/Apr/2025 16:17:47] "GET /api/orders?status=received HTTP/1.1" 200 -
+2025-04-19 16:17:59,985 - INFO - 127.0.0.1 - - [19/Apr/2025 16:17:59] "GET /api/orders?status=received HTTP/1.1" 200 -
+2025-04-19 16:18:12,035 - INFO - 127.0.0.1 - - [19/Apr/2025 16:18:12] "GET /api/orders?status=received HTTP/1.1" 200 -
+2025-04-19 16:18:24,103 - INFO - 127.0.0.1 - - [19/Apr/2025 16:18:24] "GET /api/orders?status=received HTTP/1.1" 200 -
+2025-04-19 16:18:26,579 - INFO - 127.0.0.1 - - [19/Apr/2025 16:18:26] "PUT /api/orders/16 HTTP/1.1" 200 -
+2025-04-19 16:18:34,044 - INFO - 127.0.0.1 - - [19/Apr/2025 16:18:34] "GET /api/files/order_16.docx HTTP/1.1" 200 -
+2025-04-19 16:18:36,162 - INFO - 127.0.0.1 - - [19/Apr/2025 16:18:36] "GET /api/orders?status=received HTTP/1.1" 200 -
+2025-04-19 16:18:48,227 - INFO - 127.0.0.1 - - [19/Apr/2025 16:18:48] "GET /api/orders?status=received HTTP/1.1" 200 -
+2025-04-19 16:19:00,277 - INFO - 127.0.0.1 - - [19/Apr/2025 16:19:00] "GET /api/orders?status=received HTTP/1.1" 200 -
+2025-04-19 16:19:12,345 - INFO - 127.0.0.1 - - [19/Apr/2025 16:19:12] "GET /api/orders?status=received HTTP/1.1" 200 -
+2025-04-19 16:19:24,400 - INFO - 127.0.0.1 - - [19/Apr/2025 16:19:24] "GET /api/orders?status=received HTTP/1.1" 200 -
+2025-04-19 16:19:36,451 - INFO - 127.0.0.1 - - [19/Apr/2025 16:19:36] "GET /api/orders?status=received HTTP/1.1" 200 -
+2025-04-19 16:19:48,511 - INFO - 127.0.0.1 - - [19/Apr/2025 16:19:48] "GET /api/orders?status=received HTTP/1.1" 200 -
+2025-04-19 16:20:00,581 - INFO - 127.0.0.1 - - [19/Apr/2025 16:20:00] "GET /api/orders?status=received HTTP/1.1" 200 -
+2025-04-19 16:20:12,627 - INFO - 127.0.0.1 - - [19/Apr/2025 16:20:12] "GET /api/orders?status=received HTTP/1.1" 200 -
