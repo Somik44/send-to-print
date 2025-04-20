@@ -79,7 +79,6 @@ class ShopApp(QMainWindow):
                 cursor.execute("SELECT password FROM shop")
                 for row in cursor:
                     self.existing_hashes.add(row['password'])
-            logger.info(f"Загружено {len(self.existing_hashes)} хешей паролей")
         except pymysql.Error as err:
             logger.error(f"Ошибка при загрузке паролей: {err}")
             QMessageBox.warning(self, "Ошибка", f"Ошибка при загрузке паролей: {err}")
