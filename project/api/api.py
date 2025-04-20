@@ -206,5 +206,22 @@ def delete_order(order_id):
         cursor.close()
         conn.close()
 
+@app.route('/api/shop/passwords', methods=['GET'])
+def get_shop_passwords():
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT password FROM shop")
+        passwords = [row[0] for row in cursor.fetchall()]
+        return jsonify(passwords)
+    except Exception as e:
+        logging.error(f"Error getting shop passwords: {str(e)}")
+        return jsonify({"status": "error", "message": str(e)}), 500
+    finally:
+        if cursor: cursor.close()
+        if conn: conn.close()
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

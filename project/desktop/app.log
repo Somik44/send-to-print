@@ -3388,3 +3388,54 @@
 2025-04-19 16:20:12,628 - DEBUG - http://localhost:5000 "GET /api/orders?status=received HTTP/1.1" 200 3
 2025-04-19 22:05:09,340 - DEBUG - Starting new HTTP connection (1): localhost:5000
 7a7ace67668064c57f10318c89ca4e9f99df551a
+2025-04-19 22:28:58,043 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-04-19 22:29:02,100 - ERROR - Ошибка загрузки: HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /api/orders?status=received (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000026EDE3F3080>: Failed to establish a new connection: [WinError 10061] Подключение не установлено, т.к. конечный компьютер отверг запрос на подключение'))
+2025-04-19 22:29:14,119 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-04-19 22:29:16,153 - DEBUG - http://localhost:5000 "GET /api/orders?status=received HTTP/1.1" 200 3
+2025-04-19 22:29:26,170 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-04-19 22:29:28,209 - DEBUG - http://localhost:5000 "GET /api/orders?status=received HTTP/1.1" 200 3
+2025-04-19 22:29:38,222 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-04-19 22:29:40,254 - DEBUG - http://localhost:5000 "GET /api/orders?status=received HTTP/1.1" 200 3
+2025-04-19 22:29:50,269 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-04-19 22:29:52,300 - DEBUG - http://localhost:5000 "GET /api/orders?status=received HTTP/1.1" 200 376
+2025-04-19 22:29:55,874 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-04-19 22:29:57,925 - DEBUG - http://localhost:5000 "PUT /api/orders/17 HTTP/1.1" 200 26
+2025-04-19 22:30:01,287 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-04-19 22:30:02,319 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-04-19 22:30:03,352 - DEBUG - http://localhost:5000 "GET /api/files/order_17.docx HTTP/1.1" 200 20522
+2025-04-19 22:30:04,358 - DEBUG - http://localhost:5000 "GET /api/orders?status=received HTTP/1.1" 200 3
+2025-04-20 16:00:05,713 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-04-20 16:00:09,797 - ERROR - Ошибка проверки пароля: HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /api/shop/passwords (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000199D2E83500>: Failed to establish a new connection: [WinError 10061] Подключение не установлено, т.к. конечный компьютер отверг запрос на подключение'))
+2025-04-20 16:00:15,678 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-04-20 16:00:19,764 - ERROR - Ошибка проверки пароля: HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /api/shop/passwords (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000199D3C5BF20>: Failed to establish a new connection: [WinError 10061] Подключение не установлено, т.к. конечный компьютер отверг запрос на подключение'))
+2025-04-20 16:01:19,116 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-04-20 16:01:23,178 - ERROR - Ошибка проверки пароля: HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /api/shop/passwords (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001ADFF563500>: Failed to establish a new connection: [WinError 10061] Подключение не установлено, т.к. конечный компьютер отверг запрос на подключение'))
+2025-04-20 16:05:03,432 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-04-20 16:05:39,306 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-04-20 16:05:41,376 - DEBUG - http://localhost:5000 "GET /api/health HTTP/1.1" 404 207
+2025-04-20 16:05:44,113 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-04-20 16:05:46,179 - DEBUG - http://localhost:5000 "GET /api/health HTTP/1.1" 404 207
+2025-04-20 16:06:15,201 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-04-20 16:06:17,254 - DEBUG - http://localhost:5000 "GET /api/health HTTP/1.1" 404 207
+2025-04-20 16:07:55,493 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-04-20 16:07:57,568 - DEBUG - http://localhost:5000 "GET /api/health HTTP/1.1" 404 207
+2025-04-20 16:09:22,240 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-04-20 16:09:24,303 - DEBUG - http://localhost:5000 "GET /api/health HTTP/1.1" 404 207
+2025-04-20 16:09:26,097 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-04-20 16:09:28,178 - DEBUG - http://localhost:5000 "GET /api/health HTTP/1.1" 404 207
+2025-04-20 16:09:33,063 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-04-20 16:09:35,132 - DEBUG - http://localhost:5000 "GET /api/health HTTP/1.1" 404 207
+2025-04-20 16:19:00,283 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-04-20 16:19:02,361 - DEBUG - http://localhost:5000 "GET /api/shop/passwords HTTP/1.1" 200 361
+2025-04-20 16:19:02,365 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-04-20 16:19:04,434 - DEBUG - http://localhost:5000 "GET /api/shop/passwords HTTP/1.1" 200 361
+2025-04-20 16:19:04,685 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-04-20 16:19:06,720 - DEBUG - http://localhost:5000 "GET /api/orders?status=received HTTP/1.1" 200 3
+2025-04-20 16:19:42,585 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-04-20 16:19:59,044 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-04-20 16:20:01,110 - DEBUG - http://localhost:5000 "GET /api/shop/passwords HTTP/1.1" 200 361
+2025-04-20 16:20:01,112 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-04-20 16:20:03,159 - DEBUG - http://localhost:5000 "GET /api/shop/passwords HTTP/1.1" 200 361
+2025-04-20 16:20:03,400 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-04-20 16:20:05,444 - DEBUG - http://localhost:5000 "GET /api/orders?status=received HTTP/1.1" 200 3
+2025-04-20 16:20:15,456 - DEBUG - Starting new HTTP connection (1): localhost:5000
