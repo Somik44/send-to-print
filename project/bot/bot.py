@@ -1,205 +1,184 @@
 import os
 import logging
 import random
-import threading
-import mysql.connector.pooling
-from telebot import TeleBot, types
+import asyncio
+import aiohttp
+import aiofiles
+from aiogram import Bot, Dispatcher, types, F
+from aiogram.filters import Command
+from aiogram.fsm.context import FSMContext
+from aiogram.fsm.state import State, StatesGroup
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from aiogram.enums import ContentType
 from PyPDF2 import PdfReader
+from io import BytesIO
 import pythoncom
 import win32com.client
-from decimal import Decimal
 import uuid
 import traceback
-import time
 
 logging.basicConfig(
     level=logging.DEBUG,
     filename='bot.log',
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
 
 API_TOKEN = '7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ'
-UPLOAD_FOLDER = os.path.abspath('C:\\send_to_ptint\\send-to-print\\project\\api\\uploads')
+API_URL = 'http://localhost:5000/api'
+UPLOAD_FOLDER = 'D:\\projects_py\\projectsWithGit\\send-to-print\\project\\api\\uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-DB_CONFIG = {
-    'user': 'root',
-    'password': '3465',
-    'host': 'localhost',
-    'database': 'send_to_print',
-    'pool_name': 'bot_pool',
-    'pool_size': 10
-}
 
-db_pool = mysql.connector.pooling.MySQLConnectionPool(**DB_CONFIG)
-user_states = {}
+class Form(StatesGroup):
+    shop_selection = State()
+    file_processing = State()
+    color_selection = State()
+    comment = State()
+    confirmation = State()
+
+
+bot = Bot(token=API_TOKEN)
+dp = Dispatcher()
 timers = {}
-
-bot = TeleBot(API_TOKEN)
-
-
-def get_db_connection():
-    return db_pool.get_connection()
+confirmation_timers = {}
 
 
-def cleanup_resources(chat_id):
-    if chat_id in user_states:
-        temp_path = user_states[chat_id].get('temp_file')
-        if temp_path and os.path.exists(temp_path):
-            os.remove(temp_path)
-        del user_states[chat_id]
-    if chat_id in timers:
-        timers[chat_id].cancel()
-        del timers[chat_id]
-
-
-def start_inactivity_timer(chat_id):
-    def reset_state():
-        cleanup_resources(chat_id)
-        bot.send_message(chat_id, "🚫 Сессия закрыта из-за неактивности", reply_markup=types.ReplyKeyboardRemove())
-
-    if chat_id in timers:
-        timers[chat_id].cancel()
-    timers[chat_id] = threading.Timer(60.0, reset_state)
-    timers[chat_id].start()
-
-
-def get_pdf_page_count(file_path):
+async def cleanup_order_data(user_data: dict):
     try:
-        with open(file_path, 'rb') as f:
-            return len(PdfReader(f).pages)
+        if 'temp_file' in user_data and os.path.exists(user_data['temp_file']):
+            os.remove(user_data['temp_file'])
+            logging.info(f"Удален временный файл: {user_data['temp_file']}")
+
+        if 'order_id' in user_data:
+            async with aiohttp.ClientSession() as session:
+                await session.delete(f"{API_URL}/orders/{user_data['order_id']}")
     except Exception as e:
-        logging.error(f"PDF Error: {e}")
-        return None
+        logging.error(f"Ошибка очистки: {str(e)}")
 
 
-def get_docx_page_count(file_path):
+async def start_order_timer(chat_id: int, state: FSMContext):
     try:
-        pythoncom.CoInitialize()
+        await asyncio.sleep(600)
+        if chat_id in timers:
+            user_data = await state.get_data()
+            await cleanup_order_data(user_data)
+            await bot.send_message(chat_id, "❌ Время оформления заказа истекло, ваш заказ отменен")
+            await state.clear()
+            del timers[chat_id]
+    except asyncio.CancelledError:
+        logging.info("10-минутный таймер отменен")
+
+
+async def confirmation_timeout(chat_id: int, state: FSMContext):
+    try:
+        await asyncio.sleep(60)
+        if chat_id in confirmation_timers:
+            user_data = await state.get_data()
+            await cleanup_order_data(user_data)
+            await bot.send_message(chat_id, "❌ Время подтверждения истекло, ваш заказ отменен")
+            await state.clear()
+            del confirmation_timers[chat_id]
+    except asyncio.CancelledError:
+        logging.info("1-минутный таймер отменен")
+
+
+async def get_page_count(file_path: str, ext: str) -> int:
+    try:
+        if ext == '.pdf':
+            async with aiofiles.open(file_path, 'rb') as f:
+                content = await f.read()
+                pdf = PdfReader(BytesIO(content))  # Используем BytesIO
+                return len(pdf.pages)
+
+        return await asyncio.to_thread(_process_word_file, file_path)
+
+    except Exception as e:
+        logging.error(f"Ошибка подсчета страниц: {traceback.format_exc()}")
+        raise
+
+
+def _process_word_file(file_path: str) -> int:
+    pythoncom.CoInitialize()
+    try:
         word = win32com.client.Dispatch("Word.Application")
+        word.Visible = False
         doc = word.Documents.Open(os.path.abspath(file_path))
         count = doc.ComputeStatistics(2)
         doc.Close(False)
         return count
     except Exception as e:
-        logging.error(f"DOCX Error: {e}")
-        return None
+        logging.error(f"Word COM Error: {str(e)}")
+        raise
     finally:
         word.Quit()
         pythoncom.CoUninitialize()
 
 
-def get_doc_page_count(file_path):
-    pythoncom.CoInitialize()
-    word = win32com.client.Dispatch("Word.Application")
-    word.Visible = False
+@dp.message(Command("start"))
+async def cmd_start(message: types.Message):
+    await message.answer(
+        f"Привет, {message.from_user.first_name}! Рады приветствовать тебя на нашем сервисе по распечатке документов в любое удобное время! Чтобы начать новый заказ, используйте команду /new_order."
+    )
+
+
+@dp.message(Command("new_order"))
+async def cmd_new_order(message: types.Message, state: FSMContext):
+    if message.chat.id in timers:
+        timers[message.chat.id].cancel()
+        del timers[message.chat.id]
+
+    async with aiohttp.ClientSession() as session:
+        async with session.get(f"{API_URL}/shops") as resp:
+            if resp.status != 200:
+                await message.answer("❌ Ошибка загрузки магазинов")
+                return
+            shops = await resp.json()
+
+    markup = ReplyKeyboardMarkup(
+        keyboard=[[KeyboardButton(text=shop['name'])] for shop in shops],
+        resize_keyboard=True,
+        one_time_keyboard=True
+    )
+    await message.answer("🏪 Выберите точку печати из списка:", reply_markup=markup)
+    timers[message.chat.id] = asyncio.create_task(start_order_timer(message.chat.id, state))
+    await state.set_state(Form.shop_selection)
+
+
+@dp.message(Form.shop_selection)
+async def process_shop(message: types.Message, state: FSMContext):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(f"{API_URL}/shops/{message.text}") as resp:
+            if resp.status != 200:
+                await message.answer("❌ Точка не найдена. /new_order")
+                return
+            shop = await resp.json()
+
+    await state.update_data(shop=shop)
+    response = (
+        f"🏪 Выбрана точка: {shop['name']}\n"
+        f"📍 Адрес: {shop['address']}\n"
+        f"💰 Цены:\n"
+        f"• Черно-белая: {shop['price_bw']:.2f} руб/стр\n"
+        f"• Цветная: {shop['price_cl']:.2f} руб/стр\n\n"
+        f"📎 Отправьте PDF, DOC или DOCX файл размером не более 20 МБ для расчета стоимости."
+    )
+    await message.answer(response, reply_markup=types.ReplyKeyboardRemove())
+    await state.set_state(Form.file_processing)
+
+
+@dp.message(Form.file_processing, F.content_type == ContentType.DOCUMENT)
+async def process_file(message: types.Message, state: FSMContext):
+    processing_msg = await message.answer("⏳ Файл обрабатывается, подождите пожалуйста...")
+    temp_path = None
+
     try:
-        doc = word.Documents.Open(file_path)
-        page_count = doc.ComputeStatistics(2)
-        doc.Close(False)
-        return page_count
-    except Exception as e:
-        logging.error(f"Ошибка при подсчете страниц: {e}")
-        return None
-    finally:
-        word.Quit()
-        pythoncom.CoUninitialize()
+        file_info = await bot.get_file(message.document.file_id)
+        file_url = f"https://api.telegram.org/file/bot{API_TOKEN}/{file_info.file_path}"
 
+        async with aiohttp.ClientSession() as session:
+            async with session.get(file_url) as resp:
+                file_content = await resp.read()
 
-
-@bot.message_handler(commands=['start'])
-def handle_start(message):
-    bot.send_message(
-        message.chat.id,
-        f"Привет, {message.from_user.first_name}! Рады приветствовать тебя на нашем сервисе по распечатке документов в любое удобное время! Чтобы начать новый заказ, используйте команду /new_order.")
-
-
-
-@bot.message_handler(commands=['new_order'])
-def handle_new_order(message):
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT name FROM shop")
-        shops = cursor.fetchall()
-
-        markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
-        for shop in shops:
-            markup.add(types.KeyboardButton(shop['name']))
-
-        bot.send_message(message.chat.id, "🏪 Выберите точку печати из списка:", reply_markup=markup)
-        start_inactivity_timer(message.chat.id)
-        bot.register_next_step_handler(message, process_shop_selection)
-
-    except Exception as e:
-        logging.error(f"Ошибка при выборе точки: {traceback.format_exc()}")
-        bot.send_message(message.chat.id, "❌ Ошибка загрузки точек")
-    finally:
-        cursor.close()
-        conn.close()
-
-
-def process_shop_selection(message):
-    try:
-        selected_name = message.text.strip()
-        conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
-
-        cursor.execute(
-            "SELECT ID_shop, name, address, price_bw, price_cl FROM shop WHERE name = %s",
-            (selected_name,))
-        shop = cursor.fetchone()
-
-        if shop:
-            user_states[message.chat.id] = {
-                'state': 'awaiting_file',
-                'shop_id': shop['ID_shop'],
-                'shop_info': {
-                    'name': shop['name'],
-                    'address': shop['address'],
-                    'price_bw': shop['price_bw'],
-                    'price_cl': shop['price_cl']
-                }
-            }
-
-            response = (
-                f"🏪 Выбрана точка: {shop['name']}\n"
-                f"📍 Адрес: {shop['address']}\n"
-                f"💰 Цены:\n"
-                f"• Черно-белая: {shop['price_bw']} руб/стр\n"
-                f"• Цветная: {shop['price_cl']} руб/стр\n\n"
-                f"📎 Отправьте файл для расчета стоимости."
-            )
-
-            bot.send_message(message.chat.id, response, reply_markup=types.ReplyKeyboardRemove())
-            start_inactivity_timer(message.chat.id)
-            bot.register_next_step_handler(message, handle_document)
-
-        else:
-            bot.send_message(message.chat.id, "❌ Точка не найдена. /new_order")
-
-    except Exception as e:
-        logging.error(f"Ошибка выбора точки: {traceback.format_exc()}")
-    finally:
-        if cursor:
-            cursor.close()
-        if conn:
-            conn.close()
-
-
-
-@bot.message_handler(content_types=['document'])
-def handle_document(message):
-    processing_msg = None
-    try:
-        user_state = user_states.get(message.chat.id, {})
-        if user_state.get('state') != 'awaiting_file':
-            raise ValueError("⚠️ Сначала выберите точку через /new_order")
-
-        processing_msg = bot.send_message(message.chat.id, "⏳ Файл обрабатывается, подождите пожалуйста...")
-        start_inactivity_timer(message.chat.id)
-
-        file_info = bot.get_file(message.document.file_id)
-        downloaded = bot.download_file(file_info.file_path)
         filename, ext = os.path.splitext(message.document.file_name)
         ext = ext.lower()
 
@@ -208,187 +187,413 @@ def handle_document(message):
 
         temp_name = f"temp_{uuid.uuid4()}{ext}"
         temp_path = os.path.join(UPLOAD_FOLDER, temp_name)
-        with open(temp_path, 'wb') as f:
-            f.write(downloaded)
 
-        pages = get_pdf_page_count(temp_path) if ext == '.pdf' else get_doc_page_count(temp_path)
-        if not pages or pages < 1:
+        async with aiofiles.open(temp_path, 'wb') as f:
+            await f.write(file_content)
+
+        pages = await get_page_count(temp_path, ext)
+        if pages < 1:
             raise ValueError("⚠️ Невозможно определить количество страниц")
 
-        bot.delete_message(message.chat.id, processing_msg.message_id)
-
-        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        markup.add('Черно-белая', 'Цветная')
-
-        user_states[message.chat.id].update({
+        await state.update_data({
             'temp_file': temp_path,
             'pages': pages,
             'file_extension': ext[1:],
-            'state': 'awaiting_color'
+            'filename': message.document.file_name
         })
 
-        bot.send_message(message.chat.id, f"📄 Страниц: {pages}\nВыберите тип печати:", reply_markup=markup)
-        start_inactivity_timer(message.chat.id)
-
-    except Exception as e:
-        if processing_msg:
-            bot.delete_message(message.chat.id, processing_msg.message_id)
-        bot.reply_to(message, f"❌ Ошибка обработки файла! {str(e)}")
-        cleanup_resources(message.chat.id)
-
-
-@bot.message_handler(func=lambda msg: user_states.get(msg.chat.id, {}).get('state') == 'awaiting_color')
-def handle_color(message):
-    try:
-        user_data = user_states[message.chat.id]
-        valid_responses = {
-            'черно-белая': user_data['shop_info']['price_bw'],
-            'цветная': user_data['shop_info']['price_cl']
-        }
-
-        # Нормализуем ввод
-        user_input = message.text.strip().lower()
-
-        if user_input not in valid_responses:
-            markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-            markup.add('Черно-белая', 'Цветная')
-
-            bot.send_message(message.chat.id,"❌ Неверный тип печати! Выберите вариант из кнопок ниже:", reply_markup=markup)
-            return  # Прерываем выполнение
-
-        # Если выбор корректен
-        color_type = user_input
-        price = valid_responses[user_input]
-
-        user_data.update({
-            'color': color_type,
-            'price': user_data['pages'] * price,
-            'state': 'awaiting_comment'
-        })
-
-        bot.send_message(message.chat.id,"📝 Введите комментарий ($ для пропуска):", reply_markup=types.ReplyKeyboardRemove())
-        start_inactivity_timer(message.chat.id)
-
-    except Exception as e:
-        logging.error(f"Ошибка: {traceback.format_exc()}")
-        bot.reply_to(message, "❌ Критическая ошибка, пожалуйста начните заново /new_order")
-        cleanup_resources(message.chat.id)
-
-
-@bot.message_handler(func=lambda msg: user_states.get(msg.chat.id, {}).get('state') == 'awaiting_comment')
-def handle_comment(message):
-    try:
-        comment = message.text if message.text != '$' else ''
-        user_states[message.chat.id]['comment'] = comment
-        user_states[message.chat.id]['state'] = 'awaiting_confirm'
-
-        markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
-        markup.add('Подтвердить', 'Отменить')
-
-        response = (
-            f"🔍 Подтвердите заказ:\n"
-            f"• Точка: {user_states[message.chat.id]['shop_info']['name']} по адресу {user_states[message.chat.id]['shop_info']['address']}\n"
-            f"• Страниц: {user_states[message.chat.id]['pages']}\n"
-            f"• Тип: {user_states[message.chat.id]['color']}\n"
-            f"• Стоимость: {user_states[message.chat.id]['price']} руб\n"
-            f"• Комментарий: {comment if comment else 'NONE'}"
+        markup = ReplyKeyboardMarkup(
+            keyboard=[[KeyboardButton(text="Черно-белая"), KeyboardButton(text="Цветная")]],
+            resize_keyboard=True
         )
-
-        bot.send_message(message.chat.id, response, reply_markup=markup)
-        start_inactivity_timer(message.chat.id)
-
-    except Exception as e:
-        logging.error(f"Ошибка комментария: {traceback.format_exc()}")
-        bot.reply_to(message, "❌ Ошибка комментария")
-        cleanup_resources(message.chat.id)
-
-
-
-@bot.message_handler(func=lambda msg: user_states.get(msg.chat.id, {}).get('state') == 'awaiting_confirm')
-def handle_confirm(message):
-    conn = None
-    cursor = None
-    try:
-        if message.text == 'Отменить':
-            cleanup_resources(message.chat.id)
-            temp_path = user_states.get(message.chat.id, {}).get('temp_file')
-            if temp_path and os.path.exists(temp_path):
-                os.remove(temp_path)
-            user_states.pop(message.chat.id, None)
-            bot.send_message(message.chat.id,"❌ Заказ отменен", reply_markup=types.ReplyKeyboardRemove())
-            return
-
-        user_data = user_states[message.chat.id]
-        check_code = random.randint(100000, 999999)
-        order_data = {
-            'shop_id': user_data['shop_id'],
-            'price': user_data['price'],
-            'comment': user_data.get('comment', ''),
-            'check_code': check_code,
-            'color': user_data['color'],
-            'file_extension': user_data['file_extension'],
-            'user_id': message.chat.id,
-            'pages': user_data['pages']
-        }
-
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute(
-            """INSERT INTO `order` 
-            (ID_shop, price, note, con_code, color, status, user_id, pages, file_extension) 
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)""",
-            (
-                order_data['shop_id'],
-                Decimal(order_data['price']),
-                order_data['comment'],
-                order_data['check_code'],
-                order_data['color'],
-                'получен',
-                str(order_data['user_id']),
-                order_data['pages'],
-                order_data['file_extension']
-            )
-        )
-        order_id = cursor.lastrowid
-        conn.commit()
-
-        new_filename = f"order_{order_id}.{order_data['file_extension']}"
-        new_path = os.path.join(UPLOAD_FOLDER, new_filename)
-        os.rename(user_data['temp_file'], new_path)
-
-        cursor.execute(
-            "UPDATE `order` SET file_path = %s WHERE ID = %s", (new_filename, order_id))
-        conn.commit()
-
-        bot.send_message(message.chat.id,f"✅ Заказ №{order_id} принят! Проверочный код: {check_code}",reply_markup=types.ReplyKeyboardRemove())
-        cleanup_resources(message.chat.id)
+        await message.answer(f"📄 Страниц: {pages}\nВыберите тип печати:", reply_markup=markup)
+        await state.set_state(Form.color_selection)
 
     except Exception as e:
-        logging.error(f"Ошибка подтверждения: {traceback.format_exc()}")
-        bot.reply_to(message, f"❌ Ошибка: {str(e)}")
-        if conn:
-            conn.rollback()
-        cleanup_resources(message.chat.id)
+        logging.error(f"Ошибка обработки файла: {traceback.format_exc()}")
+        await message.answer("❌ Ошибка обработки файла")
+        if temp_path and os.path.exists(temp_path):
+            await cleanup_order_data({'temp_file': temp_path})
+        await state.clear()
     finally:
-        if cursor:
-            cursor.close()
-        if conn:
-            conn.close()
+        await bot.delete_message(message.chat.id, processing_msg.message_id)
+
+
+@dp.message(Form.color_selection)
+async def process_color(message: types.Message, state: FSMContext):
+    user_data = await state.get_data()
+    color = message.text.lower()
+    if color not in ['черно-белая', 'цветная']:
+        markup = ReplyKeyboardMarkup(
+            keyboard=[[KeyboardButton(text="Черно-белая"), KeyboardButton(text="Цветная")]],
+            resize_keyboard=True
+        )
+        await message.answer("❌ Неверный тип печати! Выберите вариант из кнопок ниже:", reply_markup=markup)
+        return
+
+    price = user_data['shop']['price_bw'] if color == 'черно-белая' else user_data['shop']['price_cl']
+    total_price = round(price * user_data['pages'], 2)
+    await state.update_data(color=color, price=total_price)
+
+    await message.answer("📝 Введите комментарий к заказу ($ для пропуска):", reply_markup=types.ReplyKeyboardRemove())
+    await state.set_state(Form.comment)
+
+
+@dp.message(Form.comment)
+async def process_comment(message: types.Message, state: FSMContext):
+    comment = message.text if message.text != '$' else ''
+    await state.update_data(comment=comment)
+    user_data = await state.get_data()
+
+    response = (
+        f"🔍 Подтвердите заказ:\n"
+        f"• Точка: {user_data['shop']['name']} по адресу {user_data['shop']['address']}\n"
+        f"• Страниц: {user_data['pages']}\n"
+        f"• Тип: {user_data['color']}\n"
+        f"• Стоимость: {user_data['price']:.2f} руб\n"
+        f"• Комментарий: {comment if comment else 'нет'}"
+    )
+
+    markup = ReplyKeyboardMarkup(
+        keyboard=[[KeyboardButton(text="Подтвердить"), KeyboardButton(text="Отменить")]],
+        resize_keyboard=True,
+        one_time_keyboard=True
+    )
+    confirmation_msg = await message.answer(response, reply_markup=markup)
+
+    confirmation_timers[message.chat.id] = asyncio.create_task(
+        confirmation_timeout(message.chat.id, state)
+    )
+    await state.update_data(confirmation_msg_id=confirmation_msg.message_id)
+    await state.set_state(Form.confirmation)
+
+
+@dp.message(Form.confirmation)
+async def process_confirmation(message: types.Message, state: FSMContext):
+    # Отмена всех таймеров
+    if message.chat.id in timers:
+        timers[message.chat.id].cancel()
+        del timers[message.chat.id]
+    if message.chat.id in confirmation_timers:
+        confirmation_timers[message.chat.id].cancel()
+        del confirmation_timers[message.chat.id]
+
+    if message.text == 'Отменить':
+        await message.answer("❌ Заказ отменен", reply_markup=types.ReplyKeyboardRemove())
+        user_data = await state.get_data()
+        await cleanup_order_data(user_data)
+        await state.clear()
+        return
+
+    user_data = await state.get_data()
+    check_code = random.randint(100000, 999999)
+
+    try:
+        async with aiohttp.ClientSession() as session:
+            form_data = aiohttp.FormData()
+            form_data.add_field('ID_shop', str(user_data['shop']['ID_shop']))
+            form_data.add_field('price', str(user_data['price']))
+            form_data.add_field('pages', str(user_data['pages']))
+            form_data.add_field('color', user_data['color'])
+            form_data.add_field('user_id', str(message.chat.id))
+            form_data.add_field('note', user_data.get('comment', ''))
+            form_data.add_field('file_extension', user_data['file_extension'])
+            form_data.add_field('con_code', str(check_code))
+
+            with open(user_data['temp_file'], 'rb') as file:
+                form_data.add_field('file', file.read(), filename=user_data['filename'])
+
+            async with session.post(f"{API_URL}/orders", data=form_data) as resp:
+                if resp.status == 201:
+                    data = await resp.json()
+                    await message.answer(
+                        f"✅ Заказ №{data['order_id']} принят! Проверочный код: {check_code}",
+                        reply_markup=types.ReplyKeyboardRemove()
+                    )
+                else:
+                    await message.answer("❌ Ошибка подтверждения заказа")
+    except Exception as e:
+        await message.answer("❌ Ошибка создания заказа")
+        logging.error(f"Ошибка подтверждения: {traceback.format_exc()}")
+    finally:
+        if 'temp_file' in user_data:
+            await cleanup_order_data(user_data)
+        await state.clear()
+
+
+@dp.message()
+async def handle_unknown(message: types.Message):
+    await message.reply("Не понимаю тебя, попробуй повторить запрос ☺️")
+
+
+async def main():
+    await dp.start_polling(bot)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
 
 
 
-@bot.message_handler(func=lambda msg: True)
-def handle_unknown(message):
-    bot.reply_to(message, "Не понимаю тебя, попробуй повторить запрос ☺️")
+# import os
+# import logging
+# import random
+# import asyncio
+# import aiohttp
+# from aiogram import Bot, Dispatcher, types, F
+# from aiogram.filters import Command
+# from aiogram.fsm.context import FSMContext
+# from aiogram.fsm.state import State, StatesGroup
+# from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+# from aiogram.enums import ContentType
+# from PyPDF2 import PdfReader
+# import pythoncom
+# import win32com.client
+# import uuid
+# import traceback
+#
+# logging.basicConfig(
+#     level=logging.DEBUG,
+#     filename='bot.log',
+#     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+# )
+#
+# API_TOKEN = '7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ'
+# API_URL = 'http://localhost:5000/api'
+# UPLOAD_FOLDER = 'D:\\projects_py\\projectsWithGit\\send-to-print\\project\\api\\uploads'
+# os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+#
+#
+# class Form(StatesGroup):
+#     shop_selection = State()
+#     file_processing = State()
+#     color_selection = State()
+#     comment = State()
+#     confirmation = State()
+#
+#
+# bot = Bot(token=API_TOKEN)
+# dp = Dispatcher()
+#
+#
+# def get_page_count(file_path, ext):
+#     if ext == '.pdf':
+#         with open(file_path, 'rb') as f:
+#             return len(PdfReader(f).pages)
+#     else:
+#         pythoncom.CoInitialize()
+#         word = win32com.client.Dispatch("Word.Application")
+#         doc = word.Documents.Open(os.path.abspath(file_path))
+#         count = doc.ComputeStatistics(2)
+#         doc.Close(False)
+#         word.Quit()
+#         return count
 
-
-
-@bot.message_handler(commands=['reset'])
-def reset(message):
-    user_states.pop(message.chat.id, None)
-    bot.send_message(message.chat.id, "Состояние сброшено. Вы можете начать новый заказ, используя команду /new_order.")
-
-
-
-if __name__ == '__main__':
-    bot.polling(none_stop=True)
+#
+# @dp.message(Command("start"))
+# async def cmd_start(message: types.Message):
+#     await message.answer(
+#         f"Привет, {message.from_user.first_name}! Рады приветствовать тебя на нашем сервисе по распечатке документов в любое удобное время! Чтобы начать новый заказ, используйте команду /new_order."
+#     )
+#
+#
+# @dp.message(Command("new_order"))
+# async def cmd_new_order(message: types.Message, state: FSMContext):
+#     async with aiohttp.ClientSession() as session:
+#         async with session.get(f"{API_URL}/shops") as resp:
+#             if resp.status != 200:
+#                 await message.answer("❌ Ошибка загрузки магазинов")
+#                 return
+#             shops = await resp.json()
+#
+#     markup = ReplyKeyboardMarkup(
+#         keyboard=[[KeyboardButton(text=shop['name'])] for shop in shops],
+#         resize_keyboard=True,
+#         one_time_keyboard=True
+#     )
+#     await message.answer("🏪 Выберите точку печати из списка:", reply_markup=markup)
+#     await state.set_state(Form.shop_selection)
+#
+#
+# @dp.message(Form.shop_selection)
+# async def process_shop(message: types.Message, state: FSMContext):
+#     async with aiohttp.ClientSession() as session:
+#         async with session.get(f"{API_URL}/shops/{message.text}") as resp:
+#             if resp.status != 200:
+#                 await message.answer("❌ Точка не найдена. /new_order")
+#                 return
+#             shop = await resp.json()
+#
+#     await state.update_data(shop=shop)
+#     response = (
+#         f"🏪 Выбрана точка: {shop['name']}\n"
+#         f"📍 Адрес: {shop['address']}\n"
+#         f"💰 Цены:\n"
+#         f"• Черно-белая: {shop['price_bw']:.2f} руб/стр\n"
+#         f"• Цветная: {shop['price_cl']:.2f} руб/стр\n"
+#         f"📎 Отправьте файл для расчета стоимости."
+#     )
+#     await message.answer(response, reply_markup=types.ReplyKeyboardRemove())
+#     await state.set_state(Form.file_processing)
+#
+#
+# @dp.message(Form.file_processing, F.content_type == ContentType.DOCUMENT)
+# async def process_file(message: types.Message, state: FSMContext):
+#     processing_msg = await message.answer("⏳ Файл обрабатывается, подождите пожалуйста...")
+#     try:
+#         file_info = await bot.get_file(message.document.file_id)
+#         file_url = f"https://api.telegram.org/file/bot{API_TOKEN}/{file_info.file_path}"
+#
+#         async with aiohttp.ClientSession() as session:
+#             async with session.get(file_url) as resp:
+#                 file_content = await resp.read()
+#
+#         filename, ext = os.path.splitext(message.document.file_name)
+#         ext = ext.lower()
+#
+#         if ext not in ['.pdf', '.doc', '.docx']:
+#             raise ValueError("❌ Поддерживаются только PDF/DOC/DOCX")
+#
+#         temp_name = f"temp_{uuid.uuid4()}{ext}"
+#         temp_path = os.path.join(UPLOAD_FOLDER, temp_name)
+#
+#         # Запись файла с проверкой
+#         with open(temp_path, 'wb') as f:
+#             f.write(file_content)
+#
+#         if not os.path.exists(temp_path):
+#             raise ValueError("❌ Файл не сохранился на диск")
+#
+#         pages = await asyncio.to_thread(get_page_count, temp_path, ext)
+#         if pages < 1:
+#             raise ValueError("⚠️ Невозможно определить количество страниц")
+#
+#         await state.update_data({
+#             'temp_file': temp_path,
+#             'pages': pages,
+#             'file_extension': ext[1:],
+#             'filename': message.document.file_name
+#         })
+#
+#         markup = ReplyKeyboardMarkup(
+#             keyboard=[[KeyboardButton(text="Черно-белая"), KeyboardButton(text="Цветная")]],
+#             resize_keyboard=True
+#         )
+#         await message.answer(f"📄 Страниц: {pages}\nВыберите тип печати:", reply_markup=markup)
+#         await state.set_state(Form.color_selection)
+#
+#     except Exception as e:
+#         logging.error(f"Ошибка обработки файла: {traceback.format_exc()}")
+#         await message.answer("❌ Ошибка обработки файла!")
+#         await state.clear()
+#     finally:
+#         await bot.delete_message(message.chat.id, processing_msg.message_id)
+#
+#
+# @dp.message(Form.color_selection)
+# async def process_color(message: types.Message, state: FSMContext):
+#     user_data = await state.get_data()
+#     color = message.text.lower()
+#     if color not in ['черно-белая', 'цветная']:
+#         markup = ReplyKeyboardMarkup(
+#             keyboard=[[KeyboardButton(text="Черно-белая"), KeyboardButton(text="Цветная")]],
+#             resize_keyboard=True
+#         )
+#         await message.answer("❌ Неверный тип печати! Выберите вариант из кнопок ниже:", reply_markup=markup)
+#         return
+#
+#     price = user_data['shop']['price_bw'] if color == 'черно-белая' else user_data['shop']['price_cl']
+#     total_price = round(price * user_data['pages'], 2)
+#     await state.update_data(color=color, price=total_price)
+#
+#     await message.answer("📝 Введите комментарий ($ для пропуска):", reply_markup=types.ReplyKeyboardRemove())
+#     await state.set_state(Form.comment)
+#
+#
+# @dp.message(Form.comment)
+# async def process_comment(message: types.Message, state: FSMContext):
+#     comment = message.text if message.text != '$' else ''
+#     await state.update_data(comment=comment)
+#     user_data = await state.get_data()
+#
+#     response = (
+#         f"🔍 Подтвердите заказ:\n"
+#         f"• Точка: {user_data['shop']['name']} по адресу {user_data['shop']['address']}\n"
+#         f"• Страниц: {user_data['pages']}\n"
+#         f"• Тип: {user_data['color']}\n"
+#         f"• Стоимость: {user_data['price']:.2f} руб\n"
+#         f"• Комментарий: {comment if comment else 'нет'}"
+#     )
+#
+#     markup = ReplyKeyboardMarkup(
+#         keyboard=[[KeyboardButton(text="Подтвердить"), KeyboardButton(text="Отменить")]],
+#         resize_keyboard=True,
+#         one_time_keyboard=True
+#     )
+#     await message.answer(response, reply_markup=markup)
+#     await state.set_state(Form.confirmation)
+#
+#
+# @dp.message(Form.confirmation)
+# async def process_confirmation(message: types.Message, state: FSMContext):
+#     if message.text == 'Отменить':
+#         await message.answer("❌ Заказ отменен", reply_markup=types.ReplyKeyboardRemove())
+#         await state.clear()
+#         return
+#
+#     user_data = await state.get_data()
+#     check_code = random.randint(100000, 999999)
+#
+#     try:
+#         async with aiohttp.ClientSession() as session:
+#             form_data = aiohttp.FormData()
+#             form_data.add_field('ID_shop', str(user_data['shop']['ID_shop']))
+#             form_data.add_field('price', str(user_data['price']))
+#             form_data.add_field('pages', str(user_data['pages']))
+#             form_data.add_field('color', user_data['color'])
+#             form_data.add_field('user_id', str(message.chat.id))
+#             form_data.add_field('note', user_data.get('comment', ''))
+#             form_data.add_field('file_extension', user_data['file_extension'])
+#             form_data.add_field('con_code', str(check_code))
+#
+#             with open(user_data['temp_file'], 'rb') as file:
+#                 form_data.add_field('file', file.read(), filename=user_data['filename'])
+#
+#             async with session.post(f"{API_URL}/orders", data=form_data) as resp:
+#                 if resp.status == 201:
+#                     data = await resp.json()
+#                     await message.answer(
+#                         f"✅ Заказ №{data['order_id']} принят! Проверочный код: {check_code}",
+#                         reply_markup=types.ReplyKeyboardRemove()
+#                     )
+#                 else:
+#                     await message.answer("❌ Ошибка подтверждения заказа")
+#     except Exception as e:
+#         await message.answer("❌ Ошибка создания заказа")
+#         logging.error(f"Ошибка подтверждения: {traceback.format_exc()}")
+#     finally:
+#         if 'temp_file' in user_data:
+#             try:
+#                 os.remove(user_data['temp_file'])  # Файл мог не сохраниться
+#             except FileNotFoundError:
+#                 pass  # Игнорируем ошибку, если файл уже удален
+#             except Exception as e:
+#                 logging.error(f"Ошибка удаления temp_file: {str(e)}")
+#
+#
+# @dp.message()
+# async def handle_unknown(message: types.Message):
+#     await message.reply("Не понимаю тебя, попробуй повторить запрос ☺️")
+#
+#
+# async def main():
+#     try:
+#         await dp.start_polling(bot, handle_signals=True)
+#     except KeyboardInterrupt:
+#         logging.info("Бот остановлен")
+#     finally:
+#         await bot.session.close()
+#
+#
+# if __name__ == "__main__":
+#     asyncio.run(main())
