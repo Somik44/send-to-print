@@ -4,10 +4,11 @@ import requests
 import logging
 from PyQt5.QtCore import QThread, pyqtSignal, Qt, QTimer, QObject
 import hashlib
-from PyQt5.QtWidgets import (QApplication, QWidget, QVBoxLayout, QListWidget, QPushButton,
-                            QLabel, QMessageBox, QHBoxLayout, QListWidgetItem,
-                            QLineEdit, QDialog, QDialogButtonBox, QFormLayout, QListWidgetItem, QSpacerItem, QSizePolicy)
-from PyQt5.QtCore import QThread, pyqtSignal, Qt
+from PyQt5.QtWidgets import (
+    QApplication, QWidget, QVBoxLayout, QListWidget, QPushButton,
+    QLabel, QMessageBox, QHBoxLayout, QListWidgetItem,
+    QLineEdit, QDialog, QDialogButtonBox, QFormLayout, QSpacerItem, QSizePolicy
+)
 from PyQt5.QtGui import QIcon, QFont
 
 API_URL = "http://localhost:5000"
@@ -25,16 +26,12 @@ class LoginDialog(QDialog):
         super().__init__(parent)
         self.setWindowTitle('Авторизация')
         self.setFixedSize(300, 150)
-
         layout = QFormLayout(self)
-
         self.password_input = QLineEdit()
         self.password_input.setEchoMode(QLineEdit.Password)
-
         buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
         buttons.accepted.connect(self.verify_password)
         buttons.rejected.connect(self.reject)
-
         layout.addRow("Пароль:", self.password_input)
         layout.addRow(buttons)
 
@@ -43,44 +40,18 @@ class LoginDialog(QDialog):
         if not password:
             QMessageBox.warning(self, "Ошибка", "Введите пароль")
             return
-
         try:
-            # Хэшируем введенный пароль
             hashed_password = hashlib.sha256(password.encode()).hexdigest()
-
-            # Проверяем доступность сервера
-            try:
-                response = requests.get(f"{API_URL}/api/shop/password", timeout=5)
-                if not response.ok:
-                    raise ConnectionError("Сервер недоступен")
-            except:
-                raise ConnectionError("Не удалось подключиться к серверу")
-
-            # Получаем список всех паролей из БД
-            try:
-                response = requests.get(f"{API_URL}/api/shop/password", timeout=10)
-                if response.ok:
-                    shop_passwords = response.json()
-                    if isinstance(shop_passwords, dict) and shop_passwords.get('status') == 'error':
-                        raise ValueError(shop_passwords.get('message', 'Ошибка сервера'))
-
-                    # Проверяем, есть ли совпадение хэшей
-                    if any(hashed_password == shop_pwd for shop_pwd in shop_passwords):
-                        self.accept()
-                    else:
-                        QMessageBox.critical(self, "Ошибка", "Неверный пароль")
-                else:
-                    QMessageBox.critical(self, "Ошибка", f"Ошибка сервера: {response.status_code}")
-            except ValueError as ve:
-                QMessageBox.critical(self, "Ошибка", f"Ошибка данных: {str(ve)}")
-            except Exception as e:
-                QMessageBox.critical(self, "Ошибка", f"Ошибка запроса: {str(e)}")
-
-        except ConnectionError as ce:
-            QMessageBox.critical(self, "Ошибка подключения", f"Не удалось подключиться к серверу: {str(ce)}")
+            response = requests.get(f"{API_URL}/shop/password")
+            if not response.ok:
+                raise ConnectionError("Сервер недоступен")
+            shop_passwords = response.json()
+            if any(hashed_password == pwd for pwd in shop_passwords):
+                self.accept()
+            else:
+                QMessageBox.critical(self, "Ошибка", "Неверный пароль")
         except Exception as e:
-            logging.error(f"Ошибка проверки пароля: {str(e)}")
-            QMessageBox.critical(self, "Ошибка", "Произошла непредвиденная ошибка")
+            QMessageBox.critical(self, "Ошибка", f"Ошибка подключения: {str(e)}")
 
 class OrderLoader(QThread):
     data_loaded = pyqtSignal(list)
@@ -88,11 +59,7 @@ class OrderLoader(QThread):
 
     def run(self):
         try:
-            response = requests.get(
-                f"{API_URL}/orders",
-                params={'status[]': ['получен', 'готов']},
-                timeout=10
-            )
+            response = requests.get(f"{API_URL}/orders", params={'status[]': ['получен', 'готов']})
             if response.status_code == 200:
                 self.data_loaded.emit(response.json())
             else:
@@ -106,11 +73,7 @@ class OrderUpdater(QObject):
 
     def update_status(self, order_id, new_status):
         try:
-            response = requests.post(
-                f"{API_URL}/order?id={order_id}",
-                json={'status': new_status},
-                timeout=10
-            )
+            response = requests.post(f"{API_URL}/order?id={order_id}", json={'status': new_status})
             if response.status_code == 200:
                 self.finished.emit(True)
             else:
@@ -140,25 +103,19 @@ class FileReceiverApp(QWidget):
         self.setWindowIcon(QIcon("logo.png"))
         self.setWindowTitle('Send to print and pick up!')
         self.setFixedSize(1000, 800)
-
         main_layout = QVBoxLayout()
         control_layout = QHBoxLayout()
-
         self.refresh_btn = QPushButton("Обновить список")
         self.refresh_btn.clicked.connect(self.load_orders)
-
         control_layout.addWidget(self.refresh_btn)
         control_layout.addItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
-
         self.received_list = QListWidget()
         self.ready_list = QListWidget()
-
         main_layout.addLayout(control_layout)
         main_layout.addWidget(QLabel('Полученные файлы:'))
         main_layout.addWidget(self.received_list)
         main_layout.addWidget(QLabel('Готовые к выдаче:'))
         main_layout.addWidget(self.ready_list)
-
         self.setLayout(main_layout)
 
     def load_orders(self):
@@ -170,7 +127,6 @@ class FileReceiverApp(QWidget):
     def update_lists(self, orders):
         self.received_list.clear()
         self.ready_list.clear()
-
         for order in orders:
             if order['status'] == 'получен':
                 self.add_received_order(order)
@@ -181,42 +137,32 @@ class FileReceiverApp(QWidget):
         item = QListWidgetItem()
         widget = QWidget()
         layout = QHBoxLayout()
-
         label = QLabel(f"Заказ №{order['ID']}: {order['file_path']}")
         label.setStyleSheet("color: red;")
-
         btn_print = QPushButton("Печать")
         btn_print.clicked.connect(lambda: self.print_file(order))
-
         btn_ready = QPushButton("Готово")
         btn_ready.clicked.connect(lambda: self.update_status(order['ID'], 'готов'))
-
         layout.addWidget(label)
         layout.addWidget(btn_print)
         layout.addWidget(btn_ready)
         widget.setLayout(layout)
-
         item.setSizeHint(widget.sizeHint())
         self.received_list.addItem(item)
         self.received_list.setItemWidget(item, widget)
-
         self.download_file(order['file_path'])
 
     def add_ready_order(self, order):
         item = QListWidgetItem()
         widget = QWidget()
         layout = QHBoxLayout()
-
         label = QLabel(f"Заказ №{order['ID']}: {order['file_path']}")
         label.setStyleSheet("color: green;")
-
         btn_complete = QPushButton("Выдать")
         btn_complete.clicked.connect(lambda: self.update_status(order['ID'], 'выдан'))
-
         layout.addWidget(label)
         layout.addWidget(btn_complete)
         widget.setLayout(layout)
-
         item.setSizeHint(widget.sizeHint())
         self.ready_list.addItem(item)
         self.ready_list.setItemWidget(item, widget)
@@ -225,7 +171,7 @@ class FileReceiverApp(QWidget):
         try:
             filepath = os.path.join(DOWNLOAD_DIR, filename)
             if not os.path.exists(filepath):
-                response = requests.get(f"{API_URL}/api/files/{filename}", stream=True)
+                response = requests.get(f"{API_URL}/files/{filename}", stream=True)
                 response.raise_for_status()
                 with open(filepath, 'wb') as f:
                     for chunk in response.iter_content(8192):
@@ -260,8 +206,6 @@ class FileReceiverApp(QWidget):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-
-    # Показываем диалог входа
     login = LoginDialog()
     if login.exec_() == QDialog.Accepted:
         window = FileReceiverApp()
