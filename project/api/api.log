@@ -1,373 +1,97 @@
-2025-04-22 00:36:45,096 - DEBUG - Using proactor: IocpProactor
-2025-04-22 00:36:59,566 - INFO - Обновление статуса заказа 2 на готов
-2025-04-22 00:36:59,574 - ERROR - Ошибка обновления: 404: Заказ не найден
-2025-04-22 00:37:07,270 - INFO - Обновление статуса заказа 4 на готов
-2025-04-22 00:37:07,277 - ERROR - Ошибка обновления: 404: Заказ не найден
-2025-04-22 00:37:19,628 - INFO - Обновление статуса заказа 1 на выдан
-2025-04-22 00:37:19,670 - ERROR - Ошибка обновления: 404: Заказ не найден
-2025-04-22 00:40:43,026 - DEBUG - Using proactor: IocpProactor
-2025-04-22 00:42:16,608 - DEBUG - Calling on_part_begin with no data
-2025-04-22 00:42:16,609 - DEBUG - Calling on_header_field with data[36:48]
-2025-04-22 00:42:16,609 - DEBUG - Calling on_header_value with data[50:75]
-2025-04-22 00:42:16,609 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:42:16,609 - DEBUG - Calling on_header_field with data[77:96]
-2025-04-22 00:42:16,609 - DEBUG - Calling on_header_value with data[98:123]
-2025-04-22 00:42:16,609 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:42:16,609 - DEBUG - Calling on_headers_finished with no data
-2025-04-22 00:42:16,609 - DEBUG - Calling on_part_data with data[127:128]
-2025-04-22 00:42:16,609 - DEBUG - Calling on_part_end with no data
-2025-04-22 00:42:16,609 - DEBUG - Calling on_part_begin with no data
-2025-04-22 00:42:16,610 - DEBUG - Calling on_header_field with data[166:178]
-2025-04-22 00:42:16,610 - DEBUG - Calling on_header_value with data[180:205]
-2025-04-22 00:42:16,610 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:42:16,610 - DEBUG - Calling on_header_field with data[207:226]
-2025-04-22 00:42:16,610 - DEBUG - Calling on_header_value with data[228:251]
-2025-04-22 00:42:16,610 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:42:16,610 - DEBUG - Calling on_headers_finished with no data
-2025-04-22 00:42:16,610 - DEBUG - Calling on_part_data with data[255:258]
-2025-04-22 00:42:16,610 - DEBUG - Calling on_part_end with no data
-2025-04-22 00:42:16,610 - DEBUG - Calling on_part_begin with no data
-2025-04-22 00:42:16,610 - DEBUG - Calling on_header_field with data[296:308]
-2025-04-22 00:42:16,610 - DEBUG - Calling on_header_value with data[310:335]
-2025-04-22 00:42:16,610 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:42:16,610 - DEBUG - Calling on_header_field with data[337:356]
-2025-04-22 00:42:16,610 - DEBUG - Calling on_header_value with data[358:381]
-2025-04-22 00:42:16,610 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:42:16,610 - DEBUG - Calling on_headers_finished with no data
-2025-04-22 00:42:16,611 - DEBUG - Calling on_part_data with data[385:386]
-2025-04-22 00:42:16,611 - DEBUG - Calling on_part_end with no data
-2025-04-22 00:42:16,611 - DEBUG - Calling on_part_begin with no data
-2025-04-22 00:42:16,611 - DEBUG - Calling on_header_field with data[424:436]
-2025-04-22 00:42:16,611 - DEBUG - Calling on_header_value with data[438:463]
-2025-04-22 00:42:16,611 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:42:16,611 - DEBUG - Calling on_header_field with data[465:484]
-2025-04-22 00:42:16,611 - DEBUG - Calling on_header_value with data[486:509]
-2025-04-22 00:42:16,611 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:42:16,611 - DEBUG - Calling on_headers_finished with no data
-2025-04-22 00:42:16,611 - DEBUG - Calling on_part_data with data[513:534]
-2025-04-22 00:42:16,611 - DEBUG - Calling on_part_end with no data
-2025-04-22 00:42:16,611 - DEBUG - Calling on_part_begin with no data
-2025-04-22 00:42:16,611 - DEBUG - Calling on_header_field with data[572:584]
-2025-04-22 00:42:16,611 - DEBUG - Calling on_header_value with data[586:611]
-2025-04-22 00:42:16,611 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:42:16,611 - DEBUG - Calling on_header_field with data[613:632]
-2025-04-22 00:42:16,611 - DEBUG - Calling on_header_value with data[634:659]
-2025-04-22 00:42:16,612 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:42:16,612 - DEBUG - Calling on_headers_finished with no data
-2025-04-22 00:42:16,612 - DEBUG - Calling on_part_data with data[663:673]
-2025-04-22 00:42:16,612 - DEBUG - Calling on_part_end with no data
-2025-04-22 00:42:16,612 - DEBUG - Calling on_part_begin with no data
-2025-04-22 00:42:16,612 - DEBUG - Calling on_header_field with data[711:723]
-2025-04-22 00:42:16,612 - DEBUG - Calling on_header_value with data[725:750]
-2025-04-22 00:42:16,612 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:42:16,612 - DEBUG - Calling on_header_field with data[752:771]
-2025-04-22 00:42:16,612 - DEBUG - Calling on_header_value with data[773:795]
-2025-04-22 00:42:16,612 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:42:16,612 - DEBUG - Calling on_headers_finished with no data
-2025-04-22 00:42:16,612 - DEBUG - Calling on_part_data with data[799:809]
-2025-04-22 00:42:16,612 - DEBUG - Calling on_part_end with no data
-2025-04-22 00:42:16,612 - DEBUG - Calling on_part_begin with no data
-2025-04-22 00:42:16,612 - DEBUG - Calling on_header_field with data[847:859]
-2025-04-22 00:42:16,614 - DEBUG - Calling on_header_value with data[861:886]
-2025-04-22 00:42:16,614 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:42:16,614 - DEBUG - Calling on_header_field with data[888:907]
-2025-04-22 00:42:16,614 - DEBUG - Calling on_header_value with data[909:941]
-2025-04-22 00:42:16,614 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:42:16,614 - DEBUG - Calling on_headers_finished with no data
-2025-04-22 00:42:16,614 - DEBUG - Calling on_part_data with data[945:948]
-2025-04-22 00:42:16,614 - DEBUG - Calling on_part_end with no data
-2025-04-22 00:42:16,614 - DEBUG - Calling on_part_begin with no data
-2025-04-22 00:42:16,614 - DEBUG - Calling on_header_field with data[986:998]
-2025-04-22 00:42:16,614 - DEBUG - Calling on_header_value with data[1000:1025]
-2025-04-22 00:42:16,614 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:42:16,614 - DEBUG - Calling on_header_field with data[1027:1046]
-2025-04-22 00:42:16,614 - DEBUG - Calling on_header_value with data[1048:1074]
-2025-04-22 00:42:16,614 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:42:16,614 - DEBUG - Calling on_headers_finished with no data
-2025-04-22 00:42:16,614 - DEBUG - Calling on_part_data with data[1078:1084]
-2025-04-22 00:42:16,614 - DEBUG - Calling on_part_end with no data
-2025-04-22 00:42:16,614 - DEBUG - Calling on_part_begin with no data
-2025-04-22 00:42:16,615 - DEBUG - Calling on_header_field with data[1122:1134]
-2025-04-22 00:42:16,615 - DEBUG - Calling on_header_value with data[1136:1160]
-2025-04-22 00:42:16,615 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:42:16,615 - DEBUG - Calling on_header_field with data[1162:1181]
-2025-04-22 00:42:16,615 - DEBUG - Calling on_header_value with data[1183:1367]
-2025-04-22 00:42:16,615 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:42:16,615 - DEBUG - Calling on_headers_finished with no data
-2025-04-22 00:42:16,615 - DEBUG - Calling on_part_data with data[1371:26459]
-2025-04-22 00:42:16,615 - DEBUG - Calling on_part_end with no data
-2025-04-22 00:42:16,615 - DEBUG - Calling on_end with no data
-2025-04-22 00:42:54,182 - DEBUG - Calling on_part_begin with no data
-2025-04-22 00:42:54,182 - DEBUG - Calling on_header_field with data[36:48]
-2025-04-22 00:42:54,182 - DEBUG - Calling on_header_value with data[50:75]
-2025-04-22 00:42:54,182 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:42:54,182 - DEBUG - Calling on_header_field with data[77:96]
-2025-04-22 00:42:54,183 - DEBUG - Calling on_header_value with data[98:123]
-2025-04-22 00:42:54,183 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:42:54,183 - DEBUG - Calling on_headers_finished with no data
-2025-04-22 00:42:54,183 - DEBUG - Calling on_part_data with data[127:128]
-2025-04-22 00:42:54,183 - DEBUG - Calling on_part_end with no data
-2025-04-22 00:42:54,183 - DEBUG - Calling on_part_begin with no data
-2025-04-22 00:42:54,183 - DEBUG - Calling on_header_field with data[166:178]
-2025-04-22 00:42:54,183 - DEBUG - Calling on_header_value with data[180:205]
-2025-04-22 00:42:54,183 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:42:54,183 - DEBUG - Calling on_header_field with data[207:226]
-2025-04-22 00:42:54,183 - DEBUG - Calling on_header_value with data[228:251]
-2025-04-22 00:42:54,183 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:42:54,183 - DEBUG - Calling on_headers_finished with no data
-2025-04-22 00:42:54,183 - DEBUG - Calling on_part_data with data[255:259]
-2025-04-22 00:42:54,184 - DEBUG - Calling on_part_end with no data
-2025-04-22 00:42:54,184 - DEBUG - Calling on_part_begin with no data
-2025-04-22 00:42:54,184 - DEBUG - Calling on_header_field with data[297:309]
-2025-04-22 00:42:54,184 - DEBUG - Calling on_header_value with data[311:336]
-2025-04-22 00:42:54,184 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:42:54,184 - DEBUG - Calling on_header_field with data[338:357]
-2025-04-22 00:42:54,184 - DEBUG - Calling on_header_value with data[359:382]
-2025-04-22 00:42:54,184 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:42:54,184 - DEBUG - Calling on_headers_finished with no data
-2025-04-22 00:42:54,184 - DEBUG - Calling on_part_data with data[386:387]
-2025-04-22 00:42:54,184 - DEBUG - Calling on_part_end with no data
-2025-04-22 00:42:54,184 - DEBUG - Calling on_part_begin with no data
-2025-04-22 00:42:54,184 - DEBUG - Calling on_header_field with data[425:437]
-2025-04-22 00:42:54,184 - DEBUG - Calling on_header_value with data[439:464]
-2025-04-22 00:42:54,184 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:42:54,184 - DEBUG - Calling on_header_field with data[466:485]
-2025-04-22 00:42:54,184 - DEBUG - Calling on_header_value with data[487:510]
-2025-04-22 00:42:54,184 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:42:54,184 - DEBUG - Calling on_headers_finished with no data
-2025-04-22 00:42:54,185 - DEBUG - Calling on_part_data with data[514:528]
-2025-04-22 00:42:54,185 - DEBUG - Calling on_part_end with no data
-2025-04-22 00:42:54,185 - DEBUG - Calling on_part_begin with no data
-2025-04-22 00:42:54,185 - DEBUG - Calling on_header_field with data[566:578]
-2025-04-22 00:42:54,185 - DEBUG - Calling on_header_value with data[580:605]
-2025-04-22 00:42:54,185 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:42:54,185 - DEBUG - Calling on_header_field with data[607:626]
-2025-04-22 00:42:54,185 - DEBUG - Calling on_header_value with data[628:653]
-2025-04-22 00:42:54,185 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:42:54,185 - DEBUG - Calling on_headers_finished with no data
-2025-04-22 00:42:54,185 - DEBUG - Calling on_part_data with data[657:667]
-2025-04-22 00:42:54,185 - DEBUG - Calling on_part_end with no data
-2025-04-22 00:42:54,185 - DEBUG - Calling on_part_begin with no data
-2025-04-22 00:42:54,185 - DEBUG - Calling on_header_field with data[705:717]
-2025-04-22 00:42:54,185 - DEBUG - Calling on_header_value with data[719:744]
-2025-04-22 00:42:54,185 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:42:54,185 - DEBUG - Calling on_header_field with data[746:765]
-2025-04-22 00:42:54,185 - DEBUG - Calling on_header_value with data[767:789]
-2025-04-22 00:42:54,185 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:42:54,186 - DEBUG - Calling on_headers_finished with no data
-2025-04-22 00:42:54,186 - DEBUG - Calling on_part_end with no data
-2025-04-22 00:42:54,186 - DEBUG - Calling on_part_begin with no data
-2025-04-22 00:42:54,186 - DEBUG - Calling on_header_field with data[831:843]
-2025-04-22 00:42:54,186 - DEBUG - Calling on_header_value with data[845:870]
-2025-04-22 00:42:54,186 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:42:54,186 - DEBUG - Calling on_header_field with data[872:891]
-2025-04-22 00:42:54,186 - DEBUG - Calling on_header_value with data[893:925]
-2025-04-22 00:42:54,186 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:42:54,186 - DEBUG - Calling on_headers_finished with no data
-2025-04-22 00:42:54,186 - DEBUG - Calling on_part_data with data[929:932]
-2025-04-22 00:42:54,186 - DEBUG - Calling on_part_end with no data
-2025-04-22 00:42:54,186 - DEBUG - Calling on_part_begin with no data
-2025-04-22 00:42:54,186 - DEBUG - Calling on_header_field with data[970:982]
-2025-04-22 00:42:54,186 - DEBUG - Calling on_header_value with data[984:1009]
-2025-04-22 00:42:54,186 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:42:54,186 - DEBUG - Calling on_header_field with data[1011:1030]
-2025-04-22 00:42:54,186 - DEBUG - Calling on_header_value with data[1032:1058]
-2025-04-22 00:42:54,186 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:42:54,187 - DEBUG - Calling on_headers_finished with no data
-2025-04-22 00:42:54,187 - DEBUG - Calling on_part_data with data[1062:1068]
-2025-04-22 00:42:54,187 - DEBUG - Calling on_part_end with no data
-2025-04-22 00:42:54,187 - DEBUG - Calling on_part_begin with no data
-2025-04-22 00:42:54,187 - DEBUG - Calling on_header_field with data[1106:1118]
-2025-04-22 00:42:54,187 - DEBUG - Calling on_header_value with data[1120:1144]
-2025-04-22 00:42:54,187 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:42:54,187 - DEBUG - Calling on_header_field with data[1146:1165]
-2025-04-22 00:42:54,187 - DEBUG - Calling on_header_value with data[1167:1248]
-2025-04-22 00:42:54,187 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:42:54,187 - DEBUG - Calling on_headers_finished with no data
-2025-04-22 00:42:54,187 - DEBUG - Calling on_part_data with data[1252:31460]
-2025-04-22 00:42:54,187 - DEBUG - Calling on_part_end with no data
-2025-04-22 00:42:54,187 - DEBUG - Calling on_end with no data
-2025-04-22 00:44:35,658 - DEBUG - Calling on_part_begin with no data
-2025-04-22 00:44:35,659 - DEBUG - Calling on_header_field with data[36:48]
-2025-04-22 00:44:35,659 - DEBUG - Calling on_header_value with data[50:75]
-2025-04-22 00:44:35,659 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:44:35,659 - DEBUG - Calling on_header_field with data[77:96]
-2025-04-22 00:44:35,659 - DEBUG - Calling on_header_value with data[98:123]
-2025-04-22 00:44:35,659 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:44:35,659 - DEBUG - Calling on_headers_finished with no data
-2025-04-22 00:44:35,659 - DEBUG - Calling on_part_data with data[127:128]
-2025-04-22 00:44:35,659 - DEBUG - Calling on_part_end with no data
-2025-04-22 00:44:35,659 - DEBUG - Calling on_part_begin with no data
-2025-04-22 00:44:35,659 - DEBUG - Calling on_header_field with data[166:178]
-2025-04-22 00:44:35,659 - DEBUG - Calling on_header_value with data[180:205]
-2025-04-22 00:44:35,659 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:44:35,659 - DEBUG - Calling on_header_field with data[207:226]
-2025-04-22 00:44:35,660 - DEBUG - Calling on_header_value with data[228:251]
-2025-04-22 00:44:35,660 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:44:35,660 - DEBUG - Calling on_headers_finished with no data
-2025-04-22 00:44:35,660 - DEBUG - Calling on_part_data with data[255:259]
-2025-04-22 00:44:35,660 - DEBUG - Calling on_part_end with no data
-2025-04-22 00:44:35,660 - DEBUG - Calling on_part_begin with no data
-2025-04-22 00:44:35,660 - DEBUG - Calling on_header_field with data[297:309]
-2025-04-22 00:44:35,660 - DEBUG - Calling on_header_value with data[311:336]
-2025-04-22 00:44:35,660 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:44:35,660 - DEBUG - Calling on_header_field with data[338:357]
-2025-04-22 00:44:35,660 - DEBUG - Calling on_header_value with data[359:382]
-2025-04-22 00:44:35,660 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:44:35,660 - DEBUG - Calling on_headers_finished with no data
-2025-04-22 00:44:35,660 - DEBUG - Calling on_part_data with data[386:387]
-2025-04-22 00:44:35,660 - DEBUG - Calling on_part_end with no data
-2025-04-22 00:44:35,660 - DEBUG - Calling on_part_begin with no data
-2025-04-22 00:44:35,660 - DEBUG - Calling on_header_field with data[425:437]
-2025-04-22 00:44:35,660 - DEBUG - Calling on_header_value with data[439:464]
-2025-04-22 00:44:35,661 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:44:35,661 - DEBUG - Calling on_header_field with data[466:485]
-2025-04-22 00:44:35,661 - DEBUG - Calling on_header_value with data[487:510]
-2025-04-22 00:44:35,661 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:44:35,661 - DEBUG - Calling on_headers_finished with no data
-2025-04-22 00:44:35,661 - DEBUG - Calling on_part_data with data[514:528]
-2025-04-22 00:44:35,661 - DEBUG - Calling on_part_end with no data
-2025-04-22 00:44:35,661 - DEBUG - Calling on_part_begin with no data
-2025-04-22 00:44:35,661 - DEBUG - Calling on_header_field with data[566:578]
-2025-04-22 00:44:35,661 - DEBUG - Calling on_header_value with data[580:605]
-2025-04-22 00:44:35,661 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:44:35,661 - DEBUG - Calling on_header_field with data[607:626]
-2025-04-22 00:44:35,661 - DEBUG - Calling on_header_value with data[628:653]
-2025-04-22 00:44:35,661 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:44:35,661 - DEBUG - Calling on_headers_finished with no data
-2025-04-22 00:44:35,661 - DEBUG - Calling on_part_data with data[657:667]
-2025-04-22 00:44:35,661 - DEBUG - Calling on_part_end with no data
-2025-04-22 00:44:35,661 - DEBUG - Calling on_part_begin with no data
-2025-04-22 00:44:35,662 - DEBUG - Calling on_header_field with data[705:717]
-2025-04-22 00:44:35,662 - DEBUG - Calling on_header_value with data[719:744]
-2025-04-22 00:44:35,662 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:44:35,662 - DEBUG - Calling on_header_field with data[746:765]
-2025-04-22 00:44:35,662 - DEBUG - Calling on_header_value with data[767:789]
-2025-04-22 00:44:35,662 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:44:35,662 - DEBUG - Calling on_headers_finished with no data
-2025-04-22 00:44:35,662 - DEBUG - Calling on_part_data with data[793:803]
-2025-04-22 00:44:35,662 - DEBUG - Calling on_part_end with no data
-2025-04-22 00:44:35,662 - DEBUG - Calling on_part_begin with no data
-2025-04-22 00:44:35,662 - DEBUG - Calling on_header_field with data[841:853]
-2025-04-22 00:44:35,662 - DEBUG - Calling on_header_value with data[855:880]
-2025-04-22 00:44:35,662 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:44:35,662 - DEBUG - Calling on_header_field with data[882:901]
-2025-04-22 00:44:35,662 - DEBUG - Calling on_header_value with data[903:935]
-2025-04-22 00:44:35,662 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:44:35,662 - DEBUG - Calling on_headers_finished with no data
-2025-04-22 00:44:35,662 - DEBUG - Calling on_part_data with data[939:942]
-2025-04-22 00:44:35,662 - DEBUG - Calling on_part_end with no data
-2025-04-22 00:44:35,662 - DEBUG - Calling on_part_begin with no data
-2025-04-22 00:44:35,663 - DEBUG - Calling on_header_field with data[980:992]
-2025-04-22 00:44:35,663 - DEBUG - Calling on_header_value with data[994:1019]
-2025-04-22 00:44:35,663 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:44:35,663 - DEBUG - Calling on_header_field with data[1021:1040]
-2025-04-22 00:44:35,663 - DEBUG - Calling on_header_value with data[1042:1068]
-2025-04-22 00:44:35,663 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:44:35,663 - DEBUG - Calling on_headers_finished with no data
-2025-04-22 00:44:35,663 - DEBUG - Calling on_part_data with data[1072:1078]
-2025-04-22 00:44:35,663 - DEBUG - Calling on_part_end with no data
-2025-04-22 00:44:35,663 - DEBUG - Calling on_part_begin with no data
-2025-04-22 00:44:35,663 - DEBUG - Calling on_header_field with data[1116:1128]
-2025-04-22 00:44:35,663 - DEBUG - Calling on_header_value with data[1130:1154]
-2025-04-22 00:44:35,663 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:44:35,663 - DEBUG - Calling on_header_field with data[1156:1175]
-2025-04-22 00:44:35,663 - DEBUG - Calling on_header_value with data[1177:1234]
-2025-04-22 00:44:35,663 - DEBUG - Calling on_header_end with no data
-2025-04-22 00:44:35,663 - DEBUG - Calling on_headers_finished with no data
-2025-04-22 00:44:35,663 - DEBUG - Calling on_part_data with data[1238:130560]
-2025-04-22 00:44:35,664 - DEBUG - Calling on_part_data with data[0:51586]
-2025-04-22 00:44:35,665 - DEBUG - Calling on_part_end with no data
-2025-04-22 00:44:35,665 - DEBUG - Calling on_end with no data
-2025-04-22 13:01:56,218 - DEBUG - Using proactor: IocpProactor
-2025-04-22 13:02:53,358 - DEBUG - Calling on_part_begin with no data
-2025-04-22 13:02:53,358 - DEBUG - Calling on_header_field with data[36:48]
-2025-04-22 13:02:53,358 - DEBUG - Calling on_header_value with data[50:75]
-2025-04-22 13:02:53,359 - DEBUG - Calling on_header_end with no data
-2025-04-22 13:02:53,359 - DEBUG - Calling on_header_field with data[77:96]
-2025-04-22 13:02:53,359 - DEBUG - Calling on_header_value with data[98:123]
-2025-04-22 13:02:53,359 - DEBUG - Calling on_header_end with no data
-2025-04-22 13:02:53,359 - DEBUG - Calling on_headers_finished with no data
-2025-04-22 13:02:53,359 - DEBUG - Calling on_part_data with data[127:128]
-2025-04-22 13:02:53,359 - DEBUG - Calling on_part_end with no data
-2025-04-22 13:02:53,359 - DEBUG - Calling on_part_begin with no data
-2025-04-22 13:02:53,359 - DEBUG - Calling on_header_field with data[166:178]
-2025-04-22 13:02:53,359 - DEBUG - Calling on_header_value with data[180:205]
-2025-04-22 13:02:53,359 - DEBUG - Calling on_header_end with no data
-2025-04-22 13:02:53,359 - DEBUG - Calling on_header_field with data[207:226]
-2025-04-22 13:02:53,359 - DEBUG - Calling on_header_value with data[228:251]
-2025-04-22 13:02:53,359 - DEBUG - Calling on_header_end with no data
-2025-04-22 13:02:53,359 - DEBUG - Calling on_headers_finished with no data
-2025-04-22 13:02:53,360 - DEBUG - Calling on_part_data with data[255:259]
-2025-04-22 13:02:53,360 - DEBUG - Calling on_part_end with no data
-2025-04-22 13:02:53,360 - DEBUG - Calling on_part_begin with no data
-2025-04-22 13:02:53,360 - DEBUG - Calling on_header_field with data[297:309]
-2025-04-22 13:02:53,360 - DEBUG - Calling on_header_value with data[311:336]
-2025-04-22 13:02:53,360 - DEBUG - Calling on_header_end with no data
-2025-04-22 13:02:53,360 - DEBUG - Calling on_header_field with data[338:357]
-2025-04-22 13:02:53,360 - DEBUG - Calling on_header_value with data[359:382]
-2025-04-22 13:02:53,360 - DEBUG - Calling on_header_end with no data
-2025-04-22 13:02:53,360 - DEBUG - Calling on_headers_finished with no data
-2025-04-22 13:02:53,360 - DEBUG - Calling on_part_data with data[386:387]
-2025-04-22 13:02:53,360 - DEBUG - Calling on_part_end with no data
-2025-04-22 13:02:53,360 - DEBUG - Calling on_part_begin with no data
-2025-04-22 13:02:53,360 - DEBUG - Calling on_header_field with data[425:437]
-2025-04-22 13:02:53,360 - DEBUG - Calling on_header_value with data[439:464]
-2025-04-22 13:02:53,360 - DEBUG - Calling on_header_end with no data
-2025-04-22 13:02:53,360 - DEBUG - Calling on_header_field with data[466:485]
-2025-04-22 13:02:53,360 - DEBUG - Calling on_header_value with data[487:510]
-2025-04-22 13:02:53,360 - DEBUG - Calling on_header_end with no data
-2025-04-22 13:02:53,361 - DEBUG - Calling on_headers_finished with no data
-2025-04-22 13:02:53,361 - DEBUG - Calling on_part_data with data[514:528]
-2025-04-22 13:02:53,361 - DEBUG - Calling on_part_end with no data
-2025-04-22 13:02:53,361 - DEBUG - Calling on_part_begin with no data
-2025-04-22 13:02:53,361 - DEBUG - Calling on_header_field with data[566:578]
-2025-04-22 13:02:53,361 - DEBUG - Calling on_header_value with data[580:605]
-2025-04-22 13:02:53,361 - DEBUG - Calling on_header_end with no data
-2025-04-22 13:02:53,361 - DEBUG - Calling on_header_field with data[607:626]
-2025-04-22 13:02:53,361 - DEBUG - Calling on_header_value with data[628:653]
-2025-04-22 13:02:53,361 - DEBUG - Calling on_header_end with no data
-2025-04-22 13:02:53,361 - DEBUG - Calling on_headers_finished with no data
-2025-04-22 13:02:53,361 - DEBUG - Calling on_part_data with data[657:667]
-2025-04-22 13:02:53,361 - DEBUG - Calling on_part_end with no data
-2025-04-22 13:02:53,361 - DEBUG - Calling on_part_begin with no data
-2025-04-22 13:02:53,361 - DEBUG - Calling on_header_field with data[705:717]
-2025-04-22 13:02:53,361 - DEBUG - Calling on_header_value with data[719:744]
-2025-04-22 13:02:53,362 - DEBUG - Calling on_header_end with no data
-2025-04-22 13:02:53,362 - DEBUG - Calling on_header_field with data[746:765]
-2025-04-22 13:02:53,362 - DEBUG - Calling on_header_value with data[767:789]
-2025-04-22 13:02:53,362 - DEBUG - Calling on_header_end with no data
-2025-04-22 13:02:53,362 - DEBUG - Calling on_headers_finished with no data
-2025-04-22 13:02:53,362 - DEBUG - Calling on_part_data with data[793:799]
-2025-04-22 13:02:53,362 - DEBUG - Calling on_part_end with no data
-2025-04-22 13:02:53,362 - DEBUG - Calling on_part_begin with no data
-2025-04-22 13:02:53,362 - DEBUG - Calling on_header_field with data[837:849]
-2025-04-22 13:02:53,362 - DEBUG - Calling on_header_value with data[851:876]
-2025-04-22 13:02:53,362 - DEBUG - Calling on_header_end with no data
-2025-04-22 13:02:53,362 - DEBUG - Calling on_header_field with data[878:897]
-2025-04-22 13:02:53,362 - DEBUG - Calling on_header_value with data[899:931]
-2025-04-22 13:02:53,362 - DEBUG - Calling on_header_end with no data
-2025-04-22 13:02:53,362 - DEBUG - Calling on_headers_finished with no data
-2025-04-22 13:02:53,362 - DEBUG - Calling on_part_data with data[935:938]
-2025-04-22 13:02:53,362 - DEBUG - Calling on_part_end with no data
-2025-04-22 13:02:53,362 - DEBUG - Calling on_part_begin with no data
-2025-04-22 13:02:53,362 - DEBUG - Calling on_header_field with data[976:988]
-2025-04-22 13:02:53,362 - DEBUG - Calling on_header_value with data[990:1015]
-2025-04-22 13:02:53,363 - DEBUG - Calling on_header_end with no data
-2025-04-22 13:02:53,363 - DEBUG - Calling on_header_field with data[1017:1036]
-2025-04-22 13:02:53,363 - DEBUG - Calling on_header_value with data[1038:1064]
-2025-04-22 13:02:53,363 - DEBUG - Calling on_header_end with no data
-2025-04-22 13:02:53,363 - DEBUG - Calling on_headers_finished with no data
-2025-04-22 13:02:53,363 - DEBUG - Calling on_part_data with data[1068:1074]
-2025-04-22 13:02:53,363 - DEBUG - Calling on_part_end with no data
-2025-04-22 13:02:53,363 - DEBUG - Calling on_part_begin with no data
-2025-04-22 13:02:53,363 - DEBUG - Calling on_header_field with data[1112:1124]
-2025-04-22 13:02:53,363 - DEBUG - Calling on_header_value with data[1126:1150]
-2025-04-22 13:02:53,363 - DEBUG - Calling on_header_end with no data
-2025-04-22 13:02:53,363 - DEBUG - Calling on_header_field with data[1152:1171]
-2025-04-22 13:02:53,363 - DEBUG - Calling on_header_value with data[1173:1254]
-2025-04-22 13:02:53,363 - DEBUG - Calling on_header_end with no data
-2025-04-22 13:02:53,363 - DEBUG - Calling on_headers_finished with no data
-2025-04-22 13:02:53,363 - DEBUG - Calling on_part_data with data[1258:31466]
-2025-04-22 13:02:53,363 - DEBUG - Calling on_part_end with no data
-2025-04-22 13:02:53,363 - DEBUG - Calling on_end with no data
+2025-04-22 15:04:23,310 - DEBUG - Using proactor: IocpProactor
+2025-04-22 15:09:08,765 - DEBUG - Using proactor: IocpProactor
+2025-04-22 15:18:10,017 - DEBUG - Using proactor: IocpProactor
+2025-04-22 15:32:37,027 - DEBUG - Using proactor: IocpProactor
+2025-04-22 15:34:13,352 - DEBUG - Using proactor: IocpProactor
+2025-04-22 15:40:39,060 - DEBUG - Using proactor: IocpProactor
+2025-04-22 15:42:20,037 - DEBUG - Using proactor: IocpProactor
+2025-04-22 15:43:40,597 - DEBUG - Calling on_part_begin with no data
+2025-04-22 15:43:40,597 - DEBUG - Calling on_header_field with data[36:48]
+2025-04-22 15:43:40,597 - DEBUG - Calling on_header_value with data[50:75]
+2025-04-22 15:43:40,597 - DEBUG - Calling on_header_end with no data
+2025-04-22 15:43:40,597 - DEBUG - Calling on_header_field with data[77:96]
+2025-04-22 15:43:40,597 - DEBUG - Calling on_header_value with data[98:123]
+2025-04-22 15:43:40,597 - DEBUG - Calling on_header_end with no data
+2025-04-22 15:43:40,598 - DEBUG - Calling on_headers_finished with no data
+2025-04-22 15:43:40,598 - DEBUG - Calling on_part_data with data[127:128]
+2025-04-22 15:43:40,598 - DEBUG - Calling on_part_end with no data
+2025-04-22 15:43:40,598 - DEBUG - Calling on_part_begin with no data
+2025-04-22 15:43:40,598 - DEBUG - Calling on_header_field with data[166:178]
+2025-04-22 15:43:40,598 - DEBUG - Calling on_header_value with data[180:205]
+2025-04-22 15:43:40,598 - DEBUG - Calling on_header_end with no data
+2025-04-22 15:43:40,598 - DEBUG - Calling on_header_field with data[207:226]
+2025-04-22 15:43:40,598 - DEBUG - Calling on_header_value with data[228:251]
+2025-04-22 15:43:40,598 - DEBUG - Calling on_header_end with no data
+2025-04-22 15:43:40,598 - DEBUG - Calling on_headers_finished with no data
+2025-04-22 15:43:40,598 - DEBUG - Calling on_part_data with data[255:259]
+2025-04-22 15:43:40,599 - DEBUG - Calling on_part_end with no data
+2025-04-22 15:43:40,599 - DEBUG - Calling on_part_begin with no data
+2025-04-22 15:43:40,599 - DEBUG - Calling on_header_field with data[297:309]
+2025-04-22 15:43:40,599 - DEBUG - Calling on_header_value with data[311:336]
+2025-04-22 15:43:40,599 - DEBUG - Calling on_header_end with no data
+2025-04-22 15:43:40,599 - DEBUG - Calling on_header_field with data[338:357]
+2025-04-22 15:43:40,599 - DEBUG - Calling on_header_value with data[359:382]
+2025-04-22 15:43:40,599 - DEBUG - Calling on_header_end with no data
+2025-04-22 15:43:40,599 - DEBUG - Calling on_headers_finished with no data
+2025-04-22 15:43:40,599 - DEBUG - Calling on_part_data with data[386:387]
+2025-04-22 15:43:40,599 - DEBUG - Calling on_part_end with no data
+2025-04-22 15:43:40,599 - DEBUG - Calling on_part_begin with no data
+2025-04-22 15:43:40,599 - DEBUG - Calling on_header_field with data[425:437]
+2025-04-22 15:43:40,599 - DEBUG - Calling on_header_value with data[439:464]
+2025-04-22 15:43:40,599 - DEBUG - Calling on_header_end with no data
+2025-04-22 15:43:40,599 - DEBUG - Calling on_header_field with data[466:485]
+2025-04-22 15:43:40,600 - DEBUG - Calling on_header_value with data[487:510]
+2025-04-22 15:43:40,600 - DEBUG - Calling on_header_end with no data
+2025-04-22 15:43:40,600 - DEBUG - Calling on_headers_finished with no data
+2025-04-22 15:43:40,600 - DEBUG - Calling on_part_data with data[514:528]
+2025-04-22 15:43:40,600 - DEBUG - Calling on_part_end with no data
+2025-04-22 15:43:40,600 - DEBUG - Calling on_part_begin with no data
+2025-04-22 15:43:40,600 - DEBUG - Calling on_header_field with data[566:578]
+2025-04-22 15:43:40,600 - DEBUG - Calling on_header_value with data[580:605]
+2025-04-22 15:43:40,600 - DEBUG - Calling on_header_end with no data
+2025-04-22 15:43:40,600 - DEBUG - Calling on_header_field with data[607:626]
+2025-04-22 15:43:40,600 - DEBUG - Calling on_header_value with data[628:653]
+2025-04-22 15:43:40,600 - DEBUG - Calling on_header_end with no data
+2025-04-22 15:43:40,600 - DEBUG - Calling on_headers_finished with no data
+2025-04-22 15:43:40,600 - DEBUG - Calling on_part_data with data[657:667]
+2025-04-22 15:43:40,601 - DEBUG - Calling on_part_end with no data
+2025-04-22 15:43:40,634 - DEBUG - Calling on_part_begin with no data
+2025-04-22 15:43:40,634 - DEBUG - Calling on_header_field with data[705:717]
+2025-04-22 15:43:40,634 - DEBUG - Calling on_header_value with data[719:744]
+2025-04-22 15:43:40,634 - DEBUG - Calling on_header_end with no data
+2025-04-22 15:43:40,634 - DEBUG - Calling on_header_field with data[746:765]
+2025-04-22 15:43:40,634 - DEBUG - Calling on_header_value with data[767:789]
+2025-04-22 15:43:40,635 - DEBUG - Calling on_header_end with no data
+2025-04-22 15:43:40,635 - DEBUG - Calling on_headers_finished with no data
+2025-04-22 15:43:40,635 - DEBUG - Calling on_part_end with no data
+2025-04-22 15:43:40,635 - DEBUG - Calling on_part_begin with no data
+2025-04-22 15:43:40,635 - DEBUG - Calling on_header_field with data[831:843]
+2025-04-22 15:43:40,635 - DEBUG - Calling on_header_value with data[845:870]
+2025-04-22 15:43:40,635 - DEBUG - Calling on_header_end with no data
+2025-04-22 15:43:40,635 - DEBUG - Calling on_header_field with data[872:891]
+2025-04-22 15:43:40,635 - DEBUG - Calling on_header_value with data[893:925]
+2025-04-22 15:43:40,635 - DEBUG - Calling on_header_end with no data
+2025-04-22 15:43:40,635 - DEBUG - Calling on_headers_finished with no data
+2025-04-22 15:43:40,635 - DEBUG - Calling on_part_data with data[929:932]
+2025-04-22 15:43:40,636 - DEBUG - Calling on_part_end with no data
+2025-04-22 15:43:40,636 - DEBUG - Calling on_part_begin with no data
+2025-04-22 15:43:40,636 - DEBUG - Calling on_header_field with data[970:982]
+2025-04-22 15:43:40,636 - DEBUG - Calling on_header_value with data[984:1009]
+2025-04-22 15:43:40,636 - DEBUG - Calling on_header_end with no data
+2025-04-22 15:43:40,636 - DEBUG - Calling on_header_field with data[1011:1030]
+2025-04-22 15:43:40,636 - DEBUG - Calling on_header_value with data[1032:1058]
+2025-04-22 15:43:40,636 - DEBUG - Calling on_header_end with no data
+2025-04-22 15:43:40,636 - DEBUG - Calling on_headers_finished with no data
+2025-04-22 15:43:40,636 - DEBUG - Calling on_part_data with data[1062:1068]
+2025-04-22 15:43:40,636 - DEBUG - Calling on_part_end with no data
+2025-04-22 15:43:40,636 - DEBUG - Calling on_part_begin with no data
+2025-04-22 15:43:40,636 - DEBUG - Calling on_header_field with data[1106:1118]
+2025-04-22 15:43:40,636 - DEBUG - Calling on_header_value with data[1120:1144]
+2025-04-22 15:43:40,636 - DEBUG - Calling on_header_end with no data
+2025-04-22 15:43:40,636 - DEBUG - Calling on_header_field with data[1146:1165]
+2025-04-22 15:43:40,637 - DEBUG - Calling on_header_value with data[1167:1248]
+2025-04-22 15:43:40,637 - DEBUG - Calling on_header_end with no data
+2025-04-22 15:43:40,637 - DEBUG - Calling on_headers_finished with no data
+2025-04-22 15:43:40,637 - DEBUG - Calling on_part_data with data[1252:31460]
+2025-04-22 15:43:40,637 - DEBUG - Calling on_part_end with no data
+2025-04-22 15:43:40,637 - DEBUG - Calling on_end with no data

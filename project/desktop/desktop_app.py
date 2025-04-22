@@ -2,12 +2,12 @@ import sys
 import os
 import requests
 import logging
-from PyQt5.QtWidgets import (
-    QApplication, QWidget, QVBoxLayout, QListWidget,
-    QPushButton, QLabel, QMessageBox, QHBoxLayout,
-    QListWidgetItem, QSpacerItem, QSizePolicy
-)
 from PyQt5.QtCore import QThread, pyqtSignal, Qt, QTimer, QObject
+import hashlib
+from PyQt5.QtWidgets import (QApplication, QWidget, QVBoxLayout, QListWidget, QPushButton,
+                            QLabel, QMessageBox, QHBoxLayout, QListWidgetItem,
+                            QLineEdit, QDialog, QDialogButtonBox, QFormLayout, QListWidgetItem, QSpacerItem, QSizePolicy)
+from PyQt5.QtCore import QThread, pyqtSignal, Qt
 from PyQt5.QtGui import QIcon, QFont
 
 API_URL = "http://localhost:5000"
@@ -19,6 +19,68 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s",
     filename='desktop_app.log'
 )
+
+class LoginDialog(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle('Авторизация')
+        self.setFixedSize(300, 150)
+
+        layout = QFormLayout(self)
+
+        self.password_input = QLineEdit()
+        self.password_input.setEchoMode(QLineEdit.Password)
+
+        buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        buttons.accepted.connect(self.verify_password)
+        buttons.rejected.connect(self.reject)
+
+        layout.addRow("Пароль:", self.password_input)
+        layout.addRow(buttons)
+
+    def verify_password(self):
+        password = self.password_input.text()
+        if not password:
+            QMessageBox.warning(self, "Ошибка", "Введите пароль")
+            return
+
+        try:
+            # Хэшируем введенный пароль
+            hashed_password = hashlib.sha256(password.encode()).hexdigest()
+
+            # Проверяем доступность сервера
+            try:
+                response = requests.get(f"{API_URL}/api/shop/password", timeout=5)
+                if not response.ok:
+                    raise ConnectionError("Сервер недоступен")
+            except:
+                raise ConnectionError("Не удалось подключиться к серверу")
+
+            # Получаем список всех паролей из БД
+            try:
+                response = requests.get(f"{API_URL}/api/shop/password", timeout=10)
+                if response.ok:
+                    shop_passwords = response.json()
+                    if isinstance(shop_passwords, dict) and shop_passwords.get('status') == 'error':
+                        raise ValueError(shop_passwords.get('message', 'Ошибка сервера'))
+
+                    # Проверяем, есть ли совпадение хэшей
+                    if any(hashed_password == shop_pwd for shop_pwd in shop_passwords):
+                        self.accept()
+                    else:
+                        QMessageBox.critical(self, "Ошибка", "Неверный пароль")
+                else:
+                    QMessageBox.critical(self, "Ошибка", f"Ошибка сервера: {response.status_code}")
+            except ValueError as ve:
+                QMessageBox.critical(self, "Ошибка", f"Ошибка данных: {str(ve)}")
+            except Exception as e:
+                QMessageBox.critical(self, "Ошибка", f"Ошибка запроса: {str(e)}")
+
+        except ConnectionError as ce:
+            QMessageBox.critical(self, "Ошибка подключения", f"Не удалось подключиться к серверу: {str(ce)}")
+        except Exception as e:
+            logging.error(f"Ошибка проверки пароля: {str(e)}")
+            QMessageBox.critical(self, "Ошибка", "Произошла непредвиденная ошибка")
 
 class OrderLoader(QThread):
     data_loaded = pyqtSignal(list)
@@ -198,6 +260,12 @@ class FileReceiverApp(QWidget):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    window = FileReceiverApp()
-    window.show()
-    sys.exit(app.exec_())
+
+    # Показываем диалог входа
+    login = LoginDialog()
+    if login.exec_() == QDialog.Accepted:
+        window = FileReceiverApp()
+        window.show()
+        sys.exit(app.exec_())
+    else:
+        sys.exit(0)

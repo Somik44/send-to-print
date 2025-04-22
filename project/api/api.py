@@ -226,6 +226,20 @@ async def get_shop(shop_name: str):
         raise HTTPException(500, detail=str(e))
 
 
+@app.get("/api/shop/password")
+async def get_shop_passwords():
+    try:
+        async with app.db_pool.acquire() as conn:
+            async with conn.cursor(aiomysql.DictCursor) as cursor:
+                await cursor.execute("SELECT password FROM shop")
+                passwords = [row['password'] for row in await cursor.fetchall()]
+                return passwords
+
+    except Exception as e:
+        logging.error(f"Error getting shop passwords: {str(e)}")
+        raise HTTPException(500, detail=str(e))
+
+
 @app.get("/api/files/{filename}")
 async def get_file(filename: str):
     file_path = os.path.join(UPLOAD_FOLDER, filename)

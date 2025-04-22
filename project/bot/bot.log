@@ -1,52 +1,27 @@
-2025-04-22 00:36:52,392 - asyncio - DEBUG - Using proactor: IocpProactor
-2025-04-22 00:36:52,393 - aiogram.dispatcher - INFO - Start polling
-2025-04-22 00:36:52,725 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
-2025-04-22 00:38:23,692 - aiogram.dispatcher - INFO - Polling stopped
-2025-04-22 00:38:23,949 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
-2025-04-22 00:40:48,964 - asyncio - DEBUG - Using proactor: IocpProactor
-2025-04-22 00:40:48,964 - aiogram.dispatcher - INFO - Start polling
-2025-04-22 00:40:49,481 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
-2025-04-22 00:41:54,863 - aiogram.event - INFO - Update id=161352813 is handled. Duration 656 ms by bot id=7818669005
-2025-04-22 00:41:55,708 - aiogram.event - INFO - Update id=161352814 is handled. Duration 468 ms by bot id=7818669005
-2025-04-22 00:42:09,667 - aiogram.event - INFO - Update id=161352815 is handled. Duration 6640 ms by bot id=7818669005
-2025-04-22 00:42:11,606 - aiogram.event - INFO - Update id=161352816 is handled. Duration 141 ms by bot id=7818669005
-2025-04-22 00:42:14,410 - aiogram.event - INFO - Update id=161352817 is handled. Duration 140 ms by bot id=7818669005
-2025-04-22 00:42:16,347 - root - INFO - 10-минутный таймер отменен
-2025-04-22 00:42:16,348 - root - INFO - 1-минутный таймер отменен
-2025-04-22 00:42:16,835 - root - INFO - Удален временный файл: D:\projects_py\projectsWithGit\send-to-print\project\api\uploads\temp_9ab361db-8485-42c5-8528-bcd4f24b6d44.doc
-2025-04-22 00:42:16,835 - aiogram.event - INFO - Update id=161352818 is handled. Duration 515 ms by bot id=7818669005
-2025-04-22 00:42:31,785 - aiogram.event - INFO - Update id=161352819 is handled. Duration 515 ms by bot id=7818669005
-2025-04-22 00:42:33,637 - aiogram.event - INFO - Update id=161352820 is handled. Duration 514 ms by bot id=7818669005
-2025-04-22 00:42:44,894 - aiogram.event - INFO - Update id=161352821 is handled. Duration 6344 ms by bot id=7818669005
-2025-04-22 00:42:46,772 - aiogram.event - INFO - Update id=161352822 is handled. Duration 125 ms by bot id=7818669005
-2025-04-22 00:42:51,251 - aiogram.event - INFO - Update id=161352823 is handled. Duration 108 ms by bot id=7818669005
-2025-04-22 00:42:53,912 - root - INFO - 10-минутный таймер отменен
-2025-04-22 00:42:53,912 - root - INFO - 1-минутный таймер отменен
-2025-04-22 00:42:54,417 - root - INFO - Удален временный файл: D:\projects_py\projectsWithGit\send-to-print\project\api\uploads\temp_b9cdcf56-8fab-46b6-8eeb-e3d7d00c3208.doc
-2025-04-22 00:42:54,417 - aiogram.event - INFO - Update id=161352824 is handled. Duration 500 ms by bot id=7818669005
-2025-04-22 00:44:09,373 - aiogram.event - INFO - Update id=161352825 is handled. Duration 514 ms by bot id=7818669005
-2025-04-22 00:44:12,498 - aiogram.event - INFO - Update id=161352826 is handled. Duration 500 ms by bot id=7818669005
-2025-04-22 00:44:28,945 - aiogram.event - INFO - Update id=161352827 is handled. Duration 1547 ms by bot id=7818669005
-2025-04-22 00:44:31,084 - aiogram.event - INFO - Update id=161352828 is handled. Duration 187 ms by bot id=7818669005
-2025-04-22 00:44:33,745 - aiogram.event - INFO - Update id=161352829 is handled. Duration 203 ms by bot id=7818669005
-2025-04-22 00:44:35,391 - root - INFO - 10-минутный таймер отменен
-2025-04-22 00:44:35,391 - root - INFO - 1-минутный таймер отменен
-2025-04-22 00:44:35,897 - root - INFO - Удален временный файл: D:\projects_py\projectsWithGit\send-to-print\project\api\uploads\temp_a5419ade-a8be-45b6-b5bc-2e674a09c157.pdf
-2025-04-22 00:44:35,898 - aiogram.event - INFO - Update id=161352830 is handled. Duration 516 ms by bot id=7818669005
-2025-04-22 00:49:18,343 - aiogram.dispatcher - INFO - Polling stopped
-2025-04-22 00:49:18,613 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
-2025-04-22 13:02:01,494 - asyncio - DEBUG - Using proactor: IocpProactor
-2025-04-22 13:02:01,506 - aiogram.dispatcher - INFO - Start polling
-2025-04-22 13:02:01,934 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
-2025-04-22 13:02:26,302 - aiogram.event - INFO - Update id=161352831 is handled. Duration 561 ms by bot id=7818669005
-2025-04-22 13:02:28,745 - aiogram.event - INFO - Update id=161352832 is handled. Duration 500 ms by bot id=7818669005
-2025-04-22 13:02:30,496 - aiogram.event - INFO - Update id=161352833 is handled. Duration 516 ms by bot id=7818669005
-2025-04-22 13:02:45,917 - aiogram.event - INFO - Update id=161352834 is handled. Duration 7937 ms by bot id=7818669005
-2025-04-22 13:02:47,329 - aiogram.event - INFO - Update id=161352835 is handled. Duration 140 ms by bot id=7818669005
-2025-04-22 13:02:51,612 - aiogram.event - INFO - Update id=161352836 is handled. Duration 141 ms by bot id=7818669005
-2025-04-22 13:02:53,098 - root - INFO - 10-минутный таймер отменен
-2025-04-22 13:02:53,098 - root - INFO - 1-минутный таймер отменен
-2025-04-22 13:02:53,574 - root - INFO - Удален временный файл: D:\projects_py\projectsWithGit\send-to-print\project\api\uploads\temp_69c13607-97fb-4a1e-9639-6cae8cf7d1c2.doc
-2025-04-22 13:02:53,575 - aiogram.event - INFO - Update id=161352837 is handled. Duration 547 ms by bot id=7818669005
-2025-04-22 13:06:03,685 - aiogram.dispatcher - INFO - Polling stopped
-2025-04-22 13:06:03,947 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-04-22 15:04:29,175 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-04-22 15:04:29,211 - aiogram.dispatcher - INFO - Start polling
+2025-04-22 15:04:29,729 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-04-22 15:04:58,980 - aiogram.dispatcher - INFO - Polling stopped
+2025-04-22 15:04:59,245 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-04-22 15:32:41,052 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-04-22 15:32:41,054 - aiogram.dispatcher - INFO - Start polling
+2025-04-22 15:32:41,434 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-04-22 15:34:06,990 - aiogram.dispatcher - INFO - Polling stopped
+2025-04-22 15:34:07,251 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-04-22 15:34:18,786 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-04-22 15:34:18,788 - aiogram.dispatcher - INFO - Start polling
+2025-04-22 15:34:19,092 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-04-22 15:34:57,705 - aiogram.dispatcher - INFO - Polling stopped
+2025-04-22 15:34:57,963 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-04-22 15:43:06,494 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-04-22 15:43:06,495 - aiogram.dispatcher - INFO - Start polling
+2025-04-22 15:43:06,833 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-04-22 15:43:07,715 - aiogram.event - INFO - Update id=161352838 is handled. Duration 593 ms by bot id=7818669005
+2025-04-22 15:43:10,316 - aiogram.event - INFO - Update id=161352839 is handled. Duration 563 ms by bot id=7818669005
+2025-04-22 15:43:29,044 - aiogram.event - INFO - Update id=161352840 is handled. Duration 7000 ms by bot id=7818669005
+2025-04-22 15:43:35,775 - aiogram.event - INFO - Update id=161352841 is handled. Duration 312 ms by bot id=7818669005
+2025-04-22 15:43:38,719 - aiogram.event - INFO - Update id=161352842 is handled. Duration 187 ms by bot id=7818669005
+2025-04-22 15:43:40,325 - root - INFO - 10-минутный таймер отменен
+2025-04-22 15:43:40,325 - root - INFO - 1-минутный таймер отменен
+2025-04-22 15:43:40,790 - root - INFO - Удален временный файл: D:\projects_py\projectsWithGit\send-to-print\project\api\uploads\temp_c826f50f-567b-415e-816b-4cfd2cadffde.doc
+2025-04-22 15:43:40,791 - aiogram.event - INFO - Update id=161352843 is handled. Duration 515 ms by bot id=7818669005
