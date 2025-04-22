@@ -1,6 +1,5 @@
 import sys
-from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
-                             QLabel, QLineEdit, QPushButton, QMessageBox)
+from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QMessageBox)
 from PyQt5.QtCore import Qt
 import pymysql
 from hashlib import sha256
@@ -56,7 +55,7 @@ class ShopApp(QMainWindow):
             label = QLabel(label_text)
             input_field = QLineEdit()
 
-            if len(field) > 2:  # Если есть специальные параметры
+            if len(field) > 2:
                 input_field.setEchoMode(field[2])
 
             setattr(self, attr_name, input_field)

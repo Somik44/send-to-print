@@ -25,22 +25,25 @@ class OrderUpdate(BaseModel):
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # Инициализация пула подключений к MySQL
     app.db_pool = await aiomysql.create_pool(
-        host='localhost',
-        user='root',
-        password='Qwerty123',
-        db='send_to_print',
+        host=os.getenv("DB_HOST", "localhost"),
+        user=os.getenv("DB_USER", "root"),
+        password=os.getenv("DB_PASSWORD", "Qwerty123"),
+        db=os.getenv("DB_NAME", "send_to_print"),
         auth_plugin='mysql_native_password',
         minsize=5,
         maxsize=20
     )
     yield
+    # Закрытие пула при завершении
     app.db_pool.close()
     await app.db_pool.wait_closed()
 
 
 app = FastAPI(lifespan=lifespan)
 
+# Настройка CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -53,10 +56,21 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.mount("/uploads", StaticFiles(directory=UPLOAD_FOLDER), name="uploads")
 
 
-# Orders
-@app.get("/orders")
+@app.get("/orders", response_model=List[dict])
 async def get_orders(status: List[str] = Query(..., alias="status[]")):
+    """
+    Получение заказов по статусам
+    """
     try:
+        allowed_statuses = {'получен', 'готов', 'выдан'}
+        invalid_statuses = [s for s in status if s not in allowed_statuses]
+
+        if invalid_statuses:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Недопустимые статусы: {', '.join(invalid_statuses)}"
+            )
+
         async with app.db_pool.acquire() as conn:
             async with conn.cursor(aiomysql.DictCursor) as cursor:
                 placeholders = ','.join(['%s'] * len(status))
@@ -65,37 +79,60 @@ async def get_orders(status: List[str] = Query(..., alias="status[]")):
                     status
                 )
                 orders = await cursor.fetchall()
+
+                # Конвертация типов
                 for order in orders:
-                    order['price'] = float(order['price'])
+                    order["price"] = float(order["price"])
+                    order["ID"] = int(order["ID"])
+
                 return orders
+
+    except aiomysql.Error as e:
+        logging.error(f"Ошибка БД: {str(e)}")
+        raise HTTPException(500, detail="Ошибка базы данных")
+
     except Exception as e:
-        raise HTTPException(500, detail=str(e))
+        logging.error(f"Неизвестная ошибка: {traceback.format_exc()}")
+        raise HTTPException(500, detail="Внутренняя ошибка сервера")
 
 
 @app.post("/order")
 async def update_order_status(
-        id: int = Query(..., title="ID"),
-        data: dict = Body(...)
+        id: int = Query(..., title="ID заказа"),
+        data: OrderUpdate = Body(...)
 ):
+    """
+    Обновление статуса заказа
+    """
     try:
         async with app.db_pool.acquire() as conn:
             async with conn.cursor() as cursor:
                 await cursor.execute(
                     "UPDATE `order` SET status = %s WHERE ID = %s",
-                    (data['status'], id))
+                    (data.status, id)
+                )
                 await conn.commit()
+
                 if cursor.rowcount == 0:
-                    raise HTTPException(404, detail="Order not found")
-                return {"status": data['status']}
-    except Exception as e:
-        raise HTTPException(500, detail=str(e))
+                    raise HTTPException(404, detail="Заказ не найден")
+
+                return {"status": "success"}
+
+    except aiomysql.Error as e:
+        await conn.rollback()
+        logging.error(f"Ошибка БД: {str(e)}")
+        raise HTTPException(500, detail="Ошибка базы данных")
 
 
 @app.post("/orders/{order_id}/complete")
 async def complete_order(order_id: int):
+    """
+    Завершение заказа и удаление файла
+    """
     try:
         async with app.db_pool.acquire() as conn:
             async with conn.cursor() as cursor:
+                # Получение пути к файлу
                 await cursor.execute(
                     "SELECT file_path FROM `order` WHERE ID = %s",
                     (order_id,)
@@ -103,18 +140,25 @@ async def complete_order(order_id: int):
                 result = await cursor.fetchone()
                 file_path = result[0] if result else None
 
+                # Обновление статуса
                 await cursor.execute(
                     "UPDATE `order` SET status = 'выдан' WHERE ID = %s",
-                    (order_id,))
+                    (order_id,)
+                )
                 await conn.commit()
 
+                # Удаление файла
                 if file_path:
                     full_path = os.path.join(UPLOAD_FOLDER, file_path)
-                if os.path.exists(full_path):
-                    await asyncio.to_thread(os.remove, full_path)
-                return JSONResponse(content={"status": "выдан"})
+                    if os.path.exists(full_path):
+                        await asyncio.to_thread(os.remove, full_path)
+
+                return {"status": "выдан"}
+
     except Exception as e:
-        raise HTTPException(500, detail=str(e))
+        await conn.rollback()
+        logging.error(f"Ошибка: {traceback.format_exc()}")
+        raise HTTPException(500, detail="Ошибка сервера")
 
 
 @app.post("/orders")
@@ -129,17 +173,21 @@ async def create_order(
         con_code: int = Form(...),
         file_extension: str = Form(...)
 ):
+    """
+    Создание нового заказа
+    """
     temp_filename = f"temp_{uuid.uuid4()}{os.path.splitext(file.filename)[1]}"
     temp_path = os.path.join(UPLOAD_FOLDER, temp_filename)
 
     try:
-        content = await file.read()
+        # Сохранение временного файла
         async with aiofiles.open(temp_path, 'wb') as f:
-            await f.write(content)
+            await f.write(await file.read())
 
         async with app.db_pool.acquire() as conn:
             async with conn.cursor() as cursor:
                 await conn.begin()
+
                 try:
                     await cursor.execute(
                         """INSERT INTO `order` 
@@ -150,6 +198,8 @@ async def create_order(
                          user_id, pages, file_extension, temp_filename)
                     )
                     order_id = cursor.lastrowid
+
+                    # Переименование файла
                     new_filename = f"order_{order_id}{os.path.splitext(temp_filename)[1]}"
                     new_path = os.path.join(UPLOAD_FOLDER, new_filename)
 
@@ -161,31 +211,43 @@ async def create_order(
                         (new_filename, order_id)
                     )
                     await conn.commit()
+
                     return JSONResponse(
                         content={"order_id": order_id, "con_code": con_code},
                         status_code=201
                     )
+
                 except Exception as e:
                     await conn.rollback()
                     if os.path.exists(temp_path):
                         await asyncio.to_thread(os.remove, temp_path)
-                    raise e
+                    raise
+
     except Exception as e:
-        logging.error(f"API Error: {str(e)}")
+        logging.error(f"Ошибка создания заказа: {traceback.format_exc()}")
         raise HTTPException(500, detail=str(e))
 
 
-# Shops
 @app.get("/shops")
 async def get_shops():
+    """
+    Получение списка магазинов
+    """
     try:
         async with app.db_pool.acquire() as conn:
             async with conn.cursor(aiomysql.DictCursor) as cursor:
-                await cursor.execute("SELECT name, ID_shop, address FROM shop")
+                await cursor.execute(
+                    "SELECT name, ID_shop, address FROM shop"
+                )
                 shops = await cursor.fetchall()
-                return JSONResponse(content=shops)
+                return shops or JSONResponse(
+                    content={"message": "Магазины не найдены"},
+                    status_code=404
+                )
+
     except Exception as e:
-        raise HTTPException(500, detail=str(e))
+        logging.error(f"Ошибка: {traceback.format_exc()}")
+        raise HTTPException(500, detail="Ошибка сервера")
 
 
 @app.get("/shops/{shop_name}")
@@ -198,31 +260,38 @@ async def get_shop(shop_name: str):
                     (shop_name,)
                 )
                 shop = await cursor.fetchone()
-                return shop if shop else JSONResponse(status_code=404, content={"error": "Shop not found"})
+                if not shop:
+                    raise HTTPException(status_code=404, detail="Магазин не найден")
+                return shop
     except Exception as e:
-        raise HTTPException(500, detail=str(e))
+        logging.error(f"Ошибка: {traceback.format_exc()}")
+        raise HTTPException(500, detail="Ошибка сервера")
 
 
 @app.get("/shop/password")
 async def get_shop_passwords():
+    """
+    Получение хэшей паролей магазинов
+    """
     try:
         async with app.db_pool.acquire() as conn:
             async with conn.cursor(aiomysql.DictCursor) as cursor:
                 await cursor.execute("SELECT password FROM shop")
-                passwords = [row['password'] for row in await cursor.fetchall()]
-                return passwords
+                return [row['password'] for row in await cursor.fetchall()]
+
     except Exception as e:
-        logging.error(f"Error getting passwords: {str(e)}")
-        raise HTTPException(500, detail=str(e))
+        logging.error(f"Ошибка: {traceback.format_exc()}")
+        raise HTTPException(500, detail="Ошибка сервера")
 
 
-# Files
 @app.get("/files/{filename}")
 async def get_file(filename: str):
+    """
+    Получение файла
+    """
     file_path = os.path.join(UPLOAD_FOLDER, filename)
     if not os.path.exists(file_path):
-        logging.error(f"File {filename} not found")
-        raise HTTPException(404, detail="File not found")
+        raise HTTPException(404, detail="Файл не найден")
     return FileResponse(file_path)
 
 
