@@ -2,6 +2,7 @@ import os
 import uuid
 import logging
 import aiofiles
+import traceback
 from fastapi import FastAPI, HTTPException, UploadFile, Form, File, Query, Body
 from fastapi.responses import JSONResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -18,14 +19,11 @@ logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
 
-
 class OrderUpdate(BaseModel):
     status: Optional[str] = None
 
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Инициализация пула подключений к MySQL
     app.db_pool = await aiomysql.create_pool(
         host=os.getenv("DB_HOST", "localhost"),
         user=os.getenv("DB_USER", "root"),
@@ -36,17 +34,15 @@ async def lifespan(app: FastAPI):
         maxsize=20
     )
     yield
-    # Закрытие пула при завершении
     app.db_pool.close()
     await app.db_pool.wait_closed()
 
-
 app = FastAPI(lifespan=lifespan)
 
-# Настройка CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -57,33 +53,35 @@ app.mount("/uploads", StaticFiles(directory=UPLOAD_FOLDER), name="uploads")
 
 
 @app.get("/orders", response_model=List[dict])
-async def get_orders(status: List[str] = Query(..., alias="status[]")):
-    """
-    Получение заказов по статусам
-    """
+async def get_orders(
+        status: List[str] = Query(...),
+        shop_id: int = Query(None)
+):
     try:
-        allowed_statuses = {'получен', 'готов', 'выдан'}
+        allowed_statuses = {'получен', 'готов'}
         invalid_statuses = [s for s in status if s not in allowed_statuses]
 
         if invalid_statuses:
-            raise HTTPException(
-                status_code=400,
-                detail=f"Недопустимые статусы: {', '.join(invalid_statuses)}"
-            )
+            raise HTTPException(400, detail=f"Недопустимые статусы: {invalid_statuses}")
 
         async with app.db_pool.acquire() as conn:
             async with conn.cursor(aiomysql.DictCursor) as cursor:
+                # Формируем запрос с правильными плейсхолдерами
                 placeholders = ','.join(['%s'] * len(status))
-                await cursor.execute(
-                    f"SELECT * FROM `order` WHERE status IN ({placeholders})",
-                    status
-                )
+                query = f"SELECT * FROM `order` WHERE status IN ({placeholders})"
+                params = status.copy()
+
+                if shop_id:
+                    query += " AND ID_shop = %s"
+                    params.append(shop_id)
+
+                await cursor.execute(query, params)
                 orders = await cursor.fetchall()
 
-                # Конвертация типов
                 for order in orders:
-                    order["price"] = float(order["price"])
                     order["ID"] = int(order["ID"])
+                    order["price"] = float(order["price"])
+                    order["pages"] = int(order["pages"])
 
                 return orders
 
@@ -91,32 +89,22 @@ async def get_orders(status: List[str] = Query(..., alias="status[]")):
         logging.error(f"Ошибка БД: {str(e)}")
         raise HTTPException(500, detail="Ошибка базы данных")
 
-    except Exception as e:
-        logging.error(f"Неизвестная ошибка: {traceback.format_exc()}")
-        raise HTTPException(500, detail="Внутренняя ошибка сервера")
 
-
-@app.post("/order")
-async def update_order_status(
-        id: int = Query(..., title="ID заказа"),
-        data: OrderUpdate = Body(...)
-):
-    """
-    Обновление статуса заказа
-    """
+@app.post("/orders/{order_id}")
+async def update_order_status(order_id: int, data: OrderUpdate):
     try:
         async with app.db_pool.acquire() as conn:
             async with conn.cursor() as cursor:
                 await cursor.execute(
                     "UPDATE `order` SET status = %s WHERE ID = %s",
-                    (data.status, id)
+                    (data.status, order_id)
                 )
                 await conn.commit()
 
                 if cursor.rowcount == 0:
                     raise HTTPException(404, detail="Заказ не найден")
 
-                return {"status": "success"}
+                return {"status": "готов"}
 
     except aiomysql.Error as e:
         await conn.rollback()
@@ -126,33 +114,15 @@ async def update_order_status(
 
 @app.post("/orders/{order_id}/complete")
 async def complete_order(order_id: int):
-    """
-    Завершение заказа и удаление файла
-    """
     try:
         async with app.db_pool.acquire() as conn:
             async with conn.cursor() as cursor:
-                # Получение пути к файлу
-                await cursor.execute(
-                    "SELECT file_path FROM `order` WHERE ID = %s",
-                    (order_id,)
-                )
-                result = await cursor.fetchone()
-                file_path = result[0] if result else None
-
-                # Обновление статуса
+                # Только обновление статуса без удаления файла
                 await cursor.execute(
                     "UPDATE `order` SET status = 'выдан' WHERE ID = %s",
                     (order_id,)
                 )
                 await conn.commit()
-
-                # Удаление файла
-                if file_path:
-                    full_path = os.path.join(UPLOAD_FOLDER, file_path)
-                    if os.path.exists(full_path):
-                        await asyncio.to_thread(os.remove, full_path)
-
                 return {"status": "выдан"}
 
     except Exception as e:
@@ -173,9 +143,6 @@ async def create_order(
         con_code: int = Form(...),
         file_extension: str = Form(...)
 ):
-    """
-    Создание нового заказа
-    """
     temp_filename = f"temp_{uuid.uuid4()}{os.path.splitext(file.filename)[1]}"
     temp_path = os.path.join(UPLOAD_FOLDER, temp_filename)
 
@@ -230,9 +197,6 @@ async def create_order(
 
 @app.get("/shops")
 async def get_shops():
-    """
-    Получение списка магазинов
-    """
     try:
         async with app.db_pool.acquire() as conn:
             async with conn.cursor(aiomysql.DictCursor) as cursor:
@@ -268,17 +232,17 @@ async def get_shop(shop_name: str):
         raise HTTPException(500, detail="Ошибка сервера")
 
 
-@app.get("/shop/password")
-async def get_shop_passwords():
-    """
-    Получение хэшей паролей магазинов
-    """
+@app.get("/shop/{password_hash}")
+async def get_shop_by_password(password_hash: str):
     try:
         async with app.db_pool.acquire() as conn:
             async with conn.cursor(aiomysql.DictCursor) as cursor:
-                await cursor.execute("SELECT password FROM shop")
-                return [row['password'] for row in await cursor.fetchall()]
-
+                await cursor.execute(
+                    "SELECT ID_shop, name FROM shop WHERE password = %s",
+                    (password_hash,)
+                )
+                shop = await cursor.fetchone()
+                return shop or {"detail": "Магазин не найден"}
     except Exception as e:
         logging.error(f"Ошибка: {traceback.format_exc()}")
         raise HTTPException(500, detail="Ошибка сервера")
@@ -286,9 +250,6 @@ async def get_shop_passwords():
 
 @app.get("/files/{filename}")
 async def get_file(filename: str):
-    """
-    Получение файла
-    """
     file_path = os.path.join(UPLOAD_FOLDER, filename)
     if not os.path.exists(file_path):
         raise HTTPException(404, detail="Файл не найден")

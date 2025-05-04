@@ -45,10 +45,7 @@ confirmation_timers = {}
 
 async def cleanup_order_data(user_data: dict):
     try:
-        if 'temp_file' in user_data and os.path.exists(user_data['temp_file']):
-            os.remove(user_data['temp_file'])
-            logging.info(f"Удален временный файл: {user_data['temp_file']}")
-
+        # Убираем удаление файла
         if 'order_id' in user_data:
             async with aiohttp.ClientSession() as session:
                 await session.delete(f"{API_URL}/orders/{user_data['order_id']}")

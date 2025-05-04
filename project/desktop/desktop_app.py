@@ -1,16 +1,19 @@
 import sys
 import os
-import requests
 import logging
-from PyQt5.QtCore import QThread, pyqtSignal, Qt, QTimer, QObject
 import hashlib
+import aiohttp
+import asyncio
+import qasync
+import aiofiles
+from PyQt5.QtCore import Qt, QObject, pyqtSignal, QTimer
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QListWidget, QPushButton,
     QLabel, QMessageBox, QHBoxLayout, QListWidgetItem,
     QLineEdit, QDialog, QDialogButtonBox, QFormLayout,
     QSpacerItem, QSizePolicy
 )
-from PyQt5.QtGui import QIcon, QFont
+from PyQt5.QtGui import QIcon
 
 API_URL = "http://localhost:5000"
 DOWNLOAD_DIR = os.path.abspath('downloads')
@@ -23,9 +26,34 @@ logging.basicConfig(
 )
 
 
+class AsyncWorker(QObject):
+    finished = pyqtSignal(object)
+    error = pyqtSignal(str)
+
+    def __init__(self, coro):
+        super().__init__()
+        self.coro = coro
+
+    async def run(self):
+        try:
+            result = await self.coro
+            self.finished.emit(result)
+        except Exception as e:
+            self.error.emit(str(e))
+
+
 class LoginDialog(QDialog):
-    def __init__(self, parent=None):
-        super().__init__(parent)
+    def accept(self):
+        if self.session:
+            asyncio.create_task(self.session.close())
+        super().accept()
+
+    def __init__(self):
+        super().__init__()
+        self.session = None
+        self.setup_ui()
+
+    def setup_ui(self):
         self.setWindowTitle('Авторизация')
         self.setFixedSize(300, 150)
         layout = QFormLayout(self)
@@ -34,78 +62,47 @@ class LoginDialog(QDialog):
         self.password_input.setEchoMode(QLineEdit.Password)
 
         buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
-        buttons.accepted.connect(self.verify_password)
+        buttons.accepted.connect(self.start_auth)
         buttons.rejected.connect(self.reject)
 
         layout.addRow("Пароль:", self.password_input)
         layout.addRow(buttons)
 
-    def verify_password(self):
+    def start_auth(self):
+        self.session = aiohttp.ClientSession()
+        worker = AsyncWorker(self.authenticate())
+        worker.finished.connect(self.accept)
+        worker.error.connect(self.handle_error)
+        asyncio.create_task(worker.run())
+
+    async def authenticate(self):
         password = self.password_input.text()
         if not password:
-            QMessageBox.warning(self, "Ошибка", "Введите пароль")
-            return
+            raise ValueError("Введите пароль")
 
-        try:
-            hashed_password = hashlib.sha256(password.encode()).hexdigest()
-            response = requests.get(f"{API_URL}/shop/password", timeout=5)
+        hashed = hashlib.sha256(password.encode()).hexdigest()
+        async with self.session.get(f"{API_URL}/shop/{hashed}", timeout=5) as resp:
+            if resp.status != 200:
+                raise PermissionError("Неверный пароль")
 
-            if not response.ok:
-                raise ConnectionError("Сервер недоступен")
+    def handle_error(self, message):
+        QMessageBox.critical(self, "Ошибка", message)
+        logging.error(f"AUTH ERROR: {message}")
+        if self.session:
+            asyncio.create_task(self.session.close())
 
-            if hashed_password in response.json():
-                self.accept()
-            else:
-                QMessageBox.critical(self, "Ошибка", "Неверный пароль")
-
-        except Exception as e:
-            QMessageBox.critical(self, "Ошибка", f"Ошибка подключения: {str(e)}")
-
-
-class OrderLoader(QThread):
-    data_loaded = pyqtSignal(list)
-    error_occurred = pyqtSignal(str)
-
-    def run(self):
-        try:
-            response = requests.get(
-                f"{API_URL}/orders",
-                params={'status[]': ['получен', 'готов']},
-                timeout=10
-            )
-            if response.status_code == 200:
-                self.data_loaded.emit(response.json())
-            else:
-                self.error_occurred.emit(f"Ошибка {response.status_code}")
-        except Exception as e:
-            self.error_occurred.emit(f"Ошибка соединения: {str(e)}")
-
-
-class OrderUpdater(QObject):
-    finished = pyqtSignal(bool)
-    error_occurred = pyqtSignal(str)
-
-    def update_status(self, order_id, new_status):
-        try:
-            response = requests.post(
-                f"{API_URL}/order?id={order_id}",
-                json={'status': new_status},
-                timeout=10
-            )
-            if response.status_code == 200:
-                self.finished.emit(True)
-            else:
-                self.error_occurred.emit(response.text)
-        except Exception as e:
-            self.error_occurred.emit(str(e))
+    def closeEvent(self, event):
+        if self.session:
+            asyncio.create_task(self.session.close())
+        super().closeEvent(event)
 
 
 class FileReceiverApp(QWidget):
     def __init__(self):
         super().__init__()
-        self.threads = []
+        self.session = aiohttp.ClientSession()
         self.file_cache = set()
-        self.initUI()
+        self.init_ui()
         self.setup_timers()
         sys.excepthook = self.handle_exception
 
@@ -114,12 +111,12 @@ class FileReceiverApp(QWidget):
         QMessageBox.critical(self, "Ошибка", str(exc_value))
 
     def setup_timers(self):
-        self.auto_refresh_timer = QTimer()
-        self.auto_refresh_timer.timeout.connect(self.load_orders)
-        self.auto_refresh_timer.start(300000)
-        self.load_orders()
+        self.timer = QTimer()
+        self.timer.timeout.connect(lambda: self.execute_async(self.load_orders()))
+        self.timer.start(300000)
+        self.execute_async(self.load_orders())
 
-    def initUI(self):
+    def init_ui(self):
         self.setWindowIcon(QIcon("logo.png"))
         self.setWindowTitle('Send to print and pick up!')
         self.setFixedSize(1000, 800)
@@ -128,7 +125,7 @@ class FileReceiverApp(QWidget):
         control_layout = QHBoxLayout()
 
         self.refresh_btn = QPushButton("Обновить список")
-        self.refresh_btn.clicked.connect(self.load_orders)
+        self.refresh_btn.clicked.connect(lambda: self.execute_async(self.load_orders()))
 
         control_layout.addWidget(self.refresh_btn)
         control_layout.addItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
@@ -144,21 +141,70 @@ class FileReceiverApp(QWidget):
 
         self.setLayout(main_layout)
 
-    def load_orders(self):
-        self.refresh_btn.setEnabled(False)
-        self.loader = OrderLoader()
-        self.loader.data_loaded.connect(self.update_lists)
-        self.loader.data_loaded.connect(lambda: self.refresh_btn.setEnabled(True))
-        self.loader.error_occurred.connect(self.show_error)
-        self.loader.start()
+    def execute_async(self, coro):
+        worker = AsyncWorker(coro)
+        worker.finished.connect(self.handle_response)
+        worker.error.connect(self.show_error)
+        asyncio.create_task(worker.run())
+
+    def closeEvent(self, event):
+        if self.session and not self.session.closed:
+            asyncio.create_task(self.session.close())
+        super().closeEvent(event)
+
+    async def load_orders(self):
+        try:
+            async with self.session.get(
+                    f"{API_URL}/orders",
+                    params={'status': ['получен', 'готов']},
+                    timeout=15  # Увеличено время ожидания
+            ) as resp:
+                if resp.status == 200:
+                    orders = await resp.json()
+                    logging.debug(f"Получено заказов: {len(orders)}")
+                    return orders
+                logging.error(f"Ошибка HTTP: {resp.status}")
+                return []
+        except Exception as e:
+            logging.error(f"Ошибка запроса: {str(e)}")
+            return None
+
+    def handle_response(self, orders):
+        try:
+            if orders:
+                self.update_lists(orders)
+            else:
+                self.show_error("Не удалось загрузить заказы")
+        except Exception as e:
+            logging.error(f"Ошибка загрузки заказов: {str(e)}")
+
 
     def update_lists(self, orders):
-        self.clear_lists()
-        for order in sorted(orders, key=lambda x: x['ID'], reverse=True):
-            if order['status'] == 'получен':
-                self.add_received_order(order)
-            elif order['status'] == 'готов':
-                self.add_ready_order(order)
+        if not orders:
+            logging.warning("Пустой список заказов")
+            return
+
+        try:
+            self.clear_lists()
+            valid_orders = sorted(
+                [o for o in orders if o.get('status', '').strip().lower() in {'получен', 'готов'}],
+                key=lambda x: x['ID'],
+                reverse=True
+            )
+
+            for order in valid_orders:
+                status = order['status'].strip().lower()
+                if status == 'получен':
+                    self.add_received_order(order)
+                elif status == 'готов':
+                    self.add_ready_order(order)
+
+        except KeyError as e:
+            logging.error(f"Ключ отсутствует: {str(e)}")
+            self.show_error("Ошибка формата данных")
+        except Exception as e:
+            logging.error(f"Критическая ошибка: {str(e)}")
+            self.show_error("Ошибка обработки данных")
 
     def clear_lists(self):
         self.received_list.clear()
@@ -167,98 +213,120 @@ class FileReceiverApp(QWidget):
 
     def add_received_order(self, order):
         item = QListWidgetItem()
-        widget = QWidget()
-        layout = QHBoxLayout()
-
-        label = QLabel(f"Заказ №{order['ID']}: {order['file_path']}")
-        label.setStyleSheet("color: red; font-weight: bold;")
-
-        btn_print = QPushButton("Печать")
-        btn_print.clicked.connect(lambda: self.print_file(order))
-
-        btn_ready = QPushButton("Готово")
-        btn_ready.clicked.connect(lambda: self.update_status(order['ID'], 'готов'))
-
-        layout.addWidget(label)
-        layout.addWidget(btn_print)
-        layout.addWidget(btn_ready)
-        widget.setLayout(layout)
-
-        item.setSizeHint(widget.sizeHint())
+        widget = self.create_order_widget(
+            order,
+            "red",
+            [("Печать", lambda: self.execute_async(self.print_file(order))),
+             ("Готово", lambda: self.execute_async(self.update_status(order['ID'], 'готов')))]
+        )
         self.received_list.addItem(item)
         self.received_list.setItemWidget(item, widget)
-
-        self.download_file(order['file_path'])
+        self.execute_async(self.download_file(order['file_path']))
 
     def add_ready_order(self, order):
         item = QListWidgetItem()
-        widget = QWidget()
-        layout = QHBoxLayout()
-
-        label = QLabel(f"Заказ №{order['ID']}: {order['file_path']}")
-        label.setStyleSheet("color: green; font-weight: bold;")
-
-        btn_complete = QPushButton("Выдать")
-        btn_complete.clicked.connect(lambda: self.update_status(order['ID'], 'выдан'))
-
-        layout.addWidget(label)
-        layout.addWidget(btn_complete)
-        widget.setLayout(layout)
-
-        item.setSizeHint(widget.sizeHint())
+        widget = self.create_order_widget(
+            order,
+            "green",
+            [("Выдать", lambda: self.execute_async(self.update_status(order['ID'], 'выдан')))]
+        )
         self.ready_list.addItem(item)
         self.ready_list.setItemWidget(item, widget)
 
-    def download_file(self, filename):
+    def create_order_widget(self, order, color, buttons):
+        widget = QWidget()
+        layout = QHBoxLayout()
+        label = QLabel(f"Заказ №{order['ID']}: {order['file_path']}")
+        label.setStyleSheet(f"color: {color}; font-weight: bold;")
+        layout.addWidget(label)
+
+        for btn_text, callback in buttons:
+            btn = QPushButton(btn_text)
+            btn.clicked.connect(callback)
+            layout.addWidget(btn)
+
+        widget.setLayout(layout)
+        return widget
+
+    async def download_file(self, filename):
         try:
             filepath = os.path.join(DOWNLOAD_DIR, filename)
-            if filename not in self.file_cache and not os.path.exists(filepath):
-                response = requests.get(f"{API_URL}/files/{filename}", stream=True)
-                response.raise_for_status()
+            if filename in self.file_cache or os.path.exists(filepath):
+                return
 
-                with open(filepath, 'wb') as f:
-                    for chunk in response.iter_content(8192):
-                        f.write(chunk)
-
-                self.file_cache.add(filename)
-
+            async with self.session.get(f"{API_URL}/files/{filename}", timeout=10) as resp:
+                async with aiofiles.open(filepath, 'wb') as f:
+                    async for chunk in resp.content.iter_chunked(8192):
+                        await f.write(chunk)
+            self.file_cache.add(filename)
         except Exception as e:
             self.show_error(f"Ошибка загрузки: {str(e)}")
 
-    def print_file(self, order):
+    async def print_file(self, order):
         try:
             filepath = os.path.join(DOWNLOAD_DIR, order['file_path'])
-            if os.path.exists(filepath):
+            if not os.path.exists(filepath):
+                raise FileNotFoundError("Файл не найден")
+
+            if sys.platform == "win32":
                 os.startfile(filepath)
             else:
-                self.show_error("Файл не найден")
+                import subprocess
+                subprocess.Popen([filepath], shell=True)
         except Exception as e:
             self.show_error(f"Ошибка печати: {str(e)}")
 
-    def update_status(self, order_id, new_status):
-        updater = OrderUpdater()
-        thread = QThread()
-        updater.moveToThread(thread)
-
-        thread.started.connect(lambda: updater.update_status(order_id, new_status))
-        updater.finished.connect(thread.quit)
-        updater.finished.connect(self.load_orders)
-        updater.error_occurred.connect(self.show_error)
-
-        thread.finished.connect(thread.deleteLater)
-        self.threads.append(thread)
-        thread.start()
+    async def update_status(self, order_id, new_status):
+        try:
+            async with self.session.post(
+                    f"{API_URL}/order",
+                    params={'id': order_id},
+                    json={'status': new_status},
+                    timeout=10
+            ) as resp:
+                if resp.status != 200:
+                    raise ConnectionError(await resp.text())
+                await self.load_orders()
+        except Exception as e:
+            self.show_error(str(e))
 
     def show_error(self, message):
         QMessageBox.critical(self, "Ошибка", message)
 
+    def closeEvent(self, event):
+        asyncio.create_task(self.session.close())
+        super().closeEvent(event)
+
+
+async def main():
+    login = LoginDialog()
+    login.show()
+
+    future = asyncio.Future()
+    login.finished.connect(future.set_result)
+    await future
+
+    if login.result() == QDialog.Accepted:
+        window = FileReceiverApp()
+        window.show()
+        return window
+    return None
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    login = LoginDialog()
-    if login.exec_() == QDialog.Accepted:
-        window = FileReceiverApp()
-        window.show()
-        sys.exit(app.exec_())
-    else:
-        sys.exit(0)
+    loop = qasync.QEventLoop(app)
+    asyncio.set_event_loop(loop)
+
+    try:
+        with loop:
+            main_window = loop.run_until_complete(main())
+            if main_window:
+                loop.run_forever()
+            else:
+                loop.stop()
+    except Exception as e:
+        logging.critical(f"ФАТАЛЬНАЯ ОШИБКА: {str(e)}")
+    finally:
+        loop.close()
+    sys.exit(0)
