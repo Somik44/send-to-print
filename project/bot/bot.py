@@ -25,7 +25,7 @@ logging.basicConfig(
 
 API_TOKEN = '7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ'
 API_URL = 'http://localhost:5000'
-UPLOAD_FOLDER = 'D:\\projects_py\\projectsWithGit\\send-to-print\\project\\api\\uploads'
+UPLOAD_FOLDER = 'C:\\send_to_ptint\\send-to-print\\project\\api\\uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 
@@ -165,56 +165,110 @@ async def process_shop(message: types.Message, state: FSMContext):
 
 @dp.message(Form.file_processing, F.content_type == ContentType.DOCUMENT)
 async def process_file(message: types.Message, state: FSMContext):
+    """
+    Обрабатывает загруженный файл: скачивает, проверяет, сохраняет и подсчитывает страницы.
+    """
     processing_msg = await message.answer("⏳ Файл обрабатывается, подождите пожалуйста...")
     temp_path = None
 
     try:
+        # 1. Получаем информацию о файле
         file_info = await bot.get_file(message.document.file_id)
+        if not file_info.file_path:
+            raise ValueError("Telegram не вернул путь к файлу")
+
+        # 2. Формируем URL для скачивания
         file_url = f"https://api.telegram.org/file/bot{API_TOKEN}/{file_info.file_path}"
+        logging.info(f"Начинаем загрузку файла: {file_url}")
 
-        async with aiohttp.ClientSession() as session:
+        # 3. Скачиваем файл (с отключенной проверкой SSL для теста)
+        connector = aiohttp.TCPConnector(ssl=False)  # ВНИМАНИЕ: Не для продакшена!
+        async with aiohttp.ClientSession(connector=connector) as session:
             async with session.get(file_url) as resp:
+                if resp.status != 200:
+                    raise ValueError(f"Ошибка HTTP {resp.status}: {await resp.text()}")
+
                 file_content = await resp.read()
+                if not file_content:
+                    raise ValueError("Получен пустой файл")
 
-        filename, ext = os.path.splitext(message.document.file_name)
-        ext = ext.lower()
+        # 4. Проверяем расширение файла
+        filename = message.document.file_name or "unnamed_file"
+        file_ext = os.path.splitext(filename)[1].lower()
 
-        if ext not in ['.pdf', '.doc', '.docx']:
-            raise ValueError("❌ Поддерживаются только PDF/DOC/DOCX")
+        if file_ext not in ('.pdf', '.doc', '.docx'):
+            raise ValueError("❌ Поддерживаются только PDF, DOC и DOCX файлы")
 
-        temp_name = f"temp_{uuid.uuid4()}{ext}"
+        # 5. Сохраняем временный файл
+        temp_name = f"temp_{uuid.uuid4()}{file_ext}"
         temp_path = os.path.join(UPLOAD_FOLDER, temp_name)
 
         async with aiofiles.open(temp_path, 'wb') as f:
             await f.write(file_content)
 
-        pages = await get_page_count(temp_path, ext)
-        if pages < 1:
-            raise ValueError("⚠️ Невозможно определить количество страниц")
+        # 6. Проверяем что файл сохранился
+        if not os.path.exists(temp_path):
+            raise ValueError("Не удалось сохранить файл на диск")
 
+        # 7. Подсчитываем количество страниц
+        pages = await get_page_count(temp_path, file_ext)
+        logging.info(f"Определено страниц: {pages}")
+
+        if pages < 1:
+            raise ValueError("⚠️ Не удалось определить количество страниц")
+
+        # 8. Сохраняем данные в состояние
         await state.update_data({
             'temp_file': temp_path,
             'pages': pages,
-            'file_extension': ext[1:],
-            'filename': message.document.file_name
+            'file_extension': file_ext[1:],  # Без точки
+            'filename': filename,
+            'original_file_url': file_url
         })
 
+        # 9. Запрашиваем тип печати
         markup = ReplyKeyboardMarkup(
-            keyboard=[[KeyboardButton(text="Черно-белая"), KeyboardButton(text="Цветная")]],
-            resize_keyboard=True
+            keyboard=[
+                [KeyboardButton(text="Черно-белая")],
+                [KeyboardButton(text="Цветная")]
+            ],
+            resize_keyboard=True,
+            one_time_keyboard=True
         )
-        await message.answer(f"📄 Страниц: {pages}\nВыберите тип печати:", reply_markup=markup)
+
+        await message.answer(
+            f"📄 Файл успешно обработан!\n"
+            f"• Имя файла: {filename}\n"
+            f"• Количество страниц: {pages}\n\n"
+            f"Выберите тип печати:",
+            reply_markup=markup
+        )
+
         await state.set_state(Form.color_selection)
 
-    except Exception as e:
-        logging.error(f"Ошибка обработки файла: {traceback.format_exc()}")
-        await message.answer("❌ Ошибка обработки файла")
-        if temp_path and os.path.exists(temp_path):
-            await cleanup_order_data({'temp_file': temp_path})
-        await state.clear()
-    finally:
-        await bot.delete_message(message.chat.id, processing_msg.message_id)
+    except ValueError as ve:
+        error_msg = f"❌ Ошибка: {str(ve)}"
+        await message.answer(error_msg)
+        logging.warning(error_msg)
 
+    except Exception as e:
+        error_msg = f"❌ Критическая ошибка обработки файла: {str(e)}"
+        await message.answer("❌ Произошла непредвиденная ошибка")
+        logging.error(f"{error_msg}\n{traceback.format_exc()}")
+
+    finally:
+        # Очистка в случае ошибки
+        if temp_path and os.path.exists(temp_path) and ('temp_file' not in await state.get_data()):
+            try:
+                os.remove(temp_path)
+                logging.info(f"Удален временный файл: {temp_path}")
+            except Exception as e:
+                logging.error(f"Ошибка удаления временного файла: {str(e)}")
+
+        try:
+            await bot.delete_message(message.chat.id, processing_msg.message_id)
+        except Exception as e:
+            logging.error(f"Ошибка удаления сообщения: {str(e)}")
 
 @dp.message(Form.color_selection)
 async def process_color(message: types.Message, state: FSMContext):

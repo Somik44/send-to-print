@@ -1,0 +1,1364 @@
+2025-05-04 17:33:00,543 - DEBUG - Using proactor: _IocpProactor
+2025-05-04 17:33:00,544 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-04 17:33:00,544 - DEBUG - Thread started
+2025-05-04 17:33:03,540 - DEBUG - Submitting callback <function getaddrinfo at 0x00000157B3F025C0> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-04 17:33:03,541 - DEBUG - #3 got callback <function getaddrinfo at 0x00000157B3F025C0> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-04 17:33:03,541 - DEBUG - Invoking callback
+2025-05-04 17:33:03,546 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-04 17:33:05,575 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x00000157B57FC680>, 0, 0, <_overlapped.Overlapped object at 0x00000157B5770870>)]
+2025-05-04 17:33:05,576 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x00000157B57FC680>
+2025-05-04 17:33:05,577 - DEBUG - Event callback failed
+Traceback (most recent call last):
+  File "C:\send_to_ptint\.venv\Lib\site-packages\qasync\_windows.py", line 43, in _process_events
+    value = callback(transferred, key, ov)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\asyncio\windows_events.py", line 599, in finish_connect
+    ov.getresult()
+ConnectionRefusedError: [WinError 1225] Удаленный компьютер отклонил это сетевое подключение
+2025-05-04 17:33:05,821 - DEBUG - Submitting callback <function getaddrinfo at 0x00000157B3F025C0> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-04 17:33:05,821 - DEBUG - #1 got callback <function getaddrinfo at 0x00000157B3F025C0> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-04 17:33:05,821 - DEBUG - Invoking callback
+2025-05-04 17:33:05,822 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-04 17:33:05,823 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x00000157B57FC5E0>, 0, 0, <_overlapped.Overlapped object at 0x00000157B57709F0>)]
+2025-05-04 17:33:05,823 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x00000157B57FC5E0>
+2025-05-04 17:33:05,823 - DEBUG - Event callback failed
+Traceback (most recent call last):
+  File "C:\send_to_ptint\.venv\Lib\site-packages\qasync\_windows.py", line 43, in _process_events
+    value = callback(transferred, key, ov)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\asyncio\windows_events.py", line 599, in finish_connect
+    ov.getresult()
+ConnectionRefusedError: [WinError 1225] Удаленный компьютер отклонил это сетевое подключение
+2025-05-04 17:33:06,082 - ERROR - Exception in callback Task.task_wakeup(<Future finis... result=None>>)
+handle: <Handle Task.task_wakeup(<Future finis... result=None>>)>
+Traceback (most recent call last):
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1115, in _wrap_create_connection
+    sock = await aiohappyeyeballs.start_connection(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohappyeyeballs\impl.py", line 127, in start_connection
+    raise first_exception
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohappyeyeballs\_staggered.py", line 132, in run_one_coro
+    result = await coro_fn()
+             ^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohappyeyeballs\impl.py", line 208, in _connect_sock
+    await loop.sock_connect(sock, address)
+  File "C:\Program Files\Python312\Lib\asyncio\proactor_events.py", line 727, in sock_connect
+    return await self._proactor.connect(sock, address)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\qasync\_windows.py", line 43, in _process_events
+    value = callback(transferred, key, ov)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\asyncio\windows_events.py", line 599, in finish_connect
+    ov.getresult()
+ConnectionRefusedError: [WinError 1225] Удаленный компьютер отклонил это сетевое подключение
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py", line 39, in run
+    result = await self.coro
+             ^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py", line 84, in authenticate
+    async with self.session.get(f"{API_URL}/shop/{hashed}", timeout=5) as resp:
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\client.py", line 1425, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\client.py", line 703, in _request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 548, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1056, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1406, in _create_direct_connection
+    raise last_exc
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1375, in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1130, in _wrap_create_connection
+    raise client_error(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorError: Cannot connect to host localhost:5000 ssl:default [Удаленный компьютер отклонил это сетевое подключение]
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Program Files\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+RuntimeError: Cannot enter into task <Task pending name='Task-6' coro=<AsyncWorker.run() running at C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py:39> wait_for=<Future finished result=<Future finished result=None>>> while another task <Task pending name='Task-2' coro=<AsyncWorker.run() running at C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py:42>> is being executed.
+2025-05-04 17:33:07,864 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x00000157B57FE020>, 0, 0, <_overlapped.Overlapped object at 0x00000157B5770F30>)]
+2025-05-04 17:33:07,865 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x00000157B57FE020>
+2025-05-04 17:33:07,865 - DEBUG - Event callback failed
+Traceback (most recent call last):
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1115, in _wrap_create_connection
+    sock = await aiohappyeyeballs.start_connection(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohappyeyeballs\impl.py", line 127, in start_connection
+    raise first_exception
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohappyeyeballs\_staggered.py", line 132, in run_one_coro
+    result = await coro_fn()
+             ^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohappyeyeballs\impl.py", line 208, in _connect_sock
+    await loop.sock_connect(sock, address)
+  File "C:\Program Files\Python312\Lib\asyncio\proactor_events.py", line 727, in sock_connect
+    return await self._proactor.connect(sock, address)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\qasync\_windows.py", line 43, in _process_events
+    value = callback(transferred, key, ov)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\asyncio\windows_events.py", line 599, in finish_connect
+    ov.getresult()
+ConnectionRefusedError: [WinError 1225] Удаленный компьютер отклонил это сетевое подключение
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py", line 39, in run
+    result = await self.coro
+             ^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py", line 84, in authenticate
+    async with self.session.get(f"{API_URL}/shop/{hashed}", timeout=5) as resp:
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\client.py", line 1425, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\client.py", line 703, in _request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 548, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1056, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1406, in _create_direct_connection
+    raise last_exc
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1375, in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1130, in _wrap_create_connection
+    raise client_error(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorError: Cannot connect to host localhost:5000 ssl:default [Удаленный компьютер отклонил это сетевое подключение]
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\send_to_ptint\.venv\Lib\site-packages\qasync\_windows.py", line 43, in _process_events
+    value = callback(transferred, key, ov)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\asyncio\windows_events.py", line 599, in finish_connect
+    ov.getresult()
+ConnectionRefusedError: [WinError 1225] Удаленный компьютер отклонил это сетевое подключение
+2025-05-04 17:33:07,871 - ERROR - Exception in callback Task.task_wakeup(<_OverlappedF..., 1225, None)>)
+handle: <Handle Task.task_wakeup(<_OverlappedF..., 1225, None)>)>
+Traceback (most recent call last):
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1115, in _wrap_create_connection
+    sock = await aiohappyeyeballs.start_connection(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohappyeyeballs\impl.py", line 127, in start_connection
+    raise first_exception
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohappyeyeballs\_staggered.py", line 132, in run_one_coro
+    result = await coro_fn()
+             ^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohappyeyeballs\impl.py", line 208, in _connect_sock
+    await loop.sock_connect(sock, address)
+  File "C:\Program Files\Python312\Lib\asyncio\proactor_events.py", line 727, in sock_connect
+    return await self._proactor.connect(sock, address)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\qasync\_windows.py", line 43, in _process_events
+    value = callback(transferred, key, ov)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\asyncio\windows_events.py", line 599, in finish_connect
+    ov.getresult()
+ConnectionRefusedError: [WinError 1225] Удаленный компьютер отклонил это сетевое подключение
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py", line 39, in run
+    result = await self.coro
+             ^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py", line 84, in authenticate
+    async with self.session.get(f"{API_URL}/shop/{hashed}", timeout=5) as resp:
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\client.py", line 1425, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\client.py", line 703, in _request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 548, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1056, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1406, in _create_direct_connection
+    raise last_exc
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1375, in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1130, in _wrap_create_connection
+    raise client_error(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorError: Cannot connect to host localhost:5000 ssl:default [Удаленный компьютер отклонил это сетевое подключение]
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Program Files\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+RuntimeError: Cannot enter into task <Task pending name='Task-8' coro=<staggered_race.<locals>.run_one_coro() running at C:\send_to_ptint\.venv\Lib\site-packages\aiohappyeyeballs\_staggered.py:132> wait_for=<_OverlappedFuture finished exception=ConnectionRefusedError(22, 'Удаленный компьютер отклонил это сетевое подключение', None, 1225, None)> cb=[_wait_one.<locals>._on_completion() at C:\send_to_ptint\.venv\Lib\site-packages\aiohappyeyeballs\_staggered.py:38]> while another task <Task pending name='Task-2' coro=<AsyncWorker.run() running at C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py:42>> is being executed.
+2025-05-04 17:33:07,927 - ERROR - AUTH ERROR: Cannot connect to host localhost:5000 ssl:default [Удаленный компьютер отклонил это сетевое подключение]
+2025-05-04 17:33:08,605 - DEBUG - Stopping worker thread...
+2025-05-04 17:33:08,611 - DEBUG - Exiting thread
+2025-05-04 17:33:08,611 - DEBUG - Shutting down
+2025-05-04 17:33:08,611 - DEBUG - Waiting for thread #1 to stop...
+2025-05-04 17:33:08,611 - DEBUG - Thread #10 stopped
+2025-05-04 17:33:08,611 - DEBUG - Thread #8 stopped
+2025-05-04 17:33:08,611 - DEBUG - Thread #2 stopped
+2025-05-04 17:33:08,611 - DEBUG - Thread #3 stopped
+2025-05-04 17:33:08,611 - DEBUG - Thread #5 stopped
+2025-05-04 17:33:08,611 - DEBUG - Thread #4 stopped
+2025-05-04 17:33:08,612 - DEBUG - Thread #1 stopped
+2025-05-04 17:33:08,612 - DEBUG - Thread #6 stopped
+2025-05-04 17:33:08,612 - DEBUG - Thread #7 stopped
+2025-05-04 17:33:08,612 - DEBUG - Thread #9 stopped
+2025-05-04 17:33:08,612 - DEBUG - Waiting for thread #2 to stop...
+2025-05-04 17:33:08,612 - DEBUG - Waiting for thread #3 to stop...
+2025-05-04 17:33:08,613 - DEBUG - Waiting for thread #4 to stop...
+2025-05-04 17:33:08,613 - DEBUG - Waiting for thread #5 to stop...
+2025-05-04 17:33:08,613 - DEBUG - Waiting for thread #6 to stop...
+2025-05-04 17:33:08,613 - DEBUG - Waiting for thread #7 to stop...
+2025-05-04 17:33:08,613 - DEBUG - Waiting for thread #8 to stop...
+2025-05-04 17:33:08,613 - DEBUG - Waiting for thread #9 to stop...
+2025-05-04 17:33:08,613 - DEBUG - Waiting for thread #10 to stop...
+2025-05-04 17:33:08,613 - DEBUG - Closing
+2025-05-04 17:41:39,834 - DEBUG - Using proactor: _IocpProactor
+2025-05-04 17:41:39,835 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-04 17:41:39,835 - DEBUG - Thread started
+2025-05-04 17:41:42,045 - DEBUG - Submitting callback <function getaddrinfo at 0x000001D5DBE025C0> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-04 17:41:42,046 - DEBUG - #3 got callback <function getaddrinfo at 0x000001D5DBE025C0> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-04 17:41:42,046 - DEBUG - Invoking callback
+2025-05-04 17:41:42,050 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-04 17:41:42,296 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x000001D5DD7AC5E0>, 0, 0, <_overlapped.Overlapped object at 0x000001D5DD734930>)]
+2025-05-04 17:41:42,297 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x000001D5DD7AC5E0>
+2025-05-04 17:41:42,305 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x000001D5DC51CFE0>, 125, 0, <_overlapped.Overlapped object at 0x000001D5DD734930>)]
+2025-05-04 17:41:42,305 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x000001D5DC51CFE0>
+2025-05-04 17:41:42,434 - DEBUG - Stopping worker thread...
+2025-05-04 17:41:42,442 - DEBUG - Exiting thread
+2025-05-04 17:41:42,442 - ERROR - Ошибка запроса: no running event loop
+2025-05-04 17:41:45,455 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-04 17:41:45,455 - DEBUG - Thread started
+2025-05-04 17:41:46,704 - DEBUG - Submitting callback <function getaddrinfo at 0x000001D5DBE025C0> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-04 17:41:46,705 - DEBUG - #5 got callback <function getaddrinfo at 0x000001D5DBE025C0> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-04 17:41:46,705 - DEBUG - Invoking callback
+2025-05-04 17:41:46,705 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-04 17:41:46,949 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x000001D5DD7ADEE0>, 0, 0, <_overlapped.Overlapped object at 0x000001D5DD734C30>)]
+2025-05-04 17:41:46,950 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x000001D5DD7ADEE0>
+2025-05-04 17:41:46,961 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x000001D5DC51CFE0>, 127, 0, <_overlapped.Overlapped object at 0x000001D5DD734930>)]
+2025-05-04 17:41:46,961 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x000001D5DC51CFE0>
+2025-05-04 17:41:46,962 - DEBUG - Получено заказов: 17
+2025-05-04 17:41:48,007 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x000001D5DC51CFE0>, 127, 0, <_overlapped.Overlapped object at 0x000001D5DD734E70>)]
+2025-05-04 17:41:48,008 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x000001D5DC51CFE0>
+2025-05-04 17:41:48,008 - DEBUG - Получено заказов: 17
+2025-05-04 17:41:48,430 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x000001D5DC51CFE0>, 127, 0, <_overlapped.Overlapped object at 0x000001D5DD734870>)]
+2025-05-04 17:41:48,431 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x000001D5DC51CFE0>
+2025-05-04 17:41:48,431 - DEBUG - Получено заказов: 17
+2025-05-04 17:41:48,617 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x000001D5DC51CFE0>, 127, 0, <_overlapped.Overlapped object at 0x000001D5DD7344B0>)]
+2025-05-04 17:41:48,617 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x000001D5DC51CFE0>
+2025-05-04 17:41:48,618 - DEBUG - Получено заказов: 17
+2025-05-04 17:41:48,795 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x000001D5DC51CFE0>, 127, 0, <_overlapped.Overlapped object at 0x000001D5DD734930>)]
+2025-05-04 17:41:48,795 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x000001D5DC51CFE0>
+2025-05-04 17:41:48,796 - DEBUG - Получено заказов: 17
+2025-05-04 17:41:48,963 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x000001D5DC51CFE0>, 127, 0, <_overlapped.Overlapped object at 0x000001D5DD734AB0>)]
+2025-05-04 17:41:48,964 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x000001D5DC51CFE0>
+2025-05-04 17:41:48,964 - DEBUG - Получено заказов: 17
+2025-05-04 17:41:50,458 - DEBUG - Stopping worker thread...
+2025-05-04 17:41:50,478 - DEBUG - Exiting thread
+2025-05-04 17:41:50,478 - DEBUG - Shutting down
+2025-05-04 17:41:50,478 - DEBUG - Waiting for thread #1 to stop...
+2025-05-04 17:41:50,479 - DEBUG - Thread #6 stopped
+2025-05-04 17:41:50,479 - DEBUG - Thread #4 stopped
+2025-05-04 17:41:50,479 - DEBUG - Thread #1 stopped
+2025-05-04 17:41:50,479 - DEBUG - Thread #9 stopped
+2025-05-04 17:41:50,479 - DEBUG - Thread #2 stopped
+2025-05-04 17:41:50,479 - DEBUG - Thread #3 stopped
+2025-05-04 17:41:50,479 - DEBUG - Thread #5 stopped
+2025-05-04 17:41:50,479 - DEBUG - Thread #8 stopped
+2025-05-04 17:41:50,479 - DEBUG - Thread #10 stopped
+2025-05-04 17:41:50,479 - DEBUG - Thread #7 stopped
+2025-05-04 17:41:50,479 - DEBUG - Waiting for thread #2 to stop...
+2025-05-04 17:41:50,480 - DEBUG - Waiting for thread #3 to stop...
+2025-05-04 17:41:50,480 - DEBUG - Waiting for thread #4 to stop...
+2025-05-04 17:41:50,480 - DEBUG - Waiting for thread #5 to stop...
+2025-05-04 17:41:50,480 - DEBUG - Waiting for thread #6 to stop...
+2025-05-04 17:41:50,480 - DEBUG - Waiting for thread #7 to stop...
+2025-05-04 17:41:50,480 - DEBUG - Waiting for thread #8 to stop...
+2025-05-04 17:41:50,480 - DEBUG - Waiting for thread #9 to stop...
+2025-05-04 17:41:50,480 - DEBUG - Waiting for thread #10 to stop...
+2025-05-04 17:41:50,480 - DEBUG - Closing
+2025-05-04 17:41:52,300 - DEBUG - Using proactor: _IocpProactor
+2025-05-04 17:41:52,300 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-04 17:41:52,301 - DEBUG - Thread started
+2025-05-04 17:41:54,985 - DEBUG - Submitting callback <function getaddrinfo at 0x000001EF14AD25C0> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-04 17:41:54,985 - DEBUG - #1 got callback <function getaddrinfo at 0x000001EF14AD25C0> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-04 17:41:54,986 - DEBUG - Invoking callback
+2025-05-04 17:41:54,989 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-04 17:41:55,231 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x000001EF1636C5E0>, 0, 0, <_overlapped.Overlapped object at 0x000001EF162F0930>)]
+2025-05-04 17:41:55,231 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x000001EF1636C5E0>
+2025-05-04 17:41:55,232 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x000001EF1515CFE0>, 125, 0, <_overlapped.Overlapped object at 0x000001EF162F06F0>)]
+2025-05-04 17:41:55,233 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x000001EF1515CFE0>
+2025-05-04 17:41:55,340 - DEBUG - Stopping worker thread...
+2025-05-04 17:41:55,350 - DEBUG - Exiting thread
+2025-05-04 17:41:55,350 - ERROR - Ошибка запроса: no running event loop
+2025-05-04 17:41:58,684 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-04 17:41:58,684 - DEBUG - Thread started
+2025-05-04 17:46:55,330 - DEBUG - Submitting callback <function getaddrinfo at 0x000001EF14AD25C0> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-04 17:46:55,330 - DEBUG - #2 got callback <function getaddrinfo at 0x000001EF14AD25C0> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-04 17:46:55,331 - DEBUG - Invoking callback
+2025-05-04 17:46:55,332 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-04 17:46:55,579 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x000001EF1636DEE0>, 0, 0, <_overlapped.Overlapped object at 0x000001EF162F0C30>)]
+2025-05-04 17:46:55,580 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x000001EF1636DEE0>
+2025-05-04 17:46:55,588 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x000001EF1515CFE0>, 127, 0, <_overlapped.Overlapped object at 0x000001EF162F0270>)]
+2025-05-04 17:46:55,589 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x000001EF1515CFE0>
+2025-05-04 17:46:55,591 - DEBUG - Получено заказов: 17
+2025-05-04 17:47:00,596 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x000001EF1515CFE0>, 0, 0, <_overlapped.Overlapped object at 0x000001EF162F0E70>)]
+2025-05-04 17:47:00,597 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x000001EF1515CFE0>
+2025-05-04 17:51:55,323 - DEBUG - Submitting callback <function getaddrinfo at 0x000001EF14AD25C0> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-04 17:51:55,323 - DEBUG - #3 got callback <function getaddrinfo at 0x000001EF14AD25C0> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-04 17:51:55,323 - DEBUG - Invoking callback
+2025-05-04 17:51:55,323 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-04 17:51:55,579 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x000001EF1636DB20>, 0, 0, <_overlapped.Overlapped object at 0x000001EF162F0C30>)]
+2025-05-04 17:51:55,580 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x000001EF1636DB20>
+2025-05-04 17:51:55,582 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x000001EF1515CFE0>, 127, 0, <_overlapped.Overlapped object at 0x000001EF162F07B0>)]
+2025-05-04 17:51:55,582 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x000001EF1515CFE0>
+2025-05-04 17:51:55,582 - DEBUG - Получено заказов: 17
+2025-05-04 17:52:00,588 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x000001EF1515CFE0>, 0, 0, <_overlapped.Overlapped object at 0x000001EF162F04B0>)]
+2025-05-04 17:52:00,589 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x000001EF1515CFE0>
+2025-05-04 17:52:01,840 - DEBUG - Stopping worker thread...
+2025-05-04 17:52:01,843 - DEBUG - Exiting thread
+2025-05-04 17:52:01,843 - DEBUG - Shutting down
+2025-05-04 17:52:01,843 - DEBUG - Waiting for thread #1 to stop...
+2025-05-04 17:52:01,844 - DEBUG - Thread #4 stopped
+2025-05-04 17:52:01,844 - DEBUG - Thread #6 stopped
+2025-05-04 17:52:01,844 - DEBUG - Thread #5 stopped
+2025-05-04 17:52:01,844 - DEBUG - Thread #9 stopped
+2025-05-04 17:52:01,844 - DEBUG - Thread #8 stopped
+2025-05-04 17:52:01,844 - DEBUG - Thread #10 stopped
+2025-05-04 17:52:01,844 - DEBUG - Thread #1 stopped
+2025-05-04 17:52:01,844 - DEBUG - Thread #7 stopped
+2025-05-04 17:52:01,844 - DEBUG - Thread #2 stopped
+2025-05-04 17:52:01,844 - DEBUG - Thread #3 stopped
+2025-05-04 17:52:01,845 - DEBUG - Waiting for thread #2 to stop...
+2025-05-04 17:52:01,845 - DEBUG - Waiting for thread #3 to stop...
+2025-05-04 17:52:01,845 - DEBUG - Waiting for thread #4 to stop...
+2025-05-04 17:52:01,845 - DEBUG - Waiting for thread #5 to stop...
+2025-05-04 17:52:01,845 - DEBUG - Waiting for thread #6 to stop...
+2025-05-04 17:52:01,845 - DEBUG - Waiting for thread #7 to stop...
+2025-05-04 17:52:01,845 - DEBUG - Waiting for thread #8 to stop...
+2025-05-04 17:52:01,845 - DEBUG - Waiting for thread #9 to stop...
+2025-05-04 17:52:01,845 - DEBUG - Waiting for thread #10 to stop...
+2025-05-04 17:52:01,845 - DEBUG - Closing
+2025-05-04 17:52:07,523 - DEBUG - Using proactor: _IocpProactor
+2025-05-04 17:52:07,523 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-04 17:52:07,523 - DEBUG - Thread started
+2025-05-04 17:52:10,069 - DEBUG - Submitting callback <function getaddrinfo at 0x00000151513A25C0> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-04 17:52:10,070 - DEBUG - #1 got callback <function getaddrinfo at 0x00000151513A25C0> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-04 17:52:10,070 - DEBUG - Invoking callback
+2025-05-04 17:52:10,075 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-04 17:52:10,323 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x0000015152C8C5E0>, 0, 0, <_overlapped.Overlapped object at 0x0000015152C10930>)]
+2025-05-04 17:52:10,324 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x0000015152C8C5E0>
+2025-05-04 17:52:10,330 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x0000015151A5CFE0>, 125, 0, <_overlapped.Overlapped object at 0x0000015152C10930>)]
+2025-05-04 17:52:10,330 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x0000015151A5CFE0>
+2025-05-04 17:52:10,438 - DEBUG - Stopping worker thread...
+2025-05-04 17:52:10,449 - DEBUG - Exiting thread
+2025-05-04 17:52:10,449 - ERROR - Ошибка запроса: no running event loop
+2025-05-04 17:52:14,506 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-04 17:52:14,507 - DEBUG - Thread started
+2025-05-04 17:52:33,902 - DEBUG - Stopping worker thread...
+2025-05-04 17:52:33,914 - DEBUG - Exiting thread
+2025-05-04 17:52:33,914 - DEBUG - Shutting down
+2025-05-04 17:52:33,914 - DEBUG - Waiting for thread #1 to stop...
+2025-05-04 17:52:33,914 - DEBUG - Thread #10 stopped
+2025-05-04 17:52:33,914 - DEBUG - Thread #4 stopped
+2025-05-04 17:52:33,914 - DEBUG - Thread #3 stopped
+2025-05-04 17:52:33,914 - DEBUG - Thread #5 stopped
+2025-05-04 17:52:33,914 - DEBUG - Thread #6 stopped
+2025-05-04 17:52:33,914 - DEBUG - Thread #7 stopped
+2025-05-04 17:52:33,914 - DEBUG - Thread #8 stopped
+2025-05-04 17:52:33,915 - DEBUG - Thread #2 stopped
+2025-05-04 17:52:33,915 - DEBUG - Thread #1 stopped
+2025-05-04 17:52:33,915 - DEBUG - Thread #9 stopped
+2025-05-04 17:52:33,915 - DEBUG - Waiting for thread #2 to stop...
+2025-05-04 17:52:33,915 - DEBUG - Waiting for thread #3 to stop...
+2025-05-04 17:52:33,915 - DEBUG - Waiting for thread #4 to stop...
+2025-05-04 17:52:33,915 - DEBUG - Waiting for thread #5 to stop...
+2025-05-04 17:52:33,915 - DEBUG - Waiting for thread #6 to stop...
+2025-05-04 17:52:33,915 - DEBUG - Waiting for thread #7 to stop...
+2025-05-04 17:52:33,915 - DEBUG - Waiting for thread #8 to stop...
+2025-05-04 17:52:33,915 - DEBUG - Waiting for thread #9 to stop...
+2025-05-04 17:52:33,915 - DEBUG - Waiting for thread #10 to stop...
+2025-05-04 17:52:33,916 - DEBUG - Closing
+2025-05-04 17:52:43,762 - DEBUG - Using proactor: _IocpProactor
+2025-05-04 17:52:43,763 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-04 17:52:43,763 - DEBUG - Thread started
+2025-05-04 17:54:40,595 - DEBUG - Stopping worker thread...
+2025-05-04 17:54:40,603 - DEBUG - Exiting thread
+2025-05-04 17:54:40,603 - DEBUG - Closing
+2025-05-04 17:58:30,749 - DEBUG - Using proactor: _IocpProactor
+2025-05-04 17:58:30,750 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-04 17:58:30,750 - DEBUG - Thread started
+2025-05-04 17:59:10,847 - DEBUG - Stopping worker thread...
+2025-05-04 17:59:10,863 - DEBUG - Exiting thread
+2025-05-04 17:59:10,863 - DEBUG - Closing
+2025-05-04 18:22:39,406 - DEBUG - Using proactor: _IocpProactor
+2025-05-04 18:22:39,406 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-04 18:22:39,407 - DEBUG - Thread started
+2025-05-04 18:22:40,974 - DEBUG - Stopping worker thread...
+2025-05-04 18:22:40,975 - DEBUG - Exiting thread
+2025-05-04 18:22:40,975 - DEBUG - Closing
+2025-05-04 18:22:48,535 - DEBUG - Using proactor: _IocpProactor
+2025-05-04 18:22:48,535 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-04 18:22:48,536 - DEBUG - Thread started
+2025-05-04 18:22:51,144 - DEBUG - Submitting callback <function getaddrinfo at 0x0000024910BD25C0> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-04 18:22:51,145 - DEBUG - #4 got callback <function getaddrinfo at 0x0000024910BD25C0> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-04 18:22:51,145 - DEBUG - Invoking callback
+2025-05-04 18:22:51,148 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-04 18:22:51,404 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x000002491127CFE0>, 125, 0, <_overlapped.Overlapped object at 0x00000249124247B0>)]
+2025-05-04 18:22:51,404 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x000002491127CFE0>
+2025-05-04 18:22:51,510 - DEBUG - Stopping worker thread...
+2025-05-04 18:22:51,524 - DEBUG - Exiting thread
+2025-05-04 18:22:51,524 - ERROR - Ошибка запроса: no running event loop
+2025-05-04 18:22:53,116 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-04 18:22:53,117 - DEBUG - Thread started
+2025-05-04 18:22:53,964 - DEBUG - Stopping worker thread...
+2025-05-04 18:22:53,966 - DEBUG - Exiting thread
+2025-05-04 18:22:53,966 - DEBUG - Shutting down
+2025-05-04 18:22:53,966 - DEBUG - Waiting for thread #1 to stop...
+2025-05-04 18:22:53,966 - DEBUG - Thread #10 stopped
+2025-05-04 18:22:53,966 - DEBUG - Thread #1 stopped
+2025-05-04 18:22:53,966 - DEBUG - Thread #6 stopped
+2025-05-04 18:22:53,966 - DEBUG - Thread #5 stopped
+2025-05-04 18:22:53,966 - DEBUG - Thread #3 stopped
+2025-05-04 18:22:53,966 - DEBUG - Thread #8 stopped
+2025-05-04 18:22:53,966 - DEBUG - Thread #9 stopped
+2025-05-04 18:22:53,966 - DEBUG - Thread #2 stopped
+2025-05-04 18:22:53,967 - DEBUG - Thread #4 stopped
+2025-05-04 18:22:53,967 - DEBUG - Thread #7 stopped
+2025-05-04 18:22:53,967 - DEBUG - Waiting for thread #2 to stop...
+2025-05-04 18:22:53,967 - DEBUG - Waiting for thread #3 to stop...
+2025-05-04 18:22:53,967 - DEBUG - Waiting for thread #4 to stop...
+2025-05-04 18:22:53,967 - DEBUG - Waiting for thread #5 to stop...
+2025-05-04 18:22:53,967 - DEBUG - Waiting for thread #6 to stop...
+2025-05-04 18:22:53,967 - DEBUG - Waiting for thread #7 to stop...
+2025-05-04 18:22:53,967 - DEBUG - Waiting for thread #8 to stop...
+2025-05-04 18:22:53,967 - DEBUG - Waiting for thread #9 to stop...
+2025-05-04 18:22:53,967 - DEBUG - Waiting for thread #10 to stop...
+2025-05-04 18:22:53,968 - DEBUG - Closing
+2025-05-04 18:26:45,360 - DEBUG - Using proactor: _IocpProactor
+2025-05-04 18:26:45,360 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-04 18:26:45,361 - DEBUG - Thread started
+2025-05-04 18:26:48,247 - DEBUG - Submitting callback <function getaddrinfo at 0x000001BB63B325C0> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-04 18:26:48,248 - DEBUG - #1 got callback <function getaddrinfo at 0x000001BB63B325C0> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-04 18:26:48,248 - DEBUG - Invoking callback
+2025-05-04 18:26:48,252 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-04 18:26:48,524 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x000001BB6547C5E0>, 0, 0, <_overlapped.Overlapped object at 0x000001BB65404930>)]
+2025-05-04 18:26:48,526 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x000001BB6547C5E0>
+2025-05-04 18:26:48,527 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x000001BB6424CFE0>, 125, 0, <_overlapped.Overlapped object at 0x000001BB654046F0>)]
+2025-05-04 18:26:48,528 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x000001BB6424CFE0>
+2025-05-04 18:26:48,630 - DEBUG - Stopping worker thread...
+2025-05-04 18:26:48,631 - DEBUG - Exiting thread
+2025-05-04 18:26:48,631 - ERROR - Ошибка запроса: no running event loop
+2025-05-04 18:26:50,022 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-04 18:26:50,022 - DEBUG - Thread started
+2025-05-04 18:26:51,080 - DEBUG - Stopping worker thread...
+2025-05-04 18:26:51,092 - DEBUG - Exiting thread
+2025-05-04 18:26:51,092 - DEBUG - Shutting down
+2025-05-04 18:26:51,092 - DEBUG - Waiting for thread #1 to stop...
+2025-05-04 18:26:51,092 - DEBUG - Thread #5 stopped
+2025-05-04 18:26:51,092 - DEBUG - Thread #3 stopped
+2025-05-04 18:26:51,092 - DEBUG - Thread #4 stopped
+2025-05-04 18:26:51,092 - DEBUG - Thread #6 stopped
+2025-05-04 18:26:51,092 - DEBUG - Thread #7 stopped
+2025-05-04 18:26:51,092 - DEBUG - Thread #9 stopped
+2025-05-04 18:26:51,092 - DEBUG - Thread #10 stopped
+2025-05-04 18:26:51,092 - DEBUG - Thread #2 stopped
+2025-05-04 18:26:51,093 - DEBUG - Thread #1 stopped
+2025-05-04 18:26:51,093 - DEBUG - Thread #8 stopped
+2025-05-04 18:26:51,093 - DEBUG - Waiting for thread #2 to stop...
+2025-05-04 18:26:51,093 - DEBUG - Waiting for thread #3 to stop...
+2025-05-04 18:26:51,093 - DEBUG - Waiting for thread #4 to stop...
+2025-05-04 18:26:51,093 - DEBUG - Waiting for thread #5 to stop...
+2025-05-04 18:26:51,093 - DEBUG - Waiting for thread #6 to stop...
+2025-05-04 18:26:51,093 - DEBUG - Waiting for thread #7 to stop...
+2025-05-04 18:26:51,093 - DEBUG - Waiting for thread #8 to stop...
+2025-05-04 18:26:51,093 - DEBUG - Waiting for thread #9 to stop...
+2025-05-04 18:26:51,094 - DEBUG - Waiting for thread #10 to stop...
+2025-05-04 18:26:51,094 - DEBUG - Closing
+2025-05-04 18:28:03,930 - DEBUG - Using proactor: _IocpProactor
+2025-05-04 18:28:03,930 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-04 18:28:03,931 - DEBUG - Thread started
+2025-05-04 18:28:06,127 - DEBUG - Submitting callback <function getaddrinfo at 0x0000021A0AAD25C0> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-04 18:28:06,128 - DEBUG - #1 got callback <function getaddrinfo at 0x0000021A0AAD25C0> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-04 18:28:06,128 - DEBUG - Invoking callback
+2025-05-04 18:28:06,132 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-04 18:28:06,397 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x0000021A0B1ECFE0>, 125, 0, <_overlapped.Overlapped object at 0x0000021A0C3947B0>)]
+2025-05-04 18:28:06,397 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x0000021A0B1ECFE0>
+2025-05-04 18:28:06,508 - DEBUG - Stopping worker thread...
+2025-05-04 18:28:06,522 - DEBUG - Exiting thread
+2025-05-04 18:28:06,522 - ERROR - Ошибка запроса: no running event loop
+2025-05-04 18:28:07,739 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-04 18:28:07,740 - DEBUG - Thread started
+2025-05-04 18:33:06,496 - DEBUG - Submitting callback <function getaddrinfo at 0x0000021A0AAD25C0> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-04 18:33:06,496 - DEBUG - #2 got callback <function getaddrinfo at 0x0000021A0AAD25C0> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-04 18:33:06,496 - DEBUG - Invoking callback
+2025-05-04 18:33:06,496 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-04 18:33:06,777 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x0000021A0C41DD00>, 0, 0, <_overlapped.Overlapped object at 0x0000021A0C394870>)]
+2025-05-04 18:33:06,778 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x0000021A0C41DD00>
+2025-05-04 18:33:06,786 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x0000021A0B1ECFE0>, 124, 0, <_overlapped.Overlapped object at 0x0000021A0C3947B0>)]
+2025-05-04 18:33:06,786 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x0000021A0B1ECFE0>
+2025-05-04 18:33:06,788 - DEBUG - Получено заказов: 0
+2025-05-04 18:33:11,799 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x0000021A0B1ECFE0>, 0, 0, <_overlapped.Overlapped object at 0x0000021A0C394C30>)]
+2025-05-04 18:33:11,801 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x0000021A0B1ECFE0>
+2025-05-04 18:34:21,224 - DEBUG - Stopping worker thread...
+2025-05-04 18:34:21,240 - DEBUG - Exiting thread
+2025-05-04 18:34:21,240 - DEBUG - Shutting down
+2025-05-04 18:34:21,240 - DEBUG - Waiting for thread #1 to stop...
+2025-05-04 18:34:21,240 - DEBUG - Thread #4 stopped
+2025-05-04 18:34:21,240 - DEBUG - Thread #5 stopped
+2025-05-04 18:34:21,240 - DEBUG - Thread #8 stopped
+2025-05-04 18:34:21,240 - DEBUG - Thread #9 stopped
+2025-05-04 18:34:21,240 - DEBUG - Thread #1 stopped
+2025-05-04 18:34:21,240 - DEBUG - Thread #2 stopped
+2025-05-04 18:34:21,241 - DEBUG - Thread #7 stopped
+2025-05-04 18:34:21,241 - DEBUG - Thread #10 stopped
+2025-05-04 18:34:21,241 - DEBUG - Thread #6 stopped
+2025-05-04 18:34:21,241 - DEBUG - Thread #3 stopped
+2025-05-04 18:34:21,241 - DEBUG - Waiting for thread #2 to stop...
+2025-05-04 18:34:21,241 - DEBUG - Waiting for thread #3 to stop...
+2025-05-04 18:34:21,241 - DEBUG - Waiting for thread #4 to stop...
+2025-05-04 18:34:21,241 - DEBUG - Waiting for thread #5 to stop...
+2025-05-04 18:34:21,241 - DEBUG - Waiting for thread #6 to stop...
+2025-05-04 18:34:21,241 - DEBUG - Waiting for thread #7 to stop...
+2025-05-04 18:34:21,242 - DEBUG - Waiting for thread #8 to stop...
+2025-05-04 18:34:21,242 - DEBUG - Waiting for thread #9 to stop...
+2025-05-04 18:34:21,242 - DEBUG - Waiting for thread #10 to stop...
+2025-05-04 18:34:21,242 - DEBUG - Closing
+2025-05-05 20:54:36,300 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 20:54:36,308 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 20:54:36,309 - DEBUG - Thread started
+2025-05-05 20:56:29,791 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 20:56:29,792 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 20:56:29,792 - DEBUG - Thread started
+2025-05-05 21:00:37,944 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:00:37,945 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 21:00:37,945 - DEBUG - Thread started
+2025-05-05 21:01:45,253 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:01:45,254 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 21:01:45,254 - DEBUG - Thread started
+2025-05-05 21:02:18,619 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:07:33,761 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:07:33,762 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 21:07:33,762 - DEBUG - Thread started
+2025-05-05 21:12:38,796 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:12:38,797 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 21:12:38,798 - DEBUG - Thread started
+2025-05-05 21:14:59,916 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:14:59,917 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 21:14:59,917 - DEBUG - Thread started
+2025-05-05 21:19:13,639 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:19:13,743 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 21:19:13,743 - DEBUG - Thread started
+2025-05-05 21:19:15,138 - DEBUG - Stopping worker thread...
+2025-05-05 21:19:15,148 - DEBUG - Exiting thread
+2025-05-05 21:19:15,148 - DEBUG - Closing
+2025-05-05 21:19:21,962 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:19:22,066 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 21:19:22,067 - DEBUG - Thread started
+2025-05-05 21:19:26,692 - ERROR - Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x000002A4EFFFF440>
+2025-05-05 21:19:30,897 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:19:31,001 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 21:19:31,001 - DEBUG - Thread started
+2025-05-05 21:19:34,300 - ERROR - Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x000002BDFC04F410>
+2025-05-05 21:21:55,386 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:21:55,387 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 21:21:55,387 - DEBUG - Thread started
+2025-05-05 21:22:13,493 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:22:13,602 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 21:22:13,602 - DEBUG - Thread started
+2025-05-05 21:22:16,539 - ERROR - Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x00000198393EF3B0>
+2025-05-05 21:23:25,596 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:23:25,703 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 21:23:25,704 - DEBUG - Thread started
+2025-05-05 21:23:30,323 - ERROR - Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x000001765A4E3530>
+2025-05-05 21:24:13,666 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:24:13,667 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 21:24:13,667 - DEBUG - Thread started
+2025-05-05 21:25:31,096 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:25:31,097 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 21:25:31,097 - DEBUG - Thread started
+2025-05-05 21:25:37,240 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:25:37,346 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 21:25:37,347 - DEBUG - Thread started
+2025-05-05 21:25:40,730 - ERROR - Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x0000021E74F2F410>
+2025-05-05 21:26:40,882 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:26:40,983 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 21:26:40,984 - DEBUG - Thread started
+2025-05-05 21:26:46,448 - ERROR - Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x000001ADD7BAF3E0>
+2025-05-05 21:28:02,045 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:28:02,148 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 21:28:02,149 - DEBUG - Thread started
+2025-05-05 21:28:17,088 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:28:17,197 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 21:28:17,197 - DEBUG - Thread started
+2025-05-05 21:28:27,184 - ERROR - Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x000001A303EEF3B0>
+2025-05-05 21:29:12,051 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:29:12,156 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 21:29:12,157 - DEBUG - Thread started
+2025-05-05 21:29:17,015 - ERROR - Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x0000025E6715F470>
+2025-05-05 21:29:59,273 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:29:59,274 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 21:29:59,275 - DEBUG - Thread started
+2025-05-05 21:30:20,054 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:30:20,055 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 21:30:20,055 - DEBUG - Thread started
+2025-05-05 21:31:38,034 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:31:38,140 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 21:31:38,140 - DEBUG - Thread started
+2025-05-05 21:31:43,416 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:31:43,536 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 21:31:43,537 - DEBUG - Thread started
+2025-05-05 21:32:27,353 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:32:27,354 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 21:32:27,358 - DEBUG - Thread started
+2025-05-05 21:32:43,830 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:32:43,939 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 21:32:43,939 - DEBUG - Thread started
+2025-05-05 21:33:55,209 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:33:55,324 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 21:33:55,324 - DEBUG - Thread started
+2025-05-05 21:35:20,087 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:35:20,088 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 21:35:20,088 - DEBUG - Thread started
+2025-05-05 21:35:20,190 - ERROR - Application crash: Traceback (most recent call last):
+  File "C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py", line 438, in start_application
+    main_window = loop.run_until_complete(run_application())
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\qasync\__init__.py", line 391, in run_until_complete
+    raise RuntimeError("Event loop already running")
+RuntimeError: Event loop already running
+
+2025-05-05 21:35:20,193 - DEBUG - Stopping worker thread...
+2025-05-05 21:35:20,196 - DEBUG - Exiting thread
+2025-05-05 21:35:59,502 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:35:59,503 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 21:35:59,503 - DEBUG - Thread started
+2025-05-05 21:35:59,504 - ERROR - Application crash: Traceback (most recent call last):
+  File "C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py", line 436, in run_app
+    success = loop.run_until_complete(async_main())
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\qasync\__init__.py", line 391, in run_until_complete
+    raise RuntimeError("Event loop already running")
+RuntimeError: Event loop already running
+
+2025-05-05 21:35:59,507 - DEBUG - Stopping worker thread...
+2025-05-05 21:35:59,522 - DEBUG - Exiting thread
+2025-05-05 21:35:59,522 - DEBUG - Closing
+2025-05-05 21:36:46,431 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:36:46,431 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 21:36:46,431 - DEBUG - Thread started
+2025-05-05 21:37:38,173 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:37:38,279 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 21:37:38,280 - DEBUG - Thread started
+2025-05-05 21:38:29,743 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:38:29,863 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 21:38:29,864 - DEBUG - Thread started
+2025-05-05 21:39:28,510 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:39:28,617 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 21:39:28,617 - DEBUG - Thread started
+2025-05-05 21:41:01,323 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:41:01,355 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 21:41:01,355 - DEBUG - Thread started
+2025-05-05 21:43:37,325 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:43:37,326 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 21:43:37,326 - DEBUG - Thread started
+2025-05-05 21:44:18,246 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:44:40,695 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:46:31,129 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:46:31,131 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 21:46:31,131 - DEBUG - Thread started
+2025-05-05 21:47:45,697 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:47:45,698 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 21:47:45,698 - DEBUG - Thread started
+2025-05-05 21:48:06,199 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 21:48:06,200 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-05 21:48:06,200 - DEBUG - Thread started
+2025-05-05 21:48:55,192 - DEBUG - Using proactor: _IocpProactor
+2025-05-05 22:17:43,800 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 22:17:45,842 - DEBUG - http://localhost:5000 "GET /shop/0ffe1abd1a08215353c233d6e009613e95eec4253832a761af28ff37ac5a150c HTTP/1.1" 200 28
+2025-05-05 22:17:45,872 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=8 HTTP/1.1" 200 2
+2025-05-05 22:17:47,893 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=8 HTTP/1.1" 200 2
+2025-05-05 22:26:36,667 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 22:26:38,720 - DEBUG - http://localhost:5000 "GET /shop/b85bf0f7330be07933314afcfc04aa8e8bb33827eb03bdf2f65ff26fd32444f5 HTTP/1.1" 200 28
+2025-05-05 22:26:38,738 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=7 HTTP/1.1" 200 2
+2025-05-05 22:26:41,117 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=7 HTTP/1.1" 200 2
+2025-05-05 22:26:47,310 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 22:26:49,366 - DEBUG - http://localhost:5000 "GET /shop/0ffe1abd1a08215353c233d6e009613e95eec4253832a761af28ff37ac5a150c HTTP/1.1" 200 28
+2025-05-05 22:26:49,384 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=8 HTTP/1.1" 200 2
+2025-05-05 22:26:51,056 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=8 HTTP/1.1" 200 2
+2025-05-05 22:26:52,267 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=8 HTTP/1.1" 200 2
+2025-05-05 22:26:52,541 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=8 HTTP/1.1" 200 2
+2025-05-05 22:26:52,837 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=8 HTTP/1.1" 200 2
+2025-05-05 22:27:16,394 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 22:27:18,438 - DEBUG - http://localhost:5000 "GET /shop/0ffe1abd1a08215353c233d6e009613e95eec4253832a761af28ff37ac5a150c HTTP/1.1" 200 28
+2025-05-05 22:27:18,455 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=8 HTTP/1.1" 200 2
+2025-05-05 22:27:19,994 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=8 HTTP/1.1" 200 2
+2025-05-05 22:27:21,442 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=8 HTTP/1.1" 200 2
+2025-05-05 22:27:29,524 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 22:27:31,571 - DEBUG - http://localhost:5000 "GET /shop/b85bf0f7330be07933314afcfc04aa8e8bb33827eb03bdf2f65ff26fd32444f5 HTTP/1.1" 200 28
+2025-05-05 22:27:31,591 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=7 HTTP/1.1" 200 209
+2025-05-05 22:27:31,767 - DEBUG - http://localhost:5000 "GET /files/order_18.docx HTTP/1.1" 200 20522
+2025-05-05 22:27:34,686 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=7 HTTP/1.1" 200 2
+2025-05-05 22:31:20,853 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 22:31:26,706 - ERROR - AUTH ERROR: HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /shop/0ffe1abd1a08215353c233d6e009613e95eec4253832a761af28ff37ac5a150c (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000022FFB1330B0>: Failed to establish a new connection: [WinError 10061] Подключение не установлено, т.к. конечный компьютер отверг запрос на подключение'))
+2025-05-05 22:32:50,339 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 22:32:52,402 - DEBUG - http://localhost:5000 "GET /shop/03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4 HTTP/1.1" 200 28
+2025-05-05 22:32:52,421 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 22:32:52,578 - DEBUG - http://localhost:5000 "GET /files/order_19.docx HTTP/1.1" 200 20522
+2025-05-05 22:32:59,952 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 22:33:02,016 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 22:33:22,430 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 22:33:24,509 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 22:33:52,435 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 22:33:54,514 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 22:34:08,028 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 22:34:10,093 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 22:34:10,098 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 22:34:10,100 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 22:34:10,102 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 22:34:10,104 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 22:34:10,106 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 22:34:10,108 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 22:38:06,081 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 22:38:08,139 - DEBUG - http://localhost:5000 "GET /shop/03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4 HTTP/1.1" 200 28
+2025-05-05 22:38:08,158 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 22:38:09,661 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 22:38:09,664 - DEBUG - http://localhost:5000 "GET /files/order_19.docx HTTP/1.1" 200 20522
+2025-05-05 22:43:05,987 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 22:43:08,046 - DEBUG - http://localhost:5000 "GET /shop/03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4 HTTP/1.1" 200 28
+2025-05-05 22:43:08,067 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 22:43:08,183 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 22:43:08,187 - DEBUG - http://localhost:5000 "GET /files/order_19.docx HTTP/1.1" 200 20522
+2025-05-05 22:43:38,058 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 22:43:40,133 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 22:44:08,061 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 22:44:10,148 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 22:44:58,958 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 22:45:01,010 - DEBUG - http://localhost:5000 "GET /shop/03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4 HTTP/1.1" 200 28
+2025-05-05 22:45:01,029 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 22:45:01,148 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 22:45:01,151 - DEBUG - http://localhost:5000 "GET /files/order_19.docx HTTP/1.1" 200 20522
+2025-05-05 22:45:09,125 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 22:45:11,157 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 22:49:20,463 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 22:49:22,495 - DEBUG - http://localhost:5000 "GET /shop/03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4 HTTP/1.1" 200 28
+2025-05-05 22:49:22,507 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 22:49:22,629 - DEBUG - http://localhost:5000 "GET /files/order_19.docx HTTP/1.1" 200 20522
+2025-05-05 22:49:33,067 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 22:49:35,105 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 22:51:28,704 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 22:51:30,747 - DEBUG - http://localhost:5000 "GET /shop/03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4 HTTP/1.1" 200 28
+2025-05-05 22:51:30,765 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 22:51:41,023 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 22:51:43,074 - DEBUG - http://localhost:5000 "GET /shop/03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4 HTTP/1.1" 200 28
+2025-05-05 22:51:43,097 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 22:51:43,219 - DEBUG - http://localhost:5000 "GET /files/order_19.docx HTTP/1.1" 200 20522
+2025-05-05 22:52:39,694 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 22:52:41,745 - DEBUG - http://localhost:5000 "GET /shop/03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4 HTTP/1.1" 200 28
+2025-05-05 22:52:41,762 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 22:53:52,951 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 22:53:54,988 - DEBUG - http://localhost:5000 "GET /shop/03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4 HTTP/1.1" 200 28
+2025-05-05 22:53:55,007 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 22:53:55,133 - DEBUG - http://localhost:5000 "GET /files/order_19.docx HTTP/1.1" 200 20522
+2025-05-05 22:54:02,518 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 22:54:04,570 - DEBUG - http://localhost:5000 "POST /orders/19/complete HTTP/1.1" 200 23
+2025-05-05 22:54:04,578 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 22:54:13,326 - ERROR - Неперехваченное исключение
+Traceback (most recent call last):
+  File "C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py", line 207, in <lambda>
+    ("Готово", lambda o=order: self.update_status(o['ID'], 'готов'))
+                                                  ~^^^^^^
+TypeError: 'bool' object is not subscriptable
+2025-05-05 22:55:39,143 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 22:55:41,186 - DEBUG - http://localhost:5000 "GET /shop/03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4 HTTP/1.1" 200 28
+2025-05-05 22:55:41,208 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 22:56:11,212 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 22:56:13,290 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 22:56:41,211 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 22:56:43,293 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 22:56:43,300 - DEBUG - http://localhost:5000 "GET /files/order_19.docx HTTP/1.1" 200 20522
+2025-05-05 22:56:45,586 - DEBUG - http://localhost:5000 "POST /orders/19/complete HTTP/1.1" 200 23
+2025-05-05 22:56:45,587 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 22:56:48,639 - ERROR - Неперехваченное исключение
+Traceback (most recent call last):
+  File "C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py", line 225, in <lambda>
+    ("Готово", lambda o=order: self.update_status(o['ID'], 'готов'))
+                                                  ~^^^^^^
+TypeError: 'bool' object is not subscriptable
+2025-05-05 22:57:11,200 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 22:57:13,262 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 22:57:13,270 - DEBUG - http://localhost:5000 "GET /files/order_20.docx HTTP/1.1" 200 20522
+2025-05-05 22:57:18,473 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 22:57:20,536 - DEBUG - http://localhost:5000 "POST /orders/20/complete HTTP/1.1" 200 23
+2025-05-05 22:57:20,542 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 22:57:28,655 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 22:57:30,690 - DEBUG - http://localhost:5000 "POST /orders/20/complete HTTP/1.1" 200 23
+2025-05-05 22:57:30,694 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 22:57:30,697 - ERROR - Неперехваченное исключение
+Traceback (most recent call last):
+  File "C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py", line 225, in <lambda>
+    ("Готово", lambda o=order: self.update_status(o['ID'], 'готов'))
+                                                  ~^^^^^^
+TypeError: 'bool' object is not subscriptable
+2025-05-05 22:58:41,951 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 22:58:43,982 - DEBUG - http://localhost:5000 "GET /shop/03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4 HTTP/1.1" 200 28
+2025-05-05 22:58:44,001 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 22:59:14,006 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 22:59:16,079 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 22:59:16,086 - DEBUG - http://localhost:5000 "GET /files/order_20.docx HTTP/1.1" 200 20522
+2025-05-05 22:59:44,019 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 22:59:46,069 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 22:59:46,079 - DEBUG - http://localhost:5000 "GET /files/order_21.docx HTTP/1.1" 200 88715
+2025-05-05 23:00:14,030 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:00:16,105 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:00:34,423 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 23:00:36,481 - DEBUG - http://localhost:5000 "GET /shop/03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4 HTTP/1.1" 200 28
+2025-05-05 23:00:36,501 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 23:00:36,623 - DEBUG - http://localhost:5000 "GET /files/order_20.docx HTTP/1.1" 200 20522
+2025-05-05 23:00:48,090 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:00:50,135 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:00:50,138 - DEBUG - http://localhost:5000 "GET /files/order_21.docx HTTP/1.1" 200 88715
+2025-05-05 23:01:06,506 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:01:08,585 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:01:15,366 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:01:17,431 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:01:39,303 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 23:01:41,356 - DEBUG - http://localhost:5000 "GET /shop/03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4 HTTP/1.1" 200 28
+2025-05-05 23:01:41,377 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 23:01:41,495 - DEBUG - http://localhost:5000 "GET /files/order_20.docx HTTP/1.1" 200 20522
+2025-05-05 23:01:43,670 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:01:43,674 - DEBUG - http://localhost:5000 "GET /files/order_21.docx HTTP/1.1" 200 88715
+2025-05-05 23:01:45,036 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:01:46,019 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:04:06,743 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 23:04:08,801 - DEBUG - http://localhost:5000 "GET /shop/03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4 HTTP/1.1" 200 28
+2025-05-05 23:04:08,819 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 23:04:08,944 - DEBUG - http://localhost:5000 "GET /files/order_20.docx HTTP/1.1" 200 20522
+2025-05-05 23:04:11,698 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:04:11,700 - DEBUG - http://localhost:5000 "GET /files/order_21.docx HTTP/1.1" 200 88715
+2025-05-05 23:04:12,754 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:04:13,817 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:04:34,631 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 23:04:36,663 - DEBUG - http://localhost:5000 "GET /shop/03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4 HTTP/1.1" 200 28
+2025-05-05 23:04:36,680 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 23:04:36,800 - DEBUG - http://localhost:5000 "GET /files/order_20.docx HTTP/1.1" 200 20522
+2025-05-05 23:05:23,340 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 23:05:25,396 - DEBUG - http://localhost:5000 "GET /shop/03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4 HTTP/1.1" 200 28
+2025-05-05 23:05:25,414 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:05:25,535 - DEBUG - http://localhost:5000 "GET /files/order_21.docx HTTP/1.1" 200 88715
+2025-05-05 23:05:26,536 - DEBUG - http://localhost:5000 "POST /orders/21/complete HTTP/1.1" 200 23
+2025-05-05 23:05:26,538 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:05:28,440 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 23:05:28,442 - DEBUG - http://localhost:5000 "GET /files/order_20.docx HTTP/1.1" 200 20522
+2025-05-05 23:05:29,424 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:05:30,630 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:07:38,781 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 23:07:40,824 - DEBUG - http://localhost:5000 "GET /shop/03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4 HTTP/1.1" 200 28
+2025-05-05 23:07:40,841 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:07:40,963 - DEBUG - http://localhost:5000 "GET /files/order_21.docx HTTP/1.1" 200 88715
+2025-05-05 23:07:43,380 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 23:07:43,384 - DEBUG - http://localhost:5000 "GET /files/order_20.docx HTTP/1.1" 200 20522
+2025-05-05 23:07:44,551 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:07:45,221 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:07:45,880 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:07:46,310 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:07:46,652 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 23:07:47,293 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:07:47,646 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:08:32,861 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 23:08:34,909 - DEBUG - http://localhost:5000 "GET /shop/03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4 HTTP/1.1" 200 28
+2025-05-05 23:08:34,926 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:08:35,049 - DEBUG - http://localhost:5000 "GET /files/order_21.docx HTTP/1.1" 200 88715
+2025-05-05 23:08:38,783 - DEBUG - http://localhost:5000 "POST /orders/21/complete HTTP/1.1" 200 23
+2025-05-05 23:08:38,784 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:08:42,759 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:08:43,686 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:08:44,103 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:08:44,385 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:08:44,709 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:08:45,027 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:08:45,411 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:08:45,776 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:08:46,139 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:08:47,160 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:08:47,368 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:09:03,638 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 23:09:05,694 - DEBUG - http://localhost:5000 "GET /shop/03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4 HTTP/1.1" 200 28
+2025-05-05 23:09:05,707 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:09:05,828 - DEBUG - http://localhost:5000 "GET /files/order_21.docx HTTP/1.1" 200 88715
+2025-05-05 23:09:06,851 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:09:07,474 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:09:08,088 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:09:08,494 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:09:08,795 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:09:09,132 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:09:09,331 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:09:09,508 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:09:09,684 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:09:10,047 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:09:10,374 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:10:24,480 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 23:10:26,521 - DEBUG - http://localhost:5000 "GET /shop/03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4 HTTP/1.1" 200 28
+2025-05-05 23:10:26,538 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:10:26,659 - DEBUG - http://localhost:5000 "GET /files/order_21.docx HTTP/1.1" 200 88715
+2025-05-05 23:10:31,650 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:10:33,709 - DEBUG - http://localhost:5000 "POST /orders/21/complete HTTP/1.1" 200 23
+2025-05-05 23:10:33,714 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:10:35,817 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:10:36,594 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:10:36,753 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:10:36,911 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:10:56,534 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:10:58,587 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:11:26,528 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:11:28,593 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:11:43,751 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:11:45,793 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 425
+2025-05-05 23:11:45,795 - DEBUG - http://localhost:5000 "GET /files/order_23.docx HTTP/1.1" 200 20522
+2025-05-05 23:11:45,805 - DEBUG - http://localhost:5000 "GET /files/order_24.docx HTTP/1.1" 200 20522
+2025-05-05 23:11:56,530 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:11:58,597 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:11:58,607 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:12:01,341 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:12:01,848 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 425
+2025-05-05 23:12:03,957 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 425
+2025-05-05 23:12:04,797 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:12:05,365 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:12:06,206 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:12:06,616 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 425
+2025-05-05 23:12:08,161 - DEBUG - http://localhost:5000 "POST /orders/23/complete HTTP/1.1" 200 23
+2025-05-05 23:12:08,163 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:12:10,938 - DEBUG - http://localhost:5000 "POST /orders/23/complete HTTP/1.1" 200 23
+2025-05-05 23:12:10,939 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:12:13,350 - DEBUG - http://localhost:5000 "POST /orders/23/complete HTTP/1.1" 200 23
+2025-05-05 23:12:13,352 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 215
+2025-05-05 23:12:14,781 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:12:15,166 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 215
+2025-05-05 23:12:15,350 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:12:15,531 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 215
+2025-05-05 23:12:15,712 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 215
+2025-05-05 23:12:15,887 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:12:16,069 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 215
+2025-05-05 23:12:16,226 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:12:16,450 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 215
+2025-05-05 23:12:16,639 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 215
+2025-05-05 23:12:17,125 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:12:17,687 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 215
+2025-05-05 23:12:18,114 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:12:18,553 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 215
+2025-05-05 23:12:26,532 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:12:28,602 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 215
+2025-05-05 23:12:54,004 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:12:56,069 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:12:56,080 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 215
+2025-05-05 23:12:56,082 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:12:56,084 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 215
+2025-05-05 23:12:56,086 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 215
+2025-05-05 23:12:56,088 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:12:56,090 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 215
+2025-05-05 23:12:56,092 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:12:56,093 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 215
+2025-05-05 23:12:56,095 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 215
+2025-05-05 23:12:56,543 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:13:01,574 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 23:13:03,604 - DEBUG - http://localhost:5000 "GET /shop/03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4 HTTP/1.1" 200 28
+2025-05-05 23:13:03,615 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:13:06,508 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 215
+2025-05-05 23:13:06,511 - DEBUG - http://localhost:5000 "GET /files/order_24.docx HTTP/1.1" 200 20522
+2025-05-05 23:13:10,898 - DEBUG - http://localhost:5000 "POST /orders/24/complete HTTP/1.1" 200 23
+2025-05-05 23:13:10,899 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:13:15,915 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:13:17,977 - DEBUG - http://localhost:5000 "POST /orders/24/complete HTTP/1.1" 200 23
+2025-05-05 23:13:17,985 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:13:20,693 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 215
+2025-05-05 23:13:21,986 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:13:22,637 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:13:27,490 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:13:27,875 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:13:28,200 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 215
+2025-05-05 23:13:28,496 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:13:33,605 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:13:35,678 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:14:03,604 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:14:05,680 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:14:33,612 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:14:35,678 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:14:49,795 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:14:51,850 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 215
+2025-05-05 23:16:01,133 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 23:16:03,190 - DEBUG - http://localhost:5000 "GET /shop/03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4 HTTP/1.1" 200 28
+2025-05-05 23:16:03,210 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:16:33,206 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:16:35,288 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:16:38,520 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:16:48,380 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:16:50,447 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:16:52,200 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:16:57,007 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 23:16:57,012 - DEBUG - http://localhost:5000 "GET /files/order_25.docx HTTP/1.1" 200 20522
+2025-05-05 23:17:03,197 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:17:05,272 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:17:06,100 - DEBUG - http://localhost:5000 "POST /orders/25/complete HTTP/1.1" 200 23
+2025-05-05 23:17:06,103 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:17:13,200 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:17:15,258 - DEBUG - http://localhost:5000 "POST /orders/25/complete HTTP/1.1" 200 23
+2025-05-05 23:17:15,259 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 23:17:21,362 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:17:23,430 - DEBUG - http://localhost:5000 "POST /orders/25/complete HTTP/1.1" 200 23
+2025-05-05 23:17:23,434 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:17:25,334 - DEBUG - http://localhost:5000 "POST /orders/25/complete HTTP/1.1" 200 23
+2025-05-05 23:17:25,336 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:19:56,821 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 23:19:58,848 - DEBUG - http://localhost:5000 "GET /shop/03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4 HTTP/1.1" 200 28
+2025-05-05 23:19:58,866 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:20:28,867 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:20:30,930 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 23:20:30,934 - DEBUG - http://localhost:5000 "GET /files/order_25.docx HTTP/1.1" 200 20522
+2025-05-05 23:20:37,678 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:20:39,739 - DEBUG - http://localhost:5000 "POST /orders/25/complete HTTP/1.1" 200 23
+2025-05-05 23:20:39,747 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:20:44,302 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:20:46,446 - DEBUG - http://localhost:5000 "POST /orders/25/complete HTTP/1.1" 200 23
+2025-05-05 23:20:46,449 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 23:20:50,885 - DEBUG - http://localhost:5000 "POST /orders/25/complete HTTP/1.1" 200 23
+2025-05-05 23:20:50,887 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:20:51,320 - DEBUG - http://localhost:5000 "POST /orders/25/complete HTTP/1.1" 200 23
+2025-05-05 23:20:51,323 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 23:20:51,328 - DEBUG - http://localhost:5000 "GET /files/order_26.docx HTTP/1.1" 200 20522
+2025-05-05 23:20:53,092 - DEBUG - http://localhost:5000 "POST /orders/26/complete HTTP/1.1" 200 23
+2025-05-05 23:20:53,094 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:20:58,859 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:21:00,934 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:21:18,885 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:21:20,949 - DEBUG - http://localhost:5000 "POST /orders/26/complete HTTP/1.1" 200 23
+2025-05-05 23:21:20,957 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 23:21:26,307 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:21:28,368 - DEBUG - http://localhost:5000 "POST /orders/26/complete HTTP/1.1" 200 23
+2025-05-05 23:21:28,376 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:21:28,385 - DEBUG - http://localhost:5000 "POST /orders/26/complete HTTP/1.1" 200 23
+2025-05-05 23:21:28,386 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:21:28,388 - DEBUG - http://localhost:5000 "POST /orders/26/complete HTTP/1.1" 200 23
+2025-05-05 23:21:28,390 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:21:28,392 - DEBUG - http://localhost:5000 "POST /orders/26/complete HTTP/1.1" 200 23
+2025-05-05 23:21:28,393 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:21:28,862 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:21:29,373 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:21:30,662 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:21:31,111 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:21:31,576 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:21:31,948 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:21:33,788 - DEBUG - http://localhost:5000 "POST /orders/26/complete HTTP/1.1" 200 23
+2025-05-05 23:21:33,790 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:21:34,086 - DEBUG - http://localhost:5000 "POST /orders/26/complete HTTP/1.1" 200 23
+2025-05-05 23:21:34,088 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:21:34,499 - DEBUG - http://localhost:5000 "POST /orders/26/complete HTTP/1.1" 200 23
+2025-05-05 23:21:34,502 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:21:54,141 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 23:21:56,183 - DEBUG - http://localhost:5000 "GET /shop/03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4 HTTP/1.1" 200 28
+2025-05-05 23:21:56,201 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:24:05,583 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 23:24:07,638 - DEBUG - http://localhost:5000 "GET /shop/0ffe1abd1a08215353c233d6e009613e95eec4253832a761af28ff37ac5a150c HTTP/1.1" 200 28
+2025-05-05 23:24:07,658 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=8 HTTP/1.1" 200 202
+2025-05-05 23:24:07,779 - DEBUG - http://localhost:5000 "GET /files/order_22.docx HTTP/1.1" 200 1519227
+2025-05-05 23:24:12,541 - DEBUG - http://localhost:5000 "POST /orders/22/complete HTTP/1.1" 200 23
+2025-05-05 23:24:12,544 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=8 HTTP/1.1" 200 202
+2025-05-05 23:24:15,402 - DEBUG - http://localhost:5000 "POST /orders/22/complete HTTP/1.1" 200 23
+2025-05-05 23:24:15,403 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=8 HTTP/1.1" 200 202
+2025-05-05 23:25:18,557 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 23:25:20,611 - DEBUG - http://localhost:5000 "GET /shop/03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4 HTTP/1.1" 200 28
+2025-05-05 23:25:20,630 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:25:50,625 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:25:52,676 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:26:05,999 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:26:08,064 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:26:09,745 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:26:15,310 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:26:17,370 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:26:20,477 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 23:26:20,482 - DEBUG - http://localhost:5000 "GET /files/order_27.docx HTTP/1.1" 200 20522
+2025-05-05 23:26:20,628 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:26:22,186 - DEBUG - http://localhost:5000 "POST /orders/27/complete HTTP/1.1" 200 23
+2025-05-05 23:26:22,187 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:26:32,869 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:26:34,936 - DEBUG - http://localhost:5000 "POST /orders/27/complete HTTP/1.1" 200 23
+2025-05-05 23:26:34,943 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 23:26:38,141 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:26:44,333 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:26:46,383 - DEBUG - http://localhost:5000 "POST /orders/27/complete HTTP/1.1" 200 23
+2025-05-05 23:26:46,384 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:26:46,389 - DEBUG - http://localhost:5000 "POST /orders/27/complete HTTP/1.1" 200 23
+2025-05-05 23:26:46,390 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 23:26:46,393 - DEBUG - http://localhost:5000 "POST /orders/27/complete HTTP/1.1" 200 23
+2025-05-05 23:26:46,394 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:26:46,396 - DEBUG - http://localhost:5000 "POST /orders/27/complete HTTP/1.1" 200 23
+2025-05-05 23:26:46,398 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:26:47,095 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 23:26:49,926 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:26:50,630 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:26:50,934 - DEBUG - http://localhost:5000 "POST /orders/27/complete HTTP/1.1" 200 23
+2025-05-05 23:26:50,937 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:26:51,170 - DEBUG - http://localhost:5000 "POST /orders/27/complete HTTP/1.1" 200 23
+2025-05-05 23:26:51,172 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:26:51,319 - DEBUG - http://localhost:5000 "POST /orders/27/complete HTTP/1.1" 200 23
+2025-05-05 23:26:51,322 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:26:51,479 - DEBUG - http://localhost:5000 "POST /orders/27/complete HTTP/1.1" 200 23
+2025-05-05 23:26:51,481 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:26:51,642 - DEBUG - http://localhost:5000 "POST /orders/27/complete HTTP/1.1" 200 23
+2025-05-05 23:26:51,645 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:26:51,804 - DEBUG - http://localhost:5000 "POST /orders/27/complete HTTP/1.1" 200 23
+2025-05-05 23:26:51,806 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:28:24,876 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 23:28:26,923 - DEBUG - http://localhost:5000 "GET /shop/03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4 HTTP/1.1" 200 28
+2025-05-05 23:28:26,942 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:28:56,947 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:28:59,009 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:29:06,478 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:29:08,548 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:29:13,086 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:29:16,438 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:29:20,094 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 23:29:20,100 - DEBUG - http://localhost:5000 "GET /files/order_28.docx HTTP/1.1" 200 20522
+2025-05-05 23:29:21,664 - DEBUG - http://localhost:5000 "POST /orders/28/complete HTTP/1.1" 200 23
+2025-05-05 23:29:21,666 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:29:26,232 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:29:26,938 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:29:28,442 - DEBUG - http://localhost:5000 "POST /orders/28/complete HTTP/1.1" 200 23
+2025-05-05 23:29:28,444 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:29:30,025 - DEBUG - http://localhost:5000 "POST /orders/28/complete HTTP/1.1" 200 23
+2025-05-05 23:29:30,027 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:29:31,083 - DEBUG - http://localhost:5000 "POST /orders/28/complete HTTP/1.1" 200 23
+2025-05-05 23:29:31,086 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:29:31,413 - DEBUG - http://localhost:5000 "POST /orders/28/complete HTTP/1.1" 200 23
+2025-05-05 23:29:31,415 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:29:31,583 - DEBUG - http://localhost:5000 "POST /orders/28/complete HTTP/1.1" 200 23
+2025-05-05 23:29:31,585 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:29:31,725 - DEBUG - http://localhost:5000 "POST /orders/28/complete HTTP/1.1" 200 23
+2025-05-05 23:29:31,728 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:29:31,905 - DEBUG - http://localhost:5000 "POST /orders/28/complete HTTP/1.1" 200 23
+2025-05-05 23:29:31,908 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:29:32,079 - DEBUG - http://localhost:5000 "POST /orders/28/complete HTTP/1.1" 200 23
+2025-05-05 23:29:32,081 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:29:32,258 - DEBUG - http://localhost:5000 "POST /orders/28/complete HTTP/1.1" 200 23
+2025-05-05 23:29:32,261 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:29:32,424 - DEBUG - http://localhost:5000 "POST /orders/28/complete HTTP/1.1" 200 23
+2025-05-05 23:29:32,427 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:29:32,615 - DEBUG - http://localhost:5000 "POST /orders/28/complete HTTP/1.1" 200 23
+2025-05-05 23:29:32,618 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:29:32,781 - DEBUG - http://localhost:5000 "POST /orders/28/complete HTTP/1.1" 200 23
+2025-05-05 23:29:32,783 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:29:32,964 - DEBUG - http://localhost:5000 "POST /orders/28/complete HTTP/1.1" 200 23
+2025-05-05 23:29:32,967 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:29:33,133 - DEBUG - http://localhost:5000 "POST /orders/28/complete HTTP/1.1" 200 23
+2025-05-05 23:29:33,135 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:29:33,290 - DEBUG - http://localhost:5000 "POST /orders/28/complete HTTP/1.1" 200 23
+2025-05-05 23:29:33,292 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:29:33,463 - DEBUG - http://localhost:5000 "POST /orders/28/complete HTTP/1.1" 200 23
+2025-05-05 23:29:33,466 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:29:33,635 - DEBUG - http://localhost:5000 "POST /orders/28/complete HTTP/1.1" 200 23
+2025-05-05 23:29:33,638 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:29:33,807 - DEBUG - http://localhost:5000 "POST /orders/28/complete HTTP/1.1" 200 23
+2025-05-05 23:29:33,809 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:29:33,988 - DEBUG - http://localhost:5000 "POST /orders/28/complete HTTP/1.1" 200 23
+2025-05-05 23:29:33,990 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:29:34,151 - DEBUG - http://localhost:5000 "POST /orders/28/complete HTTP/1.1" 200 23
+2025-05-05 23:29:34,153 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:29:34,359 - DEBUG - http://localhost:5000 "POST /orders/28/complete HTTP/1.1" 200 23
+2025-05-05 23:29:34,361 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:36:15,180 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 23:36:17,233 - DEBUG - http://localhost:5000 "GET /shop/03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4 HTTP/1.1" 200 28
+2025-05-05 23:36:17,248 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:36:47,252 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:36:49,313 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:36:55,574 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:36:57,653 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:37:00,797 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:37:05,967 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:37:08,020 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:37:10,121 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 23:37:10,162 - DEBUG - http://localhost:5000 "GET /files/order_29.docx HTTP/1.1" 200 20522
+2025-05-05 23:37:11,694 - DEBUG - http://localhost:5000 "POST /orders/29/complete HTTP/1.1" 200 23
+2025-05-05 23:37:11,696 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:37:17,272 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:37:19,352 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:37:43,710 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:37:45,770 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:37:45,775 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 23:37:47,283 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 205
+2025-05-05 23:37:52,935 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:37:55,008 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:37:57,350 - DEBUG - http://localhost:5000 "POST /orders/29/complete HTTP/1.1" 200 23
+2025-05-05 23:37:57,353 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:38:17,282 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:38:19,363 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 23:41:42,003 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 23:41:44,048 - DEBUG - http://localhost:5000 "GET /shop/03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4 HTTP/1.1" 200 28
+2025-05-05 23:41:44,068 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:41:49,076 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:41:54,069 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:41:59,065 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:42:04,063 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:42:09,067 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:42:14,077 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:42:19,068 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:42:24,075 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:42:29,065 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:42:34,076 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 23:42:34,118 - DEBUG - http://localhost:5000 "GET /files/order_30.docx HTTP/1.1" 200 20522
+2025-05-05 23:42:38,398 - DEBUG - http://localhost:5000 "POST /orders/30/complete HTTP/1.1" 200 23
+2025-05-05 23:42:38,401 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:42:39,070 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:42:44,062 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:42:49,069 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 23:42:52,007 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 205
+2025-05-05 23:42:53,857 - DEBUG - http://localhost:5000 "POST /orders/30/complete HTTP/1.1" 200 23
+2025-05-05 23:42:53,860 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:42:54,075 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:42:56,915 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 23:42:58,401 - DEBUG - http://localhost:5000 "POST /orders/30/complete HTTP/1.1" 200 23
+2025-05-05 23:42:58,404 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 205
+2025-05-05 23:42:59,079 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:42:59,405 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:43:00,758 - DEBUG - http://localhost:5000 "POST /orders/30/complete HTTP/1.1" 200 23
+2025-05-05 23:43:00,759 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:43:02,399 - DEBUG - http://localhost:5000 "POST /orders/30/complete HTTP/1.1" 200 23
+2025-05-05 23:43:02,402 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:43:04,090 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:43:04,467 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:43:04,859 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:43:05,706 - DEBUG - http://localhost:5000 "POST /orders/30/complete HTTP/1.1" 200 23
+2025-05-05 23:43:05,708 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:43:07,563 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:43:08,572 - DEBUG - http://localhost:5000 "POST /orders/30/complete HTTP/1.1" 200 23
+2025-05-05 23:43:08,575 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:43:09,082 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:43:14,092 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:43:16,168 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:43:19,112 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:43:23,439 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:43:24,115 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:43:25,698 - DEBUG - http://localhost:5000 "POST /orders/30/complete HTTP/1.1" 200 23
+2025-05-05 23:43:25,700 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:43:29,114 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:43:34,117 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:43:37,824 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:43:37,828 - DEBUG - http://localhost:5000 "GET /files/order_31.docx HTTP/1.1" 200 20522
+2025-05-05 23:43:39,104 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:43:40,933 - DEBUG - http://localhost:5000 "POST /orders/31/complete HTTP/1.1" 200 23
+2025-05-05 23:43:40,934 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 198
+2025-05-05 23:43:42,387 - DEBUG - http://localhost:5000 "POST /orders/31/complete HTTP/1.1" 200 23
+2025-05-05 23:43:42,389 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:43:43,564 - DEBUG - http://localhost:5000 "POST /orders/31/complete HTTP/1.1" 200 23
+2025-05-05 23:43:43,565 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 198
+2025-05-05 23:43:44,111 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 198
+2025-05-05 23:43:44,436 - DEBUG - http://localhost:5000 "POST /orders/31/complete HTTP/1.1" 200 23
+2025-05-05 23:43:44,438 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 202
+2025-05-05 23:43:45,344 - DEBUG - http://localhost:5000 "POST /orders/31/complete HTTP/1.1" 200 23
+2025-05-05 23:43:45,345 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 198
+2025-05-05 23:43:46,533 - DEBUG - http://localhost:5000 "POST /orders/31/complete HTTP/1.1" 200 23
+2025-05-05 23:43:46,535 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:43:46,977 - DEBUG - http://localhost:5000 "POST /orders/31/complete HTTP/1.1" 200 23
+2025-05-05 23:43:46,980 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:43:48,404 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 198
+2025-05-05 23:43:48,924 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:43:49,119 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:43:49,171 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:43:49,360 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:43:49,540 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 198
+2025-05-05 23:43:49,703 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:43:49,889 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:43:53,914 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:43:54,111 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:43:55,081 - DEBUG - http://localhost:5000 "POST /orders/31/complete HTTP/1.1" 200 23
+2025-05-05 23:43:55,083 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:47:27,235 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 23:47:33,065 - ERROR - AUTH ERROR: HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /shop/03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4 (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000157B57963C0>: Failed to establish a new connection: [WinError 10061] Подключение не установлено, т.к. конечный компьютер отверг запрос на подключение'))
+2025-05-05 23:47:39,731 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 23:47:41,781 - DEBUG - http://localhost:5000 "GET /shop/03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4 HTTP/1.1" 200 28
+2025-05-05 23:47:41,799 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:47:43,299 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:47:43,660 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:47:43,831 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:47:44,036 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:47:44,204 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:51:47,298 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-05 23:51:49,353 - DEBUG - http://localhost:5000 "GET /shop/03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4 HTTP/1.1" 200 28
+2025-05-05 23:51:54,374 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:51:56,448 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:51:59,384 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:52:04,389 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:52:06,462 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:52:09,395 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:52:14,397 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:52:19,416 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:52:21,500 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:52:24,407 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:52:29,415 - DEBUG - Resetting dropped connection: localhost
+2025-05-05 23:52:31,494 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:52:34,421 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:52:37,587 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:52:39,408 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:52:40,039 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 23:52:40,077 - DEBUG - http://localhost:5000 "GET /files/order_32.docx HTTP/1.1" 200 20522
+2025-05-05 23:52:44,209 - DEBUG - http://localhost:5000 "POST /orders/32/complete HTTP/1.1" 200 23
+2025-05-05 23:52:44,406 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:52:45,216 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:52:49,422 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:52:52,134 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 23:52:54,406 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 205
+2025-05-05 23:52:56,919 - DEBUG - http://localhost:5000 "POST /orders/32/complete HTTP/1.1" 200 23
+2025-05-05 23:52:57,921 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:52:59,412 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:53:01,518 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 23:53:02,284 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 205
+2025-05-05 23:53:02,759 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:53:03,543 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:53:04,405 - DEBUG - http://localhost:5000 "POST /orders/32/complete HTTP/1.1" 200 23
+2025-05-05 23:53:04,412 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 209
+2025-05-05 23:53:05,413 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 205
+2025-05-05 23:53:05,488 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:53:05,908 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:53:06,219 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:53:07,000 - DEBUG - http://localhost:5000 "POST /orders/32/complete HTTP/1.1" 200 23
+2025-05-05 23:53:07,996 - DEBUG - http://localhost:5000 "POST /orders/32/complete HTTP/1.1" 200 23
+2025-05-05 23:53:08,002 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:53:08,875 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:53:09,005 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:53:09,229 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:53:09,406 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:53:09,428 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:53:09,599 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:53:09,773 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:53:09,944 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:53:10,112 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:53:10,294 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:53:10,508 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:53:13,235 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:53:13,546 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2
+2025-05-05 23:53:14,410 - DEBUG - http://localhost:5000 "GET /orders?status=%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD&status=%D0%B3%D0%BE%D1%82%D0%BE%D0%B2&shop_id=9 HTTP/1.1" 200 2

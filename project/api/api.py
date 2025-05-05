@@ -27,7 +27,7 @@ async def lifespan(app: FastAPI):
     app.db_pool = await aiomysql.create_pool(
         host=os.getenv("DB_HOST", "localhost"),
         user=os.getenv("DB_USER", "root"),
-        password=os.getenv("DB_PASSWORD", "Qwerty123"),
+        password=os.getenv("DB_PASSWORD", "3465"),
         db=os.getenv("DB_NAME", "send_to_print"),
         auth_plugin='mysql_native_password',
         minsize=5,
@@ -54,9 +54,10 @@ app.mount("/uploads", StaticFiles(directory=UPLOAD_FOLDER), name="uploads")
 
 @app.get("/orders", response_model=List[dict])
 async def get_orders(
-    status: List[str] = Query(..., title="Статусы заказов"),
-    shop_id: Optional[int] = Query(None, title="ID магазина")
+        status: List[str] = Query(..., title="Статусы заказов"),
+        shop_id: Optional[int] = Query(None, title="ID магазина")
 ):
+    allowed_statuses = {"получен", "готов"}  # "выдан" исключён
     try:
         allowed_statuses = {"получен", "готов"}
         invalid_statuses = [s for s in status if s not in allowed_statuses]
@@ -118,21 +119,22 @@ async def update_order_status(order_id: int, data: OrderUpdate):
 
 
 @app.post("/orders/{order_id}/complete")
-async def complete_order(order_id: int):
+async def complete_order(order_id: int, data: OrderUpdate):  # Используем OrderUpdate
     try:
+        allowed_statuses = {"готов", "выдан"}  # Разрешаем только эти статусы
+        if data.status not in allowed_statuses:
+            raise HTTPException(400, detail="Недопустимый статус")
+
         async with app.db_pool.acquire() as conn:
             async with conn.cursor() as cursor:
-                # Только обновление статуса без удаления файла
                 await cursor.execute(
-                    "UPDATE `order` SET status = 'выдан' WHERE ID = %s",
-                    (order_id,)
+                    "UPDATE `order` SET status = %s WHERE ID = %s",
+                    (data.status, order_id)
                 )
                 await conn.commit()
-                return {"status": "выдан"}
-
+                return {"status": data.status}  # Возвращаем актуальный статус
     except Exception as e:
         await conn.rollback()
-        logging.error(f"Ошибка: {traceback.format_exc()}")
         raise HTTPException(500, detail="Ошибка сервера")
 
 

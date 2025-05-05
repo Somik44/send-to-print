@@ -1,0 +1,916 @@
+2025-05-04 17:27:36,597 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-05-04 17:27:36,598 - aiogram.dispatcher - INFO - Start polling
+2025-05-04 17:27:36,783 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-04 17:43:27,762 - aiogram.event - INFO - Update id=161352984 is handled. Duration 202 ms by bot id=7818669005
+2025-05-04 17:43:29,492 - aiogram.event - INFO - Update id=161352985 is handled. Duration 421 ms by bot id=7818669005
+2025-05-04 17:43:32,427 - aiogram.event - INFO - Update id=161352986 is handled. Duration 375 ms by bot id=7818669005
+2025-05-04 17:52:19,970 - aiogram.event - INFO - Update id=161352987 is handled. Duration 187 ms by bot id=7818669005
+2025-05-04 17:52:21,238 - root - INFO - 10-минутный таймер отменен
+2025-05-04 17:52:21,573 - aiogram.event - INFO - Update id=161352988 is handled. Duration 343 ms by bot id=7818669005
+2025-05-04 17:52:23,669 - aiogram.event - INFO - Update id=161352989 is handled. Duration 375 ms by bot id=7818669005
+2025-05-04 17:52:31,716 - aiogram.event - INFO - Update id=161352990 is handled. Duration 141 ms by bot id=7818669005
+2025-05-04 17:52:36,312 - aiogram.dispatcher - INFO - Polling stopped
+2025-05-04 17:52:36,571 - root - INFO - 10-минутный таймер отменен
+2025-05-04 17:52:36,571 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-04 17:52:42,853 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-05-04 17:52:42,854 - aiogram.dispatcher - INFO - Start polling
+2025-05-04 17:52:43,023 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-04 17:52:52,366 - aiogram.event - INFO - Update id=161352991 is handled. Duration 484 ms by bot id=7818669005
+2025-05-04 17:52:54,040 - aiogram.event - INFO - Update id=161352992 is handled. Duration 375 ms by bot id=7818669005
+2025-05-04 17:53:05,532 - root - ERROR - Ошибка обработки файла: Traceback (most recent call last):
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1122, in _wrap_create_connection
+    return await self._loop.create_connection(*args, **kwargs, sock=sock)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\asyncio\base_events.py", line 1149, in create_connection
+    transport, protocol = await self._create_connection_transport(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\asyncio\base_events.py", line 1182, in _create_connection_transport
+    await waiter
+  File "C:\Program Files\Python312\Lib\asyncio\sslproto.py", line 578, in _on_handshake_complete
+    raise handshake_exc
+  File "C:\Program Files\Python312\Lib\asyncio\sslproto.py", line 560, in _do_handshake
+    self._sslobj.do_handshake()
+  File "C:\Program Files\Python312\Lib\ssl.py", line 917, in do_handshake
+    self._sslobj.do_handshake()
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1000)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\send_to_ptint\send-to-print\project\bot\bot.py", line 176, in process_file
+    async with session.get(file_url) as resp:
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\client.py", line 1425, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\client.py", line 703, in _request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 548, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1056, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1406, in _create_direct_connection
+    raise last_exc
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1375, in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1124, in _wrap_create_connection
+    raise ClientConnectorCertificateError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host api.telegram.org:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1000)')]
+
+2025-05-04 17:53:05,758 - aiogram.event - INFO - Update id=161352993 is handled. Duration 530 ms by bot id=7818669005
+2025-05-04 17:53:15,491 - aiogram.event - INFO - Update id=161352994 is handled. Duration 93 ms by bot id=7818669005
+2025-05-04 17:53:16,561 - root - INFO - 10-минутный таймер отменен
+2025-05-04 17:53:16,897 - aiogram.event - INFO - Update id=161352995 is handled. Duration 327 ms by bot id=7818669005
+2025-05-04 17:53:18,395 - aiogram.event - INFO - Update id=161352996 is handled. Duration 327 ms by bot id=7818669005
+2025-05-04 17:53:29,914 - root - ERROR - Ошибка обработки файла: Traceback (most recent call last):
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1122, in _wrap_create_connection
+    return await self._loop.create_connection(*args, **kwargs, sock=sock)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\asyncio\base_events.py", line 1149, in create_connection
+    transport, protocol = await self._create_connection_transport(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\asyncio\base_events.py", line 1182, in _create_connection_transport
+    await waiter
+  File "C:\Program Files\Python312\Lib\asyncio\sslproto.py", line 578, in _on_handshake_complete
+    raise handshake_exc
+  File "C:\Program Files\Python312\Lib\asyncio\sslproto.py", line 560, in _do_handshake
+    self._sslobj.do_handshake()
+  File "C:\Program Files\Python312\Lib\ssl.py", line 917, in do_handshake
+    self._sslobj.do_handshake()
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1000)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\send_to_ptint\send-to-print\project\bot\bot.py", line 176, in process_file
+    async with session.get(file_url) as resp:
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\client.py", line 1425, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\client.py", line 703, in _request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 548, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1056, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1406, in _create_direct_connection
+    raise last_exc
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1375, in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1124, in _wrap_create_connection
+    raise ClientConnectorCertificateError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host api.telegram.org:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1000)')]
+
+2025-05-04 17:53:30,189 - aiogram.event - INFO - Update id=161352997 is handled. Duration 563 ms by bot id=7818669005
+2025-05-04 17:54:13,212 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-04 17:54:13,212 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7818669005)
+2025-05-04 17:54:18,418 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-04 17:54:18,419 - aiogram.dispatcher - WARNING - Sleep for 1.187531 seconds and try again... (tryings = 1, bot id = 7818669005)
+2025-05-04 17:54:24,168 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-04 17:54:24,169 - aiogram.dispatcher - WARNING - Sleep for 1.563022 seconds and try again... (tryings = 2, bot id = 7818669005)
+2025-05-04 17:54:30,638 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-04 17:54:30,638 - aiogram.dispatcher - WARNING - Sleep for 2.087840 seconds and try again... (tryings = 3, bot id = 7818669005)
+2025-05-04 17:54:38,228 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-04 17:54:38,228 - aiogram.dispatcher - WARNING - Sleep for 2.597276 seconds and try again... (tryings = 4, bot id = 7818669005)
+2025-05-04 17:54:43,680 - aiogram.dispatcher - INFO - Connection established (tryings = 5, bot id = 7818669005)
+2025-05-04 17:54:43,779 - aiogram.event - INFO - Update id=161352998 is handled. Duration 93 ms by bot id=7818669005
+2025-05-04 17:54:46,477 - aiogram.event - INFO - Update id=161352999 is handled. Duration 375 ms by bot id=7818669005
+2025-05-04 17:54:46,921 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-04 17:54:46,921 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7818669005)
+2025-05-04 17:54:52,108 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-04 17:54:52,109 - aiogram.dispatcher - WARNING - Sleep for 1.316236 seconds and try again... (tryings = 1, bot id = 7818669005)
+2025-05-04 17:54:58,038 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-04 17:54:58,038 - aiogram.dispatcher - WARNING - Sleep for 1.861915 seconds and try again... (tryings = 2, bot id = 7818669005)
+2025-05-04 17:55:03,012 - aiogram.dispatcher - INFO - Polling stopped
+2025-05-04 17:55:03,276 - root - INFO - 10-минутный таймер отменен
+2025-05-04 17:55:03,276 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-04 17:55:03,276 - root - INFO - 10-минутный таймер отменен
+2025-05-04 17:58:25,719 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-05-04 17:58:25,720 - aiogram.dispatcher - INFO - Start polling
+2025-05-04 17:58:25,903 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-04 17:58:30,046 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-04 17:58:30,046 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7818669005)
+2025-05-04 17:58:31,119 - aiogram.dispatcher - INFO - Connection established (tryings = 1, bot id = 7818669005)
+2025-05-04 17:58:31,384 - aiogram.event - INFO - Update id=161353007 is handled. Duration 250 ms by bot id=7818669005
+2025-05-04 17:58:35,247 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-04 17:58:35,247 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7818669005)
+2025-05-04 17:58:39,152 - aiogram.dispatcher - INFO - Connection established (tryings = 1, bot id = 7818669005)
+2025-05-04 17:58:39,276 - aiogram.event - INFO - Update id=161353008 is handled. Duration 125 ms by bot id=7818669005
+2025-05-04 17:58:40,919 - aiogram.event - INFO - Update id=161353009 is handled. Duration 344 ms by bot id=7818669005
+2025-05-04 17:58:42,268 - aiogram.event - INFO - Update id=161353010 is handled. Duration 391 ms by bot id=7818669005
+2025-05-04 17:58:55,253 - root - ERROR - Ошибка обработки файла: Traceback (most recent call last):
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1122, in _wrap_create_connection
+    return await self._loop.create_connection(*args, **kwargs, sock=sock)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\asyncio\base_events.py", line 1149, in create_connection
+    transport, protocol = await self._create_connection_transport(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\asyncio\base_events.py", line 1182, in _create_connection_transport
+    await waiter
+  File "C:\Program Files\Python312\Lib\asyncio\sslproto.py", line 578, in _on_handshake_complete
+    raise handshake_exc
+  File "C:\Program Files\Python312\Lib\asyncio\sslproto.py", line 560, in _do_handshake
+    self._sslobj.do_handshake()
+  File "C:\Program Files\Python312\Lib\ssl.py", line 917, in do_handshake
+    self._sslobj.do_handshake()
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1000)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\send_to_ptint\send-to-print\project\bot\bot.py", line 176, in process_file
+    async with session.get(file_url) as resp:
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\client.py", line 1425, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\client.py", line 703, in _request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 548, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1056, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1406, in _create_direct_connection
+    raise last_exc
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1375, in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1124, in _wrap_create_connection
+    raise ClientConnectorCertificateError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host api.telegram.org:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1000)')]
+
+2025-05-04 17:58:55,393 - aiogram.event - INFO - Update id=161353011 is handled. Duration 688 ms by bot id=7818669005
+2025-05-04 18:00:33,689 - aiogram.dispatcher - INFO - Polling stopped
+2025-05-04 18:00:33,955 - root - INFO - 10-минутный таймер отменен
+2025-05-04 18:00:33,955 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-04 18:00:46,861 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-05-04 18:00:46,874 - aiogram.dispatcher - INFO - Start polling
+2025-05-04 18:00:47,056 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-04 18:00:51,850 - aiogram.event - INFO - Update id=161353012 is handled. Duration 219 ms by bot id=7818669005
+2025-05-04 18:00:54,085 - aiogram.event - INFO - Update id=161353013 is handled. Duration 343 ms by bot id=7818669005
+2025-05-04 18:00:55,250 - aiogram.event - INFO - Update id=161353014 is handled. Duration 375 ms by bot id=7818669005
+2025-05-04 18:01:01,920 - root - ERROR - Ошибка обработки файла: Traceback (most recent call last):
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1122, in _wrap_create_connection
+    return await self._loop.create_connection(*args, **kwargs, sock=sock)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\asyncio\base_events.py", line 1149, in create_connection
+    transport, protocol = await self._create_connection_transport(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\asyncio\base_events.py", line 1182, in _create_connection_transport
+    await waiter
+  File "C:\Program Files\Python312\Lib\asyncio\sslproto.py", line 578, in _on_handshake_complete
+    raise handshake_exc
+  File "C:\Program Files\Python312\Lib\asyncio\sslproto.py", line 560, in _do_handshake
+    self._sslobj.do_handshake()
+  File "C:\Program Files\Python312\Lib\ssl.py", line 917, in do_handshake
+    self._sslobj.do_handshake()
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1000)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\send_to_ptint\send-to-print\project\bot\bot.py", line 176, in process_file
+    async with session.get(file_url) as resp:
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\client.py", line 1425, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\client.py", line 703, in _request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 548, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1056, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1406, in _create_direct_connection
+    raise last_exc
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1375, in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1124, in _wrap_create_connection
+    raise ClientConnectorCertificateError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host api.telegram.org:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1000)')]
+
+2025-05-04 18:01:02,175 - aiogram.event - INFO - Update id=161353015 is handled. Duration 547 ms by bot id=7818669005
+2025-05-04 18:05:03,967 - aiogram.dispatcher - INFO - Polling stopped
+2025-05-04 18:05:04,230 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-04 18:05:04,230 - root - INFO - 10-минутный таймер отменен
+2025-05-04 18:05:13,832 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-05-04 18:05:13,833 - aiogram.dispatcher - INFO - Start polling
+2025-05-04 18:05:14,015 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-04 18:05:36,000 - aiogram.event - INFO - Update id=161353016 is handled. Duration 297 ms by bot id=7818669005
+2025-05-04 18:05:39,026 - aiogram.event - INFO - Update id=161353017 is handled. Duration 109 ms by bot id=7818669005
+2025-05-04 18:05:40,628 - aiogram.event - INFO - Update id=161353018 is handled. Duration 436 ms by bot id=7818669005
+2025-05-04 18:05:42,029 - aiogram.event - INFO - Update id=161353019 is handled. Duration 500 ms by bot id=7818669005
+2025-05-04 18:05:47,839 - root - ERROR - Ошибка обработки файла: Traceback (most recent call last):
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1122, in _wrap_create_connection
+    return await self._loop.create_connection(*args, **kwargs, sock=sock)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\asyncio\base_events.py", line 1149, in create_connection
+    transport, protocol = await self._create_connection_transport(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\asyncio\base_events.py", line 1182, in _create_connection_transport
+    await waiter
+  File "C:\Program Files\Python312\Lib\asyncio\sslproto.py", line 578, in _on_handshake_complete
+    raise handshake_exc
+  File "C:\Program Files\Python312\Lib\asyncio\sslproto.py", line 560, in _do_handshake
+    self._sslobj.do_handshake()
+  File "C:\Program Files\Python312\Lib\ssl.py", line 917, in do_handshake
+    self._sslobj.do_handshake()
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1000)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\send_to_ptint\send-to-print\project\bot\bot.py", line 176, in process_file
+    async with session.get(file_url) as resp:
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\client.py", line 1425, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\client.py", line 703, in _request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 548, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1056, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1406, in _create_direct_connection
+    raise last_exc
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1375, in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1124, in _wrap_create_connection
+    raise ClientConnectorCertificateError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host api.telegram.org:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1000)')]
+
+2025-05-04 18:05:48,021 - aiogram.event - INFO - Update id=161353020 is handled. Duration 500 ms by bot id=7818669005
+2025-05-04 18:05:52,284 - aiogram.dispatcher - INFO - Polling stopped
+2025-05-04 18:05:52,528 - root - INFO - 10-минутный таймер отменен
+2025-05-04 18:05:52,528 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-04 18:05:55,109 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-05-04 18:05:55,110 - aiogram.dispatcher - INFO - Start polling
+2025-05-04 18:05:55,281 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-04 18:05:58,271 - aiogram.event - INFO - Update id=161353021 is handled. Duration 202 ms by bot id=7818669005
+2025-05-04 18:05:59,781 - aiogram.event - INFO - Update id=161353022 is handled. Duration 343 ms by bot id=7818669005
+2025-05-04 18:06:01,303 - aiogram.event - INFO - Update id=161353023 is handled. Duration 375 ms by bot id=7818669005
+2025-05-04 18:06:10,333 - root - ERROR - Ошибка обработки файла: Traceback (most recent call last):
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1122, in _wrap_create_connection
+    return await self._loop.create_connection(*args, **kwargs, sock=sock)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\asyncio\base_events.py", line 1149, in create_connection
+    transport, protocol = await self._create_connection_transport(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\asyncio\base_events.py", line 1182, in _create_connection_transport
+    await waiter
+  File "C:\Program Files\Python312\Lib\asyncio\sslproto.py", line 578, in _on_handshake_complete
+    raise handshake_exc
+  File "C:\Program Files\Python312\Lib\asyncio\sslproto.py", line 560, in _do_handshake
+    self._sslobj.do_handshake()
+  File "C:\Program Files\Python312\Lib\ssl.py", line 917, in do_handshake
+    self._sslobj.do_handshake()
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1000)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\send_to_ptint\send-to-print\project\bot\bot.py", line 176, in process_file
+    async with session.get(file_url) as resp:
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\client.py", line 1425, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\client.py", line 703, in _request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 548, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1056, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1406, in _create_direct_connection
+    raise last_exc
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1375, in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1124, in _wrap_create_connection
+    raise ClientConnectorCertificateError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host api.telegram.org:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1000)')]
+
+2025-05-04 18:06:10,496 - aiogram.event - INFO - Update id=161353024 is handled. Duration 422 ms by bot id=7818669005
+2025-05-04 18:08:11,669 - aiogram.event - INFO - Update id=161353025 is handled. Duration 108 ms by bot id=7818669005
+2025-05-04 18:08:13,370 - root - INFO - 10-минутный таймер отменен
+2025-05-04 18:08:13,834 - aiogram.event - INFO - Update id=161353026 is handled. Duration 468 ms by bot id=7818669005
+2025-05-04 18:08:15,077 - aiogram.event - INFO - Update id=161353027 is handled. Duration 389 ms by bot id=7818669005
+2025-05-04 18:08:22,011 - root - ERROR - Ошибка обработки файла: Traceback (most recent call last):
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1122, in _wrap_create_connection
+    return await self._loop.create_connection(*args, **kwargs, sock=sock)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\asyncio\base_events.py", line 1149, in create_connection
+    transport, protocol = await self._create_connection_transport(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\asyncio\base_events.py", line 1182, in _create_connection_transport
+    await waiter
+  File "C:\Program Files\Python312\Lib\asyncio\sslproto.py", line 578, in _on_handshake_complete
+    raise handshake_exc
+  File "C:\Program Files\Python312\Lib\asyncio\sslproto.py", line 560, in _do_handshake
+    self._sslobj.do_handshake()
+  File "C:\Program Files\Python312\Lib\ssl.py", line 917, in do_handshake
+    self._sslobj.do_handshake()
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1000)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\send_to_ptint\send-to-print\project\bot\bot.py", line 176, in process_file
+    async with session.get(file_url) as resp:
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\client.py", line 1425, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\client.py", line 703, in _request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 548, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1056, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1406, in _create_direct_connection
+    raise last_exc
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1375, in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1124, in _wrap_create_connection
+    raise ClientConnectorCertificateError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host api.telegram.org:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1000)')]
+
+2025-05-04 18:08:22,189 - aiogram.event - INFO - Update id=161353028 is handled. Duration 688 ms by bot id=7818669005
+2025-05-04 18:08:40,963 - aiogram.event - INFO - Update id=161353029 is handled. Duration 109 ms by bot id=7818669005
+2025-05-04 18:08:42,071 - root - INFO - 10-минутный таймер отменен
+2025-05-04 18:08:42,414 - aiogram.event - INFO - Update id=161353030 is handled. Duration 343 ms by bot id=7818669005
+2025-05-04 18:08:46,289 - aiogram.event - INFO - Update id=161353031 is handled. Duration 328 ms by bot id=7818669005
+2025-05-04 18:08:58,951 - root - ERROR - Ошибка обработки файла: Traceback (most recent call last):
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1122, in _wrap_create_connection
+    return await self._loop.create_connection(*args, **kwargs, sock=sock)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\asyncio\base_events.py", line 1149, in create_connection
+    transport, protocol = await self._create_connection_transport(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\asyncio\base_events.py", line 1182, in _create_connection_transport
+    await waiter
+  File "C:\Program Files\Python312\Lib\asyncio\sslproto.py", line 578, in _on_handshake_complete
+    raise handshake_exc
+  File "C:\Program Files\Python312\Lib\asyncio\sslproto.py", line 560, in _do_handshake
+    self._sslobj.do_handshake()
+  File "C:\Program Files\Python312\Lib\ssl.py", line 917, in do_handshake
+    self._sslobj.do_handshake()
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1000)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\send_to_ptint\send-to-print\project\bot\bot.py", line 176, in process_file
+    async with session.get(file_url) as resp:
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\client.py", line 1425, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\client.py", line 703, in _request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 548, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1056, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1406, in _create_direct_connection
+    raise last_exc
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1375, in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1124, in _wrap_create_connection
+    raise ClientConnectorCertificateError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host api.telegram.org:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1000)')]
+
+2025-05-04 18:08:59,161 - aiogram.event - INFO - Update id=161353032 is handled. Duration 531 ms by bot id=7818669005
+2025-05-04 18:13:39,224 - aiogram.event - INFO - Update id=161353033 is handled. Duration 359 ms by bot id=7818669005
+2025-05-04 18:13:40,507 - aiogram.event - INFO - Update id=161353034 is handled. Duration 343 ms by bot id=7818669005
+2025-05-04 18:13:47,853 - root - ERROR - Ошибка обработки файла: Traceback (most recent call last):
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1122, in _wrap_create_connection
+    return await self._loop.create_connection(*args, **kwargs, sock=sock)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\asyncio\base_events.py", line 1149, in create_connection
+    transport, protocol = await self._create_connection_transport(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\asyncio\base_events.py", line 1182, in _create_connection_transport
+    await waiter
+  File "C:\Program Files\Python312\Lib\asyncio\sslproto.py", line 578, in _on_handshake_complete
+    raise handshake_exc
+  File "C:\Program Files\Python312\Lib\asyncio\sslproto.py", line 560, in _do_handshake
+    self._sslobj.do_handshake()
+  File "C:\Program Files\Python312\Lib\ssl.py", line 917, in do_handshake
+    self._sslobj.do_handshake()
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1000)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\send_to_ptint\send-to-print\project\bot\bot.py", line 176, in process_file
+    async with session.get(file_url) as resp:
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\client.py", line 1425, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\client.py", line 703, in _request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 548, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1056, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1406, in _create_direct_connection
+    raise last_exc
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1375, in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1124, in _wrap_create_connection
+    raise ClientConnectorCertificateError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host api.telegram.org:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1000)')]
+
+2025-05-04 18:13:48,000 - aiogram.event - INFO - Update id=161353035 is handled. Duration 405 ms by bot id=7818669005
+2025-05-04 18:14:48,787 - aiogram.dispatcher - INFO - Polling stopped
+2025-05-04 18:14:49,039 - root - INFO - 10-минутный таймер отменен
+2025-05-04 18:14:49,040 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-04 18:14:49,040 - root - INFO - 10-минутный таймер отменен
+2025-05-04 18:14:53,399 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-05-04 18:14:53,400 - aiogram.dispatcher - INFO - Start polling
+2025-05-04 18:14:53,575 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-04 18:14:59,372 - aiogram.dispatcher - INFO - Polling stopped
+2025-05-04 18:14:59,629 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-04 18:15:05,648 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-05-04 18:15:05,649 - aiogram.dispatcher - INFO - Start polling
+2025-05-04 18:15:05,824 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-04 18:15:07,076 - aiogram.event - INFO - Update id=161353036 is handled. Duration 250 ms by bot id=7818669005
+2025-05-04 18:15:08,522 - aiogram.event - INFO - Update id=161353037 is handled. Duration 344 ms by bot id=7818669005
+2025-05-04 18:15:10,046 - aiogram.event - INFO - Update id=161353038 is handled. Duration 375 ms by bot id=7818669005
+2025-05-04 18:15:17,673 - root - ERROR - Ошибка обработки файла: Traceback (most recent call last):
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1122, in _wrap_create_connection
+    return await self._loop.create_connection(*args, **kwargs, sock=sock)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\asyncio\base_events.py", line 1149, in create_connection
+    transport, protocol = await self._create_connection_transport(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\asyncio\base_events.py", line 1182, in _create_connection_transport
+    await waiter
+  File "C:\Program Files\Python312\Lib\asyncio\sslproto.py", line 578, in _on_handshake_complete
+    raise handshake_exc
+  File "C:\Program Files\Python312\Lib\asyncio\sslproto.py", line 560, in _do_handshake
+    self._sslobj.do_handshake()
+  File "C:\Program Files\Python312\Lib\ssl.py", line 917, in do_handshake
+    self._sslobj.do_handshake()
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1000)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\send_to_ptint\send-to-print\project\bot\bot.py", line 176, in process_file
+    async with session.get(file_url) as resp:
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\client.py", line 1425, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\client.py", line 703, in _request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 548, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1056, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1406, in _create_direct_connection
+    raise last_exc
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1375, in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1124, in _wrap_create_connection
+    raise ClientConnectorCertificateError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host api.telegram.org:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1000)')]
+
+2025-05-04 18:15:17,893 - aiogram.event - INFO - Update id=161353039 is handled. Duration 734 ms by bot id=7818669005
+2025-05-04 18:16:31,895 - aiogram.dispatcher - INFO - Polling stopped
+2025-05-04 18:16:32,157 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-04 18:16:32,157 - root - INFO - 10-минутный таймер отменен
+2025-05-04 18:16:37,715 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-05-04 18:16:37,716 - aiogram.dispatcher - INFO - Start polling
+2025-05-04 18:16:37,904 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-04 18:16:40,725 - aiogram.event - INFO - Update id=161353040 is handled. Duration 187 ms by bot id=7818669005
+2025-05-04 18:16:42,234 - aiogram.event - INFO - Update id=161353041 is handled. Duration 375 ms by bot id=7818669005
+2025-05-04 18:16:44,386 - aiogram.event - INFO - Update id=161353042 is handled. Duration 391 ms by bot id=7818669005
+2025-05-04 18:16:55,059 - root - ERROR - Ошибка обработки файла: Traceback (most recent call last):
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1122, in _wrap_create_connection
+    return await self._loop.create_connection(*args, **kwargs, sock=sock)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\asyncio\base_events.py", line 1149, in create_connection
+    transport, protocol = await self._create_connection_transport(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\asyncio\base_events.py", line 1182, in _create_connection_transport
+    await waiter
+  File "C:\Program Files\Python312\Lib\asyncio\sslproto.py", line 578, in _on_handshake_complete
+    raise handshake_exc
+  File "C:\Program Files\Python312\Lib\asyncio\sslproto.py", line 560, in _do_handshake
+    self._sslobj.do_handshake()
+  File "C:\Program Files\Python312\Lib\ssl.py", line 917, in do_handshake
+    self._sslobj.do_handshake()
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1000)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\send_to_ptint\send-to-print\project\bot\bot.py", line 176, in process_file
+    async with session.get(file_url) as resp:
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\client.py", line 1425, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\client.py", line 703, in _request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 548, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1056, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1406, in _create_direct_connection
+    raise last_exc
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1375, in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1124, in _wrap_create_connection
+    raise ClientConnectorCertificateError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host api.telegram.org:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1000)')]
+
+2025-05-04 18:16:55,212 - aiogram.event - INFO - Update id=161353043 is handled. Duration 389 ms by bot id=7818669005
+2025-05-04 18:19:47,315 - aiogram.dispatcher - INFO - Polling stopped
+2025-05-04 18:19:47,579 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-04 18:19:47,579 - root - INFO - 10-минутный таймер отменен
+2025-05-05 22:15:32,309 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-05-05 22:15:32,310 - aiogram.dispatcher - INFO - Start polling
+2025-05-05 22:15:32,508 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-05 22:15:33,606 - aiogram.dispatcher - INFO - Polling stopped
+2025-05-05 22:15:33,864 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-05 22:16:06,688 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-05-05 22:16:06,689 - aiogram.dispatcher - INFO - Start polling
+2025-05-05 22:16:06,862 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-05 22:16:19,144 - aiogram.dispatcher - INFO - Polling stopped
+2025-05-05 22:16:19,405 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-05 22:16:22,029 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-05-05 22:16:22,030 - aiogram.dispatcher - INFO - Start polling
+2025-05-05 22:16:22,192 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-05 22:16:45,901 - aiogram.event - INFO - Update id=161353060 is handled. Duration 187 ms by bot id=7818669005
+2025-05-05 22:16:47,492 - aiogram.event - INFO - Update id=161353061 is handled. Duration 375 ms by bot id=7818669005
+2025-05-05 22:16:51,627 - aiogram.event - INFO - Update id=161353062 is handled. Duration 327 ms by bot id=7818669005
+2025-05-05 22:17:01,384 - root - ERROR - Ошибка обработки файла: Traceback (most recent call last):
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1122, in _wrap_create_connection
+    return await self._loop.create_connection(*args, **kwargs, sock=sock)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\asyncio\base_events.py", line 1149, in create_connection
+    transport, protocol = await self._create_connection_transport(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\asyncio\base_events.py", line 1182, in _create_connection_transport
+    await waiter
+  File "C:\Program Files\Python312\Lib\asyncio\sslproto.py", line 578, in _on_handshake_complete
+    raise handshake_exc
+  File "C:\Program Files\Python312\Lib\asyncio\sslproto.py", line 560, in _do_handshake
+    self._sslobj.do_handshake()
+  File "C:\Program Files\Python312\Lib\ssl.py", line 917, in do_handshake
+    self._sslobj.do_handshake()
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1000)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\send_to_ptint\send-to-print\project\bot\bot.py", line 176, in process_file
+    async with session.get(file_url) as resp:
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\client.py", line 1425, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\client.py", line 703, in _request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 548, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1056, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1406, in _create_direct_connection
+    raise last_exc
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1375, in _create_direct_connection
+    transp, proto = await self._wrap_create_connection(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiohttp\connector.py", line 1124, in _wrap_create_connection
+    raise ClientConnectorCertificateError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorCertificateError: Cannot connect to host api.telegram.org:443 ssl:True [SSLCertVerificationError: (1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1000)')]
+
+2025-05-05 22:17:01,525 - aiogram.event - INFO - Update id=161353063 is handled. Duration 672 ms by bot id=7818669005
+2025-05-05 22:17:08,881 - aiogram.dispatcher - INFO - Polling stopped
+2025-05-05 22:17:09,122 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-05 22:17:09,122 - root - INFO - 10-минутный таймер отменен
+2025-05-05 22:23:53,597 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-05-05 22:23:53,598 - aiogram.dispatcher - INFO - Start polling
+2025-05-05 22:23:53,779 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-05 22:23:56,642 - aiogram.event - INFO - Update id=161353064 is handled. Duration 203 ms by bot id=7818669005
+2025-05-05 22:23:58,158 - aiogram.event - INFO - Update id=161353065 is handled. Duration 343 ms by bot id=7818669005
+2025-05-05 22:23:59,450 - aiogram.event - INFO - Update id=161353066 is handled. Duration 359 ms by bot id=7818669005
+2025-05-05 22:24:22,577 - aiogram.event - INFO - Update id=161353067 is handled. Duration 562 ms by bot id=7818669005
+2025-05-05 22:24:34,309 - aiogram.dispatcher - INFO - Polling stopped
+2025-05-05 22:24:34,575 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-05 22:24:34,576 - root - INFO - 10-минутный таймер отменен
+2025-05-05 22:26:00,593 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-05-05 22:26:00,594 - aiogram.dispatcher - INFO - Start polling
+2025-05-05 22:26:00,774 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-05 22:26:03,210 - aiogram.event - INFO - Update id=161353068 is handled. Duration 234 ms by bot id=7818669005
+2025-05-05 22:26:04,641 - aiogram.event - INFO - Update id=161353069 is handled. Duration 328 ms by bot id=7818669005
+2025-05-05 22:26:05,829 - aiogram.event - INFO - Update id=161353070 is handled. Duration 344 ms by bot id=7818669005
+2025-05-05 22:26:12,697 - root - INFO - Начинаем загрузку файла: https://api.telegram.org/file/bot7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ/documents/file_395.docx
+2025-05-05 22:26:18,717 - root - INFO - Определено страниц: 3
+2025-05-05 22:26:18,914 - aiogram.event - INFO - Update id=161353071 is handled. Duration 6343 ms by bot id=7818669005
+2025-05-05 22:26:22,468 - aiogram.event - INFO - Update id=161353072 is handled. Duration 77 ms by bot id=7818669005
+2025-05-05 22:26:24,330 - aiogram.event - INFO - Update id=161353073 is handled. Duration 94 ms by bot id=7818669005
+2025-05-05 22:26:25,528 - root - INFO - 10-минутный таймер отменен
+2025-05-05 22:26:25,528 - root - INFO - 1-минутный таймер отменен
+2025-05-05 22:26:25,889 - aiogram.event - INFO - Update id=161353074 is handled. Duration 375 ms by bot id=7818669005
+2025-05-05 22:27:37,697 - aiogram.dispatcher - INFO - Polling stopped
+2025-05-05 22:27:37,956 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-05 22:31:44,070 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-05-05 22:31:44,071 - aiogram.dispatcher - INFO - Start polling
+2025-05-05 22:31:44,240 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-05 22:32:17,163 - aiogram.event - INFO - Update id=161353075 is handled. Duration 218 ms by bot id=7818669005
+2025-05-05 22:32:18,586 - aiogram.event - INFO - Update id=161353076 is handled. Duration 375 ms by bot id=7818669005
+2025-05-05 22:32:20,226 - aiogram.event - INFO - Update id=161353077 is handled. Duration 468 ms by bot id=7818669005
+2025-05-05 22:32:29,606 - root - INFO - Начинаем загрузку файла: https://api.telegram.org/file/bot7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ/documents/file_395.docx
+2025-05-05 22:32:34,327 - root - INFO - Определено страниц: 3
+2025-05-05 22:32:34,472 - aiogram.event - INFO - Update id=161353078 is handled. Duration 5015 ms by bot id=7818669005
+2025-05-05 22:32:36,489 - aiogram.event - INFO - Update id=161353079 is handled. Duration 186 ms by bot id=7818669005
+2025-05-05 22:32:39,671 - aiogram.event - INFO - Update id=161353080 is handled. Duration 93 ms by bot id=7818669005
+2025-05-05 22:32:41,542 - root - INFO - 10-минутный таймер отменен
+2025-05-05 22:32:41,542 - root - INFO - 1-минутный таймер отменен
+2025-05-05 22:32:41,901 - aiogram.event - INFO - Update id=161353081 is handled. Duration 375 ms by bot id=7818669005
+2025-05-05 22:53:25,327 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-05 22:53:25,327 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7818669005)
+2025-05-05 22:53:30,546 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-05 22:53:30,546 - aiogram.dispatcher - WARNING - Sleep for 1.286113 seconds and try again... (tryings = 1, bot id = 7818669005)
+2025-05-05 22:53:41,887 - aiogram.dispatcher - INFO - Connection established (tryings = 2, bot id = 7818669005)
+2025-05-05 22:54:52,073 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-05 22:54:52,073 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7818669005)
+2025-05-05 22:54:57,219 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-05 22:54:57,220 - aiogram.dispatcher - WARNING - Sleep for 1.180633 seconds and try again... (tryings = 1, bot id = 7818669005)
+2025-05-05 22:54:58,456 - aiogram.dispatcher - INFO - Connection established (tryings = 2, bot id = 7818669005)
+2025-05-05 22:54:58,567 - aiogram.event - INFO - Update id=161353082 is handled. Duration 108 ms by bot id=7818669005
+2025-05-05 22:55:01,524 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-05 22:55:01,524 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7818669005)
+2025-05-05 22:55:06,692 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-05 22:55:06,692 - aiogram.dispatcher - WARNING - Sleep for 1.104821 seconds and try again... (tryings = 1, bot id = 7818669005)
+2025-05-05 22:55:12,019 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-05 22:55:12,019 - aiogram.dispatcher - WARNING - Sleep for 1.439002 seconds and try again... (tryings = 2, bot id = 7818669005)
+2025-05-05 22:55:18,120 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-05 22:55:18,120 - aiogram.dispatcher - WARNING - Sleep for 1.872810 seconds and try again... (tryings = 3, bot id = 7818669005)
+2025-05-05 22:55:25,060 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-05 22:55:25,060 - aiogram.dispatcher - WARNING - Sleep for 2.345124 seconds and try again... (tryings = 4, bot id = 7818669005)
+2025-05-05 22:55:31,548 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-05 22:55:31,548 - aiogram.dispatcher - WARNING - Sleep for 3.196700 seconds and try again... (tryings = 5, bot id = 7818669005)
+2025-05-05 22:55:35,064 - aiogram.dispatcher - INFO - Connection established (tryings = 6, bot id = 7818669005)
+2025-05-05 22:55:35,152 - aiogram.event - INFO - Update id=161353087 is handled. Duration 93 ms by bot id=7818669005
+2025-05-05 22:55:38,876 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-05 22:55:38,877 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7818669005)
+2025-05-05 22:55:44,253 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-05 22:55:44,253 - aiogram.dispatcher - WARNING - Sleep for 1.190388 seconds and try again... (tryings = 1, bot id = 7818669005)
+2025-05-05 22:55:50,120 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-05 22:55:50,121 - aiogram.dispatcher - WARNING - Sleep for 1.276725 seconds and try again... (tryings = 2, bot id = 7818669005)
+2025-05-05 22:55:56,691 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-05 22:55:56,691 - aiogram.dispatcher - WARNING - Sleep for 1.614287 seconds and try again... (tryings = 3, bot id = 7818669005)
+2025-05-05 22:56:00,579 - aiogram.dispatcher - INFO - Connection established (tryings = 4, bot id = 7818669005)
+2025-05-05 22:56:00,664 - aiogram.event - INFO - Update id=161353088 is handled. Duration 77 ms by bot id=7818669005
+2025-05-05 22:56:01,387 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-05 22:56:01,388 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7818669005)
+2025-05-05 22:56:03,428 - aiogram.dispatcher - INFO - Connection established (tryings = 1, bot id = 7818669005)
+2025-05-05 22:56:03,619 - aiogram.event - INFO - Update id=161353089 is handled. Duration 186 ms by bot id=7818669005
+2025-05-05 22:56:06,204 - aiogram.event - INFO - Update id=161353090 is handled. Duration 78 ms by bot id=7818669005
+2025-05-05 22:56:08,816 - aiogram.event - INFO - Update id=161353091 is handled. Duration 358 ms by bot id=7818669005
+2025-05-05 22:56:09,279 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-05 22:56:09,279 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7818669005)
+2025-05-05 22:56:18,180 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-05 22:56:18,181 - aiogram.dispatcher - WARNING - Sleep for 1.196417 seconds and try again... (tryings = 1, bot id = 7818669005)
+2025-05-05 22:56:21,407 - aiogram.dispatcher - INFO - Connection established (tryings = 2, bot id = 7818669005)
+2025-05-05 22:56:21,488 - aiogram.event - INFO - Update id=161353092 is handled. Duration 77 ms by bot id=7818669005
+2025-05-05 22:56:22,846 - aiogram.event - INFO - Update id=161353093 is handled. Duration 375 ms by bot id=7818669005
+2025-05-05 22:56:24,634 - aiogram.event - INFO - Update id=161353094 is handled. Duration 360 ms by bot id=7818669005
+2025-05-05 22:56:27,497 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-05 22:56:27,497 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7818669005)
+2025-05-05 22:56:31,074 - aiogram.dispatcher - INFO - Connection established (tryings = 1, bot id = 7818669005)
+2025-05-05 22:56:31,212 - root - INFO - Начинаем загрузку файла: https://api.telegram.org/file/bot7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ/documents/file_395.docx
+2025-05-05 22:56:35,814 - root - INFO - Определено страниц: 3
+2025-05-05 22:56:35,962 - aiogram.event - INFO - Update id=161353095 is handled. Duration 4875 ms by bot id=7818669005
+2025-05-05 22:56:36,632 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-05 22:56:36,632 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7818669005)
+2025-05-05 22:56:37,780 - aiogram.dispatcher - INFO - Connection established (tryings = 1, bot id = 7818669005)
+2025-05-05 22:56:37,930 - aiogram.event - INFO - Update id=161353096 is handled. Duration 141 ms by bot id=7818669005
+2025-05-05 22:56:40,478 - aiogram.event - INFO - Update id=161353097 is handled. Duration 202 ms by bot id=7818669005
+2025-05-05 22:56:41,664 - root - INFO - 10-минутный таймер отменен
+2025-05-05 22:56:41,665 - root - INFO - 1-минутный таймер отменен
+2025-05-05 22:56:42,011 - aiogram.event - INFO - Update id=161353098 is handled. Duration 360 ms by bot id=7818669005
+2025-05-05 22:56:48,259 - aiogram.event - INFO - Update id=161353099 is handled. Duration 360 ms by bot id=7818669005
+2025-05-05 22:57:04,578 - root - INFO - Начинаем загрузку файла: https://api.telegram.org/file/bot7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ/documents/file_403.docx
+2025-05-05 22:57:09,456 - root - INFO - Определено страниц: 20
+2025-05-05 22:57:09,714 - aiogram.event - INFO - Update id=161353100 is handled. Duration 5343 ms by bot id=7818669005
+2025-05-05 22:57:18,021 - aiogram.event - INFO - Update id=161353101 is handled. Duration 172 ms by bot id=7818669005
+2025-05-05 22:57:22,349 - aiogram.event - INFO - Update id=161353102 is handled. Duration 77 ms by bot id=7818669005
+2025-05-05 22:57:27,837 - root - INFO - 10-минутный таймер отменен
+2025-05-05 22:57:27,837 - root - INFO - 1-минутный таймер отменен
+2025-05-05 22:57:28,184 - aiogram.event - INFO - Update id=161353103 is handled. Duration 358 ms by bot id=7818669005
+2025-05-05 22:59:01,786 - aiogram.event - INFO - Update id=161353104 is handled. Duration 343 ms by bot id=7818669005
+2025-05-05 22:59:04,235 - aiogram.event - INFO - Update id=161353105 is handled. Duration 375 ms by bot id=7818669005
+2025-05-05 22:59:29,012 - root - INFO - Начинаем загрузку файла: https://api.telegram.org/file/bot7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ/documents/file_404.docx
+2025-05-05 22:59:34,770 - root - INFO - Определено страниц: 18
+2025-05-05 22:59:34,918 - aiogram.event - INFO - Update id=161353106 is handled. Duration 6343 ms by bot id=7818669005
+2025-05-05 22:59:38,381 - aiogram.event - INFO - Update id=161353107 is handled. Duration 77 ms by bot id=7818669005
+2025-05-05 22:59:47,578 - aiogram.event - INFO - Update id=161353108 is handled. Duration 78 ms by bot id=7818669005
+2025-05-05 22:59:52,254 - root - INFO - 10-минутный таймер отменен
+2025-05-05 22:59:52,254 - root - INFO - 1-минутный таймер отменен
+2025-05-05 22:59:52,715 - aiogram.event - INFO - Update id=161353109 is handled. Duration 468 ms by bot id=7818669005
+2025-05-05 23:10:46,191 - aiogram.event - INFO - Update id=161353110 is handled. Duration 108 ms by bot id=7818669005
+2025-05-05 23:10:47,754 - aiogram.event - INFO - Update id=161353111 is handled. Duration 327 ms by bot id=7818669005
+2025-05-05 23:10:48,852 - aiogram.event - INFO - Update id=161353112 is handled. Duration 390 ms by bot id=7818669005
+2025-05-05 23:10:56,525 - root - INFO - Начинаем загрузку файла: https://api.telegram.org/file/bot7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ/documents/file_395.docx
+2025-05-05 23:11:01,237 - root - INFO - Определено страниц: 3
+2025-05-05 23:11:01,394 - aiogram.event - INFO - Update id=161353113 is handled. Duration 5000 ms by bot id=7818669005
+2025-05-05 23:11:03,078 - aiogram.event - INFO - Update id=161353114 is handled. Duration 78 ms by bot id=7818669005
+2025-05-05 23:11:05,728 - aiogram.event - INFO - Update id=161353115 is handled. Duration 77 ms by bot id=7818669005
+2025-05-05 23:11:07,140 - root - INFO - 10-минутный таймер отменен
+2025-05-05 23:11:07,140 - root - INFO - 1-минутный таймер отменен
+2025-05-05 23:11:07,483 - aiogram.event - INFO - Update id=161353116 is handled. Duration 342 ms by bot id=7818669005
+2025-05-05 23:11:12,157 - aiogram.event - INFO - Update id=161353117 is handled. Duration 343 ms by bot id=7818669005
+2025-05-05 23:11:13,550 - aiogram.event - INFO - Update id=161353118 is handled. Duration 343 ms by bot id=7818669005
+2025-05-05 23:11:20,028 - root - INFO - Начинаем загрузку файла: https://api.telegram.org/file/bot7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ/documents/file_395.docx
+2025-05-05 23:11:22,228 - aiogram.event - INFO - Update id=161353120 is handled. Duration 108 ms by bot id=7818669005
+2025-05-05 23:11:24,633 - root - INFO - Определено страниц: 3
+2025-05-05 23:11:24,882 - aiogram.event - INFO - Update id=161353119 is handled. Duration 5031 ms by bot id=7818669005
+2025-05-05 23:11:28,093 - aiogram.event - INFO - Update id=161353121 is handled. Duration 125 ms by bot id=7818669005
+2025-05-05 23:11:35,479 - aiogram.event - INFO - Update id=161353122 is handled. Duration 171 ms by bot id=7818669005
+2025-05-05 23:11:37,106 - root - INFO - 10-минутный таймер отменен
+2025-05-05 23:11:37,106 - root - INFO - 1-минутный таймер отменен
+2025-05-05 23:11:37,512 - aiogram.event - INFO - Update id=161353123 is handled. Duration 422 ms by bot id=7818669005
+2025-05-05 23:16:16,264 - aiogram.event - INFO - Update id=161353124 is handled. Duration 110 ms by bot id=7818669005
+2025-05-05 23:16:17,662 - aiogram.event - INFO - Update id=161353125 is handled. Duration 327 ms by bot id=7818669005
+2025-05-05 23:16:18,895 - aiogram.event - INFO - Update id=161353126 is handled. Duration 360 ms by bot id=7818669005
+2025-05-05 23:16:24,946 - root - INFO - Начинаем загрузку файла: https://api.telegram.org/file/bot7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ/documents/file_395.docx
+2025-05-05 23:16:29,554 - root - INFO - Определено страниц: 3
+2025-05-05 23:16:29,690 - aiogram.event - INFO - Update id=161353127 is handled. Duration 4875 ms by bot id=7818669005
+2025-05-05 23:16:31,316 - aiogram.event - INFO - Update id=161353128 is handled. Duration 62 ms by bot id=7818669005
+2025-05-05 23:16:33,556 - aiogram.event - INFO - Update id=161353129 is handled. Duration 63 ms by bot id=7818669005
+2025-05-05 23:16:34,796 - root - INFO - 10-минутный таймер отменен
+2025-05-05 23:16:34,796 - root - INFO - 1-минутный таймер отменен
+2025-05-05 23:16:35,137 - aiogram.event - INFO - Update id=161353130 is handled. Duration 343 ms by bot id=7818669005
+2025-05-05 23:20:03,742 - aiogram.event - INFO - Update id=161353131 is handled. Duration 171 ms by bot id=7818669005
+2025-05-05 23:20:05,073 - aiogram.event - INFO - Update id=161353132 is handled. Duration 359 ms by bot id=7818669005
+2025-05-05 23:20:06,424 - aiogram.event - INFO - Update id=161353133 is handled. Duration 360 ms by bot id=7818669005
+2025-05-05 23:20:12,231 - root - INFO - Начинаем загрузку файла: https://api.telegram.org/file/bot7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ/documents/file_395.docx
+2025-05-05 23:20:17,067 - root - INFO - Определено страниц: 3
+2025-05-05 23:20:17,412 - aiogram.event - INFO - Update id=161353134 is handled. Duration 5327 ms by bot id=7818669005
+2025-05-05 23:20:19,373 - aiogram.event - INFO - Update id=161353135 is handled. Duration 108 ms by bot id=7818669005
+2025-05-05 23:20:21,582 - aiogram.event - INFO - Update id=161353136 is handled. Duration 125 ms by bot id=7818669005
+2025-05-05 23:20:22,983 - root - INFO - 10-минутный таймер отменен
+2025-05-05 23:20:22,983 - root - INFO - 1-минутный таймер отменен
+2025-05-05 23:20:23,345 - aiogram.event - INFO - Update id=161353137 is handled. Duration 360 ms by bot id=7818669005
+2025-05-05 23:25:26,010 - aiogram.event - INFO - Update id=161353138 is handled. Duration 360 ms by bot id=7818669005
+2025-05-05 23:25:27,371 - aiogram.event - INFO - Update id=161353139 is handled. Duration 375 ms by bot id=7818669005
+2025-05-05 23:25:36,983 - root - INFO - Начинаем загрузку файла: https://api.telegram.org/file/bot7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ/documents/file_395.docx
+2025-05-05 23:25:41,572 - root - INFO - Определено страниц: 3
+2025-05-05 23:25:41,713 - aiogram.event - INFO - Update id=161353140 is handled. Duration 4906 ms by bot id=7818669005
+2025-05-05 23:25:43,531 - aiogram.event - INFO - Update id=161353141 is handled. Duration 77 ms by bot id=7818669005
+2025-05-05 23:25:46,131 - aiogram.event - INFO - Update id=161353142 is handled. Duration 77 ms by bot id=7818669005
+2025-05-05 23:25:47,490 - root - INFO - 10-минутный таймер отменен
+2025-05-05 23:25:47,490 - root - INFO - 1-минутный таймер отменен
+2025-05-05 23:25:47,853 - aiogram.event - INFO - Update id=161353143 is handled. Duration 360 ms by bot id=7818669005
+2025-05-05 23:28:35,052 - aiogram.event - INFO - Update id=161353144 is handled. Duration 78 ms by bot id=7818669005
+2025-05-05 23:28:36,514 - aiogram.event - INFO - Update id=161353145 is handled. Duration 360 ms by bot id=7818669005
+2025-05-05 23:28:37,905 - aiogram.event - INFO - Update id=161353146 is handled. Duration 358 ms by bot id=7818669005
+2025-05-05 23:28:45,041 - root - INFO - Начинаем загрузку файла: https://api.telegram.org/file/bot7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ/documents/file_395.docx
+2025-05-05 23:28:49,625 - root - INFO - Определено страниц: 3
+2025-05-05 23:28:49,780 - aiogram.event - INFO - Update id=161353147 is handled. Duration 4889 ms by bot id=7818669005
+2025-05-05 23:28:51,008 - aiogram.event - INFO - Update id=161353148 is handled. Duration 125 ms by bot id=7818669005
+2025-05-05 23:28:53,909 - aiogram.event - INFO - Update id=161353149 is handled. Duration 93 ms by bot id=7818669005
+2025-05-05 23:28:54,958 - root - INFO - 10-минутный таймер отменен
+2025-05-05 23:28:54,958 - root - INFO - 1-минутный таймер отменен
+2025-05-05 23:28:55,299 - aiogram.event - INFO - Update id=161353150 is handled. Duration 343 ms by bot id=7818669005
+2025-05-05 23:36:02,297 - aiogram.dispatcher - INFO - Polling stopped
+2025-05-05 23:36:02,570 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-05 23:36:09,397 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-05-05 23:36:09,398 - aiogram.dispatcher - INFO - Start polling
+2025-05-05 23:36:09,590 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-05 23:36:21,924 - aiogram.event - INFO - Update id=161353151 is handled. Duration 485 ms by bot id=7818669005
+2025-05-05 23:36:23,563 - aiogram.event - INFO - Update id=161353152 is handled. Duration 343 ms by bot id=7818669005
+2025-05-05 23:36:29,387 - root - INFO - Начинаем загрузку файла: https://api.telegram.org/file/bot7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ/documents/file_395.docx
+2025-05-05 23:36:34,006 - root - INFO - Определено страниц: 3
+2025-05-05 23:36:34,222 - aiogram.event - INFO - Update id=161353153 is handled. Duration 4968 ms by bot id=7818669005
+2025-05-05 23:36:38,590 - aiogram.event - INFO - Update id=161353154 is handled. Duration 77 ms by bot id=7818669005
+2025-05-05 23:36:42,421 - aiogram.event - INFO - Update id=161353155 is handled. Duration 156 ms by bot id=7818669005
+2025-05-05 23:36:43,576 - root - INFO - 10-минутный таймер отменен
+2025-05-05 23:36:43,577 - root - INFO - 1-минутный таймер отменен
+2025-05-05 23:36:43,916 - aiogram.event - INFO - Update id=161353156 is handled. Duration 360 ms by bot id=7818669005
+2025-05-05 23:40:51,282 - aiogram.dispatcher - INFO - Polling stopped
+2025-05-05 23:40:51,537 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-05 23:41:39,536 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-05-05 23:41:39,536 - aiogram.dispatcher - INFO - Start polling
+2025-05-05 23:41:39,708 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-05 23:41:54,270 - aiogram.event - INFO - Update id=161353157 is handled. Duration 187 ms by bot id=7818669005
+2025-05-05 23:41:55,729 - aiogram.event - INFO - Update id=161353158 is handled. Duration 342 ms by bot id=7818669005
+2025-05-05 23:41:57,114 - aiogram.event - INFO - Update id=161353159 is handled. Duration 452 ms by bot id=7818669005
+2025-05-05 23:42:02,481 - root - INFO - Начинаем загрузку файла: https://api.telegram.org/file/bot7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ/documents/file_395.docx
+2025-05-05 23:42:07,097 - root - INFO - Определено страниц: 3
+2025-05-05 23:42:07,339 - aiogram.event - INFO - Update id=161353160 is handled. Duration 5015 ms by bot id=7818669005
+2025-05-05 23:42:08,673 - aiogram.event - INFO - Update id=161353161 is handled. Duration 188 ms by bot id=7818669005
+2025-05-05 23:42:11,388 - aiogram.event - INFO - Update id=161353162 is handled. Duration 78 ms by bot id=7818669005
+2025-05-05 23:42:12,452 - root - INFO - 10-минутный таймер отменен
+2025-05-05 23:42:12,452 - root - INFO - 1-минутный таймер отменен
+2025-05-05 23:42:12,792 - aiogram.event - INFO - Update id=161353163 is handled. Duration 360 ms by bot id=7818669005
+2025-05-05 23:43:14,634 - aiogram.event - INFO - Update id=161353164 is handled. Duration 327 ms by bot id=7818669005
+2025-05-05 23:43:15,883 - aiogram.event - INFO - Update id=161353165 is handled. Duration 343 ms by bot id=7818669005
+2025-05-05 23:43:22,912 - root - INFO - Начинаем загрузку файла: https://api.telegram.org/file/bot7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ/documents/file_395.docx
+2025-05-05 23:43:27,528 - root - INFO - Определено страниц: 3
+2025-05-05 23:43:27,669 - aiogram.event - INFO - Update id=161353166 is handled. Duration 5672 ms by bot id=7818669005
+2025-05-05 23:43:29,336 - aiogram.event - INFO - Update id=161353167 is handled. Duration 62 ms by bot id=7818669005
+2025-05-05 23:43:31,418 - aiogram.event - INFO - Update id=161353168 is handled. Duration 110 ms by bot id=7818669005
+2025-05-05 23:43:32,705 - root - INFO - 10-минутный таймер отменен
+2025-05-05 23:43:32,705 - root - INFO - 1-минутный таймер отменен
+2025-05-05 23:43:33,080 - aiogram.event - INFO - Update id=161353169 is handled. Duration 375 ms by bot id=7818669005
+2025-05-05 23:43:59,231 - aiogram.dispatcher - INFO - Polling stopped
+2025-05-05 23:43:59,491 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-05 23:51:44,090 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-05-05 23:51:44,091 - aiogram.dispatcher - INFO - Start polling
+2025-05-05 23:51:44,260 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-05 23:52:04,640 - aiogram.event - INFO - Update id=161353177 is handled. Duration 453 ms by bot id=7818669005
+2025-05-05 23:52:07,086 - aiogram.event - INFO - Update id=161353178 is handled. Duration 359 ms by bot id=7818669005
+2025-05-05 23:52:12,726 - root - INFO - Начинаем загрузку файла: https://api.telegram.org/file/bot7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ/documents/file_395.docx
+2025-05-05 23:52:20,374 - root - INFO - Определено страниц: 3
+2025-05-05 23:52:20,692 - aiogram.event - INFO - Update id=161353179 is handled. Duration 8093 ms by bot id=7818669005
+2025-05-05 23:52:23,374 - aiogram.event - INFO - Update id=161353180 is handled. Duration 77 ms by bot id=7818669005
+2025-05-05 23:52:25,713 - aiogram.event - INFO - Update id=161353181 is handled. Duration 77 ms by bot id=7818669005
+2025-05-05 23:52:27,126 - root - INFO - 10-минутный таймер отменен
+2025-05-05 23:52:27,126 - root - INFO - 1-минутный таймер отменен
+2025-05-05 23:52:27,473 - aiogram.event - INFO - Update id=161353182 is handled. Duration 343 ms by bot id=7818669005
+2025-05-05 23:53:18,337 - aiogram.dispatcher - INFO - Polling stopped
+2025-05-05 23:53:18,583 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
