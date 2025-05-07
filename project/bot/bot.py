@@ -4,6 +4,10 @@ import random
 import asyncio
 import aiohttp
 import aiofiles
+import json
+import websockets
+import uuid
+import traceback
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
@@ -14,8 +18,6 @@ from PyPDF2 import PdfReader
 from io import BytesIO
 import pythoncom
 import win32com.client
-import uuid
-import traceback
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -41,6 +43,34 @@ bot = Bot(token=API_TOKEN)
 dp = Dispatcher()
 timers = {}
 confirmation_timers = {}
+
+
+async def websocket_server():
+    async with websockets.serve(handler, "localhost", 8001):
+        await asyncio.Future()
+
+
+async def handler(websocket):
+    async for message in websocket:
+        try:
+            data = json.loads(message)
+            if data['type'] == 'status_update':
+                user_id = data['user_id']
+                order_id = data['order_id']
+                address = data['address']
+
+                if data['status'] == 'готов':
+                    await bot.send_message(
+                        user_id,
+                        f"🖨️ Заказ №{order_id} готов! Адрес получения: {address}"
+                    )
+                elif data['status'] == 'выдан':
+                    await bot.send_message(
+                        user_id,
+                        "✅ Спасибо, что воспользовались нашим сервисом! Ждем вас снова!"
+                    )
+        except Exception as e:
+            logging.error(f"WebSocket Error: {traceback.format_exc()}")
 
 
 async def cleanup_order_data(user_data: dict):
@@ -324,8 +354,10 @@ async def handle_unknown(message: types.Message):
 
 
 async def main():
-    await dp.start_polling(bot)
-
+    await asyncio.gather(
+        dp.start_polling(bot),
+        websocket_server()
+    )
 
 if __name__ == "__main__":
     asyncio.run(main())

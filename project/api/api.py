@@ -3,7 +3,8 @@ import uuid
 import logging
 import aiofiles
 import traceback
-from fastapi import FastAPI, HTTPException, UploadFile, Form, File, Query, Body
+import json
+from fastapi import FastAPI, HTTPException, UploadFile, Form, File, Query, WebSocket
 from fastapi.responses import JSONResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 import aiomysql
@@ -12,6 +13,7 @@ from pydantic import BaseModel
 from typing import Optional, List
 import asyncio
 from fastapi.middleware.cors import CORSMiddleware
+import websockets
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -19,8 +21,10 @@ logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
 
+
 class OrderUpdate(BaseModel):
     status: Optional[str] = None
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -30,12 +34,15 @@ async def lifespan(app: FastAPI):
         password=os.getenv("DB_PASSWORD", "Qwerty123"),
         db=os.getenv("DB_NAME", "send_to_print"),
         auth_plugin='mysql_native_password',
-        minsize=5,
-        maxsize=20
+        minsize=10,
+        maxsize=20,
+        pool_recycle=3600,
+        autocommit=False
     )
     yield
     app.db_pool.close()
     await app.db_pool.wait_closed()
+
 
 app = FastAPI(lifespan=lifespan)
 
@@ -52,88 +59,191 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.mount("/uploads", StaticFiles(directory=UPLOAD_FOLDER), name="uploads")
 
 
+def decimal_to_float(obj):
+    if isinstance(obj, Decimal):
+        return float(obj)
+    raise TypeError
+
+
+async def notify_bot(order_id: int, status: str):
+    async with app.db_pool.acquire() as conn:
+        async with conn.cursor(aiomysql.DictCursor) as cursor:
+            await cursor.execute("""
+                SELECT o.user_id, o.ID, s.address 
+                FROM `order` o 
+                JOIN shop s ON o.ID_shop = s.ID_shop 
+                WHERE o.ID = %s
+            """, (order_id,))
+            data = await cursor.fetchone()
+
+    if not data:
+        logging.error(f"Заказ {order_id} не найден при попытке уведомления")
+        return
+
+    try:
+        async with websockets.connect("ws://localhost:8001/notify", ping_interval=None) as ws:
+            await ws.send(json.dumps({
+                "type": "status_update",
+                "status": status,
+                "user_id": data['user_id'],
+                "order_id": data['ID'],
+                "address": data['address']
+            }, default=decimal_to_float))
+    except Exception as e:
+        logging.error(f"WebSocket error: {str(e)}")
+
+
+# В эндпоинте WebSocket добавить принудительное обновление данных
+@app.websocket("/ws/{shop_id}")
+async def websocket_endpoint(websocket: WebSocket, shop_id: int):
+    await websocket.accept()
+    async with app.db_pool.acquire() as conn:
+        async with conn.cursor(aiomysql.DictCursor) as cursor:
+            while True:
+                try:
+                    # Явный коммит транзакции перед запросом
+                    await conn.commit()
+                    await cursor.execute(
+                        "SELECT * FROM `order` WHERE ID_shop = %s AND status IN ('получен', 'готов') FOR UPDATE",
+                        (shop_id,)
+                    )
+                    orders = await cursor.fetchall()
+
+                    # Преобразование Decimal
+                    for order in orders:
+                        for key in ['price', 'price_bw', 'price_cl']:
+                            if key in order and isinstance(order[key], Decimal):
+                                order[key] = float(order[key])
+
+                    await websocket.send_json(orders)  # Убрать двойной json.dumps
+                    await asyncio.sleep(1)  # Уменьшить интервал обновления
+                except Exception as e:
+                    logging.error(f"WebSocket error: {str(e)}")
+                    break
+
+
 @app.get("/orders", response_model=List[dict])
 async def get_orders(
-    status: List[str] = Query(..., title="Статусы заказов"),
-    shop_id: Optional[int] = Query(None, title="ID магазина")
+        status: List[str] = Query(..., title="Статусы заказов"),
+        shop_id: Optional[int] = Query(None, title="ID магазина")
 ):
     try:
-        allowed_statuses = {"получен", "готов"}
-        invalid_statuses = [s for s in status if s not in allowed_statuses]
-        if invalid_statuses:
-            raise HTTPException(400, detail=f"Недопустимые статусы: {invalid_statuses}")
-
         async with app.db_pool.acquire() as conn:
             async with conn.cursor(aiomysql.DictCursor) as cursor:
-                # Формируем IN-условие для статусов
                 placeholders = ",".join(["%s"] * len(status))
                 query = f"SELECT * FROM `order` WHERE status IN ({placeholders})"
                 params = status.copy()
 
-                # Добавляем фильтр по магазину
                 if shop_id is not None:
                     query += " AND ID_shop = %s"
                     params.append(shop_id)
 
-                # Выполняем запрос
                 await cursor.execute(query, params)
-                orders = await cursor.fetchall()
+                return await cursor.fetchall()
 
-                # Приводим типы данных
-                for order in orders:
-                    order["ID"] = int(order["ID"])
-                    order["price"] = float(order["price"])
-                    order["pages"] = int(order["pages"])
-
-                return orders or []
-
-    except aiomysql.Error as e:
-        logging.error(f"Ошибка БД: {str(e)}")
-        raise HTTPException(500, detail="Ошибка базы данных")
     except Exception as e:
         logging.error(f"Ошибка: {traceback.format_exc()}")
         raise HTTPException(500, detail="Ошибка сервера")
 
 
-@app.post("/orders/{order_id}")
-async def update_order_status(order_id: int, data: OrderUpdate):
+@app.post("/orders/{order_id}/ready")
+async def mark_order_ready(order_id: int):
     try:
         async with app.db_pool.acquire() as conn:
-            async with conn.cursor() as cursor:
+            async with conn.cursor(aiomysql.DictCursor) as cursor:
+                await conn.begin()
+
+                # 1. Проверка существования заказа
                 await cursor.execute(
-                    "UPDATE `order` SET status = %s WHERE ID = %s",
-                    (data.status, order_id)
+                    "SELECT status FROM `order` WHERE ID = %s FOR UPDATE NOWAIT",
+                    (order_id,)
+                )
+                current = await cursor.fetchone()
+                if not current:
+                    await conn.rollback()
+                    raise HTTPException(404, detail="Заказ не найден")
+
+                # 2. Валидация статуса
+                if current['status'] != 'получен':
+                    await conn.rollback()
+                    raise HTTPException(400, detail="Текущий статус не позволяет перевести в 'готов'")
+
+                # 3. Обновление статуса
+                await cursor.execute(
+                    "UPDATE `order` SET status = 'готов' WHERE ID = %s",
+                    (order_id,)
                 )
                 await conn.commit()
 
-                if cursor.rowcount == 0:
-                    raise HTTPException(404, detail="Заказ не найден")
-
+                # 4. Уведомление
+                await notify_bot(order_id, 'готов')
                 return {"status": "готов"}
 
-    except aiomysql.Error as e:
+    except aiomysql.OperationalError as e:
         await conn.rollback()
+        if e.args[0] == 1205:
+            raise HTTPException(503, detail="Слишком много запросов, попробуйте позже")
         logging.error(f"Ошибка БД: {str(e)}")
         raise HTTPException(500, detail="Ошибка базы данных")
+    except Exception as e:
+        await conn.rollback()
+        logging.error(f"Ошибка: {traceback.format_exc()}")
+        raise HTTPException(500, detail="Внутренняя ошибка сервера")
 
 
 @app.post("/orders/{order_id}/complete")
 async def complete_order(order_id: int):
+    conn = None
     try:
-        async with app.db_pool.acquire() as conn:
-            async with conn.cursor() as cursor:
-                # Только обновление статуса без удаления файла
+        # Получаем соединение из пула
+        conn = await app.db_pool.acquire()
+        async with conn.cursor(aiomysql.DictCursor) as cursor:
+            await conn.begin()  # Начало транзакции
+
+            try:
+                # Запрос с блокировкой строки без NOWAIT
+                await cursor.execute(
+                    "SELECT status FROM `order` WHERE ID = %s FOR UPDATE",
+                    (order_id,)
+                )
+                current = await cursor.fetchone()
+
+                if not current:
+                    await conn.rollback()
+                    raise HTTPException(404, detail="Заказ не найден")
+
+                if current['status'] != 'готов':
+                    await conn.rollback()
+                    raise HTTPException(400, detail="Недопустимый статус для перехода")
+
+                # Обновление статуса
                 await cursor.execute(
                     "UPDATE `order` SET status = 'выдан' WHERE ID = %s",
                     (order_id,)
                 )
-                await conn.commit()
+                await conn.commit()  # Фиксация изменений
+
+                # Уведомление через WebSocket
+                await notify_bot(order_id, 'выдан')
                 return {"status": "выдан"}
 
+            except aiomysql.OperationalError as e:
+                await conn.rollback()
+                if e.args[0] == 1205:  # Lock wait timeout
+                    raise HTTPException(503, detail="Повторите попытку позже")
+                raise
+
     except Exception as e:
-        await conn.rollback()
-        logging.error(f"Ошибка: {traceback.format_exc()}")
-        raise HTTPException(500, detail="Ошибка сервера")
+        # Обработка ошибок соединения
+        if conn and not conn.closed:
+            await conn.rollback()
+        logging.error(f"Critical error: {traceback.format_exc()}")
+        raise HTTPException(500, detail="Internal Server Error")
+
+    finally:
+        # Возвращаем соединение в пул
+        if conn and not conn.closed:
+            await app.db_pool.release(conn)
 
 
 @app.post("/orders")
@@ -148,54 +258,45 @@ async def create_order(
         con_code: int = Form(...),
         file_extension: str = Form(...)
 ):
-    temp_filename = f"temp_{uuid.uuid4()}{os.path.splitext(file.filename)[1]}"
-    temp_path = os.path.join(UPLOAD_FOLDER, temp_filename)
-
+    """Создание нового заказа"""
     try:
-        # Сохранение временного файла
-        async with aiofiles.open(temp_path, 'wb') as f:
-            await f.write(await file.read())
-
         async with app.db_pool.acquire() as conn:
             async with conn.cursor() as cursor:
-                await conn.begin()
+                # Сначала создаем запись в БД
+                await cursor.execute("""
+                    INSERT INTO `order` (
+                        ID_shop, price, note, con_code, color, status, 
+                        user_id, pages, file_extension, file_path
+                    ) VALUES (%s, %s, %s, %s, %s, 'получен', %s, %s, %s, 'temp')
+                """, (
+                    ID_shop, price, note, con_code, color,
+                    user_id, pages, file_extension
+                ))
+                order_id = cursor.lastrowid
 
-                try:
-                    await cursor.execute(
-                        """INSERT INTO `order` 
-                        (ID_shop, price, note, con_code, color, status, 
-                         user_id, pages, file_extension, file_path) 
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
-                        (ID_shop, price, note, con_code, color, 'получен',
-                         user_id, pages, file_extension, temp_filename)
-                    )
-                    order_id = cursor.lastrowid
+                # Генерируем финальное имя файла
+                new_filename = f"order_{order_id}{os.path.splitext(file.filename)[1]}"
+                new_path = os.path.join(UPLOAD_FOLDER, new_filename)
 
-                    # Переименование файла
-                    new_filename = f"order_{order_id}{os.path.splitext(temp_filename)[1]}"
-                    new_path = os.path.join(UPLOAD_FOLDER, new_filename)
+                # Сохраняем файл сразу под финальным именем
+                async with aiofiles.open(new_path, 'wb') as f:
+                    await f.write(await file.read())
 
-                    if os.path.exists(temp_path):
-                        await asyncio.to_thread(os.rename, temp_path, new_path)
+                # Обновляем запись в БД
+                await cursor.execute(
+                    "UPDATE `order` SET file_path = %s WHERE ID = %s",
+                    (new_filename, order_id))
 
-                    await cursor.execute(
-                        "UPDATE `order` SET file_path = %s WHERE ID = %s",
-                        (new_filename, order_id)
-                    )
-                    await conn.commit()
-
-                    return JSONResponse(
-                        content={"order_id": order_id, "con_code": con_code},
-                        status_code=201
-                    )
-
-                except Exception as e:
-                    await conn.rollback()
-                    if os.path.exists(temp_path):
-                        await asyncio.to_thread(os.remove, temp_path)
-                    raise
+                await conn.commit()
+                return JSONResponse(
+                    content={"order_id": order_id, "con_code": con_code},
+                    status_code=201
+                )
 
     except Exception as e:
+        # Удаляем файл, если запись не прошла
+        if 'new_path' in locals() and os.path.exists(new_path):
+            os.remove(new_path)
         logging.error(f"Ошибка создания заказа: {traceback.format_exc()}")
         raise HTTPException(500, detail=str(e))
 
@@ -263,5 +364,11 @@ async def get_file(filename: str):
 
 if __name__ == "__main__":
     import uvicorn
-
-    uvicorn.run(app, host="0.0.0.0", port=5000)
+    uvicorn.run(
+        app,
+        host="0.0.0.0",
+        port=5000,
+        ws_ping_interval=30,
+        ws_ping_timeout=60,
+        timeout_keep_alive=120
+    )
