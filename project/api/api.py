@@ -31,7 +31,7 @@ async def lifespan(app: FastAPI):
     app.db_pool = await aiomysql.create_pool(
         host=os.getenv("DB_HOST", "localhost"),
         user=os.getenv("DB_USER", "root"),
-        password=os.getenv("DB_PASSWORD", "Qwerty123"),
+        password=os.getenv("DB_PASSWORD", "3465"),
         db=os.getenv("DB_NAME", "send_to_print"),
         auth_plugin='mysql_native_password',
         minsize=10,
@@ -127,6 +127,7 @@ async def get_orders(
         status: List[str] = Query(..., title="Статусы заказов"),
         shop_id: Optional[int] = Query(None, title="ID магазина")
 ):
+    allowed_statuses = {"получен", "готов"}  # "выдан" исключён
     try:
         async with app.db_pool.acquire() as conn:
             async with conn.cursor(aiomysql.DictCursor) as cursor:
@@ -218,8 +219,8 @@ async def complete_order(order_id: int):
 
                 # Обновление статуса
                 await cursor.execute(
-                    "UPDATE `order` SET status = 'выдан' WHERE ID = %s",
-                    (order_id,)
+                    "UPDATE `order` SET status = %s WHERE ID = %s",
+                    (data.status, order_id)
                 )
                 await conn.commit()  # Фиксация изменений
 

@@ -29,7 +29,6 @@ logging.basicConfig(
     filename='desktop_app.log'
 )
 
-
 class WebSocketClient(QThread):
     update_received = pyqtSignal(list)
 
@@ -249,6 +248,7 @@ class FileReceiverApp(QWidget):
                 ) as resp:
                     if resp.status != 200:
                         self.show_error(f"Ошибка: {await resp.text()}")
+
         except Exception as e:
             self.show_error(f"Ошибка обновления: {str(e)}")
 
