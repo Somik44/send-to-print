@@ -196,54 +196,39 @@ async def mark_order_ready(order_id: int):
 async def complete_order(order_id: int):
     conn = None
     try:
-        # Получаем соединение из пула
         conn = await app.db_pool.acquire()
         async with conn.cursor(aiomysql.DictCursor) as cursor:
-            await conn.begin()  # Начало транзакции
+            await conn.begin()
+            await cursor.execute(
+                "SELECT status FROM `order` WHERE ID = %s FOR UPDATE",
+                (order_id,)
+            )
+            current = await cursor.fetchone()
 
-            try:
-                # Запрос с блокировкой строки без NOWAIT
-                await cursor.execute(
-                    "SELECT status FROM `order` WHERE ID = %s FOR UPDATE",
-                    (order_id,)
-                )
-                current = await cursor.fetchone()
-
-                if not current:
-                    await conn.rollback()
-                    raise HTTPException(404, detail="Заказ не найден")
-
-                if current['status'] != 'готов':
-                    await conn.rollback()
-                    raise HTTPException(400, detail="Недопустимый статус для перехода")
-
-                # Обновление статуса
-                await cursor.execute(
-                    "UPDATE `order` SET status = %s WHERE ID = %s",
-                    (data.status, order_id)
-                )
-                await conn.commit()  # Фиксация изменений
-
-                # Уведомление через WebSocket
-                await notify_bot(order_id, 'выдан')
-                return {"status": "выдан"}
-
-            except aiomysql.OperationalError as e:
+            if not current:
                 await conn.rollback()
-                if e.args[0] == 1205:  # Lock wait timeout
-                    raise HTTPException(503, detail="Повторите попытку позже")
-                raise
+                raise HTTPException(404, detail="Заказ не найден")
+
+            if current['status'] != 'готов':
+                await conn.rollback()
+                raise HTTPException(400, detail="Недопустимый статус для перехода")
+
+            # Обновляем статус на "выдан"
+            await cursor.execute(
+                "UPDATE `order` SET status = 'выдан' WHERE ID = %s",
+                (order_id,)
+            )
+            await conn.commit()
+            await notify_bot(order_id, 'выдан')
+            return {"status": "выдан"}
 
     except Exception as e:
-        # Обработка ошибок соединения
-        if conn and not conn.closed:
+        if conn:
             await conn.rollback()
-        logging.error(f"Critical error: {traceback.format_exc()}")
+        logging.error(f"Ошибка: {traceback.format_exc()}")
         raise HTTPException(500, detail="Internal Server Error")
-
     finally:
-        # Возвращаем соединение в пул
-        if conn and not conn.closed:
+        if conn:
             await app.db_pool.release(conn)
 
 

@@ -2252,3 +2252,789 @@ pY6vs75NujPLpjdP0xGJNN71KCQ8uxjcsUHUuGZ23uxHrrJvWm1CNvrBUjXeGr+2
 bwIDAQAB
 -----END PUBLIC KEY-----
 
+2025-05-08 21:44:43,237 - DEBUG - Using proactor: IocpProactor
+2025-05-08 21:44:43,270 - DEBUG - caching sha2: Trying fast path
+2025-05-08 21:44:43,271 - DEBUG - caching sha2: Trying full auth...
+2025-05-08 21:44:43,271 - DEBUG - -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAho32nDGmqcw9sbhYSLbB
+42VfcolqOPklO17ZrwwtBxmfQuoFLvorXJbF0KPIF29XWsWMmEdc+WltEmqeF/90
+Z/RvI7Y4nE0UwQty3Ls3qqKXWZrdLzjxN+sumpsimC+Zc+e+FwqvRC7UfyzFxxPi
+dIs4zJkDhyfXst37emBWAX6IJtq/nPv17BEOV0lVkaW91MC2zNM7pDyN6hbw40sI
+KYrrsEZin7c0aZM+bp2b2tL+QGKgIfGLkHvepEWAi5GJLaKIwm5+j0X55k4ANUgp
+pY6vs75NujPLpjdP0xGJNN71KCQ8uxjcsUHUuGZ23uxHrrJvWm1CNvrBUjXeGr+2
+bwIDAQAB
+-----END PUBLIC KEY-----
+
+2025-05-08 21:44:43,281 - DEBUG - caching sha2: Trying fast path
+2025-05-08 21:44:43,282 - DEBUG - caching sha2: Trying full auth...
+2025-05-08 21:44:43,282 - DEBUG - -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAho32nDGmqcw9sbhYSLbB
+42VfcolqOPklO17ZrwwtBxmfQuoFLvorXJbF0KPIF29XWsWMmEdc+WltEmqeF/90
+Z/RvI7Y4nE0UwQty3Ls3qqKXWZrdLzjxN+sumpsimC+Zc+e+FwqvRC7UfyzFxxPi
+dIs4zJkDhyfXst37emBWAX6IJtq/nPv17BEOV0lVkaW91MC2zNM7pDyN6hbw40sI
+KYrrsEZin7c0aZM+bp2b2tL+QGKgIfGLkHvepEWAi5GJLaKIwm5+j0X55k4ANUgp
+pY6vs75NujPLpjdP0xGJNN71KCQ8uxjcsUHUuGZ23uxHrrJvWm1CNvrBUjXeGr+2
+bwIDAQAB
+-----END PUBLIC KEY-----
+
+2025-05-08 21:44:43,286 - DEBUG - caching sha2: Trying fast path
+2025-05-08 21:44:43,286 - DEBUG - caching sha2: Trying full auth...
+2025-05-08 21:44:43,286 - DEBUG - -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAho32nDGmqcw9sbhYSLbB
+42VfcolqOPklO17ZrwwtBxmfQuoFLvorXJbF0KPIF29XWsWMmEdc+WltEmqeF/90
+Z/RvI7Y4nE0UwQty3Ls3qqKXWZrdLzjxN+sumpsimC+Zc+e+FwqvRC7UfyzFxxPi
+dIs4zJkDhyfXst37emBWAX6IJtq/nPv17BEOV0lVkaW91MC2zNM7pDyN6hbw40sI
+KYrrsEZin7c0aZM+bp2b2tL+QGKgIfGLkHvepEWAi5GJLaKIwm5+j0X55k4ANUgp
+pY6vs75NujPLpjdP0xGJNN71KCQ8uxjcsUHUuGZ23uxHrrJvWm1CNvrBUjXeGr+2
+bwIDAQAB
+-----END PUBLIC KEY-----
+
+2025-05-08 21:44:43,291 - DEBUG - caching sha2: Trying fast path
+2025-05-08 21:44:43,291 - DEBUG - caching sha2: Trying full auth...
+2025-05-08 21:44:43,291 - DEBUG - -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAho32nDGmqcw9sbhYSLbB
+42VfcolqOPklO17ZrwwtBxmfQuoFLvorXJbF0KPIF29XWsWMmEdc+WltEmqeF/90
+Z/RvI7Y4nE0UwQty3Ls3qqKXWZrdLzjxN+sumpsimC+Zc+e+FwqvRC7UfyzFxxPi
+dIs4zJkDhyfXst37emBWAX6IJtq/nPv17BEOV0lVkaW91MC2zNM7pDyN6hbw40sI
+KYrrsEZin7c0aZM+bp2b2tL+QGKgIfGLkHvepEWAi5GJLaKIwm5+j0X55k4ANUgp
+pY6vs75NujPLpjdP0xGJNN71KCQ8uxjcsUHUuGZ23uxHrrJvWm1CNvrBUjXeGr+2
+bwIDAQAB
+-----END PUBLIC KEY-----
+
+2025-05-08 21:44:43,295 - DEBUG - caching sha2: Trying fast path
+2025-05-08 21:44:43,295 - DEBUG - caching sha2: Trying full auth...
+2025-05-08 21:44:43,296 - DEBUG - -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAho32nDGmqcw9sbhYSLbB
+42VfcolqOPklO17ZrwwtBxmfQuoFLvorXJbF0KPIF29XWsWMmEdc+WltEmqeF/90
+Z/RvI7Y4nE0UwQty3Ls3qqKXWZrdLzjxN+sumpsimC+Zc+e+FwqvRC7UfyzFxxPi
+dIs4zJkDhyfXst37emBWAX6IJtq/nPv17BEOV0lVkaW91MC2zNM7pDyN6hbw40sI
+KYrrsEZin7c0aZM+bp2b2tL+QGKgIfGLkHvepEWAi5GJLaKIwm5+j0X55k4ANUgp
+pY6vs75NujPLpjdP0xGJNN71KCQ8uxjcsUHUuGZ23uxHrrJvWm1CNvrBUjXeGr+2
+bwIDAQAB
+-----END PUBLIC KEY-----
+
+2025-05-08 21:44:43,300 - DEBUG - caching sha2: Trying fast path
+2025-05-08 21:44:43,300 - DEBUG - caching sha2: Trying full auth...
+2025-05-08 21:44:43,300 - DEBUG - -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAho32nDGmqcw9sbhYSLbB
+42VfcolqOPklO17ZrwwtBxmfQuoFLvorXJbF0KPIF29XWsWMmEdc+WltEmqeF/90
+Z/RvI7Y4nE0UwQty3Ls3qqKXWZrdLzjxN+sumpsimC+Zc+e+FwqvRC7UfyzFxxPi
+dIs4zJkDhyfXst37emBWAX6IJtq/nPv17BEOV0lVkaW91MC2zNM7pDyN6hbw40sI
+KYrrsEZin7c0aZM+bp2b2tL+QGKgIfGLkHvepEWAi5GJLaKIwm5+j0X55k4ANUgp
+pY6vs75NujPLpjdP0xGJNN71KCQ8uxjcsUHUuGZ23uxHrrJvWm1CNvrBUjXeGr+2
+bwIDAQAB
+-----END PUBLIC KEY-----
+
+2025-05-08 21:44:43,304 - DEBUG - caching sha2: Trying fast path
+2025-05-08 21:44:43,305 - DEBUG - caching sha2: Trying full auth...
+2025-05-08 21:44:43,305 - DEBUG - -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAho32nDGmqcw9sbhYSLbB
+42VfcolqOPklO17ZrwwtBxmfQuoFLvorXJbF0KPIF29XWsWMmEdc+WltEmqeF/90
+Z/RvI7Y4nE0UwQty3Ls3qqKXWZrdLzjxN+sumpsimC+Zc+e+FwqvRC7UfyzFxxPi
+dIs4zJkDhyfXst37emBWAX6IJtq/nPv17BEOV0lVkaW91MC2zNM7pDyN6hbw40sI
+KYrrsEZin7c0aZM+bp2b2tL+QGKgIfGLkHvepEWAi5GJLaKIwm5+j0X55k4ANUgp
+pY6vs75NujPLpjdP0xGJNN71KCQ8uxjcsUHUuGZ23uxHrrJvWm1CNvrBUjXeGr+2
+bwIDAQAB
+-----END PUBLIC KEY-----
+
+2025-05-08 21:44:43,309 - DEBUG - caching sha2: Trying fast path
+2025-05-08 21:44:43,309 - DEBUG - caching sha2: Trying full auth...
+2025-05-08 21:44:43,309 - DEBUG - -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAho32nDGmqcw9sbhYSLbB
+42VfcolqOPklO17ZrwwtBxmfQuoFLvorXJbF0KPIF29XWsWMmEdc+WltEmqeF/90
+Z/RvI7Y4nE0UwQty3Ls3qqKXWZrdLzjxN+sumpsimC+Zc+e+FwqvRC7UfyzFxxPi
+dIs4zJkDhyfXst37emBWAX6IJtq/nPv17BEOV0lVkaW91MC2zNM7pDyN6hbw40sI
+KYrrsEZin7c0aZM+bp2b2tL+QGKgIfGLkHvepEWAi5GJLaKIwm5+j0X55k4ANUgp
+pY6vs75NujPLpjdP0xGJNN71KCQ8uxjcsUHUuGZ23uxHrrJvWm1CNvrBUjXeGr+2
+bwIDAQAB
+-----END PUBLIC KEY-----
+
+2025-05-08 21:44:43,314 - DEBUG - caching sha2: Trying fast path
+2025-05-08 21:44:43,314 - DEBUG - caching sha2: Trying full auth...
+2025-05-08 21:44:43,314 - DEBUG - -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAho32nDGmqcw9sbhYSLbB
+42VfcolqOPklO17ZrwwtBxmfQuoFLvorXJbF0KPIF29XWsWMmEdc+WltEmqeF/90
+Z/RvI7Y4nE0UwQty3Ls3qqKXWZrdLzjxN+sumpsimC+Zc+e+FwqvRC7UfyzFxxPi
+dIs4zJkDhyfXst37emBWAX6IJtq/nPv17BEOV0lVkaW91MC2zNM7pDyN6hbw40sI
+KYrrsEZin7c0aZM+bp2b2tL+QGKgIfGLkHvepEWAi5GJLaKIwm5+j0X55k4ANUgp
+pY6vs75NujPLpjdP0xGJNN71KCQ8uxjcsUHUuGZ23uxHrrJvWm1CNvrBUjXeGr+2
+bwIDAQAB
+-----END PUBLIC KEY-----
+
+2025-05-08 21:44:43,319 - DEBUG - caching sha2: Trying fast path
+2025-05-08 21:44:43,319 - DEBUG - caching sha2: Trying full auth...
+2025-05-08 21:44:43,319 - DEBUG - -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAho32nDGmqcw9sbhYSLbB
+42VfcolqOPklO17ZrwwtBxmfQuoFLvorXJbF0KPIF29XWsWMmEdc+WltEmqeF/90
+Z/RvI7Y4nE0UwQty3Ls3qqKXWZrdLzjxN+sumpsimC+Zc+e+FwqvRC7UfyzFxxPi
+dIs4zJkDhyfXst37emBWAX6IJtq/nPv17BEOV0lVkaW91MC2zNM7pDyN6hbw40sI
+KYrrsEZin7c0aZM+bp2b2tL+QGKgIfGLkHvepEWAi5GJLaKIwm5+j0X55k4ANUgp
+pY6vs75NujPLpjdP0xGJNN71KCQ8uxjcsUHUuGZ23uxHrrJvWm1CNvrBUjXeGr+2
+bwIDAQAB
+-----END PUBLIC KEY-----
+
+2025-05-08 21:45:07,348 - DEBUG - Calling on_part_begin with no data
+2025-05-08 21:45:07,348 - DEBUG - Calling on_header_field with data[36:48]
+2025-05-08 21:45:07,348 - DEBUG - Calling on_header_value with data[50:75]
+2025-05-08 21:45:07,349 - DEBUG - Calling on_header_end with no data
+2025-05-08 21:45:07,349 - DEBUG - Calling on_header_field with data[77:96]
+2025-05-08 21:45:07,349 - DEBUG - Calling on_header_value with data[98:123]
+2025-05-08 21:45:07,349 - DEBUG - Calling on_header_end with no data
+2025-05-08 21:45:07,349 - DEBUG - Calling on_headers_finished with no data
+2025-05-08 21:45:07,349 - DEBUG - Calling on_part_data with data[127:128]
+2025-05-08 21:45:07,350 - DEBUG - Calling on_part_end with no data
+2025-05-08 21:45:07,350 - DEBUG - Calling on_part_begin with no data
+2025-05-08 21:45:07,350 - DEBUG - Calling on_header_field with data[166:178]
+2025-05-08 21:45:07,350 - DEBUG - Calling on_header_value with data[180:205]
+2025-05-08 21:45:07,350 - DEBUG - Calling on_header_end with no data
+2025-05-08 21:45:07,350 - DEBUG - Calling on_header_field with data[207:226]
+2025-05-08 21:45:07,350 - DEBUG - Calling on_header_value with data[228:251]
+2025-05-08 21:45:07,350 - DEBUG - Calling on_header_end with no data
+2025-05-08 21:45:07,350 - DEBUG - Calling on_headers_finished with no data
+2025-05-08 21:45:07,350 - DEBUG - Calling on_part_data with data[255:259]
+2025-05-08 21:45:07,350 - DEBUG - Calling on_part_end with no data
+2025-05-08 21:45:07,351 - DEBUG - Calling on_part_begin with no data
+2025-05-08 21:45:07,351 - DEBUG - Calling on_header_field with data[297:309]
+2025-05-08 21:45:07,351 - DEBUG - Calling on_header_value with data[311:336]
+2025-05-08 21:45:07,351 - DEBUG - Calling on_header_end with no data
+2025-05-08 21:45:07,351 - DEBUG - Calling on_header_field with data[338:357]
+2025-05-08 21:45:07,351 - DEBUG - Calling on_header_value with data[359:382]
+2025-05-08 21:45:07,351 - DEBUG - Calling on_header_end with no data
+2025-05-08 21:45:07,351 - DEBUG - Calling on_headers_finished with no data
+2025-05-08 21:45:07,351 - DEBUG - Calling on_part_data with data[386:387]
+2025-05-08 21:45:07,351 - DEBUG - Calling on_part_end with no data
+2025-05-08 21:45:07,352 - DEBUG - Calling on_part_begin with no data
+2025-05-08 21:45:07,352 - DEBUG - Calling on_header_field with data[425:437]
+2025-05-08 21:45:07,352 - DEBUG - Calling on_header_value with data[439:464]
+2025-05-08 21:45:07,352 - DEBUG - Calling on_header_end with no data
+2025-05-08 21:45:07,352 - DEBUG - Calling on_header_field with data[466:485]
+2025-05-08 21:45:07,352 - DEBUG - Calling on_header_value with data[487:510]
+2025-05-08 21:45:07,352 - DEBUG - Calling on_header_end with no data
+2025-05-08 21:45:07,352 - DEBUG - Calling on_headers_finished with no data
+2025-05-08 21:45:07,352 - DEBUG - Calling on_part_data with data[514:535]
+2025-05-08 21:45:07,352 - DEBUG - Calling on_part_end with no data
+2025-05-08 21:45:07,352 - DEBUG - Calling on_part_begin with no data
+2025-05-08 21:45:07,352 - DEBUG - Calling on_header_field with data[573:585]
+2025-05-08 21:45:07,352 - DEBUG - Calling on_header_value with data[587:612]
+2025-05-08 21:45:07,352 - DEBUG - Calling on_header_end with no data
+2025-05-08 21:45:07,352 - DEBUG - Calling on_header_field with data[614:633]
+2025-05-08 21:45:07,352 - DEBUG - Calling on_header_value with data[635:660]
+2025-05-08 21:45:07,353 - DEBUG - Calling on_header_end with no data
+2025-05-08 21:45:07,353 - DEBUG - Calling on_headers_finished with no data
+2025-05-08 21:45:07,353 - DEBUG - Calling on_part_data with data[664:674]
+2025-05-08 21:45:07,353 - DEBUG - Calling on_part_end with no data
+2025-05-08 21:45:07,353 - DEBUG - Calling on_part_begin with no data
+2025-05-08 21:45:07,353 - DEBUG - Calling on_header_field with data[712:724]
+2025-05-08 21:45:07,353 - DEBUG - Calling on_header_value with data[726:751]
+2025-05-08 21:45:07,353 - DEBUG - Calling on_header_end with no data
+2025-05-08 21:45:07,353 - DEBUG - Calling on_header_field with data[753:772]
+2025-05-08 21:45:07,353 - DEBUG - Calling on_header_value with data[774:796]
+2025-05-08 21:45:07,353 - DEBUG - Calling on_header_end with no data
+2025-05-08 21:45:07,353 - DEBUG - Calling on_headers_finished with no data
+2025-05-08 21:45:07,353 - DEBUG - Calling on_part_data with data[800:802]
+2025-05-08 21:45:07,353 - DEBUG - Calling on_part_end with no data
+2025-05-08 21:45:07,353 - DEBUG - Calling on_part_begin with no data
+2025-05-08 21:45:07,353 - DEBUG - Calling on_header_field with data[840:852]
+2025-05-08 21:45:07,353 - DEBUG - Calling on_header_value with data[854:879]
+2025-05-08 21:45:07,353 - DEBUG - Calling on_header_end with no data
+2025-05-08 21:45:07,353 - DEBUG - Calling on_header_field with data[881:900]
+2025-05-08 21:45:07,353 - DEBUG - Calling on_header_value with data[902:934]
+2025-05-08 21:45:07,353 - DEBUG - Calling on_header_end with no data
+2025-05-08 21:45:07,353 - DEBUG - Calling on_headers_finished with no data
+2025-05-08 21:45:07,353 - DEBUG - Calling on_part_data with data[938:942]
+2025-05-08 21:45:07,353 - DEBUG - Calling on_part_end with no data
+2025-05-08 21:45:07,353 - DEBUG - Calling on_part_begin with no data
+2025-05-08 21:45:07,353 - DEBUG - Calling on_header_field with data[980:992]
+2025-05-08 21:45:07,353 - DEBUG - Calling on_header_value with data[994:1019]
+2025-05-08 21:45:07,353 - DEBUG - Calling on_header_end with no data
+2025-05-08 21:45:07,354 - DEBUG - Calling on_header_field with data[1021:1040]
+2025-05-08 21:45:07,354 - DEBUG - Calling on_header_value with data[1042:1068]
+2025-05-08 21:45:07,354 - DEBUG - Calling on_header_end with no data
+2025-05-08 21:45:07,354 - DEBUG - Calling on_headers_finished with no data
+2025-05-08 21:45:07,354 - DEBUG - Calling on_part_data with data[1072:1078]
+2025-05-08 21:45:07,354 - DEBUG - Calling on_part_end with no data
+2025-05-08 21:45:07,354 - DEBUG - Calling on_part_begin with no data
+2025-05-08 21:45:07,354 - DEBUG - Calling on_header_field with data[1116:1128]
+2025-05-08 21:45:07,354 - DEBUG - Calling on_header_value with data[1130:1154]
+2025-05-08 21:45:07,354 - DEBUG - Calling on_header_end with no data
+2025-05-08 21:45:07,354 - DEBUG - Calling on_header_field with data[1156:1175]
+2025-05-08 21:45:07,354 - DEBUG - Calling on_header_value with data[1177:1301]
+2025-05-08 21:45:07,354 - DEBUG - Calling on_header_end with no data
+2025-05-08 21:45:07,354 - DEBUG - Calling on_headers_finished with no data
+2025-05-08 21:45:07,354 - DEBUG - Calling on_part_data with data[1305:21827]
+2025-05-08 21:45:07,354 - DEBUG - Calling on_part_end with no data
+2025-05-08 21:45:07,354 - DEBUG - Calling on_end with no data
+2025-05-08 21:51:42,894 - DEBUG - Using proactor: IocpProactor
+2025-05-08 21:51:42,932 - DEBUG - caching sha2: Trying fast path
+2025-05-08 21:51:42,932 - DEBUG - caching sha2: Trying full auth...
+2025-05-08 21:51:42,932 - DEBUG - -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAho32nDGmqcw9sbhYSLbB
+42VfcolqOPklO17ZrwwtBxmfQuoFLvorXJbF0KPIF29XWsWMmEdc+WltEmqeF/90
+Z/RvI7Y4nE0UwQty3Ls3qqKXWZrdLzjxN+sumpsimC+Zc+e+FwqvRC7UfyzFxxPi
+dIs4zJkDhyfXst37emBWAX6IJtq/nPv17BEOV0lVkaW91MC2zNM7pDyN6hbw40sI
+KYrrsEZin7c0aZM+bp2b2tL+QGKgIfGLkHvepEWAi5GJLaKIwm5+j0X55k4ANUgp
+pY6vs75NujPLpjdP0xGJNN71KCQ8uxjcsUHUuGZ23uxHrrJvWm1CNvrBUjXeGr+2
+bwIDAQAB
+-----END PUBLIC KEY-----
+
+2025-05-08 21:51:42,944 - DEBUG - caching sha2: Trying fast path
+2025-05-08 21:51:42,944 - DEBUG - caching sha2: Trying full auth...
+2025-05-08 21:51:42,944 - DEBUG - -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAho32nDGmqcw9sbhYSLbB
+42VfcolqOPklO17ZrwwtBxmfQuoFLvorXJbF0KPIF29XWsWMmEdc+WltEmqeF/90
+Z/RvI7Y4nE0UwQty3Ls3qqKXWZrdLzjxN+sumpsimC+Zc+e+FwqvRC7UfyzFxxPi
+dIs4zJkDhyfXst37emBWAX6IJtq/nPv17BEOV0lVkaW91MC2zNM7pDyN6hbw40sI
+KYrrsEZin7c0aZM+bp2b2tL+QGKgIfGLkHvepEWAi5GJLaKIwm5+j0X55k4ANUgp
+pY6vs75NujPLpjdP0xGJNN71KCQ8uxjcsUHUuGZ23uxHrrJvWm1CNvrBUjXeGr+2
+bwIDAQAB
+-----END PUBLIC KEY-----
+
+2025-05-08 21:51:42,949 - DEBUG - caching sha2: Trying fast path
+2025-05-08 21:51:42,949 - DEBUG - caching sha2: Trying full auth...
+2025-05-08 21:51:42,949 - DEBUG - -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAho32nDGmqcw9sbhYSLbB
+42VfcolqOPklO17ZrwwtBxmfQuoFLvorXJbF0KPIF29XWsWMmEdc+WltEmqeF/90
+Z/RvI7Y4nE0UwQty3Ls3qqKXWZrdLzjxN+sumpsimC+Zc+e+FwqvRC7UfyzFxxPi
+dIs4zJkDhyfXst37emBWAX6IJtq/nPv17BEOV0lVkaW91MC2zNM7pDyN6hbw40sI
+KYrrsEZin7c0aZM+bp2b2tL+QGKgIfGLkHvepEWAi5GJLaKIwm5+j0X55k4ANUgp
+pY6vs75NujPLpjdP0xGJNN71KCQ8uxjcsUHUuGZ23uxHrrJvWm1CNvrBUjXeGr+2
+bwIDAQAB
+-----END PUBLIC KEY-----
+
+2025-05-08 21:51:42,953 - DEBUG - caching sha2: Trying fast path
+2025-05-08 21:51:42,953 - DEBUG - caching sha2: Trying full auth...
+2025-05-08 21:51:42,954 - DEBUG - -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAho32nDGmqcw9sbhYSLbB
+42VfcolqOPklO17ZrwwtBxmfQuoFLvorXJbF0KPIF29XWsWMmEdc+WltEmqeF/90
+Z/RvI7Y4nE0UwQty3Ls3qqKXWZrdLzjxN+sumpsimC+Zc+e+FwqvRC7UfyzFxxPi
+dIs4zJkDhyfXst37emBWAX6IJtq/nPv17BEOV0lVkaW91MC2zNM7pDyN6hbw40sI
+KYrrsEZin7c0aZM+bp2b2tL+QGKgIfGLkHvepEWAi5GJLaKIwm5+j0X55k4ANUgp
+pY6vs75NujPLpjdP0xGJNN71KCQ8uxjcsUHUuGZ23uxHrrJvWm1CNvrBUjXeGr+2
+bwIDAQAB
+-----END PUBLIC KEY-----
+
+2025-05-08 21:51:42,958 - DEBUG - caching sha2: Trying fast path
+2025-05-08 21:51:42,958 - DEBUG - caching sha2: Trying full auth...
+2025-05-08 21:51:42,958 - DEBUG - -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAho32nDGmqcw9sbhYSLbB
+42VfcolqOPklO17ZrwwtBxmfQuoFLvorXJbF0KPIF29XWsWMmEdc+WltEmqeF/90
+Z/RvI7Y4nE0UwQty3Ls3qqKXWZrdLzjxN+sumpsimC+Zc+e+FwqvRC7UfyzFxxPi
+dIs4zJkDhyfXst37emBWAX6IJtq/nPv17BEOV0lVkaW91MC2zNM7pDyN6hbw40sI
+KYrrsEZin7c0aZM+bp2b2tL+QGKgIfGLkHvepEWAi5GJLaKIwm5+j0X55k4ANUgp
+pY6vs75NujPLpjdP0xGJNN71KCQ8uxjcsUHUuGZ23uxHrrJvWm1CNvrBUjXeGr+2
+bwIDAQAB
+-----END PUBLIC KEY-----
+
+2025-05-08 21:51:42,962 - DEBUG - caching sha2: Trying fast path
+2025-05-08 21:51:42,963 - DEBUG - caching sha2: Trying full auth...
+2025-05-08 21:51:42,963 - DEBUG - -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAho32nDGmqcw9sbhYSLbB
+42VfcolqOPklO17ZrwwtBxmfQuoFLvorXJbF0KPIF29XWsWMmEdc+WltEmqeF/90
+Z/RvI7Y4nE0UwQty3Ls3qqKXWZrdLzjxN+sumpsimC+Zc+e+FwqvRC7UfyzFxxPi
+dIs4zJkDhyfXst37emBWAX6IJtq/nPv17BEOV0lVkaW91MC2zNM7pDyN6hbw40sI
+KYrrsEZin7c0aZM+bp2b2tL+QGKgIfGLkHvepEWAi5GJLaKIwm5+j0X55k4ANUgp
+pY6vs75NujPLpjdP0xGJNN71KCQ8uxjcsUHUuGZ23uxHrrJvWm1CNvrBUjXeGr+2
+bwIDAQAB
+-----END PUBLIC KEY-----
+
+2025-05-08 21:51:42,967 - DEBUG - caching sha2: Trying fast path
+2025-05-08 21:51:42,968 - DEBUG - caching sha2: Trying full auth...
+2025-05-08 21:51:42,968 - DEBUG - -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAho32nDGmqcw9sbhYSLbB
+42VfcolqOPklO17ZrwwtBxmfQuoFLvorXJbF0KPIF29XWsWMmEdc+WltEmqeF/90
+Z/RvI7Y4nE0UwQty3Ls3qqKXWZrdLzjxN+sumpsimC+Zc+e+FwqvRC7UfyzFxxPi
+dIs4zJkDhyfXst37emBWAX6IJtq/nPv17BEOV0lVkaW91MC2zNM7pDyN6hbw40sI
+KYrrsEZin7c0aZM+bp2b2tL+QGKgIfGLkHvepEWAi5GJLaKIwm5+j0X55k4ANUgp
+pY6vs75NujPLpjdP0xGJNN71KCQ8uxjcsUHUuGZ23uxHrrJvWm1CNvrBUjXeGr+2
+bwIDAQAB
+-----END PUBLIC KEY-----
+
+2025-05-08 21:51:42,972 - DEBUG - caching sha2: Trying fast path
+2025-05-08 21:51:42,972 - DEBUG - caching sha2: Trying full auth...
+2025-05-08 21:51:42,972 - DEBUG - -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAho32nDGmqcw9sbhYSLbB
+42VfcolqOPklO17ZrwwtBxmfQuoFLvorXJbF0KPIF29XWsWMmEdc+WltEmqeF/90
+Z/RvI7Y4nE0UwQty3Ls3qqKXWZrdLzjxN+sumpsimC+Zc+e+FwqvRC7UfyzFxxPi
+dIs4zJkDhyfXst37emBWAX6IJtq/nPv17BEOV0lVkaW91MC2zNM7pDyN6hbw40sI
+KYrrsEZin7c0aZM+bp2b2tL+QGKgIfGLkHvepEWAi5GJLaKIwm5+j0X55k4ANUgp
+pY6vs75NujPLpjdP0xGJNN71KCQ8uxjcsUHUuGZ23uxHrrJvWm1CNvrBUjXeGr+2
+bwIDAQAB
+-----END PUBLIC KEY-----
+
+2025-05-08 21:51:42,977 - DEBUG - caching sha2: Trying fast path
+2025-05-08 21:51:42,977 - DEBUG - caching sha2: Trying full auth...
+2025-05-08 21:51:42,978 - DEBUG - -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAho32nDGmqcw9sbhYSLbB
+42VfcolqOPklO17ZrwwtBxmfQuoFLvorXJbF0KPIF29XWsWMmEdc+WltEmqeF/90
+Z/RvI7Y4nE0UwQty3Ls3qqKXWZrdLzjxN+sumpsimC+Zc+e+FwqvRC7UfyzFxxPi
+dIs4zJkDhyfXst37emBWAX6IJtq/nPv17BEOV0lVkaW91MC2zNM7pDyN6hbw40sI
+KYrrsEZin7c0aZM+bp2b2tL+QGKgIfGLkHvepEWAi5GJLaKIwm5+j0X55k4ANUgp
+pY6vs75NujPLpjdP0xGJNN71KCQ8uxjcsUHUuGZ23uxHrrJvWm1CNvrBUjXeGr+2
+bwIDAQAB
+-----END PUBLIC KEY-----
+
+2025-05-08 21:51:42,982 - DEBUG - caching sha2: Trying fast path
+2025-05-08 21:51:42,982 - DEBUG - caching sha2: Trying full auth...
+2025-05-08 21:51:42,983 - DEBUG - -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAho32nDGmqcw9sbhYSLbB
+42VfcolqOPklO17ZrwwtBxmfQuoFLvorXJbF0KPIF29XWsWMmEdc+WltEmqeF/90
+Z/RvI7Y4nE0UwQty3Ls3qqKXWZrdLzjxN+sumpsimC+Zc+e+FwqvRC7UfyzFxxPi
+dIs4zJkDhyfXst37emBWAX6IJtq/nPv17BEOV0lVkaW91MC2zNM7pDyN6hbw40sI
+KYrrsEZin7c0aZM+bp2b2tL+QGKgIfGLkHvepEWAi5GJLaKIwm5+j0X55k4ANUgp
+pY6vs75NujPLpjdP0xGJNN71KCQ8uxjcsUHUuGZ23uxHrrJvWm1CNvrBUjXeGr+2
+bwIDAQAB
+-----END PUBLIC KEY-----
+
+2025-05-08 21:52:03,605 - ERROR - WebSocket error: name 'Decimal' is not defined
+2025-05-08 21:52:18,162 - DEBUG - caching sha2: Trying fast path
+2025-05-08 21:52:18,162 - DEBUG - caching sha2: Trying full auth...
+2025-05-08 21:52:18,162 - DEBUG - -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAho32nDGmqcw9sbhYSLbB
+42VfcolqOPklO17ZrwwtBxmfQuoFLvorXJbF0KPIF29XWsWMmEdc+WltEmqeF/90
+Z/RvI7Y4nE0UwQty3Ls3qqKXWZrdLzjxN+sumpsimC+Zc+e+FwqvRC7UfyzFxxPi
+dIs4zJkDhyfXst37emBWAX6IJtq/nPv17BEOV0lVkaW91MC2zNM7pDyN6hbw40sI
+KYrrsEZin7c0aZM+bp2b2tL+QGKgIfGLkHvepEWAi5GJLaKIwm5+j0X55k4ANUgp
+pY6vs75NujPLpjdP0xGJNN71KCQ8uxjcsUHUuGZ23uxHrrJvWm1CNvrBUjXeGr+2
+bwIDAQAB
+-----END PUBLIC KEY-----
+
+2025-05-08 21:52:22,630 - ERROR - Critical error: Traceback (most recent call last):
+  File "C:\send_to_ptint\send-to-print\project\api\api.py", line 223, in complete_order
+    (data.status, order_id)
+     ^^^^
+NameError: name 'data' is not defined
+
+2025-05-08 21:52:22,631 - ERROR - Critical error: Traceback (most recent call last):
+  File "C:\send_to_ptint\send-to-print\project\api\api.py", line 223, in complete_order
+    (data.status, order_id)
+     ^^^^
+NameError: name 'data' is not defined
+
+2025-05-08 21:52:22,632 - ERROR - Critical error: Traceback (most recent call last):
+  File "C:\send_to_ptint\send-to-print\project\api\api.py", line 223, in complete_order
+    (data.status, order_id)
+     ^^^^
+NameError: name 'data' is not defined
+
+2025-05-08 21:52:22,633 - ERROR - Critical error: Traceback (most recent call last):
+  File "C:\send_to_ptint\send-to-print\project\api\api.py", line 223, in complete_order
+    (data.status, order_id)
+     ^^^^
+NameError: name 'data' is not defined
+
+2025-05-08 21:52:22,634 - ERROR - Critical error: Traceback (most recent call last):
+  File "C:\send_to_ptint\send-to-print\project\api\api.py", line 223, in complete_order
+    (data.status, order_id)
+     ^^^^
+NameError: name 'data' is not defined
+
+2025-05-08 21:52:22,635 - ERROR - Critical error: Traceback (most recent call last):
+  File "C:\send_to_ptint\send-to-print\project\api\api.py", line 223, in complete_order
+    (data.status, order_id)
+     ^^^^
+NameError: name 'data' is not defined
+
+2025-05-08 21:52:22,636 - ERROR - Critical error: Traceback (most recent call last):
+  File "C:\send_to_ptint\send-to-print\project\api\api.py", line 223, in complete_order
+    (data.status, order_id)
+     ^^^^
+NameError: name 'data' is not defined
+
+2025-05-08 21:52:22,637 - ERROR - Critical error: Traceback (most recent call last):
+  File "C:\send_to_ptint\send-to-print\project\api\api.py", line 223, in complete_order
+    (data.status, order_id)
+     ^^^^
+NameError: name 'data' is not defined
+
+2025-05-08 21:52:22,638 - ERROR - Critical error: Traceback (most recent call last):
+  File "C:\send_to_ptint\send-to-print\project\api\api.py", line 223, in complete_order
+    (data.status, order_id)
+     ^^^^
+NameError: name 'data' is not defined
+
+2025-05-08 21:52:26,296 - ERROR - Critical error: Traceback (most recent call last):
+  File "C:\send_to_ptint\send-to-print\project\api\api.py", line 223, in complete_order
+    (data.status, order_id)
+     ^^^^
+NameError: name 'data' is not defined
+
+2025-05-08 21:52:28,361 - ERROR - Critical error: Traceback (most recent call last):
+  File "C:\send_to_ptint\send-to-print\project\api\api.py", line 223, in complete_order
+    (data.status, order_id)
+     ^^^^
+NameError: name 'data' is not defined
+
+2025-05-08 21:52:30,221 - ERROR - Critical error: Traceback (most recent call last):
+  File "C:\send_to_ptint\send-to-print\project\api\api.py", line 223, in complete_order
+    (data.status, order_id)
+     ^^^^
+NameError: name 'data' is not defined
+
+2025-05-08 21:54:04,038 - DEBUG - Using proactor: IocpProactor
+2025-05-08 21:54:04,073 - DEBUG - caching sha2: Trying fast path
+2025-05-08 21:54:04,074 - DEBUG - caching sha2: Trying full auth...
+2025-05-08 21:54:04,074 - DEBUG - -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAho32nDGmqcw9sbhYSLbB
+42VfcolqOPklO17ZrwwtBxmfQuoFLvorXJbF0KPIF29XWsWMmEdc+WltEmqeF/90
+Z/RvI7Y4nE0UwQty3Ls3qqKXWZrdLzjxN+sumpsimC+Zc+e+FwqvRC7UfyzFxxPi
+dIs4zJkDhyfXst37emBWAX6IJtq/nPv17BEOV0lVkaW91MC2zNM7pDyN6hbw40sI
+KYrrsEZin7c0aZM+bp2b2tL+QGKgIfGLkHvepEWAi5GJLaKIwm5+j0X55k4ANUgp
+pY6vs75NujPLpjdP0xGJNN71KCQ8uxjcsUHUuGZ23uxHrrJvWm1CNvrBUjXeGr+2
+bwIDAQAB
+-----END PUBLIC KEY-----
+
+2025-05-08 21:54:04,084 - DEBUG - caching sha2: Trying fast path
+2025-05-08 21:54:04,084 - DEBUG - caching sha2: Trying full auth...
+2025-05-08 21:54:04,085 - DEBUG - -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAho32nDGmqcw9sbhYSLbB
+42VfcolqOPklO17ZrwwtBxmfQuoFLvorXJbF0KPIF29XWsWMmEdc+WltEmqeF/90
+Z/RvI7Y4nE0UwQty3Ls3qqKXWZrdLzjxN+sumpsimC+Zc+e+FwqvRC7UfyzFxxPi
+dIs4zJkDhyfXst37emBWAX6IJtq/nPv17BEOV0lVkaW91MC2zNM7pDyN6hbw40sI
+KYrrsEZin7c0aZM+bp2b2tL+QGKgIfGLkHvepEWAi5GJLaKIwm5+j0X55k4ANUgp
+pY6vs75NujPLpjdP0xGJNN71KCQ8uxjcsUHUuGZ23uxHrrJvWm1CNvrBUjXeGr+2
+bwIDAQAB
+-----END PUBLIC KEY-----
+
+2025-05-08 21:54:04,089 - DEBUG - caching sha2: Trying fast path
+2025-05-08 21:54:04,089 - DEBUG - caching sha2: Trying full auth...
+2025-05-08 21:54:04,089 - DEBUG - -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAho32nDGmqcw9sbhYSLbB
+42VfcolqOPklO17ZrwwtBxmfQuoFLvorXJbF0KPIF29XWsWMmEdc+WltEmqeF/90
+Z/RvI7Y4nE0UwQty3Ls3qqKXWZrdLzjxN+sumpsimC+Zc+e+FwqvRC7UfyzFxxPi
+dIs4zJkDhyfXst37emBWAX6IJtq/nPv17BEOV0lVkaW91MC2zNM7pDyN6hbw40sI
+KYrrsEZin7c0aZM+bp2b2tL+QGKgIfGLkHvepEWAi5GJLaKIwm5+j0X55k4ANUgp
+pY6vs75NujPLpjdP0xGJNN71KCQ8uxjcsUHUuGZ23uxHrrJvWm1CNvrBUjXeGr+2
+bwIDAQAB
+-----END PUBLIC KEY-----
+
+2025-05-08 21:54:04,094 - DEBUG - caching sha2: Trying fast path
+2025-05-08 21:54:04,094 - DEBUG - caching sha2: Trying full auth...
+2025-05-08 21:54:04,094 - DEBUG - -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAho32nDGmqcw9sbhYSLbB
+42VfcolqOPklO17ZrwwtBxmfQuoFLvorXJbF0KPIF29XWsWMmEdc+WltEmqeF/90
+Z/RvI7Y4nE0UwQty3Ls3qqKXWZrdLzjxN+sumpsimC+Zc+e+FwqvRC7UfyzFxxPi
+dIs4zJkDhyfXst37emBWAX6IJtq/nPv17BEOV0lVkaW91MC2zNM7pDyN6hbw40sI
+KYrrsEZin7c0aZM+bp2b2tL+QGKgIfGLkHvepEWAi5GJLaKIwm5+j0X55k4ANUgp
+pY6vs75NujPLpjdP0xGJNN71KCQ8uxjcsUHUuGZ23uxHrrJvWm1CNvrBUjXeGr+2
+bwIDAQAB
+-----END PUBLIC KEY-----
+
+2025-05-08 21:54:04,099 - DEBUG - caching sha2: Trying fast path
+2025-05-08 21:54:04,099 - DEBUG - caching sha2: Trying full auth...
+2025-05-08 21:54:04,099 - DEBUG - -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAho32nDGmqcw9sbhYSLbB
+42VfcolqOPklO17ZrwwtBxmfQuoFLvorXJbF0KPIF29XWsWMmEdc+WltEmqeF/90
+Z/RvI7Y4nE0UwQty3Ls3qqKXWZrdLzjxN+sumpsimC+Zc+e+FwqvRC7UfyzFxxPi
+dIs4zJkDhyfXst37emBWAX6IJtq/nPv17BEOV0lVkaW91MC2zNM7pDyN6hbw40sI
+KYrrsEZin7c0aZM+bp2b2tL+QGKgIfGLkHvepEWAi5GJLaKIwm5+j0X55k4ANUgp
+pY6vs75NujPLpjdP0xGJNN71KCQ8uxjcsUHUuGZ23uxHrrJvWm1CNvrBUjXeGr+2
+bwIDAQAB
+-----END PUBLIC KEY-----
+
+2025-05-08 21:54:04,103 - DEBUG - caching sha2: Trying fast path
+2025-05-08 21:54:04,103 - DEBUG - caching sha2: Trying full auth...
+2025-05-08 21:54:04,103 - DEBUG - -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAho32nDGmqcw9sbhYSLbB
+42VfcolqOPklO17ZrwwtBxmfQuoFLvorXJbF0KPIF29XWsWMmEdc+WltEmqeF/90
+Z/RvI7Y4nE0UwQty3Ls3qqKXWZrdLzjxN+sumpsimC+Zc+e+FwqvRC7UfyzFxxPi
+dIs4zJkDhyfXst37emBWAX6IJtq/nPv17BEOV0lVkaW91MC2zNM7pDyN6hbw40sI
+KYrrsEZin7c0aZM+bp2b2tL+QGKgIfGLkHvepEWAi5GJLaKIwm5+j0X55k4ANUgp
+pY6vs75NujPLpjdP0xGJNN71KCQ8uxjcsUHUuGZ23uxHrrJvWm1CNvrBUjXeGr+2
+bwIDAQAB
+-----END PUBLIC KEY-----
+
+2025-05-08 21:54:04,108 - DEBUG - caching sha2: Trying fast path
+2025-05-08 21:54:04,108 - DEBUG - caching sha2: Trying full auth...
+2025-05-08 21:54:04,108 - DEBUG - -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAho32nDGmqcw9sbhYSLbB
+42VfcolqOPklO17ZrwwtBxmfQuoFLvorXJbF0KPIF29XWsWMmEdc+WltEmqeF/90
+Z/RvI7Y4nE0UwQty3Ls3qqKXWZrdLzjxN+sumpsimC+Zc+e+FwqvRC7UfyzFxxPi
+dIs4zJkDhyfXst37emBWAX6IJtq/nPv17BEOV0lVkaW91MC2zNM7pDyN6hbw40sI
+KYrrsEZin7c0aZM+bp2b2tL+QGKgIfGLkHvepEWAi5GJLaKIwm5+j0X55k4ANUgp
+pY6vs75NujPLpjdP0xGJNN71KCQ8uxjcsUHUuGZ23uxHrrJvWm1CNvrBUjXeGr+2
+bwIDAQAB
+-----END PUBLIC KEY-----
+
+2025-05-08 21:54:04,112 - DEBUG - caching sha2: Trying fast path
+2025-05-08 21:54:04,113 - DEBUG - caching sha2: Trying full auth...
+2025-05-08 21:54:04,113 - DEBUG - -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAho32nDGmqcw9sbhYSLbB
+42VfcolqOPklO17ZrwwtBxmfQuoFLvorXJbF0KPIF29XWsWMmEdc+WltEmqeF/90
+Z/RvI7Y4nE0UwQty3Ls3qqKXWZrdLzjxN+sumpsimC+Zc+e+FwqvRC7UfyzFxxPi
+dIs4zJkDhyfXst37emBWAX6IJtq/nPv17BEOV0lVkaW91MC2zNM7pDyN6hbw40sI
+KYrrsEZin7c0aZM+bp2b2tL+QGKgIfGLkHvepEWAi5GJLaKIwm5+j0X55k4ANUgp
+pY6vs75NujPLpjdP0xGJNN71KCQ8uxjcsUHUuGZ23uxHrrJvWm1CNvrBUjXeGr+2
+bwIDAQAB
+-----END PUBLIC KEY-----
+
+2025-05-08 21:54:04,117 - DEBUG - caching sha2: Trying fast path
+2025-05-08 21:54:04,117 - DEBUG - caching sha2: Trying full auth...
+2025-05-08 21:54:04,117 - DEBUG - -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAho32nDGmqcw9sbhYSLbB
+42VfcolqOPklO17ZrwwtBxmfQuoFLvorXJbF0KPIF29XWsWMmEdc+WltEmqeF/90
+Z/RvI7Y4nE0UwQty3Ls3qqKXWZrdLzjxN+sumpsimC+Zc+e+FwqvRC7UfyzFxxPi
+dIs4zJkDhyfXst37emBWAX6IJtq/nPv17BEOV0lVkaW91MC2zNM7pDyN6hbw40sI
+KYrrsEZin7c0aZM+bp2b2tL+QGKgIfGLkHvepEWAi5GJLaKIwm5+j0X55k4ANUgp
+pY6vs75NujPLpjdP0xGJNN71KCQ8uxjcsUHUuGZ23uxHrrJvWm1CNvrBUjXeGr+2
+bwIDAQAB
+-----END PUBLIC KEY-----
+
+2025-05-08 21:54:04,122 - DEBUG - caching sha2: Trying fast path
+2025-05-08 21:54:04,122 - DEBUG - caching sha2: Trying full auth...
+2025-05-08 21:54:04,122 - DEBUG - -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAho32nDGmqcw9sbhYSLbB
+42VfcolqOPklO17ZrwwtBxmfQuoFLvorXJbF0KPIF29XWsWMmEdc+WltEmqeF/90
+Z/RvI7Y4nE0UwQty3Ls3qqKXWZrdLzjxN+sumpsimC+Zc+e+FwqvRC7UfyzFxxPi
+dIs4zJkDhyfXst37emBWAX6IJtq/nPv17BEOV0lVkaW91MC2zNM7pDyN6hbw40sI
+KYrrsEZin7c0aZM+bp2b2tL+QGKgIfGLkHvepEWAi5GJLaKIwm5+j0X55k4ANUgp
+pY6vs75NujPLpjdP0xGJNN71KCQ8uxjcsUHUuGZ23uxHrrJvWm1CNvrBUjXeGr+2
+bwIDAQAB
+-----END PUBLIC KEY-----
+
+2025-05-08 21:54:13,907 - DEBUG - = connection is CONNECTING
+2025-05-08 21:54:13,907 - DEBUG - > GET /notify HTTP/1.1
+2025-05-08 21:54:13,907 - DEBUG - > Host: localhost:8001
+2025-05-08 21:54:13,907 - DEBUG - > Upgrade: websocket
+2025-05-08 21:54:13,907 - DEBUG - > Connection: Upgrade
+2025-05-08 21:54:13,907 - DEBUG - > Sec-WebSocket-Key: nZu1oDnJIRv/ztI2cCLvqw==
+2025-05-08 21:54:13,907 - DEBUG - > Sec-WebSocket-Version: 13
+2025-05-08 21:54:13,907 - DEBUG - > Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+2025-05-08 21:54:13,907 - DEBUG - > User-Agent: Python/3.12 websockets/15.0.1
+2025-05-08 21:54:13,908 - DEBUG - < HTTP/1.1 101 Switching Protocols
+2025-05-08 21:54:13,908 - DEBUG - < Date: Thu, 08 May 2025 18:54:13 GMT
+2025-05-08 21:54:13,909 - DEBUG - < Upgrade: websocket
+2025-05-08 21:54:13,909 - DEBUG - < Connection: Upgrade
+2025-05-08 21:54:13,909 - DEBUG - < Sec-WebSocket-Accept: 2MU7bmlUNjWx/1tArd9HyXj15ZA=
+2025-05-08 21:54:13,909 - DEBUG - < Sec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=12; client_max_window_bits=12
+2025-05-08 21:54:13,909 - DEBUG - < Server: Python/3.12 websockets/15.0.1
+2025-05-08 21:54:13,909 - DEBUG - = connection is OPEN
+2025-05-08 21:54:13,909 - DEBUG - > TEXT '{"type": "status_update", "status": "\\u0433\\u... 43, "address": "sdvs"}' [129 bytes]
+2025-05-08 21:54:13,909 - DEBUG - > CLOSE 1000 (OK) [2 bytes]
+2025-05-08 21:54:13,909 - DEBUG - = connection is CLOSING
+2025-05-08 21:54:13,910 - DEBUG - < CLOSE 1000 (OK) [2 bytes]
+2025-05-08 21:54:13,910 - DEBUG - < EOF
+2025-05-08 21:54:13,910 - DEBUG - > EOF
+2025-05-08 21:54:13,910 - DEBUG - = connection is CLOSED
+2025-05-08 21:54:13,910 - DEBUG - x half-closing TCP connection
+2025-05-08 21:54:14,412 - ERROR - WebSocket error: name 'Decimal' is not defined
+2025-05-08 21:54:22,095 - DEBUG - caching sha2: Trying fast path
+2025-05-08 21:54:22,095 - DEBUG - caching sha2: Trying full auth...
+2025-05-08 21:54:22,095 - DEBUG - -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAho32nDGmqcw9sbhYSLbB
+42VfcolqOPklO17ZrwwtBxmfQuoFLvorXJbF0KPIF29XWsWMmEdc+WltEmqeF/90
+Z/RvI7Y4nE0UwQty3Ls3qqKXWZrdLzjxN+sumpsimC+Zc+e+FwqvRC7UfyzFxxPi
+dIs4zJkDhyfXst37emBWAX6IJtq/nPv17BEOV0lVkaW91MC2zNM7pDyN6hbw40sI
+KYrrsEZin7c0aZM+bp2b2tL+QGKgIfGLkHvepEWAi5GJLaKIwm5+j0X55k4ANUgp
+pY6vs75NujPLpjdP0xGJNN71KCQ8uxjcsUHUuGZ23uxHrrJvWm1CNvrBUjXeGr+2
+bwIDAQAB
+-----END PUBLIC KEY-----
+
+2025-05-08 21:54:36,049 - DEBUG - caching sha2: Trying fast path
+2025-05-08 21:54:36,049 - DEBUG - caching sha2: Trying full auth...
+2025-05-08 21:54:36,049 - DEBUG - -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAho32nDGmqcw9sbhYSLbB
+42VfcolqOPklO17ZrwwtBxmfQuoFLvorXJbF0KPIF29XWsWMmEdc+WltEmqeF/90
+Z/RvI7Y4nE0UwQty3Ls3qqKXWZrdLzjxN+sumpsimC+Zc+e+FwqvRC7UfyzFxxPi
+dIs4zJkDhyfXst37emBWAX6IJtq/nPv17BEOV0lVkaW91MC2zNM7pDyN6hbw40sI
+KYrrsEZin7c0aZM+bp2b2tL+QGKgIfGLkHvepEWAi5GJLaKIwm5+j0X55k4ANUgp
+pY6vs75NujPLpjdP0xGJNN71KCQ8uxjcsUHUuGZ23uxHrrJvWm1CNvrBUjXeGr+2
+bwIDAQAB
+-----END PUBLIC KEY-----
+
+2025-05-08 21:54:38,234 - DEBUG - caching sha2: Trying fast path
+2025-05-08 21:54:38,234 - DEBUG - caching sha2: Trying full auth...
+2025-05-08 21:54:38,234 - DEBUG - -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAho32nDGmqcw9sbhYSLbB
+42VfcolqOPklO17ZrwwtBxmfQuoFLvorXJbF0KPIF29XWsWMmEdc+WltEmqeF/90
+Z/RvI7Y4nE0UwQty3Ls3qqKXWZrdLzjxN+sumpsimC+Zc+e+FwqvRC7UfyzFxxPi
+dIs4zJkDhyfXst37emBWAX6IJtq/nPv17BEOV0lVkaW91MC2zNM7pDyN6hbw40sI
+KYrrsEZin7c0aZM+bp2b2tL+QGKgIfGLkHvepEWAi5GJLaKIwm5+j0X55k4ANUgp
+pY6vs75NujPLpjdP0xGJNN71KCQ8uxjcsUHUuGZ23uxHrrJvWm1CNvrBUjXeGr+2
+bwIDAQAB
+-----END PUBLIC KEY-----
+
+2025-05-08 21:54:42,675 - ERROR - Ошибка: Traceback (most recent call last):
+  File "C:\send_to_ptint\send-to-print\project\api\api.py", line 214, in complete_order
+    raise HTTPException(400, detail="Недопустимый статус для перехода")
+fastapi.exceptions.HTTPException: 400: Недопустимый статус для перехода
+
+2025-05-08 21:54:42,675 - ERROR - Ошибка: Traceback (most recent call last):
+  File "C:\send_to_ptint\send-to-print\project\api\api.py", line 214, in complete_order
+    raise HTTPException(400, detail="Недопустимый статус для перехода")
+fastapi.exceptions.HTTPException: 400: Недопустимый статус для перехода
+
+2025-05-08 21:54:42,676 - DEBUG - = connection is CONNECTING
+2025-05-08 21:54:42,677 - DEBUG - > GET /notify HTTP/1.1
+2025-05-08 21:54:42,677 - DEBUG - > Host: localhost:8001
+2025-05-08 21:54:42,677 - DEBUG - > Upgrade: websocket
+2025-05-08 21:54:42,677 - DEBUG - > Connection: Upgrade
+2025-05-08 21:54:42,677 - DEBUG - > Sec-WebSocket-Key: q7k2brRfwOBfuOMK6w3lSA==
+2025-05-08 21:54:42,677 - DEBUG - > Sec-WebSocket-Version: 13
+2025-05-08 21:54:42,677 - DEBUG - > Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+2025-05-08 21:54:42,677 - DEBUG - > User-Agent: Python/3.12 websockets/15.0.1
+2025-05-08 21:54:42,677 - DEBUG - = connection is CONNECTING
+2025-05-08 21:54:42,678 - DEBUG - > GET /notify HTTP/1.1
+2025-05-08 21:54:42,678 - DEBUG - > Host: localhost:8001
+2025-05-08 21:54:42,678 - DEBUG - > Upgrade: websocket
+2025-05-08 21:54:42,678 - DEBUG - > Connection: Upgrade
+2025-05-08 21:54:42,678 - DEBUG - > Sec-WebSocket-Key: xY65lWX1fK1vYcne52coLA==
+2025-05-08 21:54:42,678 - DEBUG - > Sec-WebSocket-Version: 13
+2025-05-08 21:54:42,678 - DEBUG - > Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+2025-05-08 21:54:42,678 - DEBUG - > User-Agent: Python/3.12 websockets/15.0.1
+2025-05-08 21:54:42,678 - DEBUG - < HTTP/1.1 101 Switching Protocols
+2025-05-08 21:54:42,678 - DEBUG - < Date: Thu, 08 May 2025 18:54:42 GMT
+2025-05-08 21:54:42,678 - DEBUG - < Upgrade: websocket
+2025-05-08 21:54:42,678 - DEBUG - < Connection: Upgrade
+2025-05-08 21:54:42,678 - DEBUG - < Sec-WebSocket-Accept: Q0kiUg6sF2TWIQegnmxuTTogx50=
+2025-05-08 21:54:42,678 - DEBUG - < Sec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=12; client_max_window_bits=12
+2025-05-08 21:54:42,678 - DEBUG - < Server: Python/3.12 websockets/15.0.1
+2025-05-08 21:54:42,679 - DEBUG - = connection is OPEN
+2025-05-08 21:54:42,679 - DEBUG - > TEXT '{"type": "status_update", "status": "\\u0432\\u... 43, "address": "sdvs"}' [129 bytes]
+2025-05-08 21:54:42,679 - DEBUG - > CLOSE 1000 (OK) [2 bytes]
+2025-05-08 21:54:42,679 - DEBUG - = connection is CLOSING
+2025-05-08 21:54:42,679 - DEBUG - < HTTP/1.1 101 Switching Protocols
+2025-05-08 21:54:42,679 - DEBUG - < Date: Thu, 08 May 2025 18:54:42 GMT
+2025-05-08 21:54:42,679 - DEBUG - < Upgrade: websocket
+2025-05-08 21:54:42,679 - DEBUG - < Connection: Upgrade
+2025-05-08 21:54:42,679 - DEBUG - < Sec-WebSocket-Accept: O0rB99FsGvOm/13rbDV0uAq0aWQ=
+2025-05-08 21:54:42,679 - DEBUG - < Sec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=12; client_max_window_bits=12
+2025-05-08 21:54:42,679 - DEBUG - < Server: Python/3.12 websockets/15.0.1
+2025-05-08 21:54:42,679 - DEBUG - = connection is OPEN
+2025-05-08 21:54:42,680 - DEBUG - < CLOSE 1000 (OK) [2 bytes]
+2025-05-08 21:54:42,680 - DEBUG - > TEXT '{"type": "status_update", "status": "\\u0432\\u... 42, "address": "sdvs"}' [129 bytes]
+2025-05-08 21:54:42,680 - DEBUG - > CLOSE 1000 (OK) [2 bytes]
+2025-05-08 21:54:42,680 - DEBUG - = connection is CLOSING
+2025-05-08 21:54:42,680 - DEBUG - < EOF
+2025-05-08 21:54:42,680 - DEBUG - > EOF
+2025-05-08 21:54:42,680 - DEBUG - = connection is CLOSED
+2025-05-08 21:54:42,680 - DEBUG - x half-closing TCP connection
+2025-05-08 21:54:42,681 - DEBUG - < CLOSE 1000 (OK) [2 bytes]
+2025-05-08 21:54:42,681 - DEBUG - < EOF
+2025-05-08 21:54:42,681 - DEBUG - > EOF
+2025-05-08 21:54:42,681 - DEBUG - = connection is CLOSED
+2025-05-08 21:54:42,681 - DEBUG - x half-closing TCP connection
+2025-05-08 21:54:55,149 - DEBUG - = connection is CONNECTING
+2025-05-08 21:54:55,150 - DEBUG - > GET /notify HTTP/1.1
+2025-05-08 21:54:55,150 - DEBUG - > Host: localhost:8001
+2025-05-08 21:54:55,150 - DEBUG - > Upgrade: websocket
+2025-05-08 21:54:55,150 - DEBUG - > Connection: Upgrade
+2025-05-08 21:54:55,150 - DEBUG - > Sec-WebSocket-Key: Tcb+SfHEBR+Uq+YhOjQG1A==
+2025-05-08 21:54:55,150 - DEBUG - > Sec-WebSocket-Version: 13
+2025-05-08 21:54:55,150 - DEBUG - > Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+2025-05-08 21:54:55,150 - DEBUG - > User-Agent: Python/3.12 websockets/15.0.1
+2025-05-08 21:54:55,151 - DEBUG - < HTTP/1.1 101 Switching Protocols
+2025-05-08 21:54:55,151 - DEBUG - < Date: Thu, 08 May 2025 18:54:55 GMT
+2025-05-08 21:54:55,151 - DEBUG - < Upgrade: websocket
+2025-05-08 21:54:55,151 - DEBUG - < Connection: Upgrade
+2025-05-08 21:54:55,151 - DEBUG - < Sec-WebSocket-Accept: S50aqZGwBLaGLAVvMTwwOUMZy50=
+2025-05-08 21:54:55,151 - DEBUG - < Sec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=12; client_max_window_bits=12
+2025-05-08 21:54:55,151 - DEBUG - < Server: Python/3.12 websockets/15.0.1
+2025-05-08 21:54:55,151 - DEBUG - = connection is OPEN
+2025-05-08 21:54:55,151 - DEBUG - > TEXT '{"type": "status_update", "status": "\\u0433\\u... 44, "address": "sdvs"}' [129 bytes]
+2025-05-08 21:54:55,151 - DEBUG - > CLOSE 1000 (OK) [2 bytes]
+2025-05-08 21:54:55,151 - DEBUG - = connection is CLOSING
+2025-05-08 21:54:55,152 - DEBUG - < CLOSE 1000 (OK) [2 bytes]
+2025-05-08 21:54:55,152 - DEBUG - < EOF
+2025-05-08 21:54:55,152 - DEBUG - > EOF
+2025-05-08 21:54:55,152 - DEBUG - = connection is CLOSED
+2025-05-08 21:54:55,152 - DEBUG - x half-closing TCP connection
+2025-05-08 21:55:05,928 - DEBUG - = connection is CONNECTING
+2025-05-08 21:55:05,928 - DEBUG - > GET /notify HTTP/1.1
+2025-05-08 21:55:05,928 - DEBUG - > Host: localhost:8001
+2025-05-08 21:55:05,928 - DEBUG - > Upgrade: websocket
+2025-05-08 21:55:05,928 - DEBUG - > Connection: Upgrade
+2025-05-08 21:55:05,928 - DEBUG - > Sec-WebSocket-Key: YBlnCFyzc3TueZa6nABMww==
+2025-05-08 21:55:05,928 - DEBUG - > Sec-WebSocket-Version: 13
+2025-05-08 21:55:05,928 - DEBUG - > Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+2025-05-08 21:55:05,928 - DEBUG - > User-Agent: Python/3.12 websockets/15.0.1
+2025-05-08 21:55:05,929 - DEBUG - < HTTP/1.1 101 Switching Protocols
+2025-05-08 21:55:05,929 - DEBUG - < Date: Thu, 08 May 2025 18:55:05 GMT
+2025-05-08 21:55:05,929 - DEBUG - < Upgrade: websocket
+2025-05-08 21:55:05,929 - DEBUG - < Connection: Upgrade
+2025-05-08 21:55:05,929 - DEBUG - < Sec-WebSocket-Accept: kbOiyVmptLpI0O4lWAYxb35v/N0=
+2025-05-08 21:55:05,930 - DEBUG - < Sec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=12; client_max_window_bits=12
+2025-05-08 21:55:05,930 - DEBUG - < Server: Python/3.12 websockets/15.0.1
+2025-05-08 21:55:05,930 - DEBUG - = connection is OPEN
+2025-05-08 21:55:05,930 - DEBUG - > TEXT '{"type": "status_update", "status": "\\u0432\\u... 44, "address": "sdvs"}' [129 bytes]
+2025-05-08 21:55:05,930 - DEBUG - > CLOSE 1000 (OK) [2 bytes]
+2025-05-08 21:55:05,930 - DEBUG - = connection is CLOSING
+2025-05-08 21:55:05,931 - DEBUG - < CLOSE 1000 (OK) [2 bytes]
+2025-05-08 21:55:05,931 - DEBUG - < EOF
+2025-05-08 21:55:05,931 - DEBUG - > EOF
+2025-05-08 21:55:05,931 - DEBUG - = connection is CLOSED
+2025-05-08 21:55:05,931 - DEBUG - x half-closing TCP connection
+2025-05-08 21:55:10,866 - DEBUG - = connection is CONNECTING
+2025-05-08 21:55:10,866 - DEBUG - > GET /notify HTTP/1.1
+2025-05-08 21:55:10,866 - DEBUG - > Host: localhost:8001
+2025-05-08 21:55:10,866 - DEBUG - > Upgrade: websocket
+2025-05-08 21:55:10,866 - DEBUG - > Connection: Upgrade
+2025-05-08 21:55:10,866 - DEBUG - > Sec-WebSocket-Key: UpXrN2RlRItdwsff5fDT2A==
+2025-05-08 21:55:10,866 - DEBUG - > Sec-WebSocket-Version: 13
+2025-05-08 21:55:10,866 - DEBUG - > Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+2025-05-08 21:55:10,866 - DEBUG - > User-Agent: Python/3.12 websockets/15.0.1
+2025-05-08 21:55:10,867 - DEBUG - < HTTP/1.1 101 Switching Protocols
+2025-05-08 21:55:10,867 - DEBUG - < Date: Thu, 08 May 2025 18:55:10 GMT
+2025-05-08 21:55:10,867 - DEBUG - < Upgrade: websocket
+2025-05-08 21:55:10,867 - DEBUG - < Connection: Upgrade
+2025-05-08 21:55:10,867 - DEBUG - < Sec-WebSocket-Accept: GTu6ZMpZhAIRitVTg1SPuRXtKIc=
+2025-05-08 21:55:10,867 - DEBUG - < Sec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=12; client_max_window_bits=12
+2025-05-08 21:55:10,867 - DEBUG - < Server: Python/3.12 websockets/15.0.1
+2025-05-08 21:55:10,867 - DEBUG - = connection is OPEN
+2025-05-08 21:55:10,868 - DEBUG - > TEXT '{"type": "status_update", "status": "\\u0432\\u... 40, "address": "sdvs"}' [129 bytes]
+2025-05-08 21:55:10,868 - DEBUG - > CLOSE 1000 (OK) [2 bytes]
+2025-05-08 21:55:10,868 - DEBUG - = connection is CLOSING
+2025-05-08 21:55:10,868 - DEBUG - < CLOSE 1000 (OK) [2 bytes]
+2025-05-08 21:55:10,868 - DEBUG - < EOF
+2025-05-08 21:55:10,869 - DEBUG - > EOF
+2025-05-08 21:55:10,869 - DEBUG - = connection is CLOSED
+2025-05-08 21:55:10,869 - DEBUG - x half-closing TCP connection
+2025-05-08 21:55:19,646 - DEBUG - = connection is CONNECTING
+2025-05-08 21:55:19,646 - DEBUG - > GET /notify HTTP/1.1
+2025-05-08 21:55:19,646 - DEBUG - > Host: localhost:8001
+2025-05-08 21:55:19,646 - DEBUG - > Upgrade: websocket
+2025-05-08 21:55:19,646 - DEBUG - > Connection: Upgrade
+2025-05-08 21:55:19,646 - DEBUG - > Sec-WebSocket-Key: P372A5MNLDJe6KRpXs31/g==
+2025-05-08 21:55:19,646 - DEBUG - > Sec-WebSocket-Version: 13
+2025-05-08 21:55:19,646 - DEBUG - > Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+2025-05-08 21:55:19,646 - DEBUG - > User-Agent: Python/3.12 websockets/15.0.1
+2025-05-08 21:55:19,647 - DEBUG - < HTTP/1.1 101 Switching Protocols
+2025-05-08 21:55:19,647 - DEBUG - < Date: Thu, 08 May 2025 18:55:19 GMT
+2025-05-08 21:55:19,647 - DEBUG - < Upgrade: websocket
+2025-05-08 21:55:19,647 - DEBUG - < Connection: Upgrade
+2025-05-08 21:55:19,647 - DEBUG - < Sec-WebSocket-Accept: cJGZ23YKqtruatTTzVHoyu+f00s=
+2025-05-08 21:55:19,647 - DEBUG - < Sec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=12; client_max_window_bits=12
+2025-05-08 21:55:19,647 - DEBUG - < Server: Python/3.12 websockets/15.0.1
+2025-05-08 21:55:19,647 - DEBUG - = connection is OPEN
+2025-05-08 21:55:19,648 - DEBUG - > TEXT '{"type": "status_update", "status": "\\u0432\\u... 41, "address": "sdvs"}' [129 bytes]
+2025-05-08 21:55:19,648 - DEBUG - > CLOSE 1000 (OK) [2 bytes]
+2025-05-08 21:55:19,648 - DEBUG - = connection is CLOSING
+2025-05-08 21:55:19,649 - DEBUG - < CLOSE 1000 (OK) [2 bytes]
+2025-05-08 21:55:19,649 - DEBUG - < EOF
+2025-05-08 21:55:19,649 - DEBUG - > EOF
+2025-05-08 21:55:19,649 - DEBUG - = connection is CLOSED
+2025-05-08 21:55:19,649 - DEBUG - x half-closing TCP connection
+2025-05-08 21:55:28,734 - DEBUG - = connection is CONNECTING
+2025-05-08 21:55:28,735 - DEBUG - > GET /notify HTTP/1.1
+2025-05-08 21:55:28,735 - DEBUG - > Host: localhost:8001
+2025-05-08 21:55:28,735 - DEBUG - > Upgrade: websocket
+2025-05-08 21:55:28,735 - DEBUG - > Connection: Upgrade
+2025-05-08 21:55:28,735 - DEBUG - > Sec-WebSocket-Key: CTgLKIx9udvbyuOXBI0Taw==
+2025-05-08 21:55:28,735 - DEBUG - > Sec-WebSocket-Version: 13
+2025-05-08 21:55:28,735 - DEBUG - > Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+2025-05-08 21:55:28,735 - DEBUG - > User-Agent: Python/3.12 websockets/15.0.1
+2025-05-08 21:55:28,737 - DEBUG - < HTTP/1.1 101 Switching Protocols
+2025-05-08 21:55:28,737 - DEBUG - < Date: Thu, 08 May 2025 18:55:28 GMT
+2025-05-08 21:55:28,738 - DEBUG - < Upgrade: websocket
+2025-05-08 21:55:28,738 - DEBUG - < Connection: Upgrade
+2025-05-08 21:55:28,738 - DEBUG - < Sec-WebSocket-Accept: 2jn2jwJxI2/6boKMwqFOnCJEjIQ=
+2025-05-08 21:55:28,738 - DEBUG - < Sec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=12; client_max_window_bits=12
+2025-05-08 21:55:28,738 - DEBUG - < Server: Python/3.12 websockets/15.0.1
+2025-05-08 21:55:28,738 - DEBUG - = connection is OPEN
+2025-05-08 21:55:28,738 - DEBUG - > TEXT '{"type": "status_update", "status": "\\u0432\\u... 39, "address": "sdvs"}' [129 bytes]
+2025-05-08 21:55:28,738 - DEBUG - > CLOSE 1000 (OK) [2 bytes]
+2025-05-08 21:55:28,739 - DEBUG - = connection is CLOSING
+2025-05-08 21:55:28,740 - DEBUG - < CLOSE 1000 (OK) [2 bytes]
+2025-05-08 21:55:28,740 - DEBUG - < EOF
+2025-05-08 21:55:28,740 - DEBUG - > EOF
+2025-05-08 21:55:28,740 - DEBUG - = connection is CLOSED
+2025-05-08 21:55:28,740 - DEBUG - x half-closing TCP connection

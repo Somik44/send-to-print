@@ -1903,3 +1903,592 @@ RuntimeError: Cannot enter into task <Task pending name='Task-13' coro=<FileRece
 task: <Task pending name='Task-12' coro=<FileReceiverApp.on_timer_timeout() running at C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py:117> cb=[asyncSlot.<locals>._error_handler() at C:\send_to_ptint\.venv\Lib\site-packages\qasync\__init__.py:778]>
 2025-05-08 21:42:36,122 - ERROR - Task was destroyed but it is pending!
 task: <Task pending name='Task-13' coro=<FileReceiverApp.on_timer_timeout() running at C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py:117> cb=[asyncSlot.<locals>._error_handler() at C:\send_to_ptint\.venv\Lib\site-packages\qasync\__init__.py:778]>
+2025-05-08 21:51:56,165 - DEBUG - Using proactor: _IocpProactor
+2025-05-08 21:51:59,343 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-08 21:52:01,410 - DEBUG - http://localhost:5000 "GET /shop/03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4 HTTP/1.1" 200 28
+2025-05-08 21:52:01,541 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-08 21:52:01,542 - DEBUG - Using proactor: IocpProactor
+2025-05-08 21:52:01,542 - DEBUG - Thread started
+2025-05-08 21:52:01,544 - DEBUG - Submitting callback <function getaddrinfo at 0x000001FD6D55A700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:52:01,545 - DEBUG - #1 got callback <function getaddrinfo at 0x000001FD6D55A700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:52:01,545 - DEBUG - Invoking callback
+2025-05-08 21:52:01,546 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:52:01,796 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x000001FD72A2F560>, 0, 0, <_overlapped.Overlapped object at 0x000001FD6EF97F30>)]
+2025-05-08 21:52:01,797 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x000001FD72A2F560>
+2025-05-08 21:52:01,799 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>, 127, 0, <_overlapped.Overlapped object at 0x000001FD6EF96430>)]
+2025-05-08 21:52:01,799 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>
+2025-05-08 21:52:01,807 - DEBUG - Submitting callback <function getaddrinfo at 0x000001FD6D55A700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:52:01,807 - DEBUG - #3 got callback <function getaddrinfo at 0x000001FD6D55A700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:52:01,807 - DEBUG - Invoking callback
+2025-05-08 21:52:01,808 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:52:02,047 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x000001FD72A45620>, 0, 0, <_overlapped.Overlapped object at 0x000001FD6EF96070>)]
+2025-05-08 21:52:02,047 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x000001FD72A45620>
+2025-05-08 21:52:02,085 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>, 293, 0, <_overlapped.Overlapped object at 0x000001FD6EF97030>)]
+2025-05-08 21:52:02,086 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>
+2025-05-08 21:52:02,092 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>, 20522, 0, <_overlapped.Overlapped object at 0x000001FD6EF95FB0>)]
+2025-05-08 21:52:02,092 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>
+2025-05-08 21:52:03,419 - DEBUG - Submitting callback <function getaddrinfo at 0x000001FD6D55A700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:52:03,420 - DEBUG - #2 got callback <function getaddrinfo at 0x000001FD6D55A700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:52:03,420 - DEBUG - Invoking callback
+2025-05-08 21:52:03,420 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:52:03,599 - DEBUG - = connection is CONNECTING
+2025-05-08 21:52:03,600 - DEBUG - > GET /ws/9 HTTP/1.1
+2025-05-08 21:52:03,600 - DEBUG - > Host: localhost:5000
+2025-05-08 21:52:03,600 - DEBUG - > Upgrade: websocket
+2025-05-08 21:52:03,601 - DEBUG - > Connection: Upgrade
+2025-05-08 21:52:03,601 - DEBUG - > Sec-WebSocket-Key: ydGaaKmTE+nITwwia/rimw==
+2025-05-08 21:52:03,601 - DEBUG - > Sec-WebSocket-Version: 13
+2025-05-08 21:52:03,601 - DEBUG - > Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+2025-05-08 21:52:03,601 - DEBUG - > User-Agent: Python/3.12 websockets/15.0.1
+2025-05-08 21:52:03,604 - DEBUG - < HTTP/1.1 101 Switching Protocols
+2025-05-08 21:52:03,604 - DEBUG - < Upgrade: websocket
+2025-05-08 21:52:03,604 - DEBUG - < Connection: Upgrade
+2025-05-08 21:52:03,604 - DEBUG - < Sec-WebSocket-Accept: /E8NnKVwt97QjdEHa8htBpItsMM=
+2025-05-08 21:52:03,604 - DEBUG - < Sec-WebSocket-Extensions: permessage-deflate
+2025-05-08 21:52:03,604 - DEBUG - < date: Thu, 08 May 2025 18:52:02 GMT
+2025-05-08 21:52:03,604 - DEBUG - < server: uvicorn
+2025-05-08 21:52:03,604 - DEBUG - = connection is OPEN
+2025-05-08 21:52:03,672 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x000001FD6FBBF740>, 0, 0, <_overlapped.Overlapped object at 0x000001FD6EF97CF0>)]
+2025-05-08 21:52:03,672 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x000001FD6FBBF740>
+2025-05-08 21:52:03,674 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>, 153, 0, <_overlapped.Overlapped object at 0x000001FD6EF97030>)]
+2025-05-08 21:52:03,674 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>
+2025-05-08 21:52:03,682 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>, 21, 0, <_overlapped.Overlapped object at 0x000001FD6EF95EF0>)]
+2025-05-08 21:52:03,682 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>
+2025-05-08 21:52:03,683 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>, 0, 0, <_overlapped.Overlapped object at 0x000001FD6EF97CF0>)]
+2025-05-08 21:52:03,693 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>
+2025-05-08 21:52:17,906 - DEBUG - Submitting callback <function getaddrinfo at 0x000001FD6D55A700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:52:17,906 - DEBUG - #4 got callback <function getaddrinfo at 0x000001FD6D55A700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:52:17,906 - DEBUG - Invoking callback
+2025-05-08 21:52:17,906 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:52:18,158 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x000001FD72A45B20>, 0, 0, <_overlapped.Overlapped object at 0x000001FD72A34570>)]
+2025-05-08 21:52:18,158 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x000001FD72A45B20>
+2025-05-08 21:52:19,400 - DEBUG - Submitting callback <function getaddrinfo at 0x000001FD6D55A700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:52:19,401 - DEBUG - #5 got callback <function getaddrinfo at 0x000001FD6D55A700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:52:19,401 - DEBUG - Invoking callback
+2025-05-08 21:52:19,401 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:52:20,273 - DEBUG - Submitting callback <function getaddrinfo at 0x000001FD6D55A700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:52:20,273 - DEBUG - #6 got callback <function getaddrinfo at 0x000001FD6D55A700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:52:20,273 - DEBUG - Invoking callback
+2025-05-08 21:52:20,274 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:52:20,519 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x000001FD72A2E840>, 0, 0, <_overlapped.Overlapped object at 0x000001FD72A34DB0>)]
+2025-05-08 21:52:20,519 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x000001FD72A2E840>
+2025-05-08 21:52:21,622 - DEBUG - Submitting callback <function getaddrinfo at 0x000001FD6D55A700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:52:21,622 - DEBUG - #10 got callback <function getaddrinfo at 0x000001FD6D55A700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:52:21,622 - DEBUG - Invoking callback
+2025-05-08 21:52:21,622 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:52:21,779 - DEBUG - Submitting callback <function getaddrinfo at 0x000001FD6D55A700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:52:21,779 - DEBUG - #7 got callback <function getaddrinfo at 0x000001FD6D55A700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:52:21,779 - DEBUG - Invoking callback
+2025-05-08 21:52:21,780 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:52:21,865 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x000001FD72A46700>, 0, 0, <_overlapped.Overlapped object at 0x000001FD72A35470>)]
+2025-05-08 21:52:21,865 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x000001FD72A46700>
+2025-05-08 21:52:21,935 - DEBUG - Submitting callback <function getaddrinfo at 0x000001FD6D55A700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:52:21,935 - DEBUG - #9 got callback <function getaddrinfo at 0x000001FD6D55A700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:52:21,935 - DEBUG - Invoking callback
+2025-05-08 21:52:21,935 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:52:22,037 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x000001FD72A45F80>, 0, 0, <_overlapped.Overlapped object at 0x000001FD72A35CB0>)]
+2025-05-08 21:52:22,038 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x000001FD72A45F80>
+2025-05-08 21:52:22,072 - DEBUG - Submitting callback <function getaddrinfo at 0x000001FD6D55A700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:52:22,072 - DEBUG - #8 got callback <function getaddrinfo at 0x000001FD6D55A700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:52:22,072 - DEBUG - Invoking callback
+2025-05-08 21:52:22,073 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:52:22,192 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x000001FD72A47600>, 0, 0, <_overlapped.Overlapped object at 0x000001FD72A364F0>)]
+2025-05-08 21:52:22,192 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x000001FD72A47600>
+2025-05-08 21:52:22,215 - DEBUG - Submitting callback <function getaddrinfo at 0x000001FD6D55A700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:52:22,215 - DEBUG - #1 got callback <function getaddrinfo at 0x000001FD6D55A700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:52:22,215 - DEBUG - Invoking callback
+2025-05-08 21:52:22,215 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:52:22,313 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x000001FD72A46520>, 0, 0, <_overlapped.Overlapped object at 0x000001FD72A365B0>)]
+2025-05-08 21:52:22,313 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x000001FD72A46520>
+2025-05-08 21:52:22,367 - DEBUG - Submitting callback <function getaddrinfo at 0x000001FD6D55A700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:52:22,367 - DEBUG - #3 got callback <function getaddrinfo at 0x000001FD6D55A700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:52:22,367 - DEBUG - Invoking callback
+2025-05-08 21:52:22,368 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:52:22,468 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x000001FD72A479C0>, 0, 0, <_overlapped.Overlapped object at 0x000001FD72A36EB0>)]
+2025-05-08 21:52:22,469 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x000001FD72A479C0>
+2025-05-08 21:52:22,499 - DEBUG - Submitting callback <function getaddrinfo at 0x000001FD6D55A700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:52:22,499 - DEBUG - #2 got callback <function getaddrinfo at 0x000001FD6D55A700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:52:22,499 - DEBUG - Invoking callback
+2025-05-08 21:52:22,500 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:52:22,625 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x000001FD72A479C0>, 0, 0, <_overlapped.Overlapped object at 0x000001FD72A37330>)]
+2025-05-08 21:52:22,625 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x000001FD72A479C0>
+2025-05-08 21:52:22,633 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>, 144, 0, <_overlapped.Overlapped object at 0x000001FD72A34AB0>)]
+2025-05-08 21:52:22,633 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>, 144, 0, <_overlapped.Overlapped object at 0x000001FD72A346F0>)]
+2025-05-08 21:52:22,633 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>, 144, 0, <_overlapped.Overlapped object at 0x000001FD6EF965B0>)]
+2025-05-08 21:52:22,633 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>
+2025-05-08 21:52:22,633 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>
+2025-05-08 21:52:22,633 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>
+2025-05-08 21:52:22,634 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>, 34, 0, <_overlapped.Overlapped object at 0x000001FD72A34AB0>)]
+2025-05-08 21:52:22,634 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>, 34, 0, <_overlapped.Overlapped object at 0x000001FD72A37330>), (<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>, 34, 0, <_overlapped.Overlapped object at 0x000001FD72A36D30>)]
+2025-05-08 21:52:22,634 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>
+2025-05-08 21:52:22,634 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>, 144, 0, <_overlapped.Overlapped object at 0x000001FD72A34F30>)]
+2025-05-08 21:52:22,634 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>
+2025-05-08 21:52:22,634 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>
+2025-05-08 21:52:22,634 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>
+2025-05-08 21:52:22,635 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>, 144, 0, <_overlapped.Overlapped object at 0x000001FD72A350B0>)]
+2025-05-08 21:52:22,636 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>, 144, 0, <_overlapped.Overlapped object at 0x000001FD72A359B0>)]
+2025-05-08 21:52:22,637 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>, 144, 0, <_overlapped.Overlapped object at 0x000001FD72A362B0>)]
+2025-05-08 21:52:22,638 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>, 144, 0, <_overlapped.Overlapped object at 0x000001FD6EF96370>)]
+2025-05-08 21:52:22,639 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>, 144, 0, <_overlapped.Overlapped object at 0x000001FD72A36C70>)]
+2025-05-08 21:52:22,644 - ERROR - Exception in callback Task.task_wakeup(<Future finished result=None>)
+handle: <Handle Task.task_wakeup(<Future finished result=None>)>
+Traceback (most recent call last):
+  File "C:\Program Files\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+RuntimeError: Cannot enter into task <Task pending name='Task-20' coro=<FileReceiverApp.update_status() running at C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py:250> wait_for=<Future finished result=None> cb=[asyncSlot.<locals>._error_handler() at C:\send_to_ptint\.venv\Lib\site-packages\qasync\__init__.py:778]> while another task <Task pending name='Task-24' coro=<FileReceiverApp.update_status() running at C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py:250> cb=[asyncSlot.<locals>._error_handler() at C:\send_to_ptint\.venv\Lib\site-packages\qasync\__init__.py:778]> is being executed.
+2025-05-08 21:52:22,645 - ERROR - Exception in callback Task.task_wakeup(<Future finished result=None>)
+handle: <Handle Task.task_wakeup(<Future finished result=None>)>
+Traceback (most recent call last):
+  File "C:\Program Files\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+RuntimeError: Cannot enter into task <Task pending name='Task-16' coro=<FileReceiverApp.update_status() running at C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py:250> wait_for=<Future finished result=None> cb=[asyncSlot.<locals>._error_handler() at C:\send_to_ptint\.venv\Lib\site-packages\qasync\__init__.py:778]> while another task <Task pending name='Task-24' coro=<FileReceiverApp.update_status() running at C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py:250> cb=[asyncSlot.<locals>._error_handler() at C:\send_to_ptint\.venv\Lib\site-packages\qasync\__init__.py:778]> is being executed.
+2025-05-08 21:52:22,645 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>
+2025-05-08 21:52:22,645 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>
+2025-05-08 21:52:22,645 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>
+2025-05-08 21:52:22,645 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>
+2025-05-08 21:52:22,645 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>
+2025-05-08 21:52:22,649 - ERROR - Exception in callback Task.task_wakeup(<Future finished result=None>)
+handle: <Handle Task.task_wakeup(<Future finished result=None>)>
+Traceback (most recent call last):
+  File "C:\Program Files\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+RuntimeError: Cannot enter into task <Task pending name='Task-28' coro=<FileReceiverApp.update_status() running at C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py:246> wait_for=<Future finished result=None> cb=[asyncSlot.<locals>._error_handler() at C:\send_to_ptint\.venv\Lib\site-packages\qasync\__init__.py:778]> while another task <Task pending name='Task-24' coro=<FileReceiverApp.update_status() running at C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py:250> cb=[asyncSlot.<locals>._error_handler() at C:\send_to_ptint\.venv\Lib\site-packages\qasync\__init__.py:778]> is being executed.
+2025-05-08 21:52:22,653 - ERROR - Exception in callback Task.task_wakeup(<Future finished result=None>)
+handle: <Handle Task.task_wakeup(<Future finished result=None>)>
+Traceback (most recent call last):
+  File "C:\Program Files\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+RuntimeError: Cannot enter into task <Task pending name='Task-31' coro=<FileReceiverApp.update_status() running at C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py:246> wait_for=<Future finished result=None> cb=[asyncSlot.<locals>._error_handler() at C:\send_to_ptint\.venv\Lib\site-packages\qasync\__init__.py:778]> while another task <Task pending name='Task-24' coro=<FileReceiverApp.update_status() running at C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py:250> cb=[asyncSlot.<locals>._error_handler() at C:\send_to_ptint\.venv\Lib\site-packages\qasync\__init__.py:778]> is being executed.
+2025-05-08 21:52:22,653 - ERROR - Exception in callback Task.task_wakeup(<Future finished result=None>)
+handle: <Handle Task.task_wakeup(<Future finished result=None>)>
+Traceback (most recent call last):
+  File "C:\Program Files\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+RuntimeError: Cannot enter into task <Task pending name='Task-35' coro=<FileReceiverApp.update_status() running at C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py:246> wait_for=<Future finished result=None> cb=[asyncSlot.<locals>._error_handler() at C:\send_to_ptint\.venv\Lib\site-packages\qasync\__init__.py:778]> while another task <Task pending name='Task-24' coro=<FileReceiverApp.update_status() running at C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py:250> cb=[asyncSlot.<locals>._error_handler() at C:\send_to_ptint\.venv\Lib\site-packages\qasync\__init__.py:778]> is being executed.
+2025-05-08 21:52:22,653 - ERROR - Exception in callback Task.task_wakeup(<Future finished result=None>)
+handle: <Handle Task.task_wakeup(<Future finished result=None>)>
+Traceback (most recent call last):
+  File "C:\Program Files\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+RuntimeError: Cannot enter into task <Task pending name='Task-39' coro=<FileReceiverApp.update_status() running at C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py:246> wait_for=<Future finished result=None> cb=[asyncSlot.<locals>._error_handler() at C:\send_to_ptint\.venv\Lib\site-packages\qasync\__init__.py:778]> while another task <Task pending name='Task-24' coro=<FileReceiverApp.update_status() running at C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py:250> cb=[asyncSlot.<locals>._error_handler() at C:\send_to_ptint\.venv\Lib\site-packages\qasync\__init__.py:778]> is being executed.
+2025-05-08 21:52:22,654 - ERROR - Exception in callback Task.task_wakeup(<Future finished result=None>)
+handle: <Handle Task.task_wakeup(<Future finished result=None>)>
+Traceback (most recent call last):
+  File "C:\Program Files\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+RuntimeError: Cannot enter into task <Task pending name='Task-43' coro=<FileReceiverApp.update_status() running at C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py:246> wait_for=<Future finished result=None> cb=[asyncSlot.<locals>._error_handler() at C:\send_to_ptint\.venv\Lib\site-packages\qasync\__init__.py:778]> while another task <Task pending name='Task-24' coro=<FileReceiverApp.update_status() running at C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py:250> cb=[asyncSlot.<locals>._error_handler() at C:\send_to_ptint\.venv\Lib\site-packages\qasync\__init__.py:778]> is being executed.
+2025-05-08 21:52:22,654 - ERROR - Exception in callback Task.task_wakeup(<Future finished result=None>)
+handle: <Handle Task.task_wakeup(<Future finished result=None>)>
+Traceback (most recent call last):
+  File "C:\Program Files\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+RuntimeError: Cannot enter into task <Task pending name='Task-47' coro=<FileReceiverApp.update_status() running at C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py:246> wait_for=<Future finished result=None> cb=[asyncSlot.<locals>._error_handler() at C:\send_to_ptint\.venv\Lib\site-packages\qasync\__init__.py:778]> while another task <Task pending name='Task-24' coro=<FileReceiverApp.update_status() running at C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py:250> cb=[asyncSlot.<locals>._error_handler() at C:\send_to_ptint\.venv\Lib\site-packages\qasync\__init__.py:778]> is being executed.
+2025-05-08 21:52:22,752 - ERROR - Exception in callback Task.task_wakeup(<Future finis... result=None>>)
+handle: <Handle Task.task_wakeup(<Future finis... result=None>>)>
+Traceback (most recent call last):
+  File "C:\Program Files\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+RuntimeError: Cannot enter into task <Task pending name='Task-51' coro=<FileReceiverApp.update_status() running at C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py:246> wait_for=<Future finished result=<Future finished result=None>> cb=[asyncSlot.<locals>._error_handler() at C:\send_to_ptint\.venv\Lib\site-packages\qasync\__init__.py:778]> while another task <Task pending name='Task-24' coro=<FileReceiverApp.update_status() running at C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py:250> cb=[asyncSlot.<locals>._error_handler() at C:\send_to_ptint\.venv\Lib\site-packages\qasync\__init__.py:778]> is being executed.
+2025-05-08 21:52:23,605 - DEBUG - > PING 'gKz&' [text, 4 bytes]
+2025-05-08 21:52:23,605 - DEBUG - % sent keepalive ping
+2025-05-08 21:52:23,605 - DEBUG - < PONG 'gKz&' [text, 4 bytes]
+2025-05-08 21:52:23,605 - DEBUG - % received keepalive pong
+2025-05-08 21:52:24,536 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x000001FD72A47EC0>, 0, 0, <_overlapped.Overlapped object at 0x000001FD72A371B0>)]
+2025-05-08 21:52:24,536 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x000001FD72A47EC0>
+2025-05-08 21:52:24,537 - DEBUG - Event callback failed
+Traceback (most recent call last):
+  File "C:\send_to_ptint\.venv\Lib\site-packages\qasync\_windows.py", line 43, in _process_events
+    value = callback(transferred, key, ov)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\asyncio\windows_events.py", line 599, in finish_connect
+    ov.getresult()
+ConnectionRefusedError: [WinError 1225] Удаленный компьютер отклонил это сетевое подключение
+2025-05-08 21:52:24,561 - ERROR - Exception in callback Task.task_wakeup(<_OverlappedF..., 1225, None)>)
+handle: <Handle Task.task_wakeup(<_OverlappedF..., 1225, None)>)>
+Traceback (most recent call last):
+  File "C:\Program Files\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+RuntimeError: Cannot enter into task <Task pending name='Task-53' coro=<staggered_race.<locals>.run_one_coro() running at C:\send_to_ptint\.venv\Lib\site-packages\aiohappyeyeballs\_staggered.py:132> wait_for=<_OverlappedFuture finished exception=ConnectionRefusedError(22, 'Удаленный компьютер отклонил это сетевое подключение', None, 1225, None)> cb=[_wait_one.<locals>._on_completion() at C:\send_to_ptint\.venv\Lib\site-packages\aiohappyeyeballs\_staggered.py:38]> while another task <Task pending name='Task-24' coro=<FileReceiverApp.update_status() running at C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py:250> cb=[asyncSlot.<locals>._error_handler() at C:\send_to_ptint\.venv\Lib\site-packages\qasync\__init__.py:778]> is being executed.
+2025-05-08 21:52:26,031 - DEBUG - Submitting callback <function getaddrinfo at 0x000001FD6D55A700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:52:26,032 - DEBUG - #4 got callback <function getaddrinfo at 0x000001FD6D55A700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:52:26,032 - DEBUG - Invoking callback
+2025-05-08 21:52:26,032 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:52:26,186 - DEBUG - Submitting callback <function getaddrinfo at 0x000001FD6D55A700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:52:26,187 - DEBUG - #5 got callback <function getaddrinfo at 0x000001FD6D55A700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:52:26,187 - DEBUG - Invoking callback
+2025-05-08 21:52:26,187 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:52:26,288 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x000001FD72A882C0>, 0, 0, <_overlapped.Overlapped object at 0x000001FD72A37870>)]
+2025-05-08 21:52:26,289 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x000001FD72A882C0>
+2025-05-08 21:52:26,297 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>, 144, 0, <_overlapped.Overlapped object at 0x000001FD72A346F0>)]
+2025-05-08 21:52:26,297 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>
+2025-05-08 21:52:26,437 - ERROR - Exception in callback Task.task_wakeup(<Future finis... result=None>>)
+handle: <Handle Task.task_wakeup(<Future finis... result=None>>)>
+Traceback (most recent call last):
+  File "C:\Program Files\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+RuntimeError: Cannot enter into task <Task pending name='Task-58' coro=<FileReceiverApp.update_status() running at C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py:246> wait_for=<Future finished result=<Future finished result=None>> cb=[asyncSlot.<locals>._error_handler() at C:\send_to_ptint\.venv\Lib\site-packages\qasync\__init__.py:778]> while another task <Task pending name='Task-55' coro=<FileReceiverApp.update_status() running at C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py:250> cb=[asyncSlot.<locals>._error_handler() at C:\send_to_ptint\.venv\Lib\site-packages\qasync\__init__.py:778]> is being executed.
+2025-05-08 21:52:28,119 - DEBUG - Submitting callback <function getaddrinfo at 0x000001FD6D55A700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:52:28,119 - DEBUG - #6 got callback <function getaddrinfo at 0x000001FD6D55A700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:52:28,120 - DEBUG - Invoking callback
+2025-05-08 21:52:28,120 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:52:28,238 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x000001FD72A889A0>, 0, 0, <_overlapped.Overlapped object at 0x000001FD72A377B0>)]
+2025-05-08 21:52:28,238 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x000001FD72A889A0>
+2025-05-08 21:52:28,238 - DEBUG - Event callback failed
+Traceback (most recent call last):
+  File "C:\send_to_ptint\.venv\Lib\site-packages\qasync\_windows.py", line 43, in _process_events
+    value = callback(transferred, key, ov)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\asyncio\windows_events.py", line 599, in finish_connect
+    ov.getresult()
+ConnectionRefusedError: [WinError 1225] Удаленный компьютер отклонил это сетевое подключение
+2025-05-08 21:52:28,359 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x000001FD72A88400>, 0, 0, <_overlapped.Overlapped object at 0x000001FD72A37AB0>)]
+2025-05-08 21:52:28,359 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x000001FD72A88400>
+2025-05-08 21:52:28,361 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>, 144, 0, <_overlapped.Overlapped object at 0x000001FD72A373F0>)]
+2025-05-08 21:52:28,361 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>
+2025-05-08 21:52:29,971 - DEBUG - Submitting callback <function getaddrinfo at 0x000001FD6D55A700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:52:29,971 - DEBUG - #10 got callback <function getaddrinfo at 0x000001FD6D55A700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:52:29,971 - DEBUG - Invoking callback
+2025-05-08 21:52:29,971 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:52:30,219 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x000001FD729E0F40>, 0, 0, <_overlapped.Overlapped object at 0x000001FD72A37930>)]
+2025-05-08 21:52:30,219 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x000001FD729E0F40>
+2025-05-08 21:52:30,222 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>, 144, 0, <_overlapped.Overlapped object at 0x000001FD72A379F0>)]
+2025-05-08 21:52:30,222 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>
+2025-05-08 21:52:31,421 - DEBUG - Submitting callback <function getaddrinfo at 0x000001FD6D55A700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:52:31,421 - DEBUG - #7 got callback <function getaddrinfo at 0x000001FD6D55A700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:52:31,421 - DEBUG - Invoking callback
+2025-05-08 21:52:31,421 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:52:31,672 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x000001FD72A88CC0>, 0, 0, <_overlapped.Overlapped object at 0x000001FD72A346F0>)]
+2025-05-08 21:52:31,672 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x000001FD72A88CC0>
+2025-05-08 21:52:31,674 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>, 127, 0, <_overlapped.Overlapped object at 0x000001FD72A373F0>)]
+2025-05-08 21:52:31,674 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x000001FD6DC5D120>
+2025-05-08 21:52:32,210 - DEBUG - Stopping worker thread...
+2025-05-08 21:52:32,223 - DEBUG - Exiting thread
+2025-05-08 21:52:32,223 - DEBUG - Shutting down
+2025-05-08 21:52:32,223 - DEBUG - Waiting for thread #1 to stop...
+2025-05-08 21:52:32,223 - DEBUG - Thread #8 stopped
+2025-05-08 21:52:32,223 - DEBUG - Thread #1 stopped
+2025-05-08 21:52:32,223 - DEBUG - Thread #3 stopped
+2025-05-08 21:52:32,223 - DEBUG - Thread #2 stopped
+2025-05-08 21:52:32,223 - DEBUG - Thread #9 stopped
+2025-05-08 21:52:32,223 - DEBUG - Thread #6 stopped
+2025-05-08 21:52:32,224 - DEBUG - Thread #10 stopped
+2025-05-08 21:52:32,224 - DEBUG - Thread #7 stopped
+2025-05-08 21:52:32,224 - DEBUG - Thread #4 stopped
+2025-05-08 21:52:32,224 - DEBUG - Thread #5 stopped
+2025-05-08 21:52:32,224 - DEBUG - Waiting for thread #2 to stop...
+2025-05-08 21:52:32,224 - DEBUG - Waiting for thread #3 to stop...
+2025-05-08 21:52:32,224 - DEBUG - Waiting for thread #4 to stop...
+2025-05-08 21:52:32,225 - DEBUG - Waiting for thread #5 to stop...
+2025-05-08 21:52:32,225 - DEBUG - Waiting for thread #6 to stop...
+2025-05-08 21:52:32,225 - DEBUG - Waiting for thread #7 to stop...
+2025-05-08 21:52:32,225 - DEBUG - Waiting for thread #8 to stop...
+2025-05-08 21:52:32,225 - DEBUG - Waiting for thread #9 to stop...
+2025-05-08 21:52:32,225 - DEBUG - Waiting for thread #10 to stop...
+2025-05-08 21:52:32,225 - DEBUG - Closing
+2025-05-08 21:54:07,591 - DEBUG - Using proactor: _IocpProactor
+2025-05-08 21:54:10,192 - DEBUG - Starting new HTTP connection (1): localhost:5000
+2025-05-08 21:54:12,237 - DEBUG - http://localhost:5000 "GET /shop/03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4 HTTP/1.1" 200 28
+2025-05-08 21:54:12,369 - DEBUG - Using proactor: IocpProactor
+2025-05-08 21:54:12,370 - DEBUG - Starting (proactor: <_IocpProactor overlapped#=0 result#=0>)...
+2025-05-08 21:54:12,370 - DEBUG - Thread started
+2025-05-08 21:54:12,372 - DEBUG - Submitting callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:54:12,373 - DEBUG - #1 got callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:54:12,373 - DEBUG - Invoking callback
+2025-05-08 21:54:12,373 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:54:12,631 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC6F560>, 0, 0, <_overlapped.Overlapped object at 0x00000275FA1E3E70>)]
+2025-05-08 21:54:12,631 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC6F560>
+2025-05-08 21:54:12,633 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>, 127, 0, <_overlapped.Overlapped object at 0x00000275FA1E21F0>)]
+2025-05-08 21:54:12,633 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>
+2025-05-08 21:54:13,645 - DEBUG - Submitting callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:54:13,645 - DEBUG - #4 got callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:54:13,646 - DEBUG - Invoking callback
+2025-05-08 21:54:13,646 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:54:13,891 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC85620>, 0, 0, <_overlapped.Overlapped object at 0x00000275FA1E21F0>)]
+2025-05-08 21:54:13,892 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC85620>
+2025-05-08 21:54:13,911 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>, 125, 0, <_overlapped.Overlapped object at 0x00000275FA1E2370>)]
+2025-05-08 21:54:13,911 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>
+2025-05-08 21:54:14,404 - DEBUG - = connection is CONNECTING
+2025-05-08 21:54:14,405 - DEBUG - > GET /ws/9 HTTP/1.1
+2025-05-08 21:54:14,405 - DEBUG - > Host: localhost:5000
+2025-05-08 21:54:14,405 - DEBUG - > Upgrade: websocket
+2025-05-08 21:54:14,406 - DEBUG - > Connection: Upgrade
+2025-05-08 21:54:14,406 - DEBUG - > Sec-WebSocket-Key: I4rs+4n1fyF8+BtBL/tW2g==
+2025-05-08 21:54:14,406 - DEBUG - > Sec-WebSocket-Version: 13
+2025-05-08 21:54:14,406 - DEBUG - > Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+2025-05-08 21:54:14,406 - DEBUG - > User-Agent: Python/3.12 websockets/15.0.1
+2025-05-08 21:54:14,410 - DEBUG - < HTTP/1.1 101 Switching Protocols
+2025-05-08 21:54:14,410 - DEBUG - < Upgrade: websocket
+2025-05-08 21:54:14,410 - DEBUG - < Connection: Upgrade
+2025-05-08 21:54:14,410 - DEBUG - < Sec-WebSocket-Accept: n0GGB4zcxvxhiTDVTVXr98fO+28=
+2025-05-08 21:54:14,411 - DEBUG - < Sec-WebSocket-Extensions: permessage-deflate
+2025-05-08 21:54:14,411 - DEBUG - < date: Thu, 08 May 2025 18:54:14 GMT
+2025-05-08 21:54:14,411 - DEBUG - < server: uvicorn
+2025-05-08 21:54:14,411 - DEBUG - = connection is OPEN
+2025-05-08 21:54:15,889 - DEBUG - Submitting callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:54:15,889 - DEBUG - #2 got callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:54:15,890 - DEBUG - Invoking callback
+2025-05-08 21:54:15,890 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:54:16,140 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC20F40>, 0, 0, <_overlapped.Overlapped object at 0x00000275FA1E3C30>)]
+2025-05-08 21:54:16,140 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC20F40>
+2025-05-08 21:54:16,142 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>, 127, 0, <_overlapped.Overlapped object at 0x00000275FA1E3C30>)]
+2025-05-08 21:54:16,143 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>
+2025-05-08 21:54:17,644 - DEBUG - Submitting callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:54:17,644 - DEBUG - #9 got callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:54:17,644 - DEBUG - Invoking callback
+2025-05-08 21:54:17,644 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:54:17,891 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC6FC40>, 0, 0, <_overlapped.Overlapped object at 0x00000275FDC74330>)]
+2025-05-08 21:54:17,891 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC6FC40>
+2025-05-08 21:54:17,895 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>, 153, 0, <_overlapped.Overlapped object at 0x00000275FA1E3C30>)]
+2025-05-08 21:54:17,895 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>
+2025-05-08 21:54:17,905 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>, 21, 0, <_overlapped.Overlapped object at 0x00000275FDC74330>)]
+2025-05-08 21:54:17,905 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>
+2025-05-08 21:54:17,907 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>, 0, 0, <_overlapped.Overlapped object at 0x00000275FA1E3C30>)]
+2025-05-08 21:54:17,918 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>
+2025-05-08 21:54:21,849 - DEBUG - Submitting callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:54:21,849 - DEBUG - #1 got callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:54:21,849 - DEBUG - Invoking callback
+2025-05-08 21:54:21,850 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:54:22,092 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC6FCE0>, 0, 0, <_overlapped.Overlapped object at 0x00000275FDC744B0>)]
+2025-05-08 21:54:22,092 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC6FCE0>
+2025-05-08 21:54:23,599 - DEBUG - Submitting callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:54:23,600 - DEBUG - #6 got callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:54:23,600 - DEBUG - Invoking callback
+2025-05-08 21:54:23,600 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:54:23,842 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC851C0>, 0, 0, <_overlapped.Overlapped object at 0x00000275FDC74930>)]
+2025-05-08 21:54:23,842 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC851C0>
+2025-05-08 21:54:23,844 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>, 127, 0, <_overlapped.Overlapped object at 0x00000275FDC74630>)]
+2025-05-08 21:54:23,844 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>
+2025-05-08 21:54:26,476 - DEBUG - Submitting callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:54:26,476 - DEBUG - #3 got callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:54:26,476 - DEBUG - Invoking callback
+2025-05-08 21:54:26,476 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:54:26,721 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC86D40>, 0, 0, <_overlapped.Overlapped object at 0x00000275FDC747B0>)]
+2025-05-08 21:54:26,721 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC86D40>
+2025-05-08 21:54:26,722 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>, 153, 0, <_overlapped.Overlapped object at 0x00000275FDC74630>)]
+2025-05-08 21:54:26,723 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>
+2025-05-08 21:54:26,726 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>, 21, 0, <_overlapped.Overlapped object at 0x00000275FDC74AB0>)]
+2025-05-08 21:54:26,726 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>
+2025-05-08 21:54:34,423 - DEBUG - > PING 71 89 8f 89 [binary, 4 bytes]
+2025-05-08 21:54:34,424 - DEBUG - % sent keepalive ping
+2025-05-08 21:54:34,425 - DEBUG - < PONG 71 89 8f 89 [binary, 4 bytes]
+2025-05-08 21:54:34,425 - DEBUG - % received keepalive pong
+2025-05-08 21:54:35,805 - DEBUG - Submitting callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:54:35,805 - DEBUG - #8 got callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:54:35,805 - DEBUG - Invoking callback
+2025-05-08 21:54:35,806 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:54:36,046 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC854E0>, 0, 0, <_overlapped.Overlapped object at 0x00000275FDC749F0>)]
+2025-05-08 21:54:36,046 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC854E0>
+2025-05-08 21:54:36,055 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>, 153, 0, <_overlapped.Overlapped object at 0x00000275FA1E1EF0>)]
+2025-05-08 21:54:36,055 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>
+2025-05-08 21:54:36,059 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>, 21, 0, <_overlapped.Overlapped object at 0x00000275FDC74270>)]
+2025-05-08 21:54:36,059 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>
+2025-05-08 21:54:36,059 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>, 0, 0, <_overlapped.Overlapped object at 0x00000275FA1E1EF0>)]
+2025-05-08 21:54:36,069 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>
+2025-05-08 21:54:37,979 - DEBUG - Submitting callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:54:37,980 - DEBUG - #5 got callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:54:37,980 - DEBUG - Invoking callback
+2025-05-08 21:54:37,980 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:54:38,232 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC849A0>, 0, 0, <_overlapped.Overlapped object at 0x00000275FDC74E70>)]
+2025-05-08 21:54:38,232 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC849A0>
+2025-05-08 21:54:40,127 - DEBUG - Submitting callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:54:40,127 - DEBUG - #7 got callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:54:40,128 - DEBUG - Invoking callback
+2025-05-08 21:54:40,128 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:54:40,379 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC860C0>, 0, 0, <_overlapped.Overlapped object at 0x00000275FDC75830>)]
+2025-05-08 21:54:40,379 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC860C0>
+2025-05-08 21:54:42,264 - DEBUG - Submitting callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:54:42,264 - DEBUG - #10 got callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:54:42,264 - DEBUG - Invoking callback
+2025-05-08 21:54:42,265 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:54:42,403 - DEBUG - Submitting callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:54:42,404 - DEBUG - #4 got callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:54:42,404 - DEBUG - Invoking callback
+2025-05-08 21:54:42,404 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:54:42,525 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC86A20>, 0, 0, <_overlapped.Overlapped object at 0x00000275FDC762B0>)]
+2025-05-08 21:54:42,526 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC86A20>
+2025-05-08 21:54:42,533 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>, 127, 0, <_overlapped.Overlapped object at 0x00000275FDC75CB0>)]
+2025-05-08 21:54:42,534 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>
+2025-05-08 21:54:42,664 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC862A0>, 0, 0, <_overlapped.Overlapped object at 0x00000275FDC75A70>)]
+2025-05-08 21:54:42,665 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC862A0>
+2025-05-08 21:54:42,675 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>, 144, 0, <_overlapped.Overlapped object at 0x00000275FDC755F0>)]
+2025-05-08 21:54:42,675 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>
+2025-05-08 21:54:42,676 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>, 144, 0, <_overlapped.Overlapped object at 0x00000275FDC76070>)]
+2025-05-08 21:54:42,681 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>, 125, 0, <_overlapped.Overlapped object at 0x00000275FA1E24F0>)]
+2025-05-08 21:54:42,681 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>, 125, 0, <_overlapped.Overlapped object at 0x00000275FDC74630>)]
+2025-05-08 21:54:42,684 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>
+2025-05-08 21:54:42,684 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>
+2025-05-08 21:54:42,684 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>
+2025-05-08 21:54:42,690 - ERROR - Exception in callback Task.task_wakeup(<Future finished result=None>)
+handle: <Handle Task.task_wakeup(<Future finished result=None>)>
+Traceback (most recent call last):
+  File "C:\Program Files\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+RuntimeError: Cannot enter into task <Task pending name='Task-50' coro=<FileReceiverApp.update_status() running at C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py:246> wait_for=<Future finished result=None> cb=[asyncSlot.<locals>._error_handler() at C:\send_to_ptint\.venv\Lib\site-packages\qasync\__init__.py:778]> while another task <Task pending name='Task-43' coro=<FileReceiverApp.update_status() running at C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py:250> cb=[asyncSlot.<locals>._error_handler() at C:\send_to_ptint\.venv\Lib\site-packages\qasync\__init__.py:778]> is being executed.
+2025-05-08 21:54:42,691 - ERROR - Exception in callback Task.task_wakeup(<Future finished result=None>)
+handle: <Handle Task.task_wakeup(<Future finished result=None>)>
+Traceback (most recent call last):
+  File "C:\Program Files\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+RuntimeError: Cannot enter into task <Task pending name='Task-22' coro=<FileReceiverApp.update_status() running at C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py:246> wait_for=<Future finished result=None> cb=[asyncSlot.<locals>._error_handler() at C:\send_to_ptint\.venv\Lib\site-packages\qasync\__init__.py:778]> while another task <Task pending name='Task-43' coro=<FileReceiverApp.update_status() running at C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py:250> cb=[asyncSlot.<locals>._error_handler() at C:\send_to_ptint\.venv\Lib\site-packages\qasync\__init__.py:778]> is being executed.
+2025-05-08 21:54:42,691 - ERROR - Exception in callback Task.task_wakeup(<Future finished result=None>)
+handle: <Handle Task.task_wakeup(<Future finished result=None>)>
+Traceback (most recent call last):
+  File "C:\Program Files\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+RuntimeError: Cannot enter into task <Task pending name='Task-39' coro=<FileReceiverApp.update_status() running at C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py:246> wait_for=<Future finished result=None> cb=[asyncSlot.<locals>._error_handler() at C:\send_to_ptint\.venv\Lib\site-packages\qasync\__init__.py:778]> while another task <Task pending name='Task-43' coro=<FileReceiverApp.update_status() running at C:\send_to_ptint\send-to-print\project\desktop\desktop_app.py:250> cb=[asyncSlot.<locals>._error_handler() at C:\send_to_ptint\.venv\Lib\site-packages\qasync\__init__.py:778]> is being executed.
+2025-05-08 21:54:44,434 - DEBUG - < PING 87 c3 50 61 [binary, 4 bytes]
+2025-05-08 21:54:44,435 - DEBUG - > PONG 87 c3 50 61 [binary, 4 bytes]
+2025-05-08 21:54:51,768 - DEBUG - Submitting callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:54:51,768 - DEBUG - #2 got callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:54:51,768 - DEBUG - Invoking callback
+2025-05-08 21:54:51,768 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:54:52,014 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC86020>, 0, 0, <_overlapped.Overlapped object at 0x00000275FDC75830>)]
+2025-05-08 21:54:52,014 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC86020>
+2025-05-08 21:54:52,016 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>, 127, 0, <_overlapped.Overlapped object at 0x00000275FDC753B0>)]
+2025-05-08 21:54:52,016 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>
+2025-05-08 21:54:54,435 - DEBUG - > PING 51 48 ff 3a [binary, 4 bytes]
+2025-05-08 21:54:54,435 - DEBUG - % sent keepalive ping
+2025-05-08 21:54:54,436 - DEBUG - < PONG 51 48 ff 3a [binary, 4 bytes]
+2025-05-08 21:54:54,437 - DEBUG - % received keepalive pong
+2025-05-08 21:54:54,890 - DEBUG - Submitting callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:54:54,891 - DEBUG - #9 got callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:54:54,891 - DEBUG - Invoking callback
+2025-05-08 21:54:54,891 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:54:55,143 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC86980>, 0, 0, <_overlapped.Overlapped object at 0x00000275FDC753B0>)]
+2025-05-08 21:54:55,143 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC86980>
+2025-05-08 21:54:55,153 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>, 125, 0, <_overlapped.Overlapped object at 0x00000275FDC75530>)]
+2025-05-08 21:54:55,153 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>
+2025-05-08 21:54:58,635 - DEBUG - Submitting callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:54:58,635 - DEBUG - #1 got callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:54:58,635 - DEBUG - Invoking callback
+2025-05-08 21:54:58,636 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:54:58,873 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC84540>, 0, 0, <_overlapped.Overlapped object at 0x00000275FDC75B30>)]
+2025-05-08 21:54:58,873 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC84540>
+2025-05-08 21:54:58,875 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>, 127, 0, <_overlapped.Overlapped object at 0x00000275FDC75230>)]
+2025-05-08 21:54:58,875 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>
+2025-05-08 21:55:05,679 - DEBUG - Submitting callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:55:05,679 - DEBUG - #6 got callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:55:05,679 - DEBUG - Invoking callback
+2025-05-08 21:55:05,680 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:55:05,920 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FADFEB60>, 0, 0, <_overlapped.Overlapped object at 0x00000275FDC75B30>)]
+2025-05-08 21:55:05,920 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FADFEB60>
+2025-05-08 21:55:05,931 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>, 125, 0, <_overlapped.Overlapped object at 0x00000275FDC753B0>)]
+2025-05-08 21:55:05,932 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>
+2025-05-08 21:55:08,129 - DEBUG - Submitting callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:55:08,129 - DEBUG - #3 got callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:55:08,129 - DEBUG - Invoking callback
+2025-05-08 21:55:08,130 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:55:08,374 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC84540>, 0, 0, <_overlapped.Overlapped object at 0x00000275FDC75830>)]
+2025-05-08 21:55:08,374 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC84540>
+2025-05-08 21:55:08,376 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>, 126, 0, <_overlapped.Overlapped object at 0x00000275FDC76130>)]
+2025-05-08 21:55:08,376 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>
+2025-05-08 21:55:10,610 - DEBUG - Submitting callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:55:10,611 - DEBUG - #8 got callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:55:10,611 - DEBUG - Invoking callback
+2025-05-08 21:55:10,611 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:55:10,859 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x00000275F6F4F560>, 0, 0, <_overlapped.Overlapped object at 0x00000275FDC75A70>)]
+2025-05-08 21:55:10,859 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x00000275F6F4F560>
+2025-05-08 21:55:10,869 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>, 125, 0, <_overlapped.Overlapped object at 0x00000275FDC75A70>)]
+2025-05-08 21:55:10,869 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>
+2025-05-08 21:55:12,279 - DEBUG - Submitting callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:55:12,279 - DEBUG - #5 got callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:55:12,279 - DEBUG - Invoking callback
+2025-05-08 21:55:12,279 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:55:12,533 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC87920>, 0, 0, <_overlapped.Overlapped object at 0x00000275FDC74AB0>)]
+2025-05-08 21:55:12,533 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC87920>
+2025-05-08 21:55:12,535 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>, 126, 0, <_overlapped.Overlapped object at 0x00000275FDC75170>)]
+2025-05-08 21:55:12,535 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>
+2025-05-08 21:55:12,649 - DEBUG - Submitting callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:55:12,649 - DEBUG - #7 got callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:55:12,649 - DEBUG - Invoking callback
+2025-05-08 21:55:12,650 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:55:12,893 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC87920>, 0, 0, <_overlapped.Overlapped object at 0x00000275FDC74630>)]
+2025-05-08 21:55:12,894 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC87920>
+2025-05-08 21:55:12,898 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>, 126, 0, <_overlapped.Overlapped object at 0x00000275FDC750B0>)]
+2025-05-08 21:55:12,898 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>
+2025-05-08 21:55:14,429 - DEBUG - > PING 0c a3 a5 b3 [binary, 4 bytes]
+2025-05-08 21:55:14,430 - DEBUG - % sent keepalive ping
+2025-05-08 21:55:14,430 - DEBUG - < PONG 0c a3 a5 b3 [binary, 4 bytes]
+2025-05-08 21:55:14,431 - DEBUG - % received keepalive pong
+2025-05-08 21:55:14,431 - DEBUG - < PING 82 ff 42 17 [binary, 4 bytes]
+2025-05-08 21:55:14,431 - DEBUG - > PONG 82 ff 42 17 [binary, 4 bytes]
+2025-05-08 21:55:19,394 - DEBUG - Submitting callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:55:19,394 - DEBUG - #10 got callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:55:19,394 - DEBUG - Invoking callback
+2025-05-08 21:55:19,394 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:55:19,639 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC860C0>, 0, 0, <_overlapped.Overlapped object at 0x00000275FDC762B0>)]
+2025-05-08 21:55:19,639 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC860C0>
+2025-05-08 21:55:19,649 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>, 125, 0, <_overlapped.Overlapped object at 0x00000275FDC756B0>)]
+2025-05-08 21:55:19,649 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>
+2025-05-08 21:55:28,480 - DEBUG - Submitting callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:55:28,480 - DEBUG - #4 got callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:55:28,480 - DEBUG - Invoking callback
+2025-05-08 21:55:28,481 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:55:28,726 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC86980>, 0, 0, <_overlapped.Overlapped object at 0x00000275FDC76370>)]
+2025-05-08 21:55:28,726 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC86980>
+2025-05-08 21:55:28,741 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>, 125, 0, <_overlapped.Overlapped object at 0x00000275FDC75170>)]
+2025-05-08 21:55:28,742 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>
+2025-05-08 21:55:29,530 - DEBUG - Submitting callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:55:29,531 - DEBUG - #2 got callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:55:29,531 - DEBUG - Invoking callback
+2025-05-08 21:55:29,531 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:55:29,781 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC86340>, 0, 0, <_overlapped.Overlapped object at 0x00000275FDC76370>)]
+2025-05-08 21:55:29,781 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC86340>
+2025-05-08 21:55:29,783 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>, 126, 0, <_overlapped.Overlapped object at 0x00000275FDC75170>)]
+2025-05-08 21:55:29,783 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>
+2025-05-08 21:55:34,432 - DEBUG - > PING 63 8a a6 f5 [binary, 4 bytes]
+2025-05-08 21:55:34,433 - DEBUG - % sent keepalive ping
+2025-05-08 21:55:34,433 - DEBUG - < PONG 63 8a a6 f5 [binary, 4 bytes]
+2025-05-08 21:55:34,434 - DEBUG - % received keepalive pong
+2025-05-08 21:55:42,272 - DEBUG - Submitting callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:55:42,273 - DEBUG - #9 got callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:55:42,273 - DEBUG - Invoking callback
+2025-05-08 21:55:42,274 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:55:42,519 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC84400>, 0, 0, <_overlapped.Overlapped object at 0x00000275FDC74B70>)]
+2025-05-08 21:55:42,520 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC84400>
+2025-05-08 21:55:42,526 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>, 126, 0, <_overlapped.Overlapped object at 0x00000275FDC75470>)]
+2025-05-08 21:55:42,526 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>
+2025-05-08 21:55:44,430 - DEBUG - < PING fa cd 02 76 [binary, 4 bytes]
+2025-05-08 21:55:44,431 - DEBUG - > PONG fa cd 02 76 [binary, 4 bytes]
+2025-05-08 21:55:54,431 - DEBUG - > PING 42 fe 83 af [binary, 4 bytes]
+2025-05-08 21:55:54,431 - DEBUG - % sent keepalive ping
+2025-05-08 21:55:54,432 - DEBUG - < PONG 42 fe 83 af [binary, 4 bytes]
+2025-05-08 21:55:54,432 - DEBUG - % received keepalive pong
+2025-05-08 21:56:12,271 - DEBUG - Submitting callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} to thread worker queue
+2025-05-08 21:56:12,271 - DEBUG - #1 got callback <function getaddrinfo at 0x00000275F87EA700> with args ('localhost', 5000, <AddressFamily.AF_UNSPEC: 0>, <SocketKind.SOCK_STREAM: 1>, 0, <AddressInfo.AI_ADDRCONFIG: 1024>) and kwargs {} from queue
+2025-05-08 21:56:12,271 - DEBUG - Invoking callback
+2025-05-08 21:56:12,272 - DEBUG - Setting Future result: [(<AddressFamily.AF_INET6: 23>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('::1', 5000, 0, 0)), (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 0, '', ('127.0.0.1', 5000))]
+2025-05-08 21:56:12,536 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[Task.task_wakeup()]>, <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC858A0>, 0, 0, <_overlapped.Overlapped object at 0x00000275FDC75170>)]
+2025-05-08 21:56:12,537 - DEBUG - Invoking event callback <function IocpProactor.connect.<locals>.finish_connect at 0x00000275FDC858A0>
+2025-05-08 21:56:12,542 - DEBUG - Got events from poll: [(<_OverlappedFuture pending cb=[_ProactorReadPipeTransport._loop_reading()]>, <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>, 126, 0, <_overlapped.Overlapped object at 0x00000275FDC752F0>)]
+2025-05-08 21:56:12,542 - DEBUG - Invoking event callback <function IocpProactor.finish_socket_func at 0x00000275F8E9D120>
+2025-05-08 21:56:14,440 - DEBUG - > PING ee 6a da 9f [binary, 4 bytes]
+2025-05-08 21:56:14,441 - DEBUG - % sent keepalive ping
+2025-05-08 21:56:14,441 - DEBUG - < PING 'R}\x18W' [text, 4 bytes]
+2025-05-08 21:56:14,441 - DEBUG - > PONG 'R}\x18W' [text, 4 bytes]
+2025-05-08 21:56:14,442 - DEBUG - < PONG ee 6a da 9f [binary, 4 bytes]
+2025-05-08 21:56:14,442 - DEBUG - % received keepalive pong
+2025-05-08 21:56:28,296 - DEBUG - Stopping worker thread...
+2025-05-08 21:56:28,305 - DEBUG - Exiting thread
+2025-05-08 21:56:28,305 - DEBUG - Shutting down
+2025-05-08 21:56:28,305 - DEBUG - Waiting for thread #1 to stop...
+2025-05-08 21:56:28,305 - DEBUG - Thread #3 stopped
+2025-05-08 21:56:28,305 - DEBUG - Thread #7 stopped
+2025-05-08 21:56:28,305 - DEBUG - Thread #5 stopped
+2025-05-08 21:56:28,305 - DEBUG - Thread #6 stopped
+2025-05-08 21:56:28,305 - DEBUG - Thread #10 stopped
+2025-05-08 21:56:28,305 - DEBUG - Thread #4 stopped
+2025-05-08 21:56:28,305 - DEBUG - Thread #8 stopped
+2025-05-08 21:56:28,305 - DEBUG - Thread #9 stopped
+2025-05-08 21:56:28,305 - DEBUG - Thread #2 stopped
+2025-05-08 21:56:28,305 - DEBUG - Thread #1 stopped
+2025-05-08 21:56:28,307 - DEBUG - Waiting for thread #2 to stop...
+2025-05-08 21:56:28,307 - DEBUG - Waiting for thread #3 to stop...
+2025-05-08 21:56:28,307 - DEBUG - Waiting for thread #4 to stop...
+2025-05-08 21:56:28,307 - DEBUG - Waiting for thread #5 to stop...
+2025-05-08 21:56:28,307 - DEBUG - Waiting for thread #6 to stop...
+2025-05-08 21:56:28,307 - DEBUG - Waiting for thread #7 to stop...
+2025-05-08 21:56:28,307 - DEBUG - Waiting for thread #8 to stop...
+2025-05-08 21:56:28,307 - DEBUG - Waiting for thread #9 to stop...
+2025-05-08 21:56:28,307 - DEBUG - Waiting for thread #10 to stop...
+2025-05-08 21:56:28,307 - DEBUG - Closing
