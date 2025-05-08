@@ -359,14 +359,20 @@ async def process_confirmation(message: types.Message, state: FSMContext):
         confirmation_timers[message.chat.id].cancel()
         del confirmation_timers[message.chat.id]
 
+    user_data = await state.get_data()
+    temp_file_path = user_data.get('temp_file')
+
     if message.text == 'Отменить':
         await message.answer("❌ Заказ отменен", reply_markup=types.ReplyKeyboardRemove())
-        user_data = await state.get_data()
-        await cleanup_order_data(user_data)
+        if temp_file_path and os.path.exists(temp_file_path):
+            try:
+                os.remove(temp_file_path)
+                logging.info(f"Удалён временный файл: {temp_file_path}")
+            except Exception as e:
+                logging.error(f"Ошибка удаления временного файла: {str(e)}")
         await state.clear()
         return
 
-    user_data = await state.get_data()
     check_code = random.randint(100000, 999999)
 
     try:
@@ -381,7 +387,7 @@ async def process_confirmation(message: types.Message, state: FSMContext):
             form_data.add_field('file_extension', user_data['file_extension'])
             form_data.add_field('con_code', str(check_code))
 
-            with open(user_data['temp_file'], 'rb') as file:
+            with open(temp_file_path, 'rb') as file:
                 form_data.add_field('file', file.read(), filename=user_data['filename'])
 
             async with session.post(f"{API_URL}/orders", data=form_data) as resp:
@@ -391,14 +397,19 @@ async def process_confirmation(message: types.Message, state: FSMContext):
                         f"✅ Заказ №{data['order_id']} принят! Проверочный код: {check_code}",
                         reply_markup=types.ReplyKeyboardRemove()
                     )
+                    # Удаляем временный файл после успешной загрузки
+                    if temp_file_path and os.path.exists(temp_file_path):
+                        try:
+                            os.remove(temp_file_path)
+                            logging.info(f"Удалён временный файл: {temp_file_path}")
+                        except Exception as e:
+                            logging.error(f"Ошибка удаления временного файла: {str(e)}")
                 else:
                     await message.answer("❌ Ошибка подтверждения заказа")
     except Exception as e:
         await message.answer("❌ Ошибка создания заказа")
         logging.error(f"Ошибка подтверждения: {traceback.format_exc()}")
     finally:
-        if 'temp_file' in user_data:
-            await cleanup_order_data(user_data)
         await state.clear()
 
 
