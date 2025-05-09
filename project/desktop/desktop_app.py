@@ -38,17 +38,15 @@ class WebSocketClient(QThread):
         self.running = True
 
     async def run_async(self):
-        async with websockets.connect(f"{WS_URL}/{self.shop_id}") as ws:
-            while self.running:
-                try:
-                    data = await ws.recv()
-                    # Явное преобразование JSON
-                    self.update_received.emit(json.loads(data))
-                except Exception as e:
-                    logging.error(f"WebSocket error: {str(e)}")
-
-    def run(self):
-        asyncio.run(self.run_async())
+        while self.running:
+            try:
+                async with websockets.connect(f"{WS_URL}/{self.shop_id}") as ws:
+                    while self.running:
+                        data = await ws.recv()
+                        self.update_received.emit(json.loads(data))
+            except Exception as e:
+                logging.error(f"WebSocket error: {str(e)}, переподключение через 5 секунд...")
+                await asyncio.sleep(5)
 
     def stop(self):
         self.running = False
@@ -124,7 +122,7 @@ class FileReceiverApp(QWidget):
                 async with session.get(
                         f"{API_URL}/orders",
                         params={'status': ['получен', 'готов'], 'shop_id': self.shop_id},
-                        timeout=10
+                        timeout=10, headers={"Cache-Control": "no-cache"}
                 ) as resp:
                     if resp.status == 200:
                         orders = await resp.json()

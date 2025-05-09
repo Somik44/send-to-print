@@ -20,7 +20,7 @@ class ShopApp(QMainWindow):
             self.db_connection = pymysql.connect(
                 host="localhost",
                 user="root",
-                password="3465",
+                password="Qwerty123",
                 database="send_to_print",
                 charset='utf8mb4',
                 cursorclass=pymysql.cursors.DictCursor
@@ -70,7 +70,6 @@ class ShopApp(QMainWindow):
         central_widget.setLayout(layout)
 
     def check_existing_passwords(self):
-        """Получаем все хеши паролей из базы данных"""
         self.existing_hashes = set()
         try:
             with self.db_connection.cursor() as cursor:
@@ -128,10 +127,8 @@ class ShopApp(QMainWindow):
                 ))
             self.db_connection.commit()
 
-            # Обновляем список хешей
             self.existing_hashes.add(password_hash)
 
-            # Очищаем поля ввода
             for field in ['name', 'address', 'bw_price', 'color_price', 'password']:
                 getattr(self, f"{field}_input").clear()
 
@@ -143,7 +140,6 @@ class ShopApp(QMainWindow):
             QMessageBox.warning(self, "Ошибка", f"Ошибка при добавлении магазина: {err}")
 
     def closeEvent(self, event):
-        # Закрываем соединение с БД при закрытии приложения
         if hasattr(self, 'db_connection'):
             self.db_connection.close()
             logger.info("Соединение с базой данных закрыто")

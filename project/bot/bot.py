@@ -27,7 +27,7 @@ logging.basicConfig(
 
 API_TOKEN = '7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ'
 API_URL = 'http://localhost:5000'
-UPLOAD_FOLDER = 'C:\\send_to_ptint\\send-to-print\\project\\api\\uploads'
+UPLOAD_FOLDER = 'D:\\projects_py\\projectsWithGit\\send-to-print\\project\\api\\uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 
@@ -45,32 +45,27 @@ timers = {}
 confirmation_timers = {}
 
 
-async def websocket_server():
-    async with websockets.serve(handler, "localhost", 8001):
-        await asyncio.Future()
-
-
-async def handler(websocket):
-    async for message in websocket:
+async def websocket_listener():
+    while True:
         try:
-            data = json.loads(message)
-            if data['type'] == 'status_update':
-                user_id = data['user_id']
-                order_id = data['order_id']
-                address = data['address']
-
-                if data['status'] == 'готов':
-                    await bot.send_message(
-                        user_id,
-                        f"🖨️ Заказ №{order_id} готов! Адрес получения: {address}"
-                    )
-                elif data['status'] == 'выдан':
-                    await bot.send_message(
-                        user_id,
-                        "✅ Спасибо, что воспользовались нашим сервисом! Ждем вас снова!"
-                    )
+            async with websockets.connect("ws://localhost:5000/ws/notify") as ws:
+                while True:
+                    message = await ws.recv()
+                    data = json.loads(message)
+                    if data['type'] == 'status_update':
+                        if data['status'] == 'готов':
+                            await bot.send_message(
+                                data['user_id'],
+                                f"🖨️ Заказ №{data['order_id']} готов! Адрес получения: {data['address']}"
+                            )
+                        elif data['status'] == 'выдан':
+                            await bot.send_message(
+                                data['user_id'],
+                                "✅ Спасибо за то, что воспользовались нашим сервисом, ждем вас еще!"
+                            )
         except Exception as e:
-            logging.error(f"WebSocket Error: {traceback.format_exc()}")
+            logging.error(f"WebSocket error: {str(e)}, переподключение через 5 сек...")
+            await asyncio.sleep(5)
 
 
 async def cleanup_order_data(user_data: dict):
@@ -195,9 +190,6 @@ async def process_shop(message: types.Message, state: FSMContext):
 
 @dp.message(Form.file_processing, F.content_type == ContentType.DOCUMENT)
 async def process_file(message: types.Message, state: FSMContext):
-    """
-    Обрабатывает загруженный файл: скачивает, проверяет, сохраняет и подсчитывает страницы.
-    """
     processing_msg = await message.answer("⏳ Файл обрабатывается, подождите пожалуйста...")
     temp_path = None
 
@@ -268,8 +260,7 @@ async def process_file(message: types.Message, state: FSMContext):
 
         await message.answer(
             f"📄 Файл успешно обработан!\n"
-            f"• Имя файла: {filename}\n"
-            f"• Количество страниц: {pages}\n\n"
+            f"• Количество страниц: {pages}\n"
             f"Выберите тип печати:",
             reply_markup=markup
         )
@@ -413,6 +404,51 @@ async def process_confirmation(message: types.Message, state: FSMContext):
         await state.clear()
 
 
+@dp.message(Command("reset"))
+async def cmd_reset(message: types.Message, state: FSMContext):
+    try:
+        # 1. Отмена таймеров
+        if message.chat.id in timers:
+            timers[message.chat.id].cancel()
+            del timers[message.chat.id]
+
+        if message.chat.id in confirmation_timers:
+            confirmation_timers[message.chat.id].cancel()
+            del confirmation_timers[message.chat.id]
+
+        # 2. Удаление временных файлов
+        user_data = await state.get_data()
+        temp_file = user_data.get('temp_file')
+
+        if temp_file and os.path.exists(temp_file):
+            try:
+                os.remove(temp_file)
+                logging.info(f"Удален временный файл: {temp_file}")
+            except Exception as e:
+                logging.error(f"Ошибка удаления файла: {str(e)}")
+
+        # 3. Очистка состояния
+        await state.clear()
+
+        # 4. Удаление сообщения подтверждения если есть
+        confirmation_msg_id = user_data.get('confirmation_msg_id')
+        if confirmation_msg_id:
+            try:
+                await bot.delete_message(message.chat.id, confirmation_msg_id)
+            except Exception as e:
+                logging.error(f"Ошибка удаления сообщения: {str(e)}")
+
+        # 5. Отправка подтверждения
+        await message.answer(
+            "🔄 Все данные сброшены. Вы можете начать новый заказ с помощью /new_order",
+            reply_markup=types.ReplyKeyboardRemove()
+        )
+
+    except Exception as e:
+        logging.error(f"Ошибка в reset: {traceback.format_exc()}")
+        await message.answer("❌ Произошла ошибка при сбросе")
+
+
 @dp.message()
 async def handle_unknown(message: types.Message):
     await message.reply("Не понимаю тебя, попробуй повторить запрос ☺️")
@@ -421,7 +457,7 @@ async def handle_unknown(message: types.Message):
 async def main():
     await asyncio.gather(
         dp.start_polling(bot),
-        websocket_server()
+        websocket_listener()
     )
 
 if __name__ == "__main__":
