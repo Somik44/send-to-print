@@ -45,27 +45,33 @@ timers = {}
 confirmation_timers = {}
 
 
-async def websocket_listener():
-    while True:
+async def websocket_server():
+    # Слушаем на всех интерфейсах и правильном порту
+    async with websockets.serve(handler, "0.0.0.0", 8001):
+        await asyncio.Future()  # Бесконечное ожидание
+
+
+async def handler(websocket):
+    async for message in websocket:
         try:
-            async with websockets.connect("ws://localhost:5000/ws/notify") as ws:
-                while True:
-                    message = await ws.recv()
-                    data = json.loads(message)
-                    if data['type'] == 'status_update':
-                        if data['status'] == 'готов':
-                            await bot.send_message(
-                                data['user_id'],
-                                f"🖨️ Заказ №{data['order_id']} готов! Адрес получения: {data['address']}"
-                            )
-                        elif data['status'] == 'выдан':
-                            await bot.send_message(
-                                data['user_id'],
-                                "✅ Спасибо за то, что воспользовались нашим сервисом, ждем вас еще!"
-                            )
+            data = json.loads(message)
+            if data['type'] == 'status_update':
+                user_id = data['user_id']
+                order_id = data['order_id']
+                address = data['address']
+
+                if data['status'] == 'готов':
+                    await bot.send_message(
+                        user_id,
+                        f"🖨️ Заказ №{order_id} готов! Адрес получения: {address}"
+                    )
+                elif data['status'] == 'выдан':
+                    await bot.send_message(
+                        user_id,
+                        "✅ Спасибо, что воспользовались нашим сервисом! Ждем вас снова!"
+                    )
         except Exception as e:
-            logging.error(f"WebSocket error: {str(e)}, переподключение через 5 сек...")
-            await asyncio.sleep(5)
+            logging.error(f"WebSocket Error: {traceback.format_exc()}")
 
 
 async def cleanup_order_data(user_data: dict):
@@ -260,7 +266,7 @@ async def process_file(message: types.Message, state: FSMContext):
 
         await message.answer(
             f"📄 Файл успешно обработан!\n"
-            f"• Количество страниц: {pages}\n"
+            f"Количество страниц: {pages}\n"
             f"Выберите тип печати:",
             reply_markup=markup
         )
@@ -307,7 +313,7 @@ async def process_color(message: types.Message, state: FSMContext):
     total_price = round(price * user_data['pages'], 2)
     await state.update_data(color=color, price=total_price)
 
-    await message.answer("📝 Введите комментарий к заказу ($ для пропуска):", reply_markup=types.ReplyKeyboardRemove())
+    await message.answer("📝 Введите комментарий к заказу (отправьте $ если комментарий не нужен):", reply_markup=types.ReplyKeyboardRemove())
     await state.set_state(Form.comment)
 
 
@@ -455,10 +461,8 @@ async def handle_unknown(message: types.Message):
 
 
 async def main():
-    await asyncio.gather(
-        dp.start_polling(bot),
-        websocket_listener()
-    )
+    await asyncio.gather(dp.start_polling(bot), websocket_server())
+
 
 if __name__ == "__main__":
     asyncio.run(main())

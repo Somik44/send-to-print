@@ -6,6 +6,7 @@ import aiohttp
 import asyncio
 import json
 import requests
+import traceback
 from PyQt6.QtCore import Qt, QTimer, QThread, pyqtSignal
 from PyQt6.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QListWidget, QPushButton,
@@ -14,12 +15,10 @@ from PyQt6.QtWidgets import (
     QSpacerItem, QSizePolicy
 )
 from PyQt6.QtGui import QIcon
-import websockets
 import qasync
 from qasync import asyncSlot, QEventLoop
 
 API_URL = "http://localhost:5000"
-WS_URL = "ws://localhost:5000/ws"
 DOWNLOAD_DIR = os.path.abspath('downloads')
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
@@ -29,28 +28,6 @@ logging.basicConfig(
     filename='desktop_app.log'
 )
 
-class WebSocketClient(QThread):
-    update_received = pyqtSignal(list)
-
-    def __init__(self, shop_id):
-        super().__init__()
-        self.shop_id = shop_id
-        self.running = True
-
-    async def run_async(self):
-        while self.running:
-            try:
-                async with websockets.connect(f"{WS_URL}/{self.shop_id}") as ws:
-                    while self.running:
-                        data = await ws.recv()
-                        self.update_received.emit(json.loads(data))
-            except Exception as e:
-                logging.error(f"WebSocket error: {str(e)}, переподключение через 5 секунд...")
-                await asyncio.sleep(5)
-
-    def stop(self):
-        self.running = False
-
 
 class FileReceiverApp(QWidget):
     def __init__(self, shop_id):
@@ -58,11 +35,8 @@ class FileReceiverApp(QWidget):
         self.shop_id = shop_id
         self.file_cache = set()
         self.current_items = {}
-        self.ws_client = WebSocketClient(shop_id)
-        self.ws_client.update_received.connect(self.handle_ws_update)
         self.init_ui()
         self.setup_timers()
-        self.ws_client.start()
 
     def init_ui(self):
         self.setWindowIcon(QIcon("logo.png"))
@@ -131,9 +105,6 @@ class FileReceiverApp(QWidget):
                         self.handle_orders(list(unique_orders))
         except Exception as e:
             self.show_error(f"Ошибка запроса: {str(e)}")
-
-    def handle_ws_update(self, orders):
-        self.handle_orders(orders)
 
     def handle_orders(self, orders):
         self.received_list.clear()
@@ -239,22 +210,33 @@ class FileReceiverApp(QWidget):
     @asyncSlot()
     async def update_status(self, order_id, new_status):
         try:
-            endpoint = "ready" if new_status == "готов" else "complete"
             async with aiohttp.ClientSession() as session:
-                async with session.post(
-                        f"{API_URL}/orders/{order_id}/{endpoint}"
-                ) as resp:
-                    if resp.status != 200:
-                        self.show_error(f"Ошибка: {await resp.text()}")
+                # Удаление файла для статуса "выдан"
+                if new_status == "выдан":
+                    async with session.get(f"{API_URL}/orders/{order_id}") as resp:
+                        file_name = (await resp.json()).get('file_path')
+                        if file_name:
+                            local_path = os.path.join(DOWNLOAD_DIR, os.path.basename(file_name))
+                            try:
+                                os.remove(local_path)
+                                self.file_cache.discard(file_name)
+                            except:
+                                pass
+                # Обновление статуса
+                endpoint = "ready" if new_status == "готов" else "complete"
+                async with session.post(f"{API_URL}/orders/{order_id}/{endpoint}"):
+                        pass
+                # Обновление списка
+                await self.load_orders()
 
         except Exception as e:
-            self.show_error(f"Ошибка обновления: {str(e)}")
+            self.show_error(f"Ошибка: {str(e)}")
+            logging.error(traceback.format_exc())
 
     def show_error(self, message):
         QMessageBox.critical(self, "Ошибка", message)
 
     def closeEvent(self, event):
-        self.ws_client.stop()
         super().closeEvent(event)
 
 
