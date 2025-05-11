@@ -68,7 +68,7 @@ async def handler(websocket):
                 elif data['status'] == 'выдан':
                     await bot.send_message(
                         user_id,
-                        "✅ Спасибо, что воспользовались нашим сервисом! Ждем вас снова!"
+                        f"✅ Заказ №{order_id} выдан! Спасибо, что воспользовались нашим сервисом! Ждем вас снова!"
                     )
         except Exception as e:
             logging.error(f"WebSocket Error: {traceback.format_exc()}")
@@ -76,7 +76,6 @@ async def handler(websocket):
 
 async def cleanup_order_data(user_data: dict):
     try:
-        # Убираем удаление файла
         if 'order_id' in user_data:
             async with aiohttp.ClientSession() as session:
                 await session.delete(f"{API_URL}/orders/{user_data['order_id']}")
@@ -334,9 +333,9 @@ async def process_comment(message: types.Message, state: FSMContext):
 
     markup = ReplyKeyboardMarkup(
         keyboard=[[KeyboardButton(text="Подтвердить"), KeyboardButton(text="Отменить")]],
-        resize_keyboard=True,
-        one_time_keyboard=True
+        resize_keyboard=True
     )
+
     confirmation_msg = await message.answer(response, reply_markup=markup)
 
     confirmation_timers[message.chat.id] = asyncio.create_task(
@@ -348,7 +347,14 @@ async def process_comment(message: types.Message, state: FSMContext):
 
 @dp.message(Form.confirmation)
 async def process_confirmation(message: types.Message, state: FSMContext):
-    # Отмена всех таймеров
+    if message.text not in ["Подтвердить", "Отменить"]:
+        markup = ReplyKeyboardMarkup(
+            keyboard=[[KeyboardButton(text="Подтвердить"), KeyboardButton(text="Отменить")]],
+            resize_keyboard=True
+        )
+        await message.answer("⚠️ Пожалуйста, используйте кнопки для подтверждения:", reply_markup=markup)
+        return
+
     if message.chat.id in timers:
         timers[message.chat.id].cancel()
         del timers[message.chat.id]
@@ -394,7 +400,6 @@ async def process_confirmation(message: types.Message, state: FSMContext):
                         f"✅ Заказ №{data['order_id']} принят! Проверочный код: {check_code}",
                         reply_markup=types.ReplyKeyboardRemove()
                     )
-                    # Удаляем временный файл после успешной загрузки
                     if temp_file_path and os.path.exists(temp_file_path):
                         try:
                             os.remove(temp_file_path)
@@ -413,7 +418,6 @@ async def process_confirmation(message: types.Message, state: FSMContext):
 @dp.message(Command("reset"))
 async def cmd_reset(message: types.Message, state: FSMContext):
     try:
-        # 1. Отмена таймеров
         if message.chat.id in timers:
             timers[message.chat.id].cancel()
             del timers[message.chat.id]
@@ -422,7 +426,6 @@ async def cmd_reset(message: types.Message, state: FSMContext):
             confirmation_timers[message.chat.id].cancel()
             del confirmation_timers[message.chat.id]
 
-        # 2. Удаление временных файлов
         user_data = await state.get_data()
         temp_file = user_data.get('temp_file')
 
@@ -433,10 +436,8 @@ async def cmd_reset(message: types.Message, state: FSMContext):
             except Exception as e:
                 logging.error(f"Ошибка удаления файла: {str(e)}")
 
-        # 3. Очистка состояния
         await state.clear()
 
-        # 4. Удаление сообщения подтверждения если есть
         confirmation_msg_id = user_data.get('confirmation_msg_id')
         if confirmation_msg_id:
             try:
@@ -444,7 +445,6 @@ async def cmd_reset(message: types.Message, state: FSMContext):
             except Exception as e:
                 logging.error(f"Ошибка удаления сообщения: {str(e)}")
 
-        # 5. Отправка подтверждения
         await message.answer(
             "🔄 Все данные сброшены. Вы можете начать новый заказ с помощью /new_order",
             reply_markup=types.ReplyKeyboardRemove()
