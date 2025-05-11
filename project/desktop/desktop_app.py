@@ -246,10 +246,31 @@ class FileReceiverApp(QWidget):
                 ) as resp:
                     if resp.status != 200:
                         self.show_error(f"Ошибка: {await resp.text()}")
+                        return
+
+                    # Если статус изменен на "выдан", удаляем файл
+                    if new_status == "выдан":
+                        # Находим заказ в текущих элементах
+                        if order_id in self.current_items:
+                            _, widget = self.current_items[order_id]
+                            # Получаем путь к файлу из виджета (может потребоваться доработка)
+                            # Предполагаем, что имя файла хранится в тексте QLabel
+                            label = widget.findChild(QLabel)
+                            if label:
+                                file_name = label.text().split(": ")[-1].strip()
+                                file_path = os.path.join(DOWNLOAD_DIR, file_name)
+                                try:
+                                    if os.path.exists(file_path):
+                                        os.remove(file_path)
+                                        logging.info(f"Файл {file_path} удален")
+                                        # Удаляем из кэша
+                                        if file_name in self.file_cache:
+                                            self.file_cache.remove(file_name)
+                                except Exception as e:
+                                    logging.error(f"Ошибка удаления файла: {str(e)}")
 
         except Exception as e:
             self.show_error(f"Ошибка обновления: {str(e)}")
-
     def show_error(self, message):
         QMessageBox.critical(self, "Ошибка", message)
 

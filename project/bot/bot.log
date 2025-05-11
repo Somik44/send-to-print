@@ -1,0 +1,520 @@
+2025-05-11 16:16:49,186 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-05-11 16:16:49,188 - aiogram.dispatcher - INFO - Start polling
+2025-05-11 16:16:49,375 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-11 16:16:51,248 - websockets.client - DEBUG - = connection is CONNECTING
+2025-05-11 16:16:51,249 - websockets.client - DEBUG - > GET /ws/notify HTTP/1.1
+2025-05-11 16:16:51,250 - websockets.client - DEBUG - > Host: localhost:5000
+2025-05-11 16:16:51,250 - websockets.client - DEBUG - > Upgrade: websocket
+2025-05-11 16:16:51,250 - websockets.client - DEBUG - > Connection: Upgrade
+2025-05-11 16:16:51,250 - websockets.client - DEBUG - > Sec-WebSocket-Key: 3eN86vI9fj5zpXpJvhxJnQ==
+2025-05-11 16:16:51,251 - websockets.client - DEBUG - > Sec-WebSocket-Version: 13
+2025-05-11 16:16:51,251 - websockets.client - DEBUG - > Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+2025-05-11 16:16:51,252 - websockets.client - DEBUG - > User-Agent: Python/3.12 websockets/15.0.1
+2025-05-11 16:16:51,254 - websockets.client - DEBUG - < HTTP/1.1 101 Switching Protocols
+2025-05-11 16:16:51,254 - websockets.client - DEBUG - < Upgrade: websocket
+2025-05-11 16:16:51,254 - websockets.client - DEBUG - < Connection: Upgrade
+2025-05-11 16:16:51,254 - websockets.client - DEBUG - < Sec-WebSocket-Accept: Pa/8CnPiRwpQQz5s62zhMuqNI7s=
+2025-05-11 16:16:51,254 - websockets.client - DEBUG - < Sec-WebSocket-Extensions: permessage-deflate
+2025-05-11 16:16:51,254 - websockets.client - DEBUG - < date: Sun, 11 May 2025 13:16:51 GMT
+2025-05-11 16:16:51,254 - websockets.client - DEBUG - < server: uvicorn
+2025-05-11 16:16:51,254 - websockets.client - DEBUG - = connection is OPEN
+2025-05-11 16:17:11,265 - websockets.client - DEBUG - > PING 6f 57 8c a8 [binary, 4 bytes]
+2025-05-11 16:17:11,266 - websockets.client - DEBUG - % sent keepalive ping
+2025-05-11 16:17:11,266 - websockets.client - DEBUG - < PONG 6f 57 8c a8 [binary, 4 bytes]
+2025-05-11 16:17:11,267 - websockets.client - DEBUG - % received keepalive pong
+2025-05-11 16:17:11,267 - websockets.client - DEBUG - < PING 'iS\x0es' [text, 4 bytes]
+2025-05-11 16:17:11,268 - websockets.client - DEBUG - > PONG 'iS\x0es' [text, 4 bytes]
+2025-05-11 16:17:31,260 - websockets.client - DEBUG - > PING 79 d7 43 0f [binary, 4 bytes]
+2025-05-11 16:17:31,260 - websockets.client - DEBUG - % sent keepalive ping
+2025-05-11 16:17:31,261 - websockets.client - DEBUG - < PONG 79 d7 43 0f [binary, 4 bytes]
+2025-05-11 16:17:31,261 - websockets.client - DEBUG - % received keepalive pong
+2025-05-11 16:17:31,291 - websockets.client - DEBUG - < PING ea be 82 86 [binary, 4 bytes]
+2025-05-11 16:17:31,292 - websockets.client - DEBUG - > PONG ea be 82 86 [binary, 4 bytes]
+2025-05-11 16:17:51,261 - websockets.client - DEBUG - > PING 71 f5 a3 d4 [binary, 4 bytes]
+2025-05-11 16:17:51,262 - websockets.client - DEBUG - % sent keepalive ping
+2025-05-11 16:17:51,262 - websockets.client - DEBUG - < PONG 71 f5 a3 d4 [binary, 4 bytes]
+2025-05-11 16:17:51,262 - websockets.client - DEBUG - % received keepalive pong
+2025-05-11 16:17:51,307 - websockets.client - DEBUG - < PING 69 e7 6b 04 [binary, 4 bytes]
+2025-05-11 16:17:51,308 - websockets.client - DEBUG - > PONG 69 e7 6b 04 [binary, 4 bytes]
+2025-05-11 16:17:52,783 - aiogram.event - INFO - Update id=161353515 is handled. Duration 469 ms by bot id=7818669005
+2025-05-11 16:18:01,751 - aiogram.event - INFO - Update id=161353516 is handled. Duration 391 ms by bot id=7818669005
+2025-05-11 16:18:08,331 - root - INFO - Начинаем загрузку файла: https://api.telegram.org/file/bot7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ/documents/file_421.docx
+2025-05-11 16:18:11,275 - websockets.client - DEBUG - > PING b7 29 d2 bd [binary, 4 bytes]
+2025-05-11 16:18:11,275 - websockets.client - DEBUG - % sent keepalive ping
+2025-05-11 16:18:11,275 - websockets.client - DEBUG - < PONG b7 29 d2 bd [binary, 4 bytes]
+2025-05-11 16:18:11,275 - websockets.client - DEBUG - % received keepalive pong
+2025-05-11 16:18:11,306 - websockets.client - DEBUG - < PING 61 b7 13 ec [binary, 4 bytes]
+2025-05-11 16:18:11,306 - websockets.client - DEBUG - > PONG 61 b7 13 ec [binary, 4 bytes]
+2025-05-11 16:18:14,080 - root - INFO - Определено страниц: 3
+2025-05-11 16:18:14,248 - aiogram.event - INFO - Update id=161353517 is handled. Duration 6109 ms by bot id=7818669005
+2025-05-11 16:18:15,861 - aiogram.event - INFO - Update id=161353518 is handled. Duration 63 ms by bot id=7818669005
+2025-05-11 16:18:17,831 - aiogram.event - INFO - Update id=161353519 is handled. Duration 140 ms by bot id=7818669005
+2025-05-11 16:18:18,792 - root - INFO - 10-минутный таймер отменен
+2025-05-11 16:18:18,793 - root - INFO - 1-минутный таймер отменен
+2025-05-11 16:18:19,240 - root - INFO - Удалён временный файл: C:\send_to_ptint\send-to-print\project\api\uploads\temp_0600eb01-966b-4851-be93-2dc5c9badaf1.docx
+2025-05-11 16:18:19,240 - aiogram.event - INFO - Update id=161353520 is handled. Duration 454 ms by bot id=7818669005
+2025-05-11 16:18:31,286 - websockets.client - DEBUG - > PING af 40 70 12 [binary, 4 bytes]
+2025-05-11 16:18:31,286 - websockets.client - DEBUG - % sent keepalive ping
+2025-05-11 16:18:31,286 - websockets.client - DEBUG - < PONG af 40 70 12 [binary, 4 bytes]
+2025-05-11 16:18:31,286 - websockets.client - DEBUG - % received keepalive pong
+2025-05-11 16:18:31,317 - websockets.client - DEBUG - < PING 70 ef 5e 9c [binary, 4 bytes]
+2025-05-11 16:18:31,317 - websockets.client - DEBUG - > PONG 70 ef 5e 9c [binary, 4 bytes]
+2025-05-11 16:18:51,306 - websockets.client - DEBUG - > PING 75 97 5c a5 [binary, 4 bytes]
+2025-05-11 16:18:51,307 - websockets.client - DEBUG - % sent keepalive ping
+2025-05-11 16:18:51,307 - websockets.client - DEBUG - < PONG 75 97 5c a5 [binary, 4 bytes]
+2025-05-11 16:18:51,307 - websockets.client - DEBUG - % received keepalive pong
+2025-05-11 16:18:51,336 - websockets.client - DEBUG - < PING '00`^' [text, 4 bytes]
+2025-05-11 16:18:51,337 - websockets.client - DEBUG - > PONG '00`^' [text, 4 bytes]
+2025-05-11 16:19:11,319 - websockets.client - DEBUG - > PING dd d0 0e 9d [binary, 4 bytes]
+2025-05-11 16:19:11,319 - websockets.client - DEBUG - % sent keepalive ping
+2025-05-11 16:19:11,319 - websockets.client - DEBUG - < PONG dd d0 0e 9d [binary, 4 bytes]
+2025-05-11 16:19:11,319 - websockets.client - DEBUG - % received keepalive pong
+2025-05-11 16:19:11,319 - websockets.client - DEBUG - < PING e6 05 8a 0c [binary, 4 bytes]
+2025-05-11 16:19:11,319 - websockets.client - DEBUG - > PONG e6 05 8a 0c [binary, 4 bytes]
+2025-05-11 16:19:31,331 - websockets.client - DEBUG - > PING 86 c7 a4 9a [binary, 4 bytes]
+2025-05-11 16:19:31,331 - websockets.client - DEBUG - % sent keepalive ping
+2025-05-11 16:19:31,331 - websockets.client - DEBUG - < PING f1 a4 30 b6 [binary, 4 bytes]
+2025-05-11 16:19:31,331 - websockets.client - DEBUG - > PONG f1 a4 30 b6 [binary, 4 bytes]
+2025-05-11 16:19:31,331 - websockets.client - DEBUG - < PONG 86 c7 a4 9a [binary, 4 bytes]
+2025-05-11 16:19:31,331 - websockets.client - DEBUG - % received keepalive pong
+2025-05-11 16:19:51,351 - websockets.client - DEBUG - > PING c0 28 a2 82 [binary, 4 bytes]
+2025-05-11 16:19:51,352 - websockets.client - DEBUG - % sent keepalive ping
+2025-05-11 16:19:51,352 - websockets.client - DEBUG - < PING 74 1d b2 b6 [binary, 4 bytes]
+2025-05-11 16:19:51,352 - websockets.client - DEBUG - > PONG 74 1d b2 b6 [binary, 4 bytes]
+2025-05-11 16:19:51,353 - websockets.client - DEBUG - < PONG c0 28 a2 82 [binary, 4 bytes]
+2025-05-11 16:19:51,353 - websockets.client - DEBUG - % received keepalive pong
+2025-05-11 16:20:11,356 - websockets.client - DEBUG - > PING 0a 1b 9c 7f [binary, 4 bytes]
+2025-05-11 16:20:11,356 - websockets.client - DEBUG - % sent keepalive ping
+2025-05-11 16:20:11,356 - websockets.client - DEBUG - < PONG 0a 1b 9c 7f [binary, 4 bytes]
+2025-05-11 16:20:11,357 - websockets.client - DEBUG - % received keepalive pong
+2025-05-11 16:20:11,357 - websockets.client - DEBUG - < PING c3 03 ff 9f [binary, 4 bytes]
+2025-05-11 16:20:11,357 - websockets.client - DEBUG - > PONG c3 03 ff 9f [binary, 4 bytes]
+2025-05-11 16:20:31,357 - websockets.client - DEBUG - > PING fb 84 3c 88 [binary, 4 bytes]
+2025-05-11 16:20:31,357 - websockets.client - DEBUG - % sent keepalive ping
+2025-05-11 16:20:31,357 - websockets.client - DEBUG - < PONG fb 84 3c 88 [binary, 4 bytes]
+2025-05-11 16:20:31,357 - websockets.client - DEBUG - % received keepalive pong
+2025-05-11 16:20:31,358 - websockets.client - DEBUG - < PING '\u2068x' [text, 4 bytes]
+2025-05-11 16:20:31,358 - websockets.client - DEBUG - > PONG '\u2068x' [text, 4 bytes]
+2025-05-11 16:20:31,847 - aiogram.dispatcher - INFO - Polling stopped
+2025-05-11 16:20:31,847 - websockets.client - DEBUG - > CLOSE 1000 (OK) [2 bytes]
+2025-05-11 16:20:31,847 - websockets.client - DEBUG - = connection is CLOSING
+2025-05-11 16:20:31,848 - websockets.client - DEBUG - < CLOSE 1000 (OK) [2 bytes]
+2025-05-11 16:20:31,848 - websockets.client - DEBUG - < EOF
+2025-05-11 16:20:31,848 - websockets.client - DEBUG - > EOF
+2025-05-11 16:20:31,848 - websockets.client - DEBUG - = connection is CLOSED
+2025-05-11 16:20:31,848 - websockets.client - DEBUG - x half-closing TCP connection
+2025-05-11 16:20:31,848 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-11 16:20:38,358 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-05-11 16:20:38,359 - aiogram.dispatcher - INFO - Start polling
+2025-05-11 16:20:38,545 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-11 16:20:40,428 - websockets.client - DEBUG - = connection is CONNECTING
+2025-05-11 16:20:40,428 - websockets.client - DEBUG - > GET /ws/notify HTTP/1.1
+2025-05-11 16:20:40,428 - websockets.client - DEBUG - > Host: localhost:5000
+2025-05-11 16:20:40,428 - websockets.client - DEBUG - > Upgrade: websocket
+2025-05-11 16:20:40,429 - websockets.client - DEBUG - > Connection: Upgrade
+2025-05-11 16:20:40,429 - websockets.client - DEBUG - > Sec-WebSocket-Key: itxItl28txmD5kgb12lsLA==
+2025-05-11 16:20:40,429 - websockets.client - DEBUG - > Sec-WebSocket-Version: 13
+2025-05-11 16:20:40,429 - websockets.client - DEBUG - > Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+2025-05-11 16:20:40,429 - websockets.client - DEBUG - > User-Agent: Python/3.12 websockets/15.0.1
+2025-05-11 16:20:40,430 - websockets.client - DEBUG - < HTTP/1.1 101 Switching Protocols
+2025-05-11 16:20:40,430 - websockets.client - DEBUG - < Upgrade: websocket
+2025-05-11 16:20:40,430 - websockets.client - DEBUG - < Connection: Upgrade
+2025-05-11 16:20:40,430 - websockets.client - DEBUG - < Sec-WebSocket-Accept: TYFslC3YNJYn3nL67aAI1r1baPc=
+2025-05-11 16:20:40,430 - websockets.client - DEBUG - < Sec-WebSocket-Extensions: permessage-deflate
+2025-05-11 16:20:40,430 - websockets.client - DEBUG - < date: Sun, 11 May 2025 13:20:40 GMT
+2025-05-11 16:20:40,430 - websockets.client - DEBUG - < server: uvicorn
+2025-05-11 16:20:40,430 - websockets.client - DEBUG - = connection is OPEN
+2025-05-11 16:21:00,446 - websockets.client - DEBUG - > PING 50 57 0c c6 [binary, 4 bytes]
+2025-05-11 16:21:00,446 - websockets.client - DEBUG - % sent keepalive ping
+2025-05-11 16:21:00,446 - websockets.client - DEBUG - < PING 96 46 b7 79 [binary, 4 bytes]
+2025-05-11 16:21:00,446 - websockets.client - DEBUG - > PONG 96 46 b7 79 [binary, 4 bytes]
+2025-05-11 16:21:00,446 - websockets.client - DEBUG - < PONG 50 57 0c c6 [binary, 4 bytes]
+2025-05-11 16:21:00,446 - websockets.client - DEBUG - % received keepalive pong
+2025-05-11 16:21:11,564 - aiogram.event - INFO - Update id=161353521 is handled. Duration 468 ms by bot id=7818669005
+2025-05-11 16:21:12,937 - aiogram.event - INFO - Update id=161353522 is handled. Duration 421 ms by bot id=7818669005
+2025-05-11 16:21:18,470 - root - INFO - Начинаем загрузку файла: https://api.telegram.org/file/bot7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ/documents/file_421.docx
+2025-05-11 16:21:20,449 - websockets.client - DEBUG - > PING 'b"\x15\x06' [text, 4 bytes]
+2025-05-11 16:21:20,449 - websockets.client - DEBUG - % sent keepalive ping
+2025-05-11 16:21:20,450 - websockets.client - DEBUG - < PONG 'b"\x15\x06' [text, 4 bytes]
+2025-05-11 16:21:20,450 - websockets.client - DEBUG - % received keepalive pong
+2025-05-11 16:21:20,450 - websockets.client - DEBUG - < PING ae d2 6c ee [binary, 4 bytes]
+2025-05-11 16:21:20,451 - websockets.client - DEBUG - > PONG ae d2 6c ee [binary, 4 bytes]
+2025-05-11 16:21:23,075 - root - INFO - Определено страниц: 3
+2025-05-11 16:21:23,213 - aiogram.event - INFO - Update id=161353523 is handled. Duration 4890 ms by bot id=7818669005
+2025-05-11 16:21:24,561 - aiogram.event - INFO - Update id=161353524 is handled. Duration 77 ms by bot id=7818669005
+2025-05-11 16:21:27,249 - aiogram.event - INFO - Update id=161353525 is handled. Duration 79 ms by bot id=7818669005
+2025-05-11 16:21:28,258 - root - INFO - 10-минутный таймер отменен
+2025-05-11 16:21:28,258 - root - INFO - 1-минутный таймер отменен
+2025-05-11 16:21:28,615 - root - INFO - Удалён временный файл: C:\send_to_ptint\send-to-print\project\api\uploads\temp_4be388b5-0ecf-46ac-9695-d1aacaab66ee.docx
+2025-05-11 16:21:28,616 - aiogram.event - INFO - Update id=161353526 is handled. Duration 375 ms by bot id=7818669005
+2025-05-11 16:21:40,451 - websockets.client - DEBUG - > PING db 9b 35 d1 [binary, 4 bytes]
+2025-05-11 16:21:40,451 - websockets.client - DEBUG - % sent keepalive ping
+2025-05-11 16:21:40,451 - websockets.client - DEBUG - < PONG db 9b 35 d1 [binary, 4 bytes]
+2025-05-11 16:21:40,451 - websockets.client - DEBUG - % received keepalive pong
+2025-05-11 16:21:40,451 - websockets.client - DEBUG - < PING dc fc 96 10 [binary, 4 bytes]
+2025-05-11 16:21:40,451 - websockets.client - DEBUG - > PONG dc fc 96 10 [binary, 4 bytes]
+2025-05-11 16:22:00,452 - websockets.client - DEBUG - > PING 2f ee 8a 64 [binary, 4 bytes]
+2025-05-11 16:22:00,452 - websockets.client - DEBUG - % sent keepalive ping
+2025-05-11 16:22:00,453 - websockets.client - DEBUG - < PONG 2f ee 8a 64 [binary, 4 bytes]
+2025-05-11 16:22:00,453 - websockets.client - DEBUG - % received keepalive pong
+2025-05-11 16:22:00,454 - websockets.client - DEBUG - < PING 08 96 44 6b [binary, 4 bytes]
+2025-05-11 16:22:00,454 - websockets.client - DEBUG - > PONG 08 96 44 6b [binary, 4 bytes]
+2025-05-11 16:22:20,450 - websockets.client - DEBUG - > PING d4 22 30 fb [binary, 4 bytes]
+2025-05-11 16:22:20,450 - websockets.client - DEBUG - % sent keepalive ping
+2025-05-11 16:22:20,450 - websockets.client - DEBUG - < PING 71 21 53 97 [binary, 4 bytes]
+2025-05-11 16:22:20,450 - websockets.client - DEBUG - > PONG 71 21 53 97 [binary, 4 bytes]
+2025-05-11 16:22:20,450 - websockets.client - DEBUG - < PONG d4 22 30 fb [binary, 4 bytes]
+2025-05-11 16:22:20,450 - websockets.client - DEBUG - % received keepalive pong
+2025-05-11 16:22:21,997 - aiogram.dispatcher - INFO - Polling stopped
+2025-05-11 16:22:21,997 - websockets.client - DEBUG - > CLOSE 1000 (OK) [2 bytes]
+2025-05-11 16:22:21,997 - websockets.client - DEBUG - = connection is CLOSING
+2025-05-11 16:22:21,998 - websockets.client - DEBUG - < CLOSE 1000 (OK) [2 bytes]
+2025-05-11 16:22:21,998 - websockets.client - DEBUG - < EOF
+2025-05-11 16:22:21,998 - websockets.client - DEBUG - > EOF
+2025-05-11 16:22:21,998 - websockets.client - DEBUG - = connection is CLOSED
+2025-05-11 16:22:21,998 - websockets.client - DEBUG - x half-closing TCP connection
+2025-05-11 16:22:21,999 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-11 16:25:05,275 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-05-11 16:25:05,276 - aiogram.dispatcher - INFO - Start polling
+2025-05-11 16:25:05,455 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-11 16:25:07,325 - websockets.client - DEBUG - = connection is CONNECTING
+2025-05-11 16:25:07,325 - websockets.client - DEBUG - > GET /ws/notify HTTP/1.1
+2025-05-11 16:25:07,325 - websockets.client - DEBUG - > Host: localhost:5000
+2025-05-11 16:25:07,326 - websockets.client - DEBUG - > Upgrade: websocket
+2025-05-11 16:25:07,326 - websockets.client - DEBUG - > Connection: Upgrade
+2025-05-11 16:25:07,326 - websockets.client - DEBUG - > Sec-WebSocket-Key: eU64QsYFdexbpzbaAuvX3g==
+2025-05-11 16:25:07,326 - websockets.client - DEBUG - > Sec-WebSocket-Version: 13
+2025-05-11 16:25:07,326 - websockets.client - DEBUG - > Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+2025-05-11 16:25:07,326 - websockets.client - DEBUG - > User-Agent: Python/3.12 websockets/15.0.1
+2025-05-11 16:25:07,327 - websockets.client - DEBUG - < HTTP/1.1 101 Switching Protocols
+2025-05-11 16:25:07,327 - websockets.client - DEBUG - < Upgrade: websocket
+2025-05-11 16:25:07,327 - websockets.client - DEBUG - < Connection: Upgrade
+2025-05-11 16:25:07,327 - websockets.client - DEBUG - < Sec-WebSocket-Accept: USp1QMUCvQa+wklO/sPZMtHwzXk=
+2025-05-11 16:25:07,327 - websockets.client - DEBUG - < Sec-WebSocket-Extensions: permessage-deflate
+2025-05-11 16:25:07,327 - websockets.client - DEBUG - < date: Sun, 11 May 2025 13:25:06 GMT
+2025-05-11 16:25:07,327 - websockets.client - DEBUG - < server: uvicorn
+2025-05-11 16:25:07,327 - websockets.client - DEBUG - = connection is OPEN
+2025-05-11 16:25:09,729 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-11 16:25:09,729 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7818669005)
+2025-05-11 16:25:15,132 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-11 16:25:15,132 - aiogram.dispatcher - WARNING - Sleep for 1.210213 seconds and try again... (tryings = 1, bot id = 7818669005)
+2025-05-11 16:25:20,483 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-11 16:25:20,484 - aiogram.dispatcher - WARNING - Sleep for 1.441403 seconds and try again... (tryings = 2, bot id = 7818669005)
+2025-05-11 16:25:26,118 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-11 16:25:26,118 - aiogram.dispatcher - WARNING - Sleep for 1.884543 seconds and try again... (tryings = 3, bot id = 7818669005)
+2025-05-11 16:25:27,324 - websockets.client - DEBUG - > PING b1 8b 7e 8a [binary, 4 bytes]
+2025-05-11 16:25:27,325 - websockets.client - DEBUG - % sent keepalive ping
+2025-05-11 16:25:27,325 - websockets.client - DEBUG - < PONG b1 8b 7e 8a [binary, 4 bytes]
+2025-05-11 16:25:27,326 - websockets.client - DEBUG - % received keepalive pong
+2025-05-11 16:25:27,326 - websockets.client - DEBUG - < PING 8d 19 29 75 [binary, 4 bytes]
+2025-05-11 16:25:27,327 - websockets.client - DEBUG - > PONG 8d 19 29 75 [binary, 4 bytes]
+2025-05-11 16:25:32,199 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-11 16:25:32,200 - aiogram.dispatcher - WARNING - Sleep for 2.401603 seconds and try again... (tryings = 4, bot id = 7818669005)
+2025-05-11 16:25:38,818 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-11 16:25:38,818 - aiogram.dispatcher - WARNING - Sleep for 3.192141 seconds and try again... (tryings = 5, bot id = 7818669005)
+2025-05-11 16:25:46,476 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-11 16:25:46,477 - aiogram.dispatcher - WARNING - Sleep for 4.057518 seconds and try again... (tryings = 6, bot id = 7818669005)
+2025-05-11 16:25:47,322 - websockets.client - DEBUG - > PING 0c fb 01 78 [binary, 4 bytes]
+2025-05-11 16:25:47,322 - websockets.client - DEBUG - % sent keepalive ping
+2025-05-11 16:25:47,322 - websockets.client - DEBUG - < PONG 0c fb 01 78 [binary, 4 bytes]
+2025-05-11 16:25:47,322 - websockets.client - DEBUG - % received keepalive pong
+2025-05-11 16:25:47,322 - websockets.client - DEBUG - < PING e7 a3 da 39 [binary, 4 bytes]
+2025-05-11 16:25:47,323 - websockets.client - DEBUG - > PONG e7 a3 da 39 [binary, 4 bytes]
+2025-05-11 16:25:55,229 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-11 16:25:55,229 - aiogram.dispatcher - WARNING - Sleep for 4.971606 seconds and try again... (tryings = 7, bot id = 7818669005)
+2025-05-11 16:25:55,797 - aiogram.dispatcher - INFO - Polling stopped
+2025-05-11 16:25:55,797 - websockets.client - DEBUG - > CLOSE 1000 (OK) [2 bytes]
+2025-05-11 16:25:55,797 - websockets.client - DEBUG - = connection is CLOSING
+2025-05-11 16:25:55,798 - websockets.client - DEBUG - < CLOSE 1000 (OK) [2 bytes]
+2025-05-11 16:25:55,798 - websockets.client - DEBUG - < EOF
+2025-05-11 16:25:55,798 - websockets.client - DEBUG - > EOF
+2025-05-11 16:25:55,798 - websockets.client - DEBUG - = connection is CLOSED
+2025-05-11 16:25:55,798 - websockets.client - DEBUG - x half-closing TCP connection
+2025-05-11 16:25:55,798 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-11 16:31:17,719 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-05-11 16:31:17,719 - aiogram.dispatcher - INFO - Start polling
+2025-05-11 16:31:17,903 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-11 16:31:19,765 - websockets.client - DEBUG - = connection is CONNECTING
+2025-05-11 16:31:19,766 - websockets.client - DEBUG - > GET /ws/notify HTTP/1.1
+2025-05-11 16:31:19,766 - websockets.client - DEBUG - > Host: localhost:5000
+2025-05-11 16:31:19,767 - websockets.client - DEBUG - > Upgrade: websocket
+2025-05-11 16:31:19,767 - websockets.client - DEBUG - > Connection: Upgrade
+2025-05-11 16:31:19,767 - websockets.client - DEBUG - > Sec-WebSocket-Key: Qnd2MrucC933+fcs4jIBVw==
+2025-05-11 16:31:19,767 - websockets.client - DEBUG - > Sec-WebSocket-Version: 13
+2025-05-11 16:31:19,767 - websockets.client - DEBUG - > Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+2025-05-11 16:31:19,767 - websockets.client - DEBUG - > User-Agent: Python/3.12 websockets/15.0.1
+2025-05-11 16:31:19,772 - websockets.client - DEBUG - < HTTP/1.1 101 Switching Protocols
+2025-05-11 16:31:19,773 - websockets.client - DEBUG - < Upgrade: websocket
+2025-05-11 16:31:19,773 - websockets.client - DEBUG - < Connection: Upgrade
+2025-05-11 16:31:19,773 - websockets.client - DEBUG - < Sec-WebSocket-Accept: XFe+RqdWhQR7bzFaUpXqExL0rK8=
+2025-05-11 16:31:19,773 - websockets.client - DEBUG - < Sec-WebSocket-Extensions: permessage-deflate
+2025-05-11 16:31:19,773 - websockets.client - DEBUG - < date: Sun, 11 May 2025 13:31:19 GMT
+2025-05-11 16:31:19,773 - websockets.client - DEBUG - < server: uvicorn
+2025-05-11 16:31:19,773 - websockets.client - DEBUG - = connection is OPEN
+2025-05-11 16:31:34,895 - aiogram.event - INFO - Update id=161353540 is handled. Duration 594 ms by bot id=7818669005
+2025-05-11 16:31:36,348 - aiogram.event - INFO - Update id=161353541 is handled. Duration 358 ms by bot id=7818669005
+2025-05-11 16:31:39,774 - websockets.client - DEBUG - > PING 1a 16 b4 ad [binary, 4 bytes]
+2025-05-11 16:31:39,775 - websockets.client - DEBUG - % sent keepalive ping
+2025-05-11 16:31:39,776 - websockets.client - DEBUG - < PONG 1a 16 b4 ad [binary, 4 bytes]
+2025-05-11 16:31:39,776 - websockets.client - DEBUG - % received keepalive pong
+2025-05-11 16:31:39,777 - websockets.client - DEBUG - < PING d8 32 2e ae [binary, 4 bytes]
+2025-05-11 16:31:39,777 - websockets.client - DEBUG - > PONG d8 32 2e ae [binary, 4 bytes]
+2025-05-11 16:31:43,162 - root - INFO - Начинаем загрузку файла: https://api.telegram.org/file/bot7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ/documents/file_421.docx
+2025-05-11 16:31:47,754 - root - INFO - Определено страниц: 3
+2025-05-11 16:31:47,905 - aiogram.event - INFO - Update id=161353542 is handled. Duration 4906 ms by bot id=7818669005
+2025-05-11 16:31:48,822 - aiogram.event - INFO - Update id=161353543 is handled. Duration 77 ms by bot id=7818669005
+2025-05-11 16:31:51,592 - aiogram.event - INFO - Update id=161353544 is handled. Duration 77 ms by bot id=7818669005
+2025-05-11 16:31:52,726 - root - INFO - 10-минутный таймер отменен
+2025-05-11 16:31:52,726 - root - INFO - 1-минутный таймер отменен
+2025-05-11 16:31:53,103 - root - INFO - Удалён временный файл: C:\send_to_ptint\send-to-print\project\api\uploads\temp_241eccdc-1b9d-4522-a029-de75fdd4507a.docx
+2025-05-11 16:31:53,104 - aiogram.event - INFO - Update id=161353545 is handled. Duration 391 ms by bot id=7818669005
+2025-05-11 16:31:59,784 - websockets.client - DEBUG - > PING '\u01e0\u0205' [text, 4 bytes]
+2025-05-11 16:31:59,785 - websockets.client - DEBUG - % sent keepalive ping
+2025-05-11 16:31:59,785 - websockets.client - DEBUG - < PING 98 83 e8 bd [binary, 4 bytes]
+2025-05-11 16:31:59,785 - websockets.client - DEBUG - > PONG 98 83 e8 bd [binary, 4 bytes]
+2025-05-11 16:31:59,786 - websockets.client - DEBUG - < PONG '\u01e0\u0205' [text, 4 bytes]
+2025-05-11 16:31:59,786 - websockets.client - DEBUG - % received keepalive pong
+2025-05-11 16:32:19,793 - websockets.client - DEBUG - > PING 36 58 96 c1 [binary, 4 bytes]
+2025-05-11 16:32:19,793 - websockets.client - DEBUG - % sent keepalive ping
+2025-05-11 16:32:19,793 - websockets.client - DEBUG - < PING 71 12 ba b2 [binary, 4 bytes]
+2025-05-11 16:32:19,793 - websockets.client - DEBUG - > PONG 71 12 ba b2 [binary, 4 bytes]
+2025-05-11 16:32:19,793 - websockets.client - DEBUG - < PONG 36 58 96 c1 [binary, 4 bytes]
+2025-05-11 16:32:19,793 - websockets.client - DEBUG - % received keepalive pong
+2025-05-11 16:32:36,556 - aiogram.dispatcher - INFO - Polling stopped
+2025-05-11 16:32:36,556 - websockets.client - DEBUG - > CLOSE 1000 (OK) [2 bytes]
+2025-05-11 16:32:36,556 - websockets.client - DEBUG - = connection is CLOSING
+2025-05-11 16:32:36,557 - websockets.client - DEBUG - < CLOSE 1000 (OK) [2 bytes]
+2025-05-11 16:32:36,557 - websockets.client - DEBUG - < EOF
+2025-05-11 16:32:36,557 - websockets.client - DEBUG - > EOF
+2025-05-11 16:32:36,557 - websockets.client - DEBUG - = connection is CLOSED
+2025-05-11 16:32:36,557 - websockets.client - DEBUG - x half-closing TCP connection
+2025-05-11 16:32:36,557 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-11 16:34:40,155 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-05-11 16:34:40,156 - aiogram.dispatcher - INFO - Start polling
+2025-05-11 16:34:40,344 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-11 16:34:42,227 - websockets.client - DEBUG - = connection is CONNECTING
+2025-05-11 16:34:42,227 - websockets.client - DEBUG - > GET /ws/notify HTTP/1.1
+2025-05-11 16:34:42,228 - websockets.client - DEBUG - > Host: localhost:5000
+2025-05-11 16:34:42,228 - websockets.client - DEBUG - > Upgrade: websocket
+2025-05-11 16:34:42,228 - websockets.client - DEBUG - > Connection: Upgrade
+2025-05-11 16:34:42,228 - websockets.client - DEBUG - > Sec-WebSocket-Key: 93BFgbWdfnDTjWpMqJ7oPg==
+2025-05-11 16:34:42,228 - websockets.client - DEBUG - > Sec-WebSocket-Version: 13
+2025-05-11 16:34:42,228 - websockets.client - DEBUG - > Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+2025-05-11 16:34:42,228 - websockets.client - DEBUG - > User-Agent: Python/3.12 websockets/15.0.1
+2025-05-11 16:34:42,229 - websockets.client - DEBUG - < HTTP/1.1 101 Switching Protocols
+2025-05-11 16:34:42,229 - websockets.client - DEBUG - < Upgrade: websocket
+2025-05-11 16:34:42,229 - websockets.client - DEBUG - < Connection: Upgrade
+2025-05-11 16:34:42,229 - websockets.client - DEBUG - < Sec-WebSocket-Accept: qFxVWzEE6W+kuhy5bbZtziCdQAc=
+2025-05-11 16:34:42,229 - websockets.client - DEBUG - < Sec-WebSocket-Extensions: permessage-deflate
+2025-05-11 16:34:42,229 - websockets.client - DEBUG - < date: Sun, 11 May 2025 13:34:42 GMT
+2025-05-11 16:34:42,229 - websockets.client - DEBUG - < server: uvicorn
+2025-05-11 16:34:42,229 - websockets.client - DEBUG - = connection is OPEN
+2025-05-11 16:34:52,645 - websockets.client - DEBUG - < CLOSE 1012 (service restart) [2 bytes]
+2025-05-11 16:34:52,645 - websockets.client - DEBUG - > CLOSE 1012 (service restart) [2 bytes]
+2025-05-11 16:34:52,645 - websockets.client - DEBUG - = connection is CLOSING
+2025-05-11 16:34:52,645 - websockets.client - DEBUG - < EOF
+2025-05-11 16:34:52,645 - websockets.client - DEBUG - > EOF
+2025-05-11 16:34:52,645 - websockets.client - DEBUG - = connection is CLOSED
+2025-05-11 16:34:52,645 - websockets.client - DEBUG - x half-closing TCP connection
+2025-05-11 16:34:52,645 - root - ERROR - WebSocket error: received 1012 (service restart); then sent 1012 (service restart), переподключение через 5 сек...
+2025-05-11 16:34:52,646 - aiogram.dispatcher - INFO - Polling stopped
+2025-05-11 16:34:52,647 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-11 16:35:04,510 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-05-11 16:35:04,510 - aiogram.dispatcher - INFO - Start polling
+2025-05-11 16:35:04,692 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-11 16:35:06,567 - websockets.client - DEBUG - = connection is CONNECTING
+2025-05-11 16:35:06,568 - websockets.client - DEBUG - > GET /ws/notify HTTP/1.1
+2025-05-11 16:35:06,568 - websockets.client - DEBUG - > Host: localhost:5000
+2025-05-11 16:35:06,569 - websockets.client - DEBUG - > Upgrade: websocket
+2025-05-11 16:35:06,569 - websockets.client - DEBUG - > Connection: Upgrade
+2025-05-11 16:35:06,569 - websockets.client - DEBUG - > Sec-WebSocket-Key: XGls9DHvsH2NCgRHbgJYHA==
+2025-05-11 16:35:06,569 - websockets.client - DEBUG - > Sec-WebSocket-Version: 13
+2025-05-11 16:35:06,569 - websockets.client - DEBUG - > Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+2025-05-11 16:35:06,569 - websockets.client - DEBUG - > User-Agent: Python/3.12 websockets/15.0.1
+2025-05-11 16:35:06,574 - websockets.client - DEBUG - < HTTP/1.1 101 Switching Protocols
+2025-05-11 16:35:06,575 - websockets.client - DEBUG - < Upgrade: websocket
+2025-05-11 16:35:06,575 - websockets.client - DEBUG - < Connection: Upgrade
+2025-05-11 16:35:06,575 - websockets.client - DEBUG - < Sec-WebSocket-Accept: +an0i8/x8gRV7BUK65a9pUL3YvE=
+2025-05-11 16:35:06,575 - websockets.client - DEBUG - < Sec-WebSocket-Extensions: permessage-deflate
+2025-05-11 16:35:06,575 - websockets.client - DEBUG - < date: Sun, 11 May 2025 13:35:05 GMT
+2025-05-11 16:35:06,576 - websockets.client - DEBUG - < server: uvicorn
+2025-05-11 16:35:06,576 - websockets.client - DEBUG - = connection is OPEN
+2025-05-11 16:35:14,145 - aiogram.event - INFO - Update id=161353546 is handled. Duration 203 ms by bot id=7818669005
+2025-05-11 16:35:15,435 - aiogram.event - INFO - Update id=161353547 is handled. Duration 343 ms by bot id=7818669005
+2025-05-11 16:35:16,817 - aiogram.event - INFO - Update id=161353548 is handled. Duration 359 ms by bot id=7818669005
+2025-05-11 16:35:26,571 - root - INFO - Начинаем загрузку файла: https://api.telegram.org/file/bot7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ/documents/file_421.docx
+2025-05-11 16:35:26,572 - websockets.client - DEBUG - > PING 83 cf 16 39 [binary, 4 bytes]
+2025-05-11 16:35:26,572 - websockets.client - DEBUG - % sent keepalive ping
+2025-05-11 16:35:26,572 - websockets.client - DEBUG - < PONG 83 cf 16 39 [binary, 4 bytes]
+2025-05-11 16:35:26,572 - websockets.client - DEBUG - % received keepalive pong
+2025-05-11 16:35:26,573 - websockets.client - DEBUG - < PING 8c ed 62 05 [binary, 4 bytes]
+2025-05-11 16:35:26,573 - websockets.client - DEBUG - > PONG 8c ed 62 05 [binary, 4 bytes]
+2025-05-11 16:35:31,143 - root - INFO - Определено страниц: 3
+2025-05-11 16:35:31,290 - aiogram.event - INFO - Update id=161353549 is handled. Duration 4875 ms by bot id=7818669005
+2025-05-11 16:35:32,710 - aiogram.event - INFO - Update id=161353550 is handled. Duration 140 ms by bot id=7818669005
+2025-05-11 16:35:34,787 - aiogram.event - INFO - Update id=161353551 is handled. Duration 92 ms by bot id=7818669005
+2025-05-11 16:35:35,904 - root - INFO - 10-минутный таймер отменен
+2025-05-11 16:35:35,904 - root - INFO - 1-минутный таймер отменен
+2025-05-11 16:35:36,251 - root - INFO - Удалён временный файл: C:\send_to_ptint\send-to-print\project\api\uploads\temp_1c285698-e24d-4200-b3d8-814139e70467.docx
+2025-05-11 16:35:36,252 - aiogram.event - INFO - Update id=161353552 is handled. Duration 343 ms by bot id=7818669005
+2025-05-11 16:35:46,581 - websockets.client - DEBUG - > PING 00 b6 49 c1 [binary, 4 bytes]
+2025-05-11 16:35:46,582 - websockets.client - DEBUG - % sent keepalive ping
+2025-05-11 16:35:46,582 - websockets.client - DEBUG - < PING 5d 54 9a 4d [binary, 4 bytes]
+2025-05-11 16:35:46,582 - websockets.client - DEBUG - > PONG 5d 54 9a 4d [binary, 4 bytes]
+2025-05-11 16:35:46,583 - websockets.client - DEBUG - < PONG 00 b6 49 c1 [binary, 4 bytes]
+2025-05-11 16:35:46,583 - websockets.client - DEBUG - % received keepalive pong
+2025-05-11 16:36:06,580 - websockets.client - DEBUG - < PING 78 f8 24 0a [binary, 4 bytes]
+2025-05-11 16:36:06,580 - websockets.client - DEBUG - > PONG 78 f8 24 0a [binary, 4 bytes]
+2025-05-11 16:36:06,580 - websockets.client - DEBUG - > PING 3e c3 24 dc [binary, 4 bytes]
+2025-05-11 16:36:06,580 - websockets.client - DEBUG - % sent keepalive ping
+2025-05-11 16:36:06,580 - websockets.client - DEBUG - < PONG 3e c3 24 dc [binary, 4 bytes]
+2025-05-11 16:36:06,580 - websockets.client - DEBUG - % received keepalive pong
+2025-05-11 16:36:26,590 - websockets.client - DEBUG - > PING 3a 82 78 de [binary, 4 bytes]
+2025-05-11 16:36:26,591 - websockets.client - DEBUG - % sent keepalive ping
+2025-05-11 16:36:26,591 - websockets.client - DEBUG - < PING 14 06 bf 19 [binary, 4 bytes]
+2025-05-11 16:36:26,591 - websockets.client - DEBUG - > PONG 14 06 bf 19 [binary, 4 bytes]
+2025-05-11 16:36:26,592 - websockets.client - DEBUG - < PONG 3a 82 78 de [binary, 4 bytes]
+2025-05-11 16:36:26,592 - websockets.client - DEBUG - % received keepalive pong
+2025-05-11 16:36:30,910 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-11 16:36:30,910 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7818669005)
+2025-05-11 16:36:36,107 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-11 16:36:36,107 - aiogram.dispatcher - WARNING - Sleep for 1.499565 seconds and try again... (tryings = 1, bot id = 7818669005)
+2025-05-11 16:36:42,061 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2025-05-11 16:36:42,061 - aiogram.dispatcher - WARNING - Sleep for 1.735360 seconds and try again... (tryings = 2, bot id = 7818669005)
+2025-05-11 16:36:46,578 - websockets.client - DEBUG - < PING c8 4d 81 2a [binary, 4 bytes]
+2025-05-11 16:36:46,578 - websockets.client - DEBUG - > PONG c8 4d 81 2a [binary, 4 bytes]
+2025-05-11 16:36:46,578 - websockets.client - DEBUG - > PING f5 4e 9e 2c [binary, 4 bytes]
+2025-05-11 16:36:46,578 - websockets.client - DEBUG - % sent keepalive ping
+2025-05-11 16:36:46,579 - websockets.client - DEBUG - < PONG f5 4e 9e 2c [binary, 4 bytes]
+2025-05-11 16:36:46,579 - websockets.client - DEBUG - % received keepalive pong
+2025-05-11 16:36:46,609 - aiogram.dispatcher - INFO - Polling stopped
+2025-05-11 16:36:46,609 - websockets.client - DEBUG - > CLOSE 1000 (OK) [2 bytes]
+2025-05-11 16:36:46,609 - websockets.client - DEBUG - = connection is CLOSING
+2025-05-11 16:36:46,610 - websockets.client - DEBUG - < CLOSE 1000 (OK) [2 bytes]
+2025-05-11 16:36:46,610 - websockets.client - DEBUG - < EOF
+2025-05-11 16:36:46,610 - websockets.client - DEBUG - > EOF
+2025-05-11 16:36:46,610 - websockets.client - DEBUG - = connection is CLOSED
+2025-05-11 16:36:46,610 - websockets.client - DEBUG - x half-closing TCP connection
+2025-05-11 16:36:46,610 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-11 16:41:51,176 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-05-11 16:41:51,176 - aiogram.dispatcher - INFO - Start polling
+2025-05-11 16:41:51,353 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-11 16:41:53,242 - websockets.client - DEBUG - = connection is CONNECTING
+2025-05-11 16:41:53,243 - websockets.client - DEBUG - > GET /ws/notify HTTP/1.1
+2025-05-11 16:41:53,244 - websockets.client - DEBUG - > Host: localhost:5000
+2025-05-11 16:41:53,244 - websockets.client - DEBUG - > Upgrade: websocket
+2025-05-11 16:41:53,244 - websockets.client - DEBUG - > Connection: Upgrade
+2025-05-11 16:41:53,244 - websockets.client - DEBUG - > Sec-WebSocket-Key: oCUpUH+Cm/U64VOR+++dqQ==
+2025-05-11 16:41:53,244 - websockets.client - DEBUG - > Sec-WebSocket-Version: 13
+2025-05-11 16:41:53,244 - websockets.client - DEBUG - > Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+2025-05-11 16:41:53,245 - websockets.client - DEBUG - > User-Agent: Python/3.12 websockets/15.0.1
+2025-05-11 16:41:53,248 - websockets.client - DEBUG - < HTTP/1.1 101 Switching Protocols
+2025-05-11 16:41:53,248 - websockets.client - DEBUG - < Upgrade: websocket
+2025-05-11 16:41:53,248 - websockets.client - DEBUG - < Connection: Upgrade
+2025-05-11 16:41:53,248 - websockets.client - DEBUG - < Sec-WebSocket-Accept: ccgVm/Zbq6LW2r12myMj0rYw+f4=
+2025-05-11 16:41:53,248 - websockets.client - DEBUG - < Sec-WebSocket-Extensions: permessage-deflate
+2025-05-11 16:41:53,248 - websockets.client - DEBUG - < date: Sun, 11 May 2025 13:41:52 GMT
+2025-05-11 16:41:53,248 - websockets.client - DEBUG - < server: uvicorn
+2025-05-11 16:41:53,249 - websockets.client - DEBUG - = connection is OPEN
+2025-05-11 16:42:05,239 - aiogram.event - INFO - Update id=161353559 is handled. Duration 204 ms by bot id=7818669005
+2025-05-11 16:42:06,814 - aiogram.event - INFO - Update id=161353560 is handled. Duration 375 ms by bot id=7818669005
+2025-05-11 16:42:08,441 - aiogram.event - INFO - Update id=161353561 is handled. Duration 484 ms by bot id=7818669005
+2025-05-11 16:42:13,244 - websockets.client - DEBUG - > PING 61 f2 97 68 [binary, 4 bytes]
+2025-05-11 16:42:13,245 - websockets.client - DEBUG - % sent keepalive ping
+2025-05-11 16:42:13,246 - websockets.client - DEBUG - < PONG 61 f2 97 68 [binary, 4 bytes]
+2025-05-11 16:42:13,246 - websockets.client - DEBUG - % received keepalive pong
+2025-05-11 16:42:13,246 - websockets.client - DEBUG - < PING 0d ec 31 c4 [binary, 4 bytes]
+2025-05-11 16:42:13,246 - websockets.client - DEBUG - > PONG 0d ec 31 c4 [binary, 4 bytes]
+2025-05-11 16:42:14,587 - root - INFO - Начинаем загрузку файла: https://api.telegram.org/file/bot7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ/documents/file_421.docx
+2025-05-11 16:42:19,135 - root - INFO - Определено страниц: 3
+2025-05-11 16:42:19,321 - aiogram.event - INFO - Update id=161353562 is handled. Duration 4875 ms by bot id=7818669005
+2025-05-11 16:42:20,560 - aiogram.event - INFO - Update id=161353563 is handled. Duration 77 ms by bot id=7818669005
+2025-05-11 16:42:24,219 - aiogram.event - INFO - Update id=161353564 is handled. Duration 61 ms by bot id=7818669005
+2025-05-11 16:42:25,139 - root - INFO - 10-минутный таймер отменен
+2025-05-11 16:42:25,139 - root - INFO - 1-минутный таймер отменен
+2025-05-11 16:42:25,498 - root - INFO - Удалён временный файл: C:\send_to_ptint\send-to-print\project\api\uploads\temp_fc88b1ce-5471-41ff-a2c6-3f690e9f2717.docx
+2025-05-11 16:42:25,499 - aiogram.event - INFO - Update id=161353565 is handled. Duration 359 ms by bot id=7818669005
+2025-05-11 16:42:27,325 - aiogram.event - INFO - Update id=161353566 is handled. Duration 77 ms by bot id=7818669005
+2025-05-11 16:42:33,261 - websockets.client - DEBUG - > PING f2 43 da 3d [binary, 4 bytes]
+2025-05-11 16:42:33,262 - websockets.client - DEBUG - % sent keepalive ping
+2025-05-11 16:42:33,262 - websockets.client - DEBUG - < PING b8 ff 71 96 [binary, 4 bytes]
+2025-05-11 16:42:33,262 - websockets.client - DEBUG - > PONG b8 ff 71 96 [binary, 4 bytes]
+2025-05-11 16:42:33,263 - websockets.client - DEBUG - < PONG f2 43 da 3d [binary, 4 bytes]
+2025-05-11 16:42:33,263 - websockets.client - DEBUG - % received keepalive pong
+2025-05-11 16:42:53,261 - websockets.client - DEBUG - < PING 25 60 7b b5 [binary, 4 bytes]
+2025-05-11 16:42:53,261 - websockets.client - DEBUG - > PONG 25 60 7b b5 [binary, 4 bytes]
+2025-05-11 16:42:53,261 - websockets.client - DEBUG - > PING 26 82 a9 83 [binary, 4 bytes]
+2025-05-11 16:42:53,261 - websockets.client - DEBUG - % sent keepalive ping
+2025-05-11 16:42:53,261 - websockets.client - DEBUG - < PONG 26 82 a9 83 [binary, 4 bytes]
+2025-05-11 16:42:53,261 - websockets.client - DEBUG - % received keepalive pong
+2025-05-11 16:43:13,254 - websockets.client - DEBUG - < PING 02 69 32 a1 [binary, 4 bytes]
+2025-05-11 16:43:13,254 - websockets.client - DEBUG - > PONG 02 69 32 a1 [binary, 4 bytes]
+2025-05-11 16:43:13,254 - websockets.client - DEBUG - > PING 02 60 cf 57 [binary, 4 bytes]
+2025-05-11 16:43:13,254 - websockets.client - DEBUG - % sent keepalive ping
+2025-05-11 16:43:13,254 - websockets.client - DEBUG - < PONG 02 60 cf 57 [binary, 4 bytes]
+2025-05-11 16:43:13,254 - websockets.client - DEBUG - % received keepalive pong
+2025-05-11 16:43:18,081 - websockets.client - DEBUG - < CLOSE 1012 (service restart) [2 bytes]
+2025-05-11 16:43:18,081 - websockets.client - DEBUG - > CLOSE 1012 (service restart) [2 bytes]
+2025-05-11 16:43:18,082 - websockets.client - DEBUG - = connection is CLOSING
+2025-05-11 16:43:18,082 - websockets.client - DEBUG - < EOF
+2025-05-11 16:43:18,082 - websockets.client - DEBUG - > EOF
+2025-05-11 16:43:18,082 - websockets.client - DEBUG - = connection is CLOSED
+2025-05-11 16:43:18,082 - websockets.client - DEBUG - x half-closing TCP connection
+2025-05-11 16:43:18,082 - root - ERROR - WebSocket error: received 1012 (service restart); then sent 1012 (service restart), переподключение через 5 сек...
+2025-05-11 16:43:18,083 - aiogram.dispatcher - INFO - Polling stopped
+2025-05-11 16:43:18,083 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-11 16:44:27,972 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-05-11 16:44:27,972 - aiogram.dispatcher - INFO - Start polling
+2025-05-11 16:44:28,162 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-11 16:44:30,042 - websockets.client - DEBUG - = connection is CONNECTING
+2025-05-11 16:44:30,042 - websockets.client - DEBUG - > GET /ws/notify HTTP/1.1
+2025-05-11 16:44:30,042 - websockets.client - DEBUG - > Host: localhost:5000
+2025-05-11 16:44:30,043 - websockets.client - DEBUG - > Upgrade: websocket
+2025-05-11 16:44:30,043 - websockets.client - DEBUG - > Connection: Upgrade
+2025-05-11 16:44:30,043 - websockets.client - DEBUG - > Sec-WebSocket-Key: OU9kON2kcppwdKnBUXjS+w==
+2025-05-11 16:44:30,043 - websockets.client - DEBUG - > Sec-WebSocket-Version: 13
+2025-05-11 16:44:30,043 - websockets.client - DEBUG - > Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+2025-05-11 16:44:30,043 - websockets.client - DEBUG - > User-Agent: Python/3.12 websockets/15.0.1
+2025-05-11 16:44:30,044 - websockets.client - DEBUG - < HTTP/1.1 101 Switching Protocols
+2025-05-11 16:44:30,045 - websockets.client - DEBUG - < Upgrade: websocket
+2025-05-11 16:44:30,045 - websockets.client - DEBUG - < Connection: Upgrade
+2025-05-11 16:44:30,045 - websockets.client - DEBUG - < Sec-WebSocket-Accept: O3kmzkUhx05nU/rCg6PhJAMJhYU=
+2025-05-11 16:44:30,045 - websockets.client - DEBUG - < Sec-WebSocket-Extensions: permessage-deflate
+2025-05-11 16:44:30,045 - websockets.client - DEBUG - < date: Sun, 11 May 2025 13:44:29 GMT
+2025-05-11 16:44:30,045 - websockets.client - DEBUG - < server: uvicorn
+2025-05-11 16:44:30,045 - websockets.client - DEBUG - = connection is OPEN
+2025-05-11 16:44:38,804 - aiogram.event - INFO - Update id=161353567 is handled. Duration 452 ms by bot id=7818669005
+2025-05-11 16:44:40,135 - aiogram.event - INFO - Update id=161353568 is handled. Duration 358 ms by bot id=7818669005
+2025-05-11 16:44:42,221 - root - INFO - 10-минутный таймер отменен
+2025-05-11 16:44:42,684 - aiogram.event - INFO - Update id=161353569 is handled. Duration 468 ms by bot id=7818669005
+2025-05-11 16:44:44,166 - aiogram.event - INFO - Update id=161353570 is handled. Duration 342 ms by bot id=7818669005
+2025-05-11 16:44:50,033 - websockets.client - DEBUG - < PING 27 4a 3e c3 [binary, 4 bytes]
+2025-05-11 16:44:50,034 - websockets.client - DEBUG - > PONG 27 4a 3e c3 [binary, 4 bytes]
+2025-05-11 16:44:50,035 - websockets.client - DEBUG - > PING a9 24 71 6c [binary, 4 bytes]
+2025-05-11 16:44:50,035 - websockets.client - DEBUG - % sent keepalive ping
+2025-05-11 16:44:50,036 - websockets.client - DEBUG - < PONG a9 24 71 6c [binary, 4 bytes]
+2025-05-11 16:44:50,036 - websockets.client - DEBUG - % received keepalive pong
+2025-05-11 16:44:50,051 - root - INFO - Начинаем загрузку файла: https://api.telegram.org/file/bot7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ/documents/file_421.docx
+2025-05-11 16:44:54,640 - root - INFO - Определено страниц: 3
+2025-05-11 16:44:54,873 - aiogram.event - INFO - Update id=161353571 is handled. Duration 4968 ms by bot id=7818669005
+2025-05-11 16:44:57,902 - aiogram.event - INFO - Update id=161353572 is handled. Duration 266 ms by bot id=7818669005
+2025-05-11 16:44:59,646 - aiogram.event - INFO - Update id=161353573 is handled. Duration 78 ms by bot id=7818669005
+2025-05-11 16:45:00,683 - root - INFO - 10-минутный таймер отменен
+2025-05-11 16:45:00,683 - root - INFO - 1-минутный таймер отменен
+2025-05-11 16:45:01,035 - root - INFO - Удалён временный файл: C:\send_to_ptint\send-to-print\project\api\uploads\temp_0070f583-0998-4ef9-96dd-15afd2febd29.docx
+2025-05-11 16:45:01,036 - aiogram.event - INFO - Update id=161353574 is handled. Duration 358 ms by bot id=7818669005
+2025-05-11 16:45:10,039 - websockets.client - DEBUG - > PING d6 51 37 22 [binary, 4 bytes]
+2025-05-11 16:45:10,040 - websockets.client - DEBUG - % sent keepalive ping
+2025-05-11 16:45:10,040 - websockets.client - DEBUG - < PING e8 59 ab 5e [binary, 4 bytes]
+2025-05-11 16:45:10,040 - websockets.client - DEBUG - > PONG e8 59 ab 5e [binary, 4 bytes]
+2025-05-11 16:45:10,041 - websockets.client - DEBUG - < PONG d6 51 37 22 [binary, 4 bytes]
+2025-05-11 16:45:10,041 - websockets.client - DEBUG - % received keepalive pong
+2025-05-11 16:45:18,300 - aiogram.dispatcher - INFO - Polling stopped
+2025-05-11 16:45:18,300 - websockets.client - DEBUG - > CLOSE 1000 (OK) [2 bytes]
+2025-05-11 16:45:18,300 - websockets.client - DEBUG - = connection is CLOSING
+2025-05-11 16:45:18,301 - websockets.client - DEBUG - < CLOSE 1000 (OK) [2 bytes]
+2025-05-11 16:45:18,301 - websockets.client - DEBUG - < EOF
+2025-05-11 16:45:18,301 - websockets.client - DEBUG - > EOF
+2025-05-11 16:45:18,301 - websockets.client - DEBUG - = connection is CLOSED
+2025-05-11 16:45:18,301 - websockets.client - DEBUG - x half-closing TCP connection
+2025-05-11 16:45:18,301 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
