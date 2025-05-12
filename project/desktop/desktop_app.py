@@ -158,11 +158,15 @@ class FileReceiverApp(QWidget):
             btn_print.clicked.connect(lambda: self.print_file(order))
             btn_ready = QPushButton("Готово")
             btn_ready.clicked.connect(lambda: self.update_status(order['ID'], 'готов'))
-            buttons = [btn_print, btn_ready]
+            btn_info = QPushButton("Информация")
+            btn_info.clicked.connect(lambda: self.show_order_info(order))  # Новая кнопка
+            buttons = [btn_print, btn_ready, btn_info]  # Добавляем новую кнопку
         else:
             btn_complete = QPushButton("Выдать")
             btn_complete.clicked.connect(lambda: self.update_status(order['ID'], 'выдан'))
-            buttons = [btn_complete]
+            btn_info = QPushButton("Код")
+            btn_info.clicked.connect(lambda: self.show_con_code(order))  # Новая кнопка
+            buttons = [btn_complete, btn_info]  # Добавляем новую кнопку
 
         button_style = """
             QPushButton { 
@@ -182,6 +186,17 @@ class FileReceiverApp(QWidget):
         layout.addWidget(label)
         widget.setLayout(layout)
         return widget
+
+    def show_order_info(self, order):
+        info_message = f"Заказ №{order['ID']}\n" \
+                       f"Тип печати: {order['color']}\n" \
+                       f"Комментарий: {order.get('note', 'Нет информации')}"
+        QMessageBox.information(self, "Информация о заказе", info_message)
+
+    def show_con_code(self, order):
+        info_message = f"Заказ №{order['ID']}\n" \
+                       f"Код подтверждения: {order['con_code']}\n"
+        QMessageBox.information(self, "Проверочный код", info_message)
 
     async def download_file(self, filename):
         try:
@@ -211,21 +226,28 @@ class FileReceiverApp(QWidget):
     async def update_status(self, order_id, new_status):
         try:
             async with aiohttp.ClientSession() as session:
-                # Удаление файла для статуса "выдан"
-                if new_status == "выдан":
-                    async with session.get(f"{API_URL}/orders/{order_id}") as resp:
-                        file_name = (await resp.json()).get('file_path')
-                        if file_name:
+                # Получаем информацию о заказе
+                async with session.get(f"{API_URL}/orders/{order_id}") as resp:
+                    if resp.status == 200:
+                        order_data = await resp.json()
+                        file_name = order_data.get('file_path')
+
+                        # Удаление файла для статуса "готов" и "выдан" из локальной папки downloads
+                        if (new_status == "готов" or new_status == "выдан") and file_name:
                             local_path = os.path.join(DOWNLOAD_DIR, os.path.basename(file_name))
                             try:
-                                os.remove(local_path)
-                                self.file_cache.discard(file_name)
-                            except:
-                                pass
-                # Обновление статуса
+                                if os.path.exists(local_path):
+                                    os.remove(local_path)
+                                    self.file_cache.discard(file_name)
+                                    logging.info(f"Файл {file_name} успешно удален из downloads")
+                            except Exception as e:
+                                logging.error(f"Ошибка при удалении файла из downloads: {str(e)}")
+
+                # Обновление статуса на сервере
                 endpoint = "ready" if new_status == "готов" else "complete"
                 async with session.post(f"{API_URL}/orders/{order_id}/{endpoint}"):
-                        pass
+                    pass
+
                 # Обновление списка
                 await self.load_orders()
 
