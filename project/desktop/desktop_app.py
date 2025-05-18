@@ -83,7 +83,7 @@ class FileReceiverApp(QWidget):
     def setup_timers(self):
         self.timer = QTimer()
         self.timer.timeout.connect(self.on_timer_timeout)
-        self.timer.start(30000)
+        self.timer.start(60000)
         self.on_timer_timeout()
 
     @asyncSlot()
@@ -160,13 +160,13 @@ class FileReceiverApp(QWidget):
             btn_ready.clicked.connect(lambda: self.update_status(order['ID'], 'готов'))
             btn_info = QPushButton("Информация")
             btn_info.clicked.connect(lambda: self.show_order_info(order))  # Новая кнопка
-            buttons = [btn_print, btn_ready, btn_info]  # Добавляем новую кнопку
+            buttons = [btn_info, btn_print, btn_ready]  # Добавляем новую кнопку
         else:
             btn_complete = QPushButton("Выдать")
             btn_complete.clicked.connect(lambda: self.update_status(order['ID'], 'выдан'))
             btn_info = QPushButton("Код")
             btn_info.clicked.connect(lambda: self.show_con_code(order))  # Новая кнопка
-            buttons = [btn_complete, btn_info]  # Добавляем новую кнопку
+            buttons = [btn_info, btn_complete]  # Добавляем новую кнопку
 
         button_style = """
             QPushButton { 

@@ -41,7 +41,7 @@ async def get_db():
     return await aiomysql.connect(
         host=os.getenv("DB_HOST", "localhost"),
         user=os.getenv("DB_USER", "root"),
-        password=os.getenv("DB_PASSWORD", "3465"),
+        password=os.getenv("DB_PASSWORD", "Qwerty123"),
         db=os.getenv("DB_NAME", "send_to_print"),
         autocommit=False,
         cursorclass=aiomysql.DictCursor

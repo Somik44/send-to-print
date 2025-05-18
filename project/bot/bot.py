@@ -27,7 +27,7 @@ logging.basicConfig(
 
 API_TOKEN = '7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ'
 API_URL = 'http://localhost:5000'
-UPLOAD_FOLDER = 'C:\\send_to_ptint\\send-to-print\\project\\api\\uploads'
+UPLOAD_FOLDER = 'D:\\projects_py\\projectsWithGit\\send-to-print\\project\\api\\uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 
@@ -154,6 +154,29 @@ async def cmd_new_order(message: types.Message, state: FSMContext):
         timers[message.chat.id].cancel()
         del timers[message.chat.id]
 
+    if message.chat.id in confirmation_timers:
+        confirmation_timers[message.chat.id].cancel()
+        del confirmation_timers[message.chat.id]
+
+    user_data = await state.get_data()
+    temp_file = user_data.get('temp_file')
+
+    if temp_file and os.path.exists(temp_file):
+        try:
+            os.remove(temp_file)
+            logging.info(f"Удален временный файл: {temp_file}")
+        except Exception as e:
+            logging.error(f"Ошибка удаления файла: {str(e)}")
+
+    confirmation_msg_id = user_data.get('confirmation_msg_id')
+    if confirmation_msg_id:
+        try:
+            await bot.delete_message(message.chat.id, confirmation_msg_id)
+        except Exception as e:
+            logging.error(f"Ошибка удаления сообщения: {str(e)}")
+
+    await state.clear()
+
     async with aiohttp.ClientSession() as session:
         async with session.get(f"{API_URL}/shops") as resp:
             if resp.status != 200:
@@ -187,7 +210,8 @@ async def process_shop(message: types.Message, state: FSMContext):
         f"💰 Цены:\n"
         f"• Черно-белая: {shop['price_bw']:.2f} руб/стр\n"
         f"• Цветная: {shop['price_cl']:.2f} руб/стр\n\n"
-        f"📎 Отправьте PDF, DOC или DOCX файл размером не более 20 МБ для расчета стоимости."
+        f"📎 Отправьте PDF, DOC или DOCX файл размером не более 20 МБ для расчета стоимости\n"
+        f"Используйте /reset для отмены заказа."
     )
     await message.answer(response, reply_markup=types.ReplyKeyboardRemove())
     await state.set_state(Form.file_processing)
@@ -224,7 +248,7 @@ async def process_file(message: types.Message, state: FSMContext):
         file_ext = os.path.splitext(filename)[1].lower()
 
         if file_ext not in ('.pdf', '.doc', '.docx'):
-            raise ValueError("❌ Поддерживаются только PDF, DOC и DOCX файлы")
+            raise ValueError("Поддерживаются только PDF, DOC и DOCX файлы")
 
         # 5. Сохраняем временный файл
         temp_name = f"temp_{uuid.uuid4()}{file_ext}"
@@ -296,6 +320,7 @@ async def process_file(message: types.Message, state: FSMContext):
         except Exception as e:
             logging.error(f"Ошибка удаления сообщения: {str(e)}")
 
+
 @dp.message(Form.color_selection)
 async def process_color(message: types.Message, state: FSMContext):
     user_data = await state.get_data()
@@ -312,13 +337,29 @@ async def process_color(message: types.Message, state: FSMContext):
     total_price = round(price * user_data['pages'], 2)
     await state.update_data(color=color, price=total_price)
 
-    await message.answer("📝 Введите комментарий к заказу (отправьте $ если комментарий не нужен):", reply_markup=types.ReplyKeyboardRemove())
+    # Добавляем клавиатуру с кнопкой "Без комментария"
+    markup = ReplyKeyboardMarkup(
+        keyboard=[
+            [KeyboardButton(text="Без комментария")]
+        ],
+        resize_keyboard=True,
+        one_time_keyboard=True
+    )
+    await message.answer(
+        "📝 Введите комментарий к заказу или нажмите кнопку ниже:",
+        reply_markup=markup
+    )
     await state.set_state(Form.comment)
 
 
 @dp.message(Form.comment)
 async def process_comment(message: types.Message, state: FSMContext):
-    comment = message.text if message.text != '$' else ''
+    # Обрабатываем кнопку "Без комментария"
+    if message.text == "Без комментария":
+        comment = ''
+    else:
+        comment = message.text
+
     await state.update_data(comment=comment)
     user_data = await state.get_data()
 
