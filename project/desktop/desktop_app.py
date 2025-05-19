@@ -12,7 +12,7 @@ from PyQt6.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QListWidget, QPushButton,
     QLabel, QMessageBox, QHBoxLayout, QListWidgetItem,
     QLineEdit, QDialog, QDialogButtonBox, QFormLayout,
-    QSpacerItem, QSizePolicy
+    QSpacerItem, QSizePolicy, QMenu, QToolButton
 )
 from PyQt6.QtGui import QIcon
 import qasync
@@ -47,11 +47,34 @@ class FileReceiverApp(QWidget):
         main_layout.setContentsMargins(10, 10, 10, 10)
         main_layout.setSpacing(10)
 
-        control_layout = QHBoxLayout()
+        # Создаем верхнюю панель с кнопками
+        top_panel = QHBoxLayout()
+
+        # Кнопка обновления
         self.refresh_btn = QPushButton("Обновить список")
         self.refresh_btn.clicked.connect(self.on_refresh_clicked)
-        control_layout.addWidget(self.refresh_btn)
-        control_layout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
+        top_panel.addWidget(self.refresh_btn)
+
+        # Растягивающийся элемент
+        top_panel.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
+
+        # Кнопка меню
+        self.menu_btn = QToolButton()
+        self.menu_btn.setText("☰")  # Иконка меню
+        self.menu_btn.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
+
+        # Создаем меню
+        menu = QMenu()
+
+        # Добавляем пункты меню
+        instruction_action = menu.addAction("Инструкция")
+        instruction_action.triggered.connect(self.show_instructions)
+
+        contacts_action = menu.addAction("Контакты")
+        contacts_action.triggered.connect(self.show_contacts)
+
+        self.menu_btn.setMenu(menu)
+        top_panel.addWidget(self.menu_btn)
 
         self.received_list = QListWidget()
         self.ready_list = QListWidget()
@@ -68,13 +91,32 @@ class FileReceiverApp(QWidget):
                 }
             """)
 
-        main_layout.addLayout(control_layout)
+        main_layout.addLayout(top_panel)
         main_layout.addWidget(QLabel('Полученные файлы:'))
         main_layout.addWidget(self.received_list)
         main_layout.addWidget(QLabel('Готовые к выдаче:'))
         main_layout.addWidget(self.ready_list)
 
         self.setLayout(main_layout)
+
+    def show_instructions(self):
+        QMessageBox.information(self, "Инструкция",
+                                "1. Для обновления списка заказов нажмите кнопку 'Обновить список'\n"
+                                "2. Для печати файла нажмите кнопку 'Печать'\n"
+                                "3. После печати измените статус на 'Готово'\n"
+                                "4. Когда клиент заберет заказ, нажмите 'Выдать'")
+
+    def show_contacts(self):
+        QMessageBox.information(self, "Контакты",
+                                "Техническая поддержка:\n"
+                                "Телефон: +7 (920) 021-91-71\n"
+                                "Email: german7352@gmail.com\n"
+                                "Telegram: @shmoshlover\n"
+                                "Рекомендуем обращаться в Telegram")
+
+    @asyncSlot()
+    async def on_refresh_clicked(self):
+        await self.load_orders()
 
     @asyncSlot()
     async def on_refresh_clicked(self):
@@ -157,16 +199,26 @@ class FileReceiverApp(QWidget):
             btn_print = QPushButton("Печать")
             btn_print.clicked.connect(lambda: self.print_file(order))
             btn_ready = QPushButton("Готово")
-            btn_ready.clicked.connect(lambda: self.update_status(order['ID'], 'готов'))
+            # Добавляем подтверждение для кнопки "Готово"
+            btn_ready.clicked.connect(lambda: self.confirm_status_change(
+                order['ID'],
+                'готов',
+                f"Подтвердите изменение статуса заказа №{order['ID']} на 'Готово'"
+            ))
             btn_info = QPushButton("Информация")
-            btn_info.clicked.connect(lambda: self.show_order_info(order))  # Новая кнопка
-            buttons = [btn_info, btn_print, btn_ready]  # Добавляем новую кнопку
+            btn_info.clicked.connect(lambda: self.show_order_info(order))
+            buttons = [btn_info, btn_print, btn_ready]
         else:
             btn_complete = QPushButton("Выдать")
-            btn_complete.clicked.connect(lambda: self.update_status(order['ID'], 'выдан'))
+            # Добавляем подтверждение для кнопки "Выдать"
+            btn_complete.clicked.connect(lambda: self.confirm_status_change(
+                order['ID'],
+                'выдан',
+                f"Подтвердите выдачу заказа №{order['ID']} клиенту"
+            ))
             btn_info = QPushButton("Код")
-            btn_info.clicked.connect(lambda: self.show_con_code(order))  # Новая кнопка
-            buttons = [btn_info, btn_complete]  # Добавляем новую кнопку
+            btn_info.clicked.connect(lambda: self.show_con_code(order))
+            buttons = [btn_info, btn_complete]
 
         button_style = """
             QPushButton { 
@@ -186,6 +238,18 @@ class FileReceiverApp(QWidget):
         layout.addWidget(label)
         widget.setLayout(layout)
         return widget
+
+    def confirm_status_change(self, order_id, new_status, message):
+        reply = QMessageBox.question(
+            self,
+            'Подтверждение',
+            message,
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No
+        )
+
+        if reply == QMessageBox.StandardButton.Yes:
+            self.update_status(order_id, new_status)
 
     def show_order_info(self, order):
         info_message = f"Заказ №{order['ID']}\n" \

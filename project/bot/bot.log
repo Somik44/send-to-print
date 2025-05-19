@@ -1,0 +1,142 @@
+2025-05-19 16:01:41,717 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-05-19 16:01:41,718 - aiogram.dispatcher - INFO - Start polling
+2025-05-19 16:01:41,740 - websockets.server - INFO - server listening on 0.0.0.0:8001
+2025-05-19 16:01:41,904 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-19 16:02:43,205 - aiogram.dispatcher - INFO - Polling stopped
+2025-05-19 16:02:43,206 - websockets.server - INFO - server closing
+2025-05-19 16:02:43,206 - websockets.server - INFO - server closed
+2025-05-19 16:02:43,206 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-19 16:02:49,241 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-05-19 16:02:49,242 - aiogram.dispatcher - INFO - Start polling
+2025-05-19 16:02:49,261 - websockets.server - INFO - server listening on 0.0.0.0:8001
+2025-05-19 16:02:49,420 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-19 16:03:00,214 - websockets.server - DEBUG - = connection is CONNECTING
+2025-05-19 16:03:00,215 - websockets.server - DEBUG - < GET / HTTP/1.1
+2025-05-19 16:03:00,215 - websockets.server - DEBUG - < Host: localhost:8001
+2025-05-19 16:03:00,215 - websockets.server - DEBUG - < Upgrade: websocket
+2025-05-19 16:03:00,215 - websockets.server - DEBUG - < Connection: Upgrade
+2025-05-19 16:03:00,215 - websockets.server - DEBUG - < Sec-WebSocket-Key: PbMfZDoHi8aQG8e2x0shxA==
+2025-05-19 16:03:00,215 - websockets.server - DEBUG - < Sec-WebSocket-Version: 13
+2025-05-19 16:03:00,215 - websockets.server - DEBUG - < Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+2025-05-19 16:03:00,215 - websockets.server - DEBUG - < User-Agent: Python/3.12 websockets/15.0.1
+2025-05-19 16:03:00,216 - websockets.server - DEBUG - > HTTP/1.1 101 Switching Protocols
+2025-05-19 16:03:00,216 - websockets.server - DEBUG - > Date: Mon, 19 May 2025 13:03:00 GMT
+2025-05-19 16:03:00,216 - websockets.server - DEBUG - > Upgrade: websocket
+2025-05-19 16:03:00,216 - websockets.server - DEBUG - > Connection: Upgrade
+2025-05-19 16:03:00,216 - websockets.server - DEBUG - > Sec-WebSocket-Accept: eFnvQe4Tj+kIifhqJCytxuN4D+0=
+2025-05-19 16:03:00,216 - websockets.server - DEBUG - > Sec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=12; client_max_window_bits=12
+2025-05-19 16:03:00,216 - websockets.server - DEBUG - > Server: Python/3.12 websockets/15.0.1
+2025-05-19 16:03:00,216 - websockets.server - DEBUG - = connection is OPEN
+2025-05-19 16:03:00,216 - websockets.server - INFO - connection open
+2025-05-19 16:03:00,218 - websockets.server - DEBUG - < TEXT '{"type": "status_update", "status": "\\u0433\\u... 69, "address": "sdvs"}' [129 bytes]
+2025-05-19 16:03:00,218 - websockets.server - DEBUG - < CLOSE 1000 (OK) [2 bytes]
+2025-05-19 16:03:00,218 - websockets.server - DEBUG - > CLOSE 1000 (OK) [2 bytes]
+2025-05-19 16:03:00,218 - websockets.server - DEBUG - = connection is CLOSING
+2025-05-19 16:03:00,218 - websockets.server - DEBUG - > EOF
+2025-05-19 16:03:00,218 - websockets.server - DEBUG - x half-closing TCP connection
+2025-05-19 16:03:00,219 - websockets.server - DEBUG - < EOF
+2025-05-19 16:03:00,219 - websockets.server - DEBUG - = connection is CLOSED
+2025-05-19 16:03:04,063 - websockets.server - DEBUG - = connection is CONNECTING
+2025-05-19 16:03:04,065 - websockets.server - DEBUG - < GET / HTTP/1.1
+2025-05-19 16:03:04,065 - websockets.server - DEBUG - < Host: localhost:8001
+2025-05-19 16:03:04,065 - websockets.server - DEBUG - < Upgrade: websocket
+2025-05-19 16:03:04,065 - websockets.server - DEBUG - < Connection: Upgrade
+2025-05-19 16:03:04,065 - websockets.server - DEBUG - < Sec-WebSocket-Key: HORc33qcXFEUE8BBqGSckg==
+2025-05-19 16:03:04,065 - websockets.server - DEBUG - < Sec-WebSocket-Version: 13
+2025-05-19 16:03:04,065 - websockets.server - DEBUG - < Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+2025-05-19 16:03:04,066 - websockets.server - DEBUG - < User-Agent: Python/3.12 websockets/15.0.1
+2025-05-19 16:03:04,066 - websockets.server - DEBUG - > HTTP/1.1 101 Switching Protocols
+2025-05-19 16:03:04,066 - websockets.server - DEBUG - > Date: Mon, 19 May 2025 13:03:04 GMT
+2025-05-19 16:03:04,066 - websockets.server - DEBUG - > Upgrade: websocket
+2025-05-19 16:03:04,066 - websockets.server - DEBUG - > Connection: Upgrade
+2025-05-19 16:03:04,066 - websockets.server - DEBUG - > Sec-WebSocket-Accept: 1NkMohcIs0dUNML0TfPFyG4mjCA=
+2025-05-19 16:03:04,066 - websockets.server - DEBUG - > Sec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=12; client_max_window_bits=12
+2025-05-19 16:03:04,066 - websockets.server - DEBUG - > Server: Python/3.12 websockets/15.0.1
+2025-05-19 16:03:04,067 - websockets.server - DEBUG - = connection is OPEN
+2025-05-19 16:03:04,067 - websockets.server - INFO - connection open
+2025-05-19 16:03:04,068 - websockets.server - DEBUG - < TEXT '{"type": "status_update", "status": "\\u0432\\u... 69, "address": "sdvs"}' [129 bytes]
+2025-05-19 16:03:04,069 - websockets.server - DEBUG - < CLOSE 1000 (OK) [2 bytes]
+2025-05-19 16:03:04,069 - websockets.server - DEBUG - > CLOSE 1000 (OK) [2 bytes]
+2025-05-19 16:03:04,069 - websockets.server - DEBUG - = connection is CLOSING
+2025-05-19 16:03:04,070 - websockets.server - DEBUG - > EOF
+2025-05-19 16:03:04,070 - websockets.server - DEBUG - x half-closing TCP connection
+2025-05-19 16:03:04,070 - websockets.server - DEBUG - < EOF
+2025-05-19 16:03:04,071 - websockets.server - DEBUG - = connection is CLOSED
+2025-05-19 16:04:51,293 - aiogram.dispatcher - INFO - Polling stopped
+2025-05-19 16:04:51,294 - websockets.server - INFO - server closing
+2025-05-19 16:04:51,294 - websockets.server - INFO - server closed
+2025-05-19 16:04:51,294 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-19 16:09:05,355 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-05-19 16:09:05,356 - aiogram.dispatcher - INFO - Start polling
+2025-05-19 16:09:05,381 - websockets.server - INFO - server listening on 0.0.0.0:8001
+2025-05-19 16:09:05,555 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-19 16:19:25,467 - aiogram.event - INFO - Update id=161354088 is handled. Duration 468 ms by bot id=7818669005
+2025-05-19 16:19:26,865 - aiogram.event - INFO - Update id=161354089 is handled. Duration 391 ms by bot id=7818669005
+2025-05-19 16:19:29,849 - root - INFO - 10-минутный таймер отменен
+2025-05-19 16:19:30,201 - aiogram.event - INFO - Update id=161354090 is handled. Duration 344 ms by bot id=7818669005
+2025-05-19 16:19:32,073 - aiogram.event - INFO - Update id=161354091 is handled. Duration 406 ms by bot id=7818669005
+2025-05-19 16:19:37,996 - root - INFO - Начинаем загрузку файла: https://api.telegram.org/file/bot7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ/documents/file_446.docx
+2025-05-19 16:19:42,691 - root - INFO - Определено страниц: 3
+2025-05-19 16:19:42,875 - aiogram.event - INFO - Update id=161354092 is handled. Duration 5062 ms by bot id=7818669005
+2025-05-19 16:19:44,394 - aiogram.event - INFO - Update id=161354093 is handled. Duration 78 ms by bot id=7818669005
+2025-05-19 16:19:46,339 - aiogram.event - INFO - Update id=161354094 is handled. Duration 171 ms by bot id=7818669005
+2025-05-19 16:19:47,563 - root - INFO - 10-минутный таймер отменен
+2025-05-19 16:19:47,564 - root - INFO - 1-минутный таймер отменен
+2025-05-19 16:19:47,919 - root - INFO - Удалён временный файл: C:\send_to_ptint\send-to-print\project\api\uploads\temp_b2226e55-936b-4338-96b9-cd782cde8c9a.docx
+2025-05-19 16:19:47,919 - aiogram.event - INFO - Update id=161354095 is handled. Duration 358 ms by bot id=7818669005
+2025-05-19 16:19:59,016 - websockets.server - DEBUG - = connection is CONNECTING
+2025-05-19 16:19:59,018 - websockets.server - DEBUG - < GET / HTTP/1.1
+2025-05-19 16:19:59,019 - websockets.server - DEBUG - < Host: localhost:8001
+2025-05-19 16:19:59,019 - websockets.server - DEBUG - < Upgrade: websocket
+2025-05-19 16:19:59,019 - websockets.server - DEBUG - < Connection: Upgrade
+2025-05-19 16:19:59,019 - websockets.server - DEBUG - < Sec-WebSocket-Key: Hpq6DNLj1+uC1WVmWti7Nw==
+2025-05-19 16:19:59,019 - websockets.server - DEBUG - < Sec-WebSocket-Version: 13
+2025-05-19 16:19:59,019 - websockets.server - DEBUG - < Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+2025-05-19 16:19:59,019 - websockets.server - DEBUG - < User-Agent: Python/3.12 websockets/15.0.1
+2025-05-19 16:19:59,020 - websockets.server - DEBUG - > HTTP/1.1 101 Switching Protocols
+2025-05-19 16:19:59,020 - websockets.server - DEBUG - > Date: Mon, 19 May 2025 13:19:59 GMT
+2025-05-19 16:19:59,020 - websockets.server - DEBUG - > Upgrade: websocket
+2025-05-19 16:19:59,021 - websockets.server - DEBUG - > Connection: Upgrade
+2025-05-19 16:19:59,021 - websockets.server - DEBUG - > Sec-WebSocket-Accept: kVyoyVpiJ93IWWbcRspmmjotSLA=
+2025-05-19 16:19:59,021 - websockets.server - DEBUG - > Sec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=12; client_max_window_bits=12
+2025-05-19 16:19:59,021 - websockets.server - DEBUG - > Server: Python/3.12 websockets/15.0.1
+2025-05-19 16:19:59,021 - websockets.server - DEBUG - = connection is OPEN
+2025-05-19 16:19:59,021 - websockets.server - INFO - connection open
+2025-05-19 16:19:59,023 - websockets.server - DEBUG - < TEXT '{"type": "status_update", "status": "\\u0433\\u... 70, "address": "sdvs"}' [129 bytes]
+2025-05-19 16:19:59,024 - websockets.server - DEBUG - < CLOSE 1000 (OK) [2 bytes]
+2025-05-19 16:19:59,025 - websockets.server - DEBUG - > CLOSE 1000 (OK) [2 bytes]
+2025-05-19 16:19:59,025 - websockets.server - DEBUG - = connection is CLOSING
+2025-05-19 16:19:59,025 - websockets.server - DEBUG - > EOF
+2025-05-19 16:19:59,025 - websockets.server - DEBUG - x half-closing TCP connection
+2025-05-19 16:19:59,026 - websockets.server - DEBUG - < EOF
+2025-05-19 16:19:59,026 - websockets.server - DEBUG - = connection is CLOSED
+2025-05-19 16:20:04,557 - websockets.server - DEBUG - = connection is CONNECTING
+2025-05-19 16:20:04,560 - websockets.server - DEBUG - < GET / HTTP/1.1
+2025-05-19 16:20:04,560 - websockets.server - DEBUG - < Host: localhost:8001
+2025-05-19 16:20:04,561 - websockets.server - DEBUG - < Upgrade: websocket
+2025-05-19 16:20:04,561 - websockets.server - DEBUG - < Connection: Upgrade
+2025-05-19 16:20:04,561 - websockets.server - DEBUG - < Sec-WebSocket-Key: TKVQiY+gMtyDguE/7dpOtw==
+2025-05-19 16:20:04,561 - websockets.server - DEBUG - < Sec-WebSocket-Version: 13
+2025-05-19 16:20:04,561 - websockets.server - DEBUG - < Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+2025-05-19 16:20:04,561 - websockets.server - DEBUG - < User-Agent: Python/3.12 websockets/15.0.1
+2025-05-19 16:20:04,562 - websockets.server - DEBUG - > HTTP/1.1 101 Switching Protocols
+2025-05-19 16:20:04,562 - websockets.server - DEBUG - > Date: Mon, 19 May 2025 13:20:04 GMT
+2025-05-19 16:20:04,563 - websockets.server - DEBUG - > Upgrade: websocket
+2025-05-19 16:20:04,563 - websockets.server - DEBUG - > Connection: Upgrade
+2025-05-19 16:20:04,563 - websockets.server - DEBUG - > Sec-WebSocket-Accept: 0M6xgmF6DH2YV4Z7oDzp/NzHU04=
+2025-05-19 16:20:04,563 - websockets.server - DEBUG - > Sec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=12; client_max_window_bits=12
+2025-05-19 16:20:04,563 - websockets.server - DEBUG - > Server: Python/3.12 websockets/15.0.1
+2025-05-19 16:20:04,563 - websockets.server - DEBUG - = connection is OPEN
+2025-05-19 16:20:04,564 - websockets.server - INFO - connection open
+2025-05-19 16:20:04,566 - websockets.server - DEBUG - < TEXT '{"type": "status_update", "status": "\\u0432\\u... 70, "address": "sdvs"}' [129 bytes]
+2025-05-19 16:20:04,568 - websockets.server - DEBUG - < CLOSE 1000 (OK) [2 bytes]
+2025-05-19 16:20:04,568 - websockets.server - DEBUG - > CLOSE 1000 (OK) [2 bytes]
+2025-05-19 16:20:04,568 - websockets.server - DEBUG - = connection is CLOSING
+2025-05-19 16:20:04,568 - websockets.server - DEBUG - > EOF
+2025-05-19 16:20:04,568 - websockets.server - DEBUG - x half-closing TCP connection
+2025-05-19 16:20:04,569 - websockets.server - DEBUG - < EOF
+2025-05-19 16:20:04,569 - websockets.server - DEBUG - = connection is CLOSED
+2025-05-19 16:21:35,614 - aiogram.dispatcher - INFO - Polling stopped
+2025-05-19 16:21:35,614 - websockets.server - INFO - server closing
+2025-05-19 16:21:35,615 - websockets.server - INFO - server closed
+2025-05-19 16:21:35,615 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'

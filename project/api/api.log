@@ -1,0 +1,299 @@
+2025-05-19 16:01:37,958 - DEBUG - Using proactor: IocpProactor
+2025-05-19 16:02:14,257 - DEBUG - caching sha2: Trying full auth...
+2025-05-19 16:02:14,257 - DEBUG - -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAho32nDGmqcw9sbhYSLbB
+42VfcolqOPklO17ZrwwtBxmfQuoFLvorXJbF0KPIF29XWsWMmEdc+WltEmqeF/90
+Z/RvI7Y4nE0UwQty3Ls3qqKXWZrdLzjxN+sumpsimC+Zc+e+FwqvRC7UfyzFxxPi
+dIs4zJkDhyfXst37emBWAX6IJtq/nPv17BEOV0lVkaW91MC2zNM7pDyN6hbw40sI
+KYrrsEZin7c0aZM+bp2b2tL+QGKgIfGLkHvepEWAi5GJLaKIwm5+j0X55k4ANUgp
+pY6vs75NujPLpjdP0xGJNN71KCQ8uxjcsUHUuGZ23uxHrrJvWm1CNvrBUjXeGr+2
+bwIDAQAB
+-----END PUBLIC KEY-----
+
+2025-05-19 16:02:14,296 - ERROR - Error: Traceback (most recent call last):
+  File "C:\send_to_ptint\send-to-print\project\api\api.py", line 299, in get_shop_by_password
+    async with await get_db() as conn:
+               ^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\send-to-print\project\api\api.py", line 41, in get_db
+    return await aiomysql.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiomysql\connection.py", line 75, in _connect
+    await conn._connect()
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiomysql\connection.py", line 540, in _connect
+    await self._request_authentication()
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiomysql\connection.py", line 865, in _request_authentication
+    await self.caching_sha2_password_auth(auth_packet)
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiomysql\connection.py", line 989, in caching_sha2_password_auth
+    pkt = await self._read_packet()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiomysql\connection.py", line 652, in _read_packet
+    packet.raise_for_error()
+  File "C:\send_to_ptint\.venv\Lib\site-packages\pymysql\protocol.py", line 219, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "C:\send_to_ptint\.venv\Lib\site-packages\pymysql\err.py", line 150, in raise_mysql_exception
+    raise errorclass(errno, errval)
+pymysql.err.OperationalError: (1045, "Access denied for user 'root'@'localhost' (using password: YES)")
+
+2025-05-19 16:02:22,698 - DEBUG - caching sha2: Trying full auth...
+2025-05-19 16:02:22,698 - DEBUG - -----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAho32nDGmqcw9sbhYSLbB
+42VfcolqOPklO17ZrwwtBxmfQuoFLvorXJbF0KPIF29XWsWMmEdc+WltEmqeF/90
+Z/RvI7Y4nE0UwQty3Ls3qqKXWZrdLzjxN+sumpsimC+Zc+e+FwqvRC7UfyzFxxPi
+dIs4zJkDhyfXst37emBWAX6IJtq/nPv17BEOV0lVkaW91MC2zNM7pDyN6hbw40sI
+KYrrsEZin7c0aZM+bp2b2tL+QGKgIfGLkHvepEWAi5GJLaKIwm5+j0X55k4ANUgp
+pY6vs75NujPLpjdP0xGJNN71KCQ8uxjcsUHUuGZ23uxHrrJvWm1CNvrBUjXeGr+2
+bwIDAQAB
+-----END PUBLIC KEY-----
+
+2025-05-19 16:02:22,708 - ERROR - Error: Traceback (most recent call last):
+  File "C:\send_to_ptint\send-to-print\project\api\api.py", line 299, in get_shop_by_password
+    async with await get_db() as conn:
+               ^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\send-to-print\project\api\api.py", line 41, in get_db
+    return await aiomysql.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiomysql\connection.py", line 75, in _connect
+    await conn._connect()
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiomysql\connection.py", line 540, in _connect
+    await self._request_authentication()
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiomysql\connection.py", line 865, in _request_authentication
+    await self.caching_sha2_password_auth(auth_packet)
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiomysql\connection.py", line 989, in caching_sha2_password_auth
+    pkt = await self._read_packet()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\send_to_ptint\.venv\Lib\site-packages\aiomysql\connection.py", line 652, in _read_packet
+    packet.raise_for_error()
+  File "C:\send_to_ptint\.venv\Lib\site-packages\pymysql\protocol.py", line 219, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "C:\send_to_ptint\.venv\Lib\site-packages\pymysql\err.py", line 150, in raise_mysql_exception
+    raise errorclass(errno, errval)
+pymysql.err.OperationalError: (1045, "Access denied for user 'root'@'localhost' (using password: YES)")
+
+2025-05-19 16:02:45,860 - DEBUG - Using proactor: IocpProactor
+2025-05-19 16:02:54,205 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 16:02:54,635 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 16:02:58,147 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 16:02:58,160 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 16:03:00,214 - DEBUG - = connection is CONNECTING
+2025-05-19 16:03:00,214 - DEBUG - > GET / HTTP/1.1
+2025-05-19 16:03:00,215 - DEBUG - > Host: localhost:8001
+2025-05-19 16:03:00,215 - DEBUG - > Upgrade: websocket
+2025-05-19 16:03:00,215 - DEBUG - > Connection: Upgrade
+2025-05-19 16:03:00,215 - DEBUG - > Sec-WebSocket-Key: PbMfZDoHi8aQG8e2x0shxA==
+2025-05-19 16:03:00,215 - DEBUG - > Sec-WebSocket-Version: 13
+2025-05-19 16:03:00,215 - DEBUG - > Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+2025-05-19 16:03:00,215 - DEBUG - > User-Agent: Python/3.12 websockets/15.0.1
+2025-05-19 16:03:00,216 - DEBUG - < HTTP/1.1 101 Switching Protocols
+2025-05-19 16:03:00,216 - DEBUG - < Date: Mon, 19 May 2025 13:03:00 GMT
+2025-05-19 16:03:00,216 - DEBUG - < Upgrade: websocket
+2025-05-19 16:03:00,216 - DEBUG - < Connection: Upgrade
+2025-05-19 16:03:00,216 - DEBUG - < Sec-WebSocket-Accept: eFnvQe4Tj+kIifhqJCytxuN4D+0=
+2025-05-19 16:03:00,216 - DEBUG - < Sec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=12; client_max_window_bits=12
+2025-05-19 16:03:00,216 - DEBUG - < Server: Python/3.12 websockets/15.0.1
+2025-05-19 16:03:00,216 - DEBUG - = connection is OPEN
+2025-05-19 16:03:00,217 - DEBUG - > TEXT '{"type": "status_update", "status": "\\u0433\\u... 69, "address": "sdvs"}' [129 bytes]
+2025-05-19 16:03:00,217 - DEBUG - > CLOSE 1000 (OK) [2 bytes]
+2025-05-19 16:03:00,217 - DEBUG - = connection is CLOSING
+2025-05-19 16:03:00,219 - DEBUG - < CLOSE 1000 (OK) [2 bytes]
+2025-05-19 16:03:00,219 - DEBUG - < EOF
+2025-05-19 16:03:00,219 - DEBUG - > EOF
+2025-05-19 16:03:00,219 - DEBUG - = connection is CLOSED
+2025-05-19 16:03:00,219 - DEBUG - x half-closing TCP connection
+2025-05-19 16:03:00,482 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 16:03:02,035 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 16:03:02,036 - INFO - Файл заказа 69 удален: C:\send_to_ptint\send-to-print\project\api\uploads\order_69.docx
+2025-05-19 16:03:02,039 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 16:03:04,063 - DEBUG - = connection is CONNECTING
+2025-05-19 16:03:04,064 - DEBUG - > GET / HTTP/1.1
+2025-05-19 16:03:04,064 - DEBUG - > Host: localhost:8001
+2025-05-19 16:03:04,064 - DEBUG - > Upgrade: websocket
+2025-05-19 16:03:04,064 - DEBUG - > Connection: Upgrade
+2025-05-19 16:03:04,064 - DEBUG - > Sec-WebSocket-Key: HORc33qcXFEUE8BBqGSckg==
+2025-05-19 16:03:04,064 - DEBUG - > Sec-WebSocket-Version: 13
+2025-05-19 16:03:04,064 - DEBUG - > Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+2025-05-19 16:03:04,065 - DEBUG - > User-Agent: Python/3.12 websockets/15.0.1
+2025-05-19 16:03:04,067 - DEBUG - < HTTP/1.1 101 Switching Protocols
+2025-05-19 16:03:04,067 - DEBUG - < Date: Mon, 19 May 2025 13:03:04 GMT
+2025-05-19 16:03:04,067 - DEBUG - < Upgrade: websocket
+2025-05-19 16:03:04,067 - DEBUG - < Connection: Upgrade
+2025-05-19 16:03:04,067 - DEBUG - < Sec-WebSocket-Accept: 1NkMohcIs0dUNML0TfPFyG4mjCA=
+2025-05-19 16:03:04,067 - DEBUG - < Sec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=12; client_max_window_bits=12
+2025-05-19 16:03:04,067 - DEBUG - < Server: Python/3.12 websockets/15.0.1
+2025-05-19 16:03:04,068 - DEBUG - = connection is OPEN
+2025-05-19 16:03:04,068 - DEBUG - > TEXT '{"type": "status_update", "status": "\\u0432\\u... 69, "address": "sdvs"}' [129 bytes]
+2025-05-19 16:03:04,068 - DEBUG - > CLOSE 1000 (OK) [2 bytes]
+2025-05-19 16:03:04,068 - DEBUG - = connection is CLOSING
+2025-05-19 16:03:04,070 - DEBUG - < CLOSE 1000 (OK) [2 bytes]
+2025-05-19 16:03:04,070 - DEBUG - < EOF
+2025-05-19 16:03:04,070 - DEBUG - > EOF
+2025-05-19 16:03:04,070 - DEBUG - = connection is CLOSED
+2025-05-19 16:03:04,070 - DEBUG - x half-closing TCP connection
+2025-05-19 16:03:04,329 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 16:03:54,500 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 16:09:02,432 - DEBUG - Using proactor: IocpProactor
+2025-05-19 16:09:09,791 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 16:09:10,198 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 16:09:26,731 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 16:09:27,135 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 16:11:09,241 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 16:11:09,809 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 16:14:09,070 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 16:14:09,659 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 16:18:42,635 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 16:18:43,054 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 16:19:25,260 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 16:19:26,740 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 16:19:30,115 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 16:19:31,941 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 16:19:42,903 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 16:19:47,819 - DEBUG - Calling on_part_begin with no data
+2025-05-19 16:19:47,820 - DEBUG - Calling on_header_field with data[36:48]
+2025-05-19 16:19:47,820 - DEBUG - Calling on_header_value with data[50:75]
+2025-05-19 16:19:47,820 - DEBUG - Calling on_header_end with no data
+2025-05-19 16:19:47,820 - DEBUG - Calling on_header_field with data[77:96]
+2025-05-19 16:19:47,820 - DEBUG - Calling on_header_value with data[98:123]
+2025-05-19 16:19:47,821 - DEBUG - Calling on_header_end with no data
+2025-05-19 16:19:47,821 - DEBUG - Calling on_headers_finished with no data
+2025-05-19 16:19:47,821 - DEBUG - Calling on_part_data with data[127:128]
+2025-05-19 16:19:47,821 - DEBUG - Calling on_part_end with no data
+2025-05-19 16:19:47,821 - DEBUG - Calling on_part_begin with no data
+2025-05-19 16:19:47,821 - DEBUG - Calling on_header_field with data[166:178]
+2025-05-19 16:19:47,822 - DEBUG - Calling on_header_value with data[180:205]
+2025-05-19 16:19:47,822 - DEBUG - Calling on_header_end with no data
+2025-05-19 16:19:47,822 - DEBUG - Calling on_header_field with data[207:226]
+2025-05-19 16:19:47,822 - DEBUG - Calling on_header_value with data[228:251]
+2025-05-19 16:19:47,822 - DEBUG - Calling on_header_end with no data
+2025-05-19 16:19:47,822 - DEBUG - Calling on_headers_finished with no data
+2025-05-19 16:19:47,822 - DEBUG - Calling on_part_data with data[255:259]
+2025-05-19 16:19:47,822 - DEBUG - Calling on_part_end with no data
+2025-05-19 16:19:47,822 - DEBUG - Calling on_part_begin with no data
+2025-05-19 16:19:47,822 - DEBUG - Calling on_header_field with data[297:309]
+2025-05-19 16:19:47,822 - DEBUG - Calling on_header_value with data[311:336]
+2025-05-19 16:19:47,822 - DEBUG - Calling on_header_end with no data
+2025-05-19 16:19:47,822 - DEBUG - Calling on_header_field with data[338:357]
+2025-05-19 16:19:47,822 - DEBUG - Calling on_header_value with data[359:382]
+2025-05-19 16:19:47,822 - DEBUG - Calling on_header_end with no data
+2025-05-19 16:19:47,822 - DEBUG - Calling on_headers_finished with no data
+2025-05-19 16:19:47,822 - DEBUG - Calling on_part_data with data[386:387]
+2025-05-19 16:19:47,822 - DEBUG - Calling on_part_end with no data
+2025-05-19 16:19:47,822 - DEBUG - Calling on_part_begin with no data
+2025-05-19 16:19:47,822 - DEBUG - Calling on_header_field with data[425:437]
+2025-05-19 16:19:47,822 - DEBUG - Calling on_header_value with data[439:464]
+2025-05-19 16:19:47,822 - DEBUG - Calling on_header_end with no data
+2025-05-19 16:19:47,822 - DEBUG - Calling on_header_field with data[466:485]
+2025-05-19 16:19:47,822 - DEBUG - Calling on_header_value with data[487:510]
+2025-05-19 16:19:47,822 - DEBUG - Calling on_header_end with no data
+2025-05-19 16:19:47,822 - DEBUG - Calling on_headers_finished with no data
+2025-05-19 16:19:47,822 - DEBUG - Calling on_part_data with data[514:535]
+2025-05-19 16:19:47,822 - DEBUG - Calling on_part_end with no data
+2025-05-19 16:19:47,822 - DEBUG - Calling on_part_begin with no data
+2025-05-19 16:19:47,822 - DEBUG - Calling on_header_field with data[573:585]
+2025-05-19 16:19:47,823 - DEBUG - Calling on_header_value with data[587:612]
+2025-05-19 16:19:47,823 - DEBUG - Calling on_header_end with no data
+2025-05-19 16:19:47,823 - DEBUG - Calling on_header_field with data[614:633]
+2025-05-19 16:19:47,823 - DEBUG - Calling on_header_value with data[635:660]
+2025-05-19 16:19:47,823 - DEBUG - Calling on_header_end with no data
+2025-05-19 16:19:47,823 - DEBUG - Calling on_headers_finished with no data
+2025-05-19 16:19:47,823 - DEBUG - Calling on_part_data with data[664:674]
+2025-05-19 16:19:47,823 - DEBUG - Calling on_part_end with no data
+2025-05-19 16:19:47,823 - DEBUG - Calling on_part_begin with no data
+2025-05-19 16:19:47,823 - DEBUG - Calling on_header_field with data[712:724]
+2025-05-19 16:19:47,823 - DEBUG - Calling on_header_value with data[726:751]
+2025-05-19 16:19:47,823 - DEBUG - Calling on_header_end with no data
+2025-05-19 16:19:47,823 - DEBUG - Calling on_header_field with data[753:772]
+2025-05-19 16:19:47,823 - DEBUG - Calling on_header_value with data[774:796]
+2025-05-19 16:19:47,823 - DEBUG - Calling on_header_end with no data
+2025-05-19 16:19:47,823 - DEBUG - Calling on_headers_finished with no data
+2025-05-19 16:19:47,823 - DEBUG - Calling on_part_end with no data
+2025-05-19 16:19:47,823 - DEBUG - Calling on_part_begin with no data
+2025-05-19 16:19:47,823 - DEBUG - Calling on_header_field with data[838:850]
+2025-05-19 16:19:47,823 - DEBUG - Calling on_header_value with data[852:877]
+2025-05-19 16:19:47,823 - DEBUG - Calling on_header_end with no data
+2025-05-19 16:19:47,823 - DEBUG - Calling on_header_field with data[879:898]
+2025-05-19 16:19:47,823 - DEBUG - Calling on_header_value with data[900:932]
+2025-05-19 16:19:47,823 - DEBUG - Calling on_header_end with no data
+2025-05-19 16:19:47,823 - DEBUG - Calling on_headers_finished with no data
+2025-05-19 16:19:47,823 - DEBUG - Calling on_part_data with data[936:940]
+2025-05-19 16:19:47,823 - DEBUG - Calling on_part_end with no data
+2025-05-19 16:19:47,823 - DEBUG - Calling on_part_begin with no data
+2025-05-19 16:19:47,823 - DEBUG - Calling on_header_field with data[978:990]
+2025-05-19 16:19:47,823 - DEBUG - Calling on_header_value with data[992:1017]
+2025-05-19 16:19:47,823 - DEBUG - Calling on_header_end with no data
+2025-05-19 16:19:47,823 - DEBUG - Calling on_header_field with data[1019:1038]
+2025-05-19 16:19:47,823 - DEBUG - Calling on_header_value with data[1040:1066]
+2025-05-19 16:19:47,823 - DEBUG - Calling on_header_end with no data
+2025-05-19 16:19:47,823 - DEBUG - Calling on_headers_finished with no data
+2025-05-19 16:19:47,824 - DEBUG - Calling on_part_data with data[1070:1076]
+2025-05-19 16:19:47,824 - DEBUG - Calling on_part_end with no data
+2025-05-19 16:19:47,824 - DEBUG - Calling on_part_begin with no data
+2025-05-19 16:19:47,824 - DEBUG - Calling on_header_field with data[1114:1126]
+2025-05-19 16:19:47,824 - DEBUG - Calling on_header_value with data[1128:1152]
+2025-05-19 16:19:47,824 - DEBUG - Calling on_header_end with no data
+2025-05-19 16:19:47,824 - DEBUG - Calling on_header_field with data[1154:1173]
+2025-05-19 16:19:47,824 - DEBUG - Calling on_header_value with data[1175:1299]
+2025-05-19 16:19:47,824 - DEBUG - Calling on_header_end with no data
+2025-05-19 16:19:47,824 - DEBUG - Calling on_headers_finished with no data
+2025-05-19 16:19:47,824 - DEBUG - Calling on_part_data with data[1303:21825]
+2025-05-19 16:19:47,824 - DEBUG - Calling on_part_end with no data
+2025-05-19 16:19:47,824 - DEBUG - Calling on_end with no data
+2025-05-19 16:19:47,825 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 16:19:51,616 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 16:19:56,968 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 16:19:56,973 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 16:19:59,016 - DEBUG - = connection is CONNECTING
+2025-05-19 16:19:59,017 - DEBUG - > GET / HTTP/1.1
+2025-05-19 16:19:59,017 - DEBUG - > Host: localhost:8001
+2025-05-19 16:19:59,017 - DEBUG - > Upgrade: websocket
+2025-05-19 16:19:59,017 - DEBUG - > Connection: Upgrade
+2025-05-19 16:19:59,017 - DEBUG - > Sec-WebSocket-Key: Hpq6DNLj1+uC1WVmWti7Nw==
+2025-05-19 16:19:59,017 - DEBUG - > Sec-WebSocket-Version: 13
+2025-05-19 16:19:59,017 - DEBUG - > Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+2025-05-19 16:19:59,018 - DEBUG - > User-Agent: Python/3.12 websockets/15.0.1
+2025-05-19 16:19:59,022 - DEBUG - < HTTP/1.1 101 Switching Protocols
+2025-05-19 16:19:59,022 - DEBUG - < Date: Mon, 19 May 2025 13:19:59 GMT
+2025-05-19 16:19:59,022 - DEBUG - < Upgrade: websocket
+2025-05-19 16:19:59,022 - DEBUG - < Connection: Upgrade
+2025-05-19 16:19:59,022 - DEBUG - < Sec-WebSocket-Accept: kVyoyVpiJ93IWWbcRspmmjotSLA=
+2025-05-19 16:19:59,023 - DEBUG - < Sec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=12; client_max_window_bits=12
+2025-05-19 16:19:59,023 - DEBUG - < Server: Python/3.12 websockets/15.0.1
+2025-05-19 16:19:59,023 - DEBUG - = connection is OPEN
+2025-05-19 16:19:59,023 - DEBUG - > TEXT '{"type": "status_update", "status": "\\u0433\\u... 70, "address": "sdvs"}' [129 bytes]
+2025-05-19 16:19:59,023 - DEBUG - > CLOSE 1000 (OK) [2 bytes]
+2025-05-19 16:19:59,023 - DEBUG - = connection is CLOSING
+2025-05-19 16:19:59,025 - DEBUG - < CLOSE 1000 (OK) [2 bytes]
+2025-05-19 16:19:59,025 - DEBUG - < EOF
+2025-05-19 16:19:59,025 - DEBUG - > EOF
+2025-05-19 16:19:59,026 - DEBUG - = connection is CLOSED
+2025-05-19 16:19:59,026 - DEBUG - x half-closing TCP connection
+2025-05-19 16:19:59,286 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 16:20:02,525 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 16:20:02,526 - INFO - Файл заказа 70 удален: C:\send_to_ptint\send-to-print\project\api\uploads\order_70.docx
+2025-05-19 16:20:02,530 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 16:20:04,557 - DEBUG - = connection is CONNECTING
+2025-05-19 16:20:04,558 - DEBUG - > GET / HTTP/1.1
+2025-05-19 16:20:04,558 - DEBUG - > Host: localhost:8001
+2025-05-19 16:20:04,558 - DEBUG - > Upgrade: websocket
+2025-05-19 16:20:04,559 - DEBUG - > Connection: Upgrade
+2025-05-19 16:20:04,559 - DEBUG - > Sec-WebSocket-Key: TKVQiY+gMtyDguE/7dpOtw==
+2025-05-19 16:20:04,559 - DEBUG - > Sec-WebSocket-Version: 13
+2025-05-19 16:20:04,559 - DEBUG - > Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+2025-05-19 16:20:04,559 - DEBUG - > User-Agent: Python/3.12 websockets/15.0.1
+2025-05-19 16:20:04,564 - DEBUG - < HTTP/1.1 101 Switching Protocols
+2025-05-19 16:20:04,565 - DEBUG - < Date: Mon, 19 May 2025 13:20:04 GMT
+2025-05-19 16:20:04,565 - DEBUG - < Upgrade: websocket
+2025-05-19 16:20:04,565 - DEBUG - < Connection: Upgrade
+2025-05-19 16:20:04,565 - DEBUG - < Sec-WebSocket-Accept: 0M6xgmF6DH2YV4Z7oDzp/NzHU04=
+2025-05-19 16:20:04,565 - DEBUG - < Sec-WebSocket-Extensions: permessage-deflate; server_max_window_bits=12; client_max_window_bits=12
+2025-05-19 16:20:04,565 - DEBUG - < Server: Python/3.12 websockets/15.0.1
+2025-05-19 16:20:04,565 - DEBUG - = connection is OPEN
+2025-05-19 16:20:04,566 - DEBUG - > TEXT '{"type": "status_update", "status": "\\u0432\\u... 70, "address": "sdvs"}' [129 bytes]
+2025-05-19 16:20:04,566 - DEBUG - > CLOSE 1000 (OK) [2 bytes]
+2025-05-19 16:20:04,566 - DEBUG - = connection is CLOSING
+2025-05-19 16:20:04,568 - DEBUG - < CLOSE 1000 (OK) [2 bytes]
+2025-05-19 16:20:04,569 - DEBUG - < EOF
+2025-05-19 16:20:04,569 - DEBUG - > EOF
+2025-05-19 16:20:04,569 - DEBUG - = connection is CLOSED
+2025-05-19 16:20:04,569 - DEBUG - x half-closing TCP connection
+2025-05-19 16:20:04,820 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 16:21:16,277 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 16:21:16,680 - DEBUG - caching sha2: succeeded by fast path.
