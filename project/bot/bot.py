@@ -27,7 +27,7 @@ logging.basicConfig(
 
 API_TOKEN = '7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ'
 API_URL = 'http://localhost:5000'
-UPLOAD_FOLDER = 'C:\\send_to_ptint\\send-to-print\\project\\api\\uploads'
+UPLOAD_FOLDER = 'D:\\projects_py\\projectsWithGit\\send-to-print\\project\\api\\uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 
@@ -89,7 +89,7 @@ async def start_order_timer(chat_id: int, state: FSMContext):
         if chat_id in timers:
             user_data = await state.get_data()
             await cleanup_order_data(user_data)
-            await bot.send_message(chat_id, "❌ Время оформления заказа истекло, ваш заказ отменен")
+            await bot.send_message(chat_id, "❌ Время оформления заказа истекло, ваш заказ отменен", reply_markup=types.ReplyKeyboardRemove())
             await state.clear()
             del timers[chat_id]
     except asyncio.CancelledError:
@@ -102,7 +102,7 @@ async def confirmation_timeout(chat_id: int, state: FSMContext):
         if chat_id in confirmation_timers:
             user_data = await state.get_data()
             await cleanup_order_data(user_data)
-            await bot.send_message(chat_id, "❌ Время подтверждения истекло, ваш заказ отменен")
+            await bot.send_message(chat_id, "❌ Время подтверждения истекло, ваш заказ отменен", reply_markup=types.ReplyKeyboardRemove())
             await state.clear()
             del confirmation_timers[chat_id]
     except asyncio.CancelledError:
@@ -111,6 +111,8 @@ async def confirmation_timeout(chat_id: int, state: FSMContext):
 
 async def get_page_count(file_path: str, ext: str) -> int:
     try:
+        if ext in ('.png', '.jpg', '.jpeg'):
+            return 1
         if ext == '.pdf':
             async with aiofiles.open(file_path, 'rb') as f:
                 content = await f.read()
@@ -210,7 +212,7 @@ async def process_shop(message: types.Message, state: FSMContext):
         f"💰 Цены:\n"
         f"• Черно-белая: {shop['price_bw']:.2f} руб/стр\n"
         f"• Цветная: {shop['price_cl']:.2f} руб/стр\n\n"
-        f"📎 Отправьте PDF, DOC или DOCX файл размером не более 20 МБ для расчета стоимости\n"
+        f"📎 Отправьте PDF, DOC, DOCX файл или PNG, JPEG, JPG картинку размером не более 20 МБ для расчета стоимости\n"
         f"Используйте /reset для отмены заказа."
     )
     await message.answer(response, reply_markup=types.ReplyKeyboardRemove())
@@ -247,8 +249,8 @@ async def process_file(message: types.Message, state: FSMContext):
         filename = message.document.file_name or "unnamed_file"
         file_ext = os.path.splitext(filename)[1].lower()
 
-        if file_ext not in ('.pdf', '.doc', '.docx'):
-            raise ValueError("Поддерживаются только PDF, DOC и DOCX файлы")
+        if file_ext not in ('.pdf', '.doc', '.docx', '.png', '.jpg', '.jpeg'):
+            raise ValueError("Поддерживаются только следующие форматы: PDF, DOC, DOCX, PNG, JPEG, JPG")
 
         # 5. Сохраняем временный файл
         temp_name = f"temp_{uuid.uuid4()}{file_ext}"
@@ -297,6 +299,14 @@ async def process_file(message: types.Message, state: FSMContext):
         await state.set_state(Form.color_selection)
 
     except ValueError as ve:
+        if message.chat.id in timers:
+            timers[message.chat.id].cancel()
+            del timers[message.chat.id]
+        if message.chat.id in confirmation_timers:
+            confirmation_timers[message.chat.id].cancel()
+            del confirmation_timers[message.chat.id]
+        await state.clear()
+
         error_msg = f"❌ Ошибка: {str(ve)}"
         await message.answer(error_msg)
         logging.warning(error_msg)
@@ -363,13 +373,24 @@ async def process_comment(message: types.Message, state: FSMContext):
     await state.update_data(comment=comment)
     user_data = await state.get_data()
 
+    # Определяем расширение файла
+    file_ext = user_data.get('file_extension', '').lower()
+
+    # Формируем строку стоимости
+    cost_line = (
+        "• Стоимость: уточняйте на точке"
+        if file_ext in ('png', 'jpg', 'jpeg')
+        else f"• Стоимость: {user_data['price']:.2f} руб"
+    )
+
     response = (
         f"🔍 Подтвердите заказ:\n"
         f"• Точка: {user_data['shop']['name']} по адресу {user_data['shop']['address']}\n"
         f"• Страниц: {user_data['pages']}\n"
         f"• Тип: {user_data['color']}\n"
-        f"• Стоимость: {user_data['price']:.2f} руб\n"
-        f"• Комментарий: {comment if comment else 'нет'}"
+        f"{cost_line}\n"  
+        f"• Комментарий: {comment if comment else 'нет'}\n"
+#        f"Внимание! Это примерные расценки, не являющиеся публичной афертой. Итоговую стоимость уточняйте на точке печати"
     )
 
     markup = ReplyKeyboardMarkup(

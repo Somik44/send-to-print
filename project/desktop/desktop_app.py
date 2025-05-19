@@ -7,6 +7,8 @@ import asyncio
 import json
 import requests
 import traceback
+import qasync
+from qasync import asyncSlot, QEventLoop
 from PyQt6.QtCore import Qt, QTimer, QThread, pyqtSignal
 from PyQt6.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QListWidget, QPushButton,
@@ -15,8 +17,7 @@ from PyQt6.QtWidgets import (
     QSpacerItem, QSizePolicy, QMenu, QToolButton
 )
 from PyQt6.QtGui import QIcon
-import qasync
-from qasync import asyncSlot, QEventLoop
+
 
 API_URL = "http://localhost:5000"
 DOWNLOAD_DIR = os.path.abspath('downloads')
@@ -28,12 +29,14 @@ logging.basicConfig(
     filename='desktop_app.log'
 )
 
+
 def resource_path(relative_path):
     try:
         base_path = sys._MEIPASS  # Временная папка PyInstaller
     except AttributeError:
         base_path = os.path.abspath(".")
     return os.path.join(base_path, relative_path)
+
 
 class FileReceiverApp(QWidget):
     def __init__(self, shop_id):
@@ -107,10 +110,12 @@ class FileReceiverApp(QWidget):
 
     def show_instructions(self):
         QMessageBox.information(self, "Инструкция",
-                                "1. Для обновления списка заказов нажмите кнопку 'Обновить список'\n"
-                                "2. Для печати файла нажмите кнопку 'Печать'\n"
-                                "3. После печати измените статус на 'Готово'\n"
-                                "4. Когда клиент заберет заказ, нажмите 'Выдать'")
+                                "1. Для обновления списка заказов нажмите кнопку 'Обновить список'\n(По умолчанию список обновляется каждые 3 минуты)\n"
+                                "2. Перед печатью посмотрите информацию о заказе(тип печати, комментарий). Для просмотра нажмите кнопку 'Информация'\n"
+                                "3. Для печати файла нажмите кнопку 'Печать'\n"
+                                "4. После успешной печати измените статус на 'Готово'\n"
+                                "5. Перед тем, как отдавать распечатку сверьте код выдачи по кнопке 'Код выдачи'\n"
+                                "6. После успешной проверки отдайте распечатку клиенту и нажмите 'Выдать'")
 
     def show_contacts(self):
         QMessageBox.information(self, "Контакты",
@@ -131,7 +136,7 @@ class FileReceiverApp(QWidget):
     def setup_timers(self):
         self.timer = QTimer()
         self.timer.timeout.connect(self.on_timer_timeout)
-        self.timer.start(60000)
+        self.timer.start(180000)
         self.on_timer_timeout()
 
     @asyncSlot()
@@ -222,7 +227,7 @@ class FileReceiverApp(QWidget):
                 'выдан',
                 f"Подтвердите выдачу заказа №{order['ID']} клиенту"
             ))
-            btn_info = QPushButton("Код")
+            btn_info = QPushButton("Код выдачи")
             btn_info.clicked.connect(lambda: self.show_con_code(order))
             buttons = [btn_info, btn_complete]
 
