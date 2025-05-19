@@ -140,3 +140,22 @@
 2025-05-19 16:21:35,614 - websockets.server - INFO - server closing
 2025-05-19 16:21:35,615 - websockets.server - INFO - server closed
 2025-05-19 16:21:35,615 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-19 18:56:05,220 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-05-19 18:56:05,220 - aiogram.dispatcher - INFO - Start polling
+2025-05-19 18:56:05,237 - websockets.server - INFO - server listening on 0.0.0.0:8001
+2025-05-19 18:56:05,416 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-05-19 18:56:28,006 - aiogram.event - INFO - Update id=161354096 is handled. Duration 516 ms by bot id=7818669005
+2025-05-19 18:56:29,301 - aiogram.event - INFO - Update id=161354097 is handled. Duration 375 ms by bot id=7818669005
+2025-05-19 18:56:40,823 - root - INFO - Начинаем загрузку файла: https://api.telegram.org/file/bot7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ/documents/file_446.docx
+2025-05-19 18:56:45,922 - root - INFO - Определено страниц: 3
+2025-05-19 18:56:46,070 - aiogram.event - INFO - Update id=161354098 is handled. Duration 5467 ms by bot id=7818669005
+2025-05-19 18:56:47,523 - aiogram.event - INFO - Update id=161354099 is handled. Duration 141 ms by bot id=7818669005
+2025-05-19 18:56:49,409 - aiogram.event - INFO - Update id=161354100 is handled. Duration 78 ms by bot id=7818669005
+2025-05-19 18:56:50,627 - root - INFO - 10-минутный таймер отменен
+2025-05-19 18:56:50,627 - root - INFO - 1-минутный таймер отменен
+2025-05-19 18:56:50,966 - root - INFO - Удалён временный файл: C:\send_to_ptint\send-to-print\project\api\uploads\temp_fa3bd5fb-98a0-400b-991b-e8afddd84890.docx
+2025-05-19 18:56:50,967 - aiogram.event - INFO - Update id=161354101 is handled. Duration 360 ms by bot id=7818669005
+2025-05-19 19:01:25,880 - aiogram.dispatcher - INFO - Polling stopped
+2025-05-19 19:01:25,880 - websockets.server - INFO - server closing
+2025-05-19 19:01:25,880 - websockets.server - INFO - server closed
+2025-05-19 19:01:25,880 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'

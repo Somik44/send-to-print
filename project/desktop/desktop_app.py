@@ -28,6 +28,12 @@ logging.basicConfig(
     filename='desktop_app.log'
 )
 
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS  # Временная папка PyInstaller
+    except AttributeError:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
 
 class FileReceiverApp(QWidget):
     def __init__(self, shop_id):
@@ -39,7 +45,7 @@ class FileReceiverApp(QWidget):
         self.setup_timers()
 
     def init_ui(self):
-        self.setWindowIcon(QIcon("logo.png"))
+        self.setWindowIcon(QIcon(resource_path('logo.png')))
         self.setWindowTitle('Send to print and pick up!')
         self.setMinimumSize(800, 600)
 
@@ -334,7 +340,7 @@ class LoginDialog(QDialog):
 
     def setup_ui(self):
         self.setWindowTitle('Авторизация')
-        self.setWindowIcon(QIcon("logo.png"))
+        self.setWindowIcon(QIcon(resource_path('logo.png')))
         self.setFixedSize(320, 160)
 
         layout = QFormLayout(self)

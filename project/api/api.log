@@ -297,3 +297,100 @@ pymysql.err.OperationalError: (1045, "Access denied for user 'root'@'localhost' 
 2025-05-19 16:20:04,820 - DEBUG - caching sha2: succeeded by fast path.
 2025-05-19 16:21:16,277 - DEBUG - caching sha2: succeeded by fast path.
 2025-05-19 16:21:16,680 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 18:56:02,207 - DEBUG - Using proactor: IocpProactor
+2025-05-19 18:56:14,735 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 18:56:15,335 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 18:56:27,760 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 18:56:29,195 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 18:56:50,882 - DEBUG - Calling on_part_begin with no data
+2025-05-19 18:56:50,883 - DEBUG - Calling on_header_field with data[36:48]
+2025-05-19 18:56:50,883 - DEBUG - Calling on_header_value with data[50:75]
+2025-05-19 18:56:50,883 - DEBUG - Calling on_header_end with no data
+2025-05-19 18:56:50,883 - DEBUG - Calling on_header_field with data[77:96]
+2025-05-19 18:56:50,883 - DEBUG - Calling on_header_value with data[98:123]
+2025-05-19 18:56:50,883 - DEBUG - Calling on_header_end with no data
+2025-05-19 18:56:50,883 - DEBUG - Calling on_headers_finished with no data
+2025-05-19 18:56:50,883 - DEBUG - Calling on_part_data with data[127:128]
+2025-05-19 18:56:50,884 - DEBUG - Calling on_part_end with no data
+2025-05-19 18:56:50,884 - DEBUG - Calling on_part_begin with no data
+2025-05-19 18:56:50,884 - DEBUG - Calling on_header_field with data[166:178]
+2025-05-19 18:56:50,884 - DEBUG - Calling on_header_value with data[180:205]
+2025-05-19 18:56:50,884 - DEBUG - Calling on_header_end with no data
+2025-05-19 18:56:50,884 - DEBUG - Calling on_header_field with data[207:226]
+2025-05-19 18:56:50,884 - DEBUG - Calling on_header_value with data[228:251]
+2025-05-19 18:56:50,884 - DEBUG - Calling on_header_end with no data
+2025-05-19 18:56:50,884 - DEBUG - Calling on_headers_finished with no data
+2025-05-19 18:56:50,884 - DEBUG - Calling on_part_data with data[255:259]
+2025-05-19 18:56:50,884 - DEBUG - Calling on_part_end with no data
+2025-05-19 18:56:50,884 - DEBUG - Calling on_part_begin with no data
+2025-05-19 18:56:50,884 - DEBUG - Calling on_header_field with data[297:309]
+2025-05-19 18:56:50,884 - DEBUG - Calling on_header_value with data[311:336]
+2025-05-19 18:56:50,884 - DEBUG - Calling on_header_end with no data
+2025-05-19 18:56:50,884 - DEBUG - Calling on_header_field with data[338:357]
+2025-05-19 18:56:50,884 - DEBUG - Calling on_header_value with data[359:382]
+2025-05-19 18:56:50,884 - DEBUG - Calling on_header_end with no data
+2025-05-19 18:56:50,884 - DEBUG - Calling on_headers_finished with no data
+2025-05-19 18:56:50,884 - DEBUG - Calling on_part_data with data[386:387]
+2025-05-19 18:56:50,884 - DEBUG - Calling on_part_end with no data
+2025-05-19 18:56:50,884 - DEBUG - Calling on_part_begin with no data
+2025-05-19 18:56:50,884 - DEBUG - Calling on_header_field with data[425:437]
+2025-05-19 18:56:50,884 - DEBUG - Calling on_header_value with data[439:464]
+2025-05-19 18:56:50,884 - DEBUG - Calling on_header_end with no data
+2025-05-19 18:56:50,884 - DEBUG - Calling on_header_field with data[466:485]
+2025-05-19 18:56:50,884 - DEBUG - Calling on_header_value with data[487:510]
+2025-05-19 18:56:50,884 - DEBUG - Calling on_header_end with no data
+2025-05-19 18:56:50,884 - DEBUG - Calling on_headers_finished with no data
+2025-05-19 18:56:50,884 - DEBUG - Calling on_part_data with data[514:535]
+2025-05-19 18:56:50,884 - DEBUG - Calling on_part_end with no data
+2025-05-19 18:56:50,884 - DEBUG - Calling on_part_begin with no data
+2025-05-19 18:56:50,884 - DEBUG - Calling on_header_field with data[573:585]
+2025-05-19 18:56:50,884 - DEBUG - Calling on_header_value with data[587:612]
+2025-05-19 18:56:50,885 - DEBUG - Calling on_header_end with no data
+2025-05-19 18:56:50,885 - DEBUG - Calling on_header_field with data[614:633]
+2025-05-19 18:56:50,885 - DEBUG - Calling on_header_value with data[635:660]
+2025-05-19 18:56:50,885 - DEBUG - Calling on_header_end with no data
+2025-05-19 18:56:50,885 - DEBUG - Calling on_headers_finished with no data
+2025-05-19 18:56:50,885 - DEBUG - Calling on_part_data with data[664:674]
+2025-05-19 18:56:50,885 - DEBUG - Calling on_part_end with no data
+2025-05-19 18:56:50,885 - DEBUG - Calling on_part_begin with no data
+2025-05-19 18:56:50,885 - DEBUG - Calling on_header_field with data[712:724]
+2025-05-19 18:56:50,885 - DEBUG - Calling on_header_value with data[726:751]
+2025-05-19 18:56:50,885 - DEBUG - Calling on_header_end with no data
+2025-05-19 18:56:50,885 - DEBUG - Calling on_header_field with data[753:772]
+2025-05-19 18:56:50,885 - DEBUG - Calling on_header_value with data[774:796]
+2025-05-19 18:56:50,885 - DEBUG - Calling on_header_end with no data
+2025-05-19 18:56:50,885 - DEBUG - Calling on_headers_finished with no data
+2025-05-19 18:56:50,885 - DEBUG - Calling on_part_end with no data
+2025-05-19 18:56:50,885 - DEBUG - Calling on_part_begin with no data
+2025-05-19 18:56:50,885 - DEBUG - Calling on_header_field with data[838:850]
+2025-05-19 18:56:50,885 - DEBUG - Calling on_header_value with data[852:877]
+2025-05-19 18:56:50,885 - DEBUG - Calling on_header_end with no data
+2025-05-19 18:56:50,885 - DEBUG - Calling on_header_field with data[879:898]
+2025-05-19 18:56:50,885 - DEBUG - Calling on_header_value with data[900:932]
+2025-05-19 18:56:50,885 - DEBUG - Calling on_header_end with no data
+2025-05-19 18:56:50,885 - DEBUG - Calling on_headers_finished with no data
+2025-05-19 18:56:50,885 - DEBUG - Calling on_part_data with data[936:940]
+2025-05-19 18:56:50,885 - DEBUG - Calling on_part_end with no data
+2025-05-19 18:56:50,885 - DEBUG - Calling on_part_begin with no data
+2025-05-19 18:56:50,885 - DEBUG - Calling on_header_field with data[978:990]
+2025-05-19 18:56:50,885 - DEBUG - Calling on_header_value with data[992:1017]
+2025-05-19 18:56:50,885 - DEBUG - Calling on_header_end with no data
+2025-05-19 18:56:50,885 - DEBUG - Calling on_header_field with data[1019:1038]
+2025-05-19 18:56:50,885 - DEBUG - Calling on_header_value with data[1040:1066]
+2025-05-19 18:56:50,885 - DEBUG - Calling on_header_end with no data
+2025-05-19 18:56:50,886 - DEBUG - Calling on_headers_finished with no data
+2025-05-19 18:56:50,886 - DEBUG - Calling on_part_data with data[1070:1076]
+2025-05-19 18:56:50,886 - DEBUG - Calling on_part_end with no data
+2025-05-19 18:56:50,886 - DEBUG - Calling on_part_begin with no data
+2025-05-19 18:56:50,886 - DEBUG - Calling on_header_field with data[1114:1126]
+2025-05-19 18:56:50,886 - DEBUG - Calling on_header_value with data[1128:1152]
+2025-05-19 18:56:50,886 - DEBUG - Calling on_header_end with no data
+2025-05-19 18:56:50,886 - DEBUG - Calling on_header_field with data[1154:1173]
+2025-05-19 18:56:50,886 - DEBUG - Calling on_header_value with data[1175:1299]
+2025-05-19 18:56:50,886 - DEBUG - Calling on_header_end with no data
+2025-05-19 18:56:50,886 - DEBUG - Calling on_headers_finished with no data
+2025-05-19 18:56:50,886 - DEBUG - Calling on_part_data with data[1303:21825]
+2025-05-19 18:56:50,886 - DEBUG - Calling on_part_end with no data
+2025-05-19 18:56:50,886 - DEBUG - Calling on_end with no data
+2025-05-19 18:56:50,887 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-19 18:56:54,618 - DEBUG - caching sha2: succeeded by fast path.
