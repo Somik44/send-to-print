@@ -288,12 +288,14 @@ class FileReceiverApp(QWidget):
     def show_order_info(self, order):
         info_message = f"Заказ №{order['ID']}\n" \
                        f"Тип печати: {order['color']}\n" \
-                       f"Комментарий: {order.get('note', 'Нет информации')}"
+                       f"Комментарий: {order.get('note', 'Нет информации')}\n" \
+                       f"Стоимость печати: {order['price']} руб."
         QMessageBox.information(self, "Информация о заказе", info_message)
 
     def show_con_code(self, order):
         info_message = f"Заказ №{order['ID']}\n" \
-                       f"Код подтверждения: {order['con_code']}\n"
+                       f"Код подтверждения: {order['con_code']}\n" \
+                       f"Стоимость печати: {order['price']} руб."
         QMessageBox.information(self, "Проверочный код", info_message)
 
     async def download_file(self, filename):
