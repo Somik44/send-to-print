@@ -18,7 +18,7 @@ from PyQt6.QtGui import QIcon
 import qasync
 from qasync import asyncSlot, QEventLoop
 
-API_URL = "https://wanly-leading-velvetbreast.cloudpub.ru"
+API_URL = "https://heatedly-effectual-bison.cloudpub.ru"
 DOWNLOAD_DIR = os.path.abspath('downloads')
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
