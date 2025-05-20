@@ -30,7 +30,7 @@ class OrderUpdate(BaseModel):
 
 
 app = FastAPI()
-WS_URL = 'ws://tcp.cloudpub.ru:32299/bot'
+WS_URL = 'ws://tcp.cloudpub.ru:23757/bot'
 UPLOAD_FOLDER = os.path.abspath('uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.mount("/uploads", StaticFiles(directory=UPLOAD_FOLDER), name="uploads")
@@ -72,7 +72,7 @@ async def notify_bot(order_id: int, status: str):
                 data = await cursor.fetchone()
 
         # Исправляем адрес WebSocket на порт 8001
-        async with websockets.connect("ws://tcp.cloudpub.ru:32299") as ws:
+        async with websockets.connect("ws://tcp.cloudpub.ru:23757") as ws:
             await ws.send(json.dumps({
                 "type": "status_update",
                 "status": status,

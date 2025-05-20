@@ -26,7 +26,7 @@ logging.basicConfig(
 )
 
 API_TOKEN = '7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ'
-API_URL = 'https://wanly-leading-velvetbreast.cloudpub.ru'
+API_URL = 'https://heatedly-effectual-bison.cloudpub.ru'
 UPLOAD_FOLDER = 'D:\\projects_py\\projectsWithGit\\send-to-print\\project\\api\\uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 

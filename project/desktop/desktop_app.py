@@ -132,10 +132,15 @@ class FileReceiverApp(QWidget):
     def show_contacts(self):
         QMessageBox.information(self, "Контакты",
                                 "Техническая поддержка:\n"
-                                "Телефон: +7 (920) 021-91-71\n"
-                                "Email: german7352@gmail.com\n"
-                                "Telegram: @shmoshlover\n"
-                                "Рекомендуем обращаться в Telegram")
+                                "1. Герман Андреевич\n"
+                                "   Телефон: +7 (920) 021-91-71\n"
+                                "   Email: german7352@gmail.com\n"
+                                "   Telegram: @shmoshlover\n"
+                                "2. Михаил Валерьевич\n"
+                                "   Телефон: +7 (953) 575-43-11\n"
+                                "   Email: Somik.228@yandex.ru\n"
+                                "   Telegram: @Somik288\n"
+                                "По любым вопросам рекомендуем обращаться в Telegram")
 
     @asyncSlot()
     async def on_refresh_clicked(self):
