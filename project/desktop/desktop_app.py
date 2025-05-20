@@ -326,23 +326,6 @@ class FileReceiverApp(QWidget):
     async def update_status(self, order_id, new_status):
         try:
             async with aiohttp.ClientSession() as session:
-                # Получаем информацию о заказе
-                async with session.get(f"{API_URL}/orders/{order_id}") as resp:
-                    if resp.status == 200:
-                        order_data = await resp.json()
-                        file_name = order_data.get('file_path')
-
-                        # Удаление файла для статуса "готов" и "выдан" из локальной папки downloads
-                        if (new_status == "готов" or new_status == "выдан") and file_name:
-                            local_path = os.path.join(DOWNLOAD_DIR, os.path.basename(file_name))
-                            try:
-                                if os.path.exists(local_path):
-                                    os.remove(local_path)
-                                    self.file_cache.discard(file_name)
-                                    logging.info(f"Файл {file_name} успешно удален из downloads")
-                            except Exception as e:
-                                logging.error(f"Ошибка при удалении файла из downloads: {str(e)}")
-
                 # Обновление статуса на сервере
                 endpoint = "ready" if new_status == "готов" else "complete"
                 async with session.post(f"{API_URL}/orders/{order_id}/{endpoint}"):
