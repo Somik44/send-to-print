@@ -297,9 +297,9 @@ async def get_shop(shop_name: str):
 async def get_shop_by_password(password_hash: str):
     try:
         async with await get_db() as conn:
-            async with conn.cursor() as cursor:
+            async with conn.cursor(aiomysql.DictCursor) as cursor:  # Используем DictCursor
                 await cursor.execute(
-                    "SELECT ID_shop, name FROM shop WHERE password = %s",
+                    "SELECT ID_shop, name, address FROM shop WHERE password = %s",  # Добавили address
                     (password_hash,)
                 )
                 shop = await cursor.fetchone()
@@ -308,7 +308,7 @@ async def get_shop_by_password(password_hash: str):
                         content={"detail": "Invalid password"},
                         status_code=401
                     )
-                return shop
+                return shop  # Теперь возвращает ID, название и адрес
     except Exception as e:
         logging.error(f"Error: {traceback.format_exc()}")
         raise HTTPException(500, detail="Server error")

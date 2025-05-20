@@ -38,10 +38,10 @@ def resource_path(relative_path):
 
 
 class FileReceiverApp(QWidget):
-    def __init__(self, shop_id):
+    def __init__(self, shop_info: dict):
         super().__init__()
         self.is_refreshing = False
-        self.shop_id = shop_id
+        self.shop_info = shop_info
         self.file_cache = set()
         self.current_items = {}
         self.init_ui()
@@ -63,6 +63,18 @@ class FileReceiverApp(QWidget):
         self.refresh_btn = QPushButton("Обновить список")
         self.refresh_btn.clicked.connect(self.on_refresh_clicked)
         top_panel.addWidget(self.refresh_btn)
+
+        shop_text = f"Точка {self.shop_info['name']} по адресу {self.shop_info['address']}"
+        self.shop_label = QLabel(shop_text)
+        self.shop_label.setStyleSheet("""
+                    QLabel {
+                        font-size: 14px;
+                        color: #555;
+                        padding: 5px 15px;
+                        border-left: 2px solid #ddd;
+                    }
+                """)
+        top_panel.addWidget(self.shop_label)
 
         # Растягивающийся элемент
         top_panel.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
@@ -159,7 +171,7 @@ class FileReceiverApp(QWidget):
             async with aiohttp.ClientSession() as session:
                 async with session.get(
                         f"{API_URL}/orders",
-                        params={'status': ['получен', 'готов'], 'shop_id': self.shop_id},
+                        params={'status': ['получен', 'готов'], 'shop_id': self.shop_info['ID_shop']},
                         timeout=10, headers={"Cache-Control": "no-cache"}
                 ) as resp:
                     if resp.status == 200:
@@ -351,7 +363,7 @@ class FileReceiverApp(QWidget):
 class LoginDialog(QDialog):
     def __init__(self):
         super().__init__()
-        self.shop_id = None
+        self.shop_info = {}
         self.setup_ui()
 
     def setup_ui(self):
@@ -390,7 +402,7 @@ class LoginDialog(QDialog):
                 data = response.json()
                 if "ID_shop" not in data:
                     raise ValueError("Некорректный ответ сервера")
-                self.shop_id = data["ID_shop"]
+                self.shop_info = response.json()
                 self.accept()
             else:
                 QMessageBox.critical(self, "Ошибка", "Неверный пароль")
@@ -405,7 +417,7 @@ if __name__ == '__main__':
 
     with loop:
         login_dialog = LoginDialog()
-        if login_dialog.exec() == QDialog.DialogCode.Accepted and login_dialog.shop_id:
-            window = FileReceiverApp(login_dialog.shop_id)
+        if login_dialog.exec() == QDialog.DialogCode.Accepted and login_dialog.shop_info:
+            window = FileReceiverApp(login_dialog.shop_info)
             window.show()
             loop.run_forever()
