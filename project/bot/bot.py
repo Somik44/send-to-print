@@ -146,7 +146,7 @@ def _process_word_file(file_path: str) -> int:
 @dp.message(Command("start"))
 async def cmd_start(message: types.Message):
     await message.answer(
-        f"Привет, {message.from_user.first_name}! Рады приветствовать тебя на нашем сервисе по распечатке документов в любое удобное время! Чтобы начать новый заказ, используйте команду /new_order."
+        f"Привет, {message.from_user.first_name}! Рады приветствовать тебя на нашем сервисе по распечатке документов в любое удобное время! Чтобы начать новый заказ, используйте команду /new_order.", reply_markup=types.ReplyKeyboardRemove()
     )
 
 
@@ -274,7 +274,7 @@ async def process_file(message: types.Message, state: FSMContext):
         await state.update_data({
             'temp_file': temp_path,
             'pages': pages,
-            'file_extension': file_ext[1:],  # Без точки
+            'file_extension': file_ext[1:],
             'filename': filename,
             'original_file_url': file_url
         })
@@ -307,15 +307,22 @@ async def process_file(message: types.Message, state: FSMContext):
             del confirmation_timers[message.chat.id]
         await state.clear()
 
-        error_msg = f"❌ Ошибка: {str(ve)}"
-        await message.answer(error_msg)
+        error_msg = f"❌ Ошибка: {str(ve)}. Используйте /new_order для начала нового заказа"
+        await message.answer(error_msg, reply_markup=types.ReplyKeyboardRemove())
         logging.warning(error_msg)
 
     except Exception as e:
-        error_msg = f"❌ Критическая ошибка обработки файла: {str(e)}"
-        await message.answer("❌ Произошла непредвиденная ошибка")
-        logging.error(f"{error_msg}\n{traceback.format_exc()}")
+        if message.chat.id in timers:
+            timers[message.chat.id].cancel()
+            del timers[message.chat.id]
+        if message.chat.id in confirmation_timers:
+            confirmation_timers[message.chat.id].cancel()
+            del confirmation_timers[message.chat.id]
+        await state.clear()
 
+        error_msg = f"❌ Критическая ошибка обработки файла: {str(e)}"
+        await message.answer("❌ Произошла непредвиденная ошибка. Используйте /new_order для начала нового заказа", reply_markup=types.ReplyKeyboardRemove())
+        logging.error(f"{error_msg}\n{traceback.format_exc()}")
     finally:
         # Очистка в случае ошибки
         if temp_path and os.path.exists(temp_path) and ('temp_file' not in await state.get_data()):

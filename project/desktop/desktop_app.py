@@ -7,8 +7,6 @@ import asyncio
 import json
 import requests
 import traceback
-import qasync
-from qasync import asyncSlot, QEventLoop
 from PyQt6.QtCore import Qt, QTimer, QThread, pyqtSignal
 from PyQt6.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QListWidget, QPushButton,
@@ -17,7 +15,8 @@ from PyQt6.QtWidgets import (
     QSpacerItem, QSizePolicy, QMenu, QToolButton
 )
 from PyQt6.QtGui import QIcon
-
+import qasync
+from qasync import asyncSlot, QEventLoop
 
 API_URL = "http://localhost:5000"
 DOWNLOAD_DIR = os.path.abspath('downloads')
@@ -41,6 +40,7 @@ def resource_path(relative_path):
 class FileReceiverApp(QWidget):
     def __init__(self, shop_id):
         super().__init__()
+        self.is_refreshing = False
         self.shop_id = shop_id
         self.file_cache = set()
         self.current_items = {}
@@ -127,11 +127,22 @@ class FileReceiverApp(QWidget):
 
     @asyncSlot()
     async def on_refresh_clicked(self):
-        await self.load_orders()
+        if self.is_refreshing:
+            return  # Если обновление уже идет, игнорируем нажатие
 
-    @asyncSlot()
-    async def on_refresh_clicked(self):
-        await self.load_orders()
+        try:
+            self.is_refreshing = True
+            self.refresh_btn.setEnabled(False)  # Блокируем кнопку
+            self.refresh_btn.setText("Обновление...")
+
+            await self.load_orders()  # Основная логика
+
+        except Exception as e:
+            self.show_error(f"Ошибка: {str(e)}")
+        finally:
+            self.is_refreshing = False
+            self.refresh_btn.setEnabled(True)  # Разблокируем кнопку
+            self.refresh_btn.setText("Обновить список")
 
     def setup_timers(self):
         self.timer = QTimer()
