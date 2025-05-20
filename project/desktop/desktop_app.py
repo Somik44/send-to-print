@@ -359,6 +359,17 @@ class FileReceiverApp(QWidget):
         QMessageBox.critical(self, "Ошибка", message)
 
     def closeEvent(self, event):
+        # Удаление всех файлов из папки downloads
+        if os.path.exists(DOWNLOAD_DIR):
+            for filename in os.listdir(DOWNLOAD_DIR):
+                file_path = os.path.join(DOWNLOAD_DIR, filename)
+                try:
+                    if os.path.isfile(file_path):
+                        os.remove(file_path)
+                        logging.info(f"Файл {filename} удален.")
+                except Exception as e:
+                    logging.error(f"Ошибка удаления файла {filename}: {str(e)}")
+
         super().closeEvent(event)
 
 
