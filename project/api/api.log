@@ -251,3 +251,6 @@
 2025-05-20 21:45:08,694 - DEBUG - Calling on_end with no data
 2025-05-20 21:45:08,695 - DEBUG - caching sha2: succeeded by fast path.
 2025-05-20 21:45:10,785 - DEBUG - caching sha2: succeeded by fast path.
+2025-05-20 22:17:06,931 - DEBUG - Using proactor: IocpProactor
+2025-05-20 22:18:38,289 - DEBUG - Using proactor: IocpProactor
+2025-05-20 22:20:37,413 - DEBUG - Using proactor: IocpProactor

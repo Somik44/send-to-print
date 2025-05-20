@@ -221,3 +221,8 @@ OSError: [WinError 995] Операция ввода/вывода была прервана из-за завершения пот
 2025-05-20 21:45:22,936 - DEBUG - Waiting for thread #9 to stop...
 2025-05-20 21:45:22,936 - DEBUG - Waiting for thread #10 to stop...
 2025-05-20 21:45:22,936 - DEBUG - Closing
+2025-05-20 22:21:28,020 - DEBUG - Using proactor: _IocpProactor
+2025-05-20 22:21:30,242 - DEBUG - Starting new HTTPS connection (1): wanly-leading-velvetbreast.cloudpub.ru:443
+2025-05-20 22:21:34,542 - DEBUG - https://wanly-leading-velvetbreast.cloudpub.ru:443 "GET /shop/03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4 HTTP/1.1" 502 11134
+2025-05-20 22:21:45,709 - DEBUG - Closing
+2025-05-20 22:21:45,709 - DEBUG - Closing
