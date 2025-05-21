@@ -1,0 +1,5 @@
+2025-05-21 08:25:05,725 - DEBUG - Using proactor: _IocpProactor
+2025-05-21 08:25:10,620 - DEBUG - Starting new HTTPS connection (1): heatedly-effectual-bison.cloudpub.ru:443
+2025-05-21 08:25:10,859 - DEBUG - https://heatedly-effectual-bison.cloudpub.ru:443 "GET /shop/a7ef9d0560e2144949045a322a88b84796b7266688a6db1eb0d1a1688bf16950 HTTP/1.1" 502 11134
+2025-05-21 08:25:13,138 - DEBUG - Closing
+2025-05-21 08:25:13,138 - DEBUG - Closing

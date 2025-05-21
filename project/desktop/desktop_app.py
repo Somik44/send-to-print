@@ -235,8 +235,10 @@ class FileReceiverApp(QWidget):
 
         buttons = []
         if order['status'] == 'получен':
-            btn_print = QPushButton("Печать")
-            btn_print.clicked.connect(lambda: self.print_file(order))
+            # btn_print = QPushButton("Печать")
+            # btn_print.clicked.connect(lambda: self.print_file(order))
+            btn_open = QPushButton("Загрузить")
+            btn_open.clicked.connect(self. open_downloads_folder)
             btn_ready = QPushButton("Готово")
             # Добавляем подтверждение для кнопки "Готово"
             btn_ready.clicked.connect(lambda: self.confirm_status_change(
@@ -246,7 +248,7 @@ class FileReceiverApp(QWidget):
             ))
             btn_info = QPushButton("Информация")
             btn_info.clicked.connect(lambda: self.show_order_info(order))
-            buttons = [btn_info, btn_print, btn_ready]
+            buttons = [btn_info, btn_open, btn_ready]
         else:
             btn_complete = QPushButton("Выдать")
             # Добавляем подтверждение для кнопки "Выдать"
@@ -277,6 +279,14 @@ class FileReceiverApp(QWidget):
         layout.addWidget(label)
         widget.setLayout(layout)
         return widget
+
+    def open_downloads_folder(self):
+        """Открывает папку downloads в проводнике ОС"""
+        if sys.platform == "win32":
+            os.startfile(DOWNLOAD_DIR)
+        else:
+            import subprocess
+            subprocess.Popen(["xdg-open", DOWNLOAD_DIR])
 
     def confirm_status_change(self, order_id, new_status, message):
         reply = QMessageBox.question(
@@ -319,13 +329,13 @@ class FileReceiverApp(QWidget):
         except Exception as e:
             self.show_error(f"Ошибка загрузки: {str(e)}")
 
-    def print_file(self, order):
-        filepath = os.path.join(DOWNLOAD_DIR, order['file_path'])
-        if sys.platform == "win32":
-            os.startfile(filepath)
-        else:
-            import subprocess
-            subprocess.Popen(["xdg-open", filepath])
+    # def print_file(self, order):
+    #     filepath = os.path.join(DOWNLOAD_DIR, order['file_path'])
+    #     if sys.platform == "win32":
+    #         os.startfile(filepath)
+    #     else:
+    #         import subprocess
+    #         subprocess.Popen(["xdg-open", filepath])
 
     @asyncSlot()
     async def update_status(self, order_id, new_status):
