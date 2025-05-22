@@ -48,6 +48,22 @@ class FileReceiverApp(QWidget):
         self.setup_timers()
 
     def init_ui(self):
+
+        self.setStyleSheet("""
+            QWidget {
+                font-size: 14px;  /* Размер шрифта по умолчанию */
+            }
+            QLabel {
+                font-size: 15px;  /* Увеличенный шрифт для меток */
+            }
+            QPushButton {
+                font-size: 13px;  /* Размер шрифта для кнопок */
+            }
+            QListWidget {
+                font-size: 14px;  /* Размер шрифта в списках */
+            }
+        """)
+
         self.setWindowIcon(QIcon(resource_path('logo.png')))
         self.setWindowTitle('Send to print and pick up!')
         self.setMinimumSize(800, 600)
@@ -68,7 +84,7 @@ class FileReceiverApp(QWidget):
         self.shop_label = QLabel(shop_text)
         self.shop_label.setStyleSheet("""
                     QLabel {
-                        font-size: 14px;
+                        font-size: 16px;
                         color: #555;
                         padding: 5px 15px;
                         border-left: 2px solid #ddd;
@@ -124,7 +140,7 @@ class FileReceiverApp(QWidget):
         QMessageBox.information(self, "Инструкция",
                                 "1. Для обновления списка заказов нажмите кнопку 'Обновить список'\n(По умолчанию список обновляется каждые 3 минуты)\n"
                                 "2. Перед печатью посмотрите информацию о заказе(тип печати, комментарий). Для просмотра нажмите кнопку 'Информация'\n"
-                                "3. Для печати файла нажмите кнопку 'Печать'\n"
+                                "3. Для получения достпупа к файлу нажмите кнопку 'Загрузить'\n"
                                 "4. После успешной печати измените статус на 'Готово'\n"
                                 "5. Перед тем, как отдавать распечатку сверьте код выдачи по кнопке 'Код выдачи'\n"
                                 "6. После успешной проверки отдайте распечатку клиенту и нажмите 'Выдать'")
@@ -423,6 +439,21 @@ class LoginDialog(QDialog):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+
+    # Устанавливаем глобальный стиль для всех QMessageBox
+    app.setStyleSheet("""
+        QMessageBox {
+            font-size: 14px;
+        }""")
+        # QMessageBox QLabel {
+        #     font-size: 14px;
+        # }
+        # QMessageBox QPushButton {
+        #     font-size: 12px;
+        #     min-width: 80px;
+        # }
+    # """)
+
     loop = QEventLoop(app)
     asyncio.set_event_loop(loop)
 
