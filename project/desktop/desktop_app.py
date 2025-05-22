@@ -281,7 +281,6 @@ class FileReceiverApp(QWidget):
         return widget
 
     def open_downloads_folder(self):
-        """Открывает папку downloads в проводнике ОС"""
         if sys.platform == "win32":
             os.startfile(DOWNLOAD_DIR)
         else:
