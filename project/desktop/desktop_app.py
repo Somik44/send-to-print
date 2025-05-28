@@ -48,6 +48,22 @@ class FileReceiverApp(QWidget):
         self.setup_timers()
 
     def init_ui(self):
+
+        self.setStyleSheet("""
+            QWidget {
+                font-size: 14px;  /* Размер шрифта по умолчанию */
+            }
+            QLabel {
+                font-size: 15px;  /* Увеличенный шрифт для меток */
+            }
+            QPushButton {
+                font-size: 13px;  /* Размер шрифта для кнопок */
+            }
+            QListWidget {
+                font-size: 14px;  /* Размер шрифта в списках */
+            }
+        """)
+
         self.setWindowIcon(QIcon(resource_path('logo.png')))
         self.setWindowTitle('Send to print and pick up!')
         self.setMinimumSize(800, 600)
@@ -68,7 +84,7 @@ class FileReceiverApp(QWidget):
         self.shop_label = QLabel(shop_text)
         self.shop_label.setStyleSheet("""
                     QLabel {
-                        font-size: 14px;
+                        font-size: 16px;
                         color: #555;
                         padding: 5px 15px;
                         border-left: 2px solid #ddd;
@@ -124,7 +140,7 @@ class FileReceiverApp(QWidget):
         QMessageBox.information(self, "Инструкция",
                                 "1. Для обновления списка заказов нажмите кнопку 'Обновить список'\n(По умолчанию список обновляется каждые 3 минуты)\n"
                                 "2. Перед печатью посмотрите информацию о заказе(тип печати, комментарий). Для просмотра нажмите кнопку 'Информация'\n"
-                                "3. Для печати файла нажмите кнопку 'Печать'\n"
+                                "3. Для получения достпупа к файлу нажмите кнопку 'Загрузить'\n"
                                 "4. После успешной печати измените статус на 'Готово'\n"
                                 "5. Перед тем, как отдавать распечатку сверьте код выдачи по кнопке 'Код выдачи'\n"
                                 "6. После успешной проверки отдайте распечатку клиенту и нажмите 'Выдать'")
@@ -176,7 +192,7 @@ class FileReceiverApp(QWidget):
             async with aiohttp.ClientSession() as session:
                 async with session.get(
                         f"{API_URL}/orders",
-                        params={'status': ['получен', 'готов'], 'shop_id': self.shop_info['ID_shop']},
+                        params={'status': ['received', 'ready'], 'shop_id': self.shop_info['ID_shop']},
                         timeout=10, headers={"Cache-Control": "no-cache"}
                 ) as resp:
                     if resp.status == 200:
@@ -200,17 +216,17 @@ class FileReceiverApp(QWidget):
                 item = QListWidgetItem()
                 widget = self.create_order_widget(order)
 
-                if order['status'] == 'получен':
+                if order['status'] == 'received':
                     self.received_list.addItem(item)
                 else:
                     self.ready_list.addItem(item)
 
                 item.setSizeHint(widget.sizeHint())
-                target_list = self.received_list if order['status'] == 'получен' else self.ready_list
+                target_list = self.received_list if order['status'] == 'received' else self.ready_list
                 target_list.setItemWidget(item, widget)
                 self.current_items[order['ID']] = (item, widget)
 
-                if order['status'] == 'получен' and order['file_path'] not in self.file_cache:
+                if order['status'] == 'received' and order['file_path'] not in self.file_cache:
                     asyncio.create_task(self.download_file(order['file_path']))
 
             except Exception as e:
@@ -230,11 +246,11 @@ class FileReceiverApp(QWidget):
         label_text = f"Заказ №{order['ID']}: {file_name}"
         label = QLabel(label_text)
         label.setWordWrap(True)
-        color = "#dc3545" if order['status'] == 'получен' else "#28a745"
+        color = "#dc3545" if order['status'] == 'received' else "#28a745"
         label.setStyleSheet(f"QLabel {{ color: {color}; font-weight: 600; font-size: 13px; padding: 5px; }}")
 
         buttons = []
-        if order['status'] == 'получен':
+        if order['status'] == 'received':
             # btn_print = QPushButton("Печать")
             # btn_print.clicked.connect(lambda: self.print_file(order))
             btn_open = QPushButton("Загрузить")
@@ -243,7 +259,7 @@ class FileReceiverApp(QWidget):
             # Добавляем подтверждение для кнопки "Готово"
             btn_ready.clicked.connect(lambda: self.confirm_status_change(
                 order['ID'],
-                'готов',
+                'ready',
                 f"Подтвердите изменение статуса заказа №{order['ID']} на 'Готово'"
             ))
             btn_info = QPushButton("Информация")
@@ -254,7 +270,7 @@ class FileReceiverApp(QWidget):
             # Добавляем подтверждение для кнопки "Выдать"
             btn_complete.clicked.connect(lambda: self.confirm_status_change(
                 order['ID'],
-                'выдан',
+                'completed',
                 f"Подтвердите выдачу заказа №{order['ID']} клиенту"
             ))
             btn_info = QPushButton("Код выдачи")
@@ -341,7 +357,7 @@ class FileReceiverApp(QWidget):
         try:
             async with aiohttp.ClientSession() as session:
                 # Обновление статуса на сервере
-                endpoint = "ready" if new_status == "готов" else "complete"
+                endpoint = "ready" if new_status == "ready" else "complete"
                 async with session.post(f"{API_URL}/orders/{order_id}/{endpoint}"):
                     pass
 
@@ -422,6 +438,21 @@ class LoginDialog(QDialog):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+
+    # Устанавливаем глобальный стиль для всех QMessageBox
+    app.setStyleSheet("""
+        QMessageBox {
+            font-size: 14px;
+        }""")
+        # QMessageBox QLabel {
+        #     font-size: 14px;
+        # }
+        # QMessageBox QPushButton {
+        #     font-size: 12px;
+        #     min-width: 80px;
+        # }
+    # """)
+
     loop = QEventLoop(app)
     asyncio.set_event_loop(loop)
 

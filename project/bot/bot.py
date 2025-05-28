@@ -60,12 +60,12 @@ async def handler(websocket):
                 order_id = data['order_id']
                 address = data['address']
 
-                if data['status'] == 'готов':
+                if data['status'] == 'ready':
                     await bot.send_message(
                         user_id,
                         f"🖨️ Заказ №{order_id} готов! Адрес получения: {address}"
                     )
-                elif data['status'] == 'выдан':
+                elif data['status'] == 'completed':
                     await bot.send_message(
                         user_id,
                         f"✅ Заказ №{order_id} выдан! Спасибо, что воспользовались нашим сервисом! Ждем вас снова!"

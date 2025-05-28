@@ -41,7 +41,7 @@ async def get_db():
     return await aiomysql.connect(
         host=os.getenv("DB_HOST", "localhost"),
         user=os.getenv("DB_USER", "root"),
-        password=os.getenv("DB_PASSWORD", "Qwerty123"),
+        password=os.getenv("DB_PASSWORD", "1111"),
         db=os.getenv("DB_NAME", "send_to_print"),
         autocommit=False,
         cursorclass=aiomysql.DictCursor
@@ -137,12 +137,12 @@ async def mark_order_ready(order_id: int):
 
                 # Обновляем статус
                 await cursor.execute(
-                    "UPDATE `order` SET status = 'готов' WHERE ID = %s",
+                    "UPDATE `order` SET status = 'ready' WHERE ID = %s",
                     (order_id,)
                 )
                 await conn.commit()
-                await notify_bot(order_id, "готов")
-                return {"status": "готов"}
+                await notify_bot(order_id, "ready")
+                return {"status": "ready"}
     except Exception as e:
         logging.error(f"Error: {traceback.format_exc()}")
         raise HTTPException(500, detail="Internal server error")
@@ -169,7 +169,7 @@ async def complete_order(order_id: int):
                     await conn.rollback()
                     raise HTTPException(404, detail="Order not found")
 
-                if current['status'] != 'готов':
+                if current['status'] != 'ready':
                     await conn.rollback()
                     raise HTTPException(
                         400,
@@ -188,12 +188,12 @@ async def complete_order(order_id: int):
 
                 # 3. Обновление статуса
                 await cursor.execute(
-                    "UPDATE `order` SET status = 'выдан' WHERE ID = %s",
+                    "UPDATE `order` SET status = 'completed' WHERE ID = %s",
                     (order_id,)
                 )
                 await conn.commit()
-                await notify_bot(order_id, "выдан")
-                return {"status": "выдан"}
+                await notify_bot(order_id, "completed")
+                return {"status": "completed"}
 
     except HTTPException:
         raise
@@ -223,7 +223,7 @@ async def create_order(
                     INSERT INTO `order` (
                         ID_shop, price, note, con_code, color, status, 
                         user_id, pages, file_extension, file_path
-                    ) VALUES (%s, %s, %s, %s, %s, 'получен', %s, %s, %s, 'temp')
+                    ) VALUES (%s, %s, %s, %s, %s, 'received', %s, %s, %s, 'temp')
                 """, (
                     ID_shop, price, note, con_code, color,
                     user_id, pages, file_extension
