@@ -17,6 +17,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.websockets import WebSocketDisconnect
 from json import JSONDecodeError
 from starlette.websockets import WebSocketState, WebSocketDisconnect
+import aiohttp
 
 # logging.basicConfig(
 #     level=logging.DEBUG,
@@ -72,7 +73,7 @@ class OrderUpdate(BaseModel):
 
 
 app = FastAPI()
-WS_URL = 'ws://tcp.cloudpub.ru:23757/bot'
+# WS_URL = 'ws://tcp.cloudpub.ru:55000/bot'
 UPLOAD_FOLDER = os.path.abspath('uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.mount("/uploads", StaticFiles(directory=UPLOAD_FOLDER), name="uploads")
@@ -83,47 +84,47 @@ async def get_db():
     return await aiomysql.connect(
         host=os.getenv("DB_HOST", "localhost"),
         user=os.getenv("DB_USER", "root"),
-        password=os.getenv("DB_PASSWORD", "1111"),
+        password=os.getenv("DB_PASSWORD", "Qwerty123"),
         db=os.getenv("DB_NAME", "send_to_print"),
         autocommit=False,
         cursorclass=aiomysql.DictCursor
     )
 
 
-@app.websocket("/ws/notify")
-async def websocket_notify(websocket: WebSocket):
-    await websocket.accept()
-    try:
-        while True:
-            await websocket.receive_text()
-    except Exception as e:
-        logging.error(f"WebSocket connection closed: {str(e)}")
-
-
-async def notify_bot(order_id: int, status: str):
-    try:
-        # Используем существующее подключение через get_db()
-        async with await get_db() as conn:
-            async with conn.cursor(aiomysql.DictCursor) as cursor:
-                await cursor.execute("""
-                    SELECT o.user_id, o.ID, s.address 
-                    FROM `order` o 
-                    JOIN shop s ON o.ID_shop = s.ID_shop 
-                    WHERE o.ID = %s
-                """, (order_id,))
-                data = await cursor.fetchone()
-
-        # Исправляем адрес WebSocket на порт 8001
-        async with websockets.connect("ws://tcp.cloudpub.ru:23757") as ws:
-            await ws.send(json.dumps({
-                "type": "status_update",
-                "status": status,
-                "user_id": data['user_id'],
-                "order_id": data['ID'],
-                "address": data['address']
-            }))
-    except Exception as e:
-        logging.error(f"WebSocket notification error: {traceback.format_exc()}")
+# @app.websocket("/ws/notify")
+# async def websocket_notify(websocket: WebSocket):
+#     await websocket.accept()
+#     try:
+#         while True:
+#             await websocket.receive_text()
+#     except Exception as e:
+#         logging.error(f"WebSocket connection closed: {str(e)}")
+#
+#
+# async def notify_bot(order_id: int, status: str):
+#     try:
+#         # Используем существующее подключение через get_db()
+#         async with await get_db() as conn:
+#             async with conn.cursor(aiomysql.DictCursor) as cursor:
+#                 await cursor.execute("""
+#                     SELECT o.user_id, o.ID, s.address
+#                     FROM `order` o
+#                     JOIN shop s ON o.ID_shop = s.ID_shop
+#                     WHERE o.ID = %s
+#                 """, (order_id,))
+#                 data = await cursor.fetchone()
+#
+#         # Исправляем адрес WebSocket на порт 8001
+#         async with websockets.connect("ws://tcp.cloudpub.ru:55000") as ws:
+#             await ws.send(json.dumps({
+#                 "type": "status_update",
+#                 "status": status,
+#                 "user_id": data['user_id'],
+#                 "order_id": data['ID'],
+#                 "address": data['address']
+#             }))
+#     except Exception as e:
+#         logging.error(f"WebSocket notification error: {traceback.format_exc()}")
 
 
 # Helper functions
@@ -183,7 +184,7 @@ async def mark_order_ready(order_id: int):
                     (order_id,)
                 )
                 await conn.commit()
-                await notify_bot(order_id, "ready")
+                # await notify_bot(order_id, "ready")
                 return {"status": "ready"}
     except Exception as e:
         logging.error(f"Error: {traceback.format_exc()}")
@@ -234,7 +235,7 @@ async def complete_order(order_id: int):
                     (order_id,)
                 )
                 await conn.commit()
-                await notify_bot(order_id, "completed")
+                # await notify_bot(order_id, "completed")
                 return {"status": "completed"}
 
     except HTTPException:
@@ -363,6 +364,103 @@ async def get_file(filename: str):
     if not os.path.exists(file_path):
         raise HTTPException(404, detail="File not found")
     return FileResponse(file_path)
+
+
+# unn
+@app.get("/orders/{order_id}")
+async def get_order(order_id: int):
+    try:
+        async with await get_db() as conn:
+            async with conn.cursor(aiomysql.DictCursor) as cursor:
+                await cursor.execute(
+                    "SELECT * FROM `order` WHERE ID = %s",
+                    (order_id,)
+                )
+                order = await cursor.fetchone()
+                if not order:
+                    raise HTTPException(404, detail="Order not found")
+                return order
+    except Exception as e:
+        logging.error(f"Error: {traceback.format_exc()}")
+        raise HTTPException(500, detail="Server error")
+
+
+# Добавлен endpoint для обработки загрузки файла через бота
+@app.post("/orders/{order_id}/download")
+async def download_order_file(order_id: int):
+    try:
+        # Добавляем логирование начала процесса
+        logging.info(f"Starting download for order {order_id}")
+
+        async with await get_db() as conn:
+            async with conn.cursor(aiomysql.DictCursor) as cursor:
+                await cursor.execute(
+                    "SELECT file_path, user_id FROM `order` WHERE ID = %s",
+                    (order_id,)
+                )
+                order = await cursor.fetchone()
+
+                if not order:
+                    logging.warning(f"Order {order_id} not found in database")
+                    raise HTTPException(404, detail="Order not found")
+
+                logging.info(f"Order found: {order}")
+
+                # Полный путь к файлу
+                file_path = os.path.join(UPLOAD_FOLDER, order['file_path'])
+                if not os.path.exists(file_path):
+                    logging.error(f"File not found: {file_path}")
+                    raise HTTPException(404, detail="File not found")
+
+                # Добавляем логирование размера файла
+                file_size = os.path.getsize(file_path)
+                logging.info(f"File size: {file_size} bytes")
+
+                async with aiohttp.ClientSession() as session:
+                    form_data = aiohttp.FormData()
+                    form_data.add_field('order_id', str(order_id))
+                    form_data.add_field('user_id', order['user_id'])
+
+                    # Ключевое исправление: отправляем СОДЕРЖИМОЕ файла, а не путь
+                    async with aiofiles.open(file_path, 'rb') as f:
+                        file_content = await f.read()
+                        form_data.add_field('file', file_content, filename=order['file_path'])
+
+                    bot_url = "https://causally-enthralled-rat.cloudpub.ru/upload_to_telegram"
+                    logging.info(f"Sending request to bot: {bot_url}")
+
+                    async with session.post(
+                            bot_url,
+                            data=form_data
+                    ) as bot_resp:
+                        # Детальное логирование ответа бота
+                        status = bot_resp.status
+                        response_text = await bot_resp.text()
+                        logging.info(f"Bot response: {status} - {response_text}")
+
+                        if status != 200:
+                            logging.error(f"Bot processing failed: {status} - {response_text}")
+                            raise HTTPException(500, detail="Bot processing failed")
+
+                        try:
+                            bot_data = await bot_resp.json()
+                        except Exception as e:
+                            logging.error(f"JSON decode error: {e}\nResponse: {response_text}")
+                            raise HTTPException(500, detail="Invalid bot response")
+
+                        file_url = bot_data.get('file_url')
+                        if not file_url:
+                            logging.error(f"Missing file_url in bot response: {bot_data}")
+                            raise HTTPException(500, detail="Missing file_url in response")
+
+                        return {"file_url": file_url}
+
+    except HTTPException as he:
+        logging.error(f"HTTPException: {he.detail}")
+        raise
+    except Exception as e:
+        logging.error(f"Download processing error: {traceback.format_exc()}")
+        raise HTTPException(500, detail="Server error")
 
 
 if __name__ == "__main__":

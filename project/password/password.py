@@ -20,7 +20,7 @@ class ShopApp(QMainWindow):
             self.db_connection = pymysql.connect(
                 host="localhost",
                 user="root",
-                password="1111",
+                password="Qwerty123",
                 database="send_to_print",
                 charset='utf8mb4',
                 cursorclass=pymysql.cursors.DictCursor

@@ -16,6 +16,7 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.enums import ContentType
 from PyPDF2 import PdfReader
 from io import BytesIO
+from aiohttp import web
 import pythoncom
 import win32com.client
 
@@ -26,9 +27,10 @@ logging.basicConfig(
 )
 
 API_TOKEN = '7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ'
-API_URL = 'https://heatedly-effectual-bison.cloudpub.ru'
+API_URL = 'https://pugnaciously-quickened-gobbler.cloudpub.ru'
 UPLOAD_FOLDER = 'D:\\projects_py\\projectsWithGit\\send-to-print\\project\\api\\uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+YOUR_PRIVATE_GROUP_ID = "-4966410677"
 
 
 class Form(StatesGroup):
@@ -44,34 +46,123 @@ dp = Dispatcher()
 timers = {}
 confirmation_timers = {}
 
-
-async def websocket_server():
-    # Слушаем на всех интерфейсах и правильном порту
-    async with websockets.serve(handler, "0.0.0.0", 8001):
-        await asyncio.Future()  # Бесконечное ожидание
+http_app = web.Application()
+routes = web.RouteTableDef()
 
 
-async def handler(websocket):
-    async for message in websocket:
-        try:
-            data = json.loads(message)
-            if data['type'] == 'status_update':
-                user_id = data['user_id']
-                order_id = data['order_id']
-                address = data['address']
+# Регистрируем наш endpoint
+@routes.post('/upload_to_telegram')
+async def http_upload_to_telegram(request: web.Request):
+    return await handle_upload_to_telegram(request)
 
-                if data['status'] == 'ready':
-                    await bot.send_message(
-                        user_id,
-                        f"🖨️ Заказ №{order_id} готов! Адрес получения: {address}"
-                    )
-                elif data['status'] == 'completed':
-                    await bot.send_message(
-                        user_id,
-                        f"✅ Заказ №{order_id} выдан! Спасибо, что воспользовались нашим сервисом! Ждем вас снова!"
-                    )
-        except Exception as e:
-            logging.error(f"WebSocket Error: {traceback.format_exc()}")
+# Применяем роуты
+http_app.add_routes(routes)
+
+
+# Функция для запуска HTTP сервера
+async def start_http_server():
+    runner = web.AppRunner(http_app)
+    await runner.setup()
+    site = web.TCPSite(runner, '0.0.0.0', 8000)  # Порт можно изменить
+    await site.start()
+    logging.info("HTTP server started on port 8000")
+
+
+@routes.post('/upload_to_telegram')
+async def handle_upload_to_telegram(request: web.Request):
+    logging.info("Получен запрос на загрузку")
+    try:
+        # Логируем заголовки для диагностики
+        logging.debug(f"Заголовки запроса: {dict(request.headers)}")
+
+        reader = await request.multipart()
+        order_id = None
+        user_id = None
+        file_field = None
+        file_content = None
+
+        async for field in reader:
+            logging.debug(f"Обработка поля: {field.name}")
+
+            if field.name == 'order_id':
+                order_id = await field.text()
+                logging.info(f"ID заказа: {order_id}")
+            elif field.name == 'user_id':
+                user_id = await field.text()
+                logging.info(f"ID пользователя: {user_id}")
+            elif field.name == 'file':
+                file_field = field
+                # Читаем содержимое файла сразу
+                file_content = await file_field.read()
+                logging.info(f"Найдено поле с файлом")
+
+        if not order_id or not user_id or not file_field:
+            error_msg = "Отсутствуют обязательные параметры"
+            logging.error(error_msg)
+            return web.json_response({"error": error_msg}, status=400)
+
+        if not file_content:
+            error_msg = "Получен пустой файл"
+            logging.error(error_msg)
+            return web.json_response({"error": error_msg}, status=400)
+
+        # Проверяем размер файла
+        MAX_SIZE = 20 * 1024 * 1024  # 20MB
+        if len(file_content) > MAX_SIZE:
+            error_msg = "Файл слишком большой"
+            logging.error(error_msg)
+            return web.json_response({"error": error_msg}, status=413)
+
+        filename = file_field.filename
+        logging.info(f"Получен файл: {filename} (размер: {len(file_content)} байт)")
+
+        # Отправляем в Telegram
+        message = await bot.send_document(
+            chat_id=YOUR_PRIVATE_GROUP_ID,
+            document=types.BufferedInputFile(file_content, filename=filename),
+            caption=f"Файл для заказа #{order_id}"
+        )
+
+        # Получаем ссылку
+        file_info = await bot.get_file(message.document.file_id)
+        public_url = f"https://api.telegram.org/file/bot{API_TOKEN}/{file_info.file_path}"
+        logging.info(f"Файл успешно загружен в Telegram: {public_url}")
+
+        return web.json_response({"file_url": public_url})
+
+    except Exception as e:
+        error_msg = f"Ошибка загрузки в Telegram: {traceback.format_exc()}"
+        logging.error(error_msg)
+        return web.json_response({"error": str(e)}, status=500)
+
+
+# async def websocket_server():
+#     # Слушаем на всех интерфейсах и правильном порту
+#     async with websockets.serve(handler, "0.0.0.0", 8001):
+#         await asyncio.Future()  # Бесконечное ожидание
+#
+#
+# async def handler(websocket):
+#     async for message in websocket:
+#         try:
+#             data = json.loads(message)
+#             if data['type'] == 'status_update':
+#                 user_id = data['user_id']
+#                 order_id = data['order_id']
+#                 address = data['address']
+#
+#                 if data['status'] == 'ready':
+#                     await bot.send_message(
+#                         user_id,
+#                         f"🖨️ Заказ №{order_id} готов! Адрес получения: {address}"
+#                     )
+#                 elif data['status'] == 'completed':
+#                     await bot.send_message(
+#                         user_id,
+#                         f"✅ Заказ №{order_id} выдан! Спасибо, что воспользовались нашим сервисом! Ждем вас снова!"
+#                     )
+#         except Exception as e:
+#             logging.error(f"WebSocket Error: {traceback.format_exc()}")
 
 
 async def cleanup_order_data(user_data: dict):
@@ -531,7 +622,7 @@ async def handle_unknown(message: types.Message):
 
 
 async def main():
-    await asyncio.gather(dp.start_polling(bot), websocket_server())
+    await asyncio.gather(dp.start_polling(bot), start_http_server())  # + websocket_server()
 
 
 if __name__ == "__main__":

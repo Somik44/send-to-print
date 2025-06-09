@@ -1,0 +1,128 @@
+2025-06-09 17:00:52,385 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-06-09 17:00:52,386 - aiogram.dispatcher - INFO - Start polling
+2025-06-09 17:00:52,390 - root - INFO - HTTP server started on port 8000
+2025-06-09 17:00:52,646 - aiogram.dispatcher - INFO - Run polling for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'
+2025-06-09 17:02:49,873 - aiogram.event - INFO - Update id=161355019 is handled. Duration 2375 ms by bot id=7818669005
+2025-06-09 17:02:53,185 - aiogram.event - INFO - Update id=161355020 is handled. Duration 1827 ms by bot id=7818669005
+2025-06-09 17:02:59,137 - root - INFO - Начинаем загрузку файла: https://api.telegram.org/file/bot7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ/documents/file_507.jpg
+2025-06-09 17:02:59,701 - root - INFO - Определено страниц: 1
+2025-06-09 17:02:59,888 - aiogram.event - INFO - Update id=161355021 is handled. Duration 1155 ms by bot id=7818669005
+2025-06-09 17:03:01,136 - aiogram.event - INFO - Update id=161355022 is handled. Duration 94 ms by bot id=7818669005
+2025-06-09 17:03:02,455 - aiogram.event - INFO - Update id=161355023 is handled. Duration 108 ms by bot id=7818669005
+2025-06-09 17:03:03,509 - root - INFO - 10-минутный таймер отменен
+2025-06-09 17:03:03,509 - root - INFO - 1-минутный таймер отменен
+2025-06-09 17:03:05,755 - root - INFO - Удалён временный файл: D:\projects_py\projectsWithGit\send-to-print\project\api\uploads\temp_bac701e0-5636-47a5-99a7-78012afa5301.jpg
+2025-06-09 17:03:05,755 - aiogram.event - INFO - Update id=161355024 is handled. Duration 2265 ms by bot id=7818669005
+2025-06-09 17:03:08,029 - aiogram.event - INFO - Update id=161355025 is handled. Duration 171 ms by bot id=7818669005
+2025-06-09 17:03:15,996 - aiogram.event - INFO - Update id=161355026 is handled. Duration 2219 ms by bot id=7818669005
+2025-06-09 17:03:17,297 - aiogram.event - INFO - Update id=161355027 is handled. Duration 2203 ms by bot id=7818669005
+2025-06-09 17:03:22,238 - root - INFO - Начинаем загрузку файла: https://api.telegram.org/file/bot7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ/documents/file_502.jpg
+2025-06-09 17:03:23,004 - root - INFO - Определено страниц: 1
+2025-06-09 17:03:23,928 - aiogram.event - INFO - Update id=161355028 is handled. Duration 2296 ms by bot id=7818669005
+2025-06-09 17:03:30,091 - aiogram.event - INFO - Update id=161355029 is handled. Duration 92 ms by bot id=7818669005
+2025-06-09 17:03:32,762 - aiogram.event - INFO - Update id=161355030 is handled. Duration 1530 ms by bot id=7818669005
+2025-06-09 17:03:33,900 - root - INFO - 10-минутный таймер отменен
+2025-06-09 17:03:33,900 - root - INFO - 1-минутный таймер отменен
+2025-06-09 17:03:36,146 - root - INFO - Удалён временный файл: D:\projects_py\projectsWithGit\send-to-print\project\api\uploads\temp_fe3f5197-ed28-4826-97b6-afcd69a794ca.jpg
+2025-06-09 17:03:36,146 - aiogram.event - INFO - Update id=161355031 is handled. Duration 2265 ms by bot id=7818669005
+2025-06-09 17:03:39,831 - aiogram.event - INFO - Update id=161355032 is handled. Duration 202 ms by bot id=7818669005
+2025-06-09 17:03:41,105 - aiogram.event - INFO - Update id=161355033 is handled. Duration 172 ms by bot id=7818669005
+2025-06-09 17:03:47,043 - root - INFO - Начинаем загрузку файла: https://api.telegram.org/file/bot7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ/documents/file_499.jpg
+2025-06-09 17:03:47,375 - root - INFO - Определено страниц: 1
+2025-06-09 17:03:47,560 - aiogram.event - INFO - Update id=161355034 is handled. Duration 686 ms by bot id=7818669005
+2025-06-09 17:03:48,636 - aiogram.event - INFO - Update id=161355035 is handled. Duration 78 ms by bot id=7818669005
+2025-06-09 17:03:49,826 - aiogram.event - INFO - Update id=161355036 is handled. Duration 94 ms by bot id=7818669005
+2025-06-09 17:03:50,979 - root - INFO - 10-минутный таймер отменен
+2025-06-09 17:03:50,980 - root - INFO - 1-минутный таймер отменен
+2025-06-09 17:03:53,181 - root - INFO - Удалён временный файл: D:\projects_py\projectsWithGit\send-to-print\project\api\uploads\temp_daf54f99-4453-43ec-bec5-a655cd6291f6.jpg
+2025-06-09 17:03:53,181 - aiogram.event - INFO - Update id=161355037 is handled. Duration 2219 ms by bot id=7818669005
+2025-06-09 17:03:57,238 - aiogram.event - INFO - Update id=161355038 is handled. Duration 171 ms by bot id=7818669005
+2025-06-09 17:03:58,259 - aiogram.event - INFO - Update id=161355039 is handled. Duration 186 ms by bot id=7818669005
+2025-06-09 17:04:02,018 - root - INFO - Начинаем загрузку файла: https://api.telegram.org/file/bot7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ/documents/file_508.doc
+2025-06-09 17:04:08,169 - root - INFO - Определено страниц: 1
+2025-06-09 17:04:09,089 - aiogram.event - INFO - Update id=161355040 is handled. Duration 7250 ms by bot id=7818669005
+2025-06-09 17:04:19,906 - aiogram.event - INFO - Update id=161355041 is handled. Duration 94 ms by bot id=7818669005
+2025-06-09 17:04:21,138 - aiogram.event - INFO - Update id=161355042 is handled. Duration 94 ms by bot id=7818669005
+2025-06-09 17:04:22,406 - root - INFO - 10-минутный таймер отменен
+2025-06-09 17:04:22,406 - root - INFO - 1-минутный таймер отменен
+2025-06-09 17:04:24,618 - root - INFO - Удалён временный файл: D:\projects_py\projectsWithGit\send-to-print\project\api\uploads\temp_b707bc81-ce66-4b7c-9b95-6664a2a44d47.doc
+2025-06-09 17:04:24,619 - aiogram.event - INFO - Update id=161355043 is handled. Duration 2219 ms by bot id=7818669005
+2025-06-09 17:07:26,675 - aiogram.event - INFO - Update id=161355044 is handled. Duration 2186 ms by bot id=7818669005
+2025-06-09 17:07:27,922 - aiogram.event - INFO - Update id=161355045 is handled. Duration 155 ms by bot id=7818669005
+2025-06-09 17:07:45,559 - root - INFO - Начинаем загрузку файла: https://api.telegram.org/file/bot7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ/documents/file_498.doc
+2025-06-09 17:07:50,385 - root - INFO - Определено страниц: 3
+2025-06-09 17:07:50,564 - aiogram.event - INFO - Update id=161355046 is handled. Duration 5172 ms by bot id=7818669005
+2025-06-09 17:07:56,286 - aiogram.event - INFO - Update id=161355047 is handled. Duration 92 ms by bot id=7818669005
+2025-06-09 17:07:57,365 - aiogram.event - INFO - Update id=161355048 is handled. Duration 94 ms by bot id=7818669005
+2025-06-09 17:07:58,178 - root - INFO - 10-минутный таймер отменен
+2025-06-09 17:07:58,178 - root - INFO - 1-минутный таймер отменен
+2025-06-09 17:08:00,412 - root - INFO - Удалён временный файл: D:\projects_py\projectsWithGit\send-to-print\project\api\uploads\temp_f0db8b3e-1c67-4af7-a064-dcf39f650a35.doc
+2025-06-09 17:08:00,413 - aiogram.event - INFO - Update id=161355049 is handled. Duration 2250 ms by bot id=7818669005
+2025-06-09 17:08:10,276 - root - INFO - Получен запрос на загрузку
+2025-06-09 17:08:10,276 - root - DEBUG - Заголовки запроса: {'Host': 'causally-enthralled-rat.cloudpub.ru', 'Accept': '*/*', 'Accept-Encoding': 'gzip, deflate', 'User-Agent': 'Python/3.12 aiohttp/3.11.18', 'Content-Length': '215228', 'Content-Type': 'multipart/form-data; boundary=d991623564544d9f9b9f0992413fa9f6', 'X-Forwarded-For': '89.109.50.246', 'x-forwarded-port': '443', 'X-Forwarded-Host': 'causally-enthralled-rat.cloudpub.ru', 'X-Forwarded-Proto': 'https', 'x-real-ip': '89.109.50.246', 'x-real-port': '7099'}
+2025-06-09 17:08:10,277 - root - DEBUG - Обработка поля: order_id
+2025-06-09 17:08:10,277 - root - INFO - ID заказа: 10
+2025-06-09 17:08:10,278 - root - DEBUG - Обработка поля: user_id
+2025-06-09 17:08:10,278 - root - INFO - ID пользователя: 1609896577
+2025-06-09 17:08:10,278 - root - DEBUG - Обработка поля: file
+2025-06-09 17:08:10,313 - root - INFO - Найдено поле с файлом
+2025-06-09 17:08:10,314 - root - INFO - Получен файл: order_10.jpg (размер: 214769 байт)
+2025-06-09 17:08:10,984 - root - INFO - Файл успешно загружен в Telegram: https://api.telegram.org/file/bot7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ/documents/file_509.jpg
+2025-06-09 17:08:10,984 - aiohttp.access - INFO - 127.0.0.1 [09/Jun/2025:17:08:10 +0300] "POST /upload_to_telegram HTTP/1.1" 200 279 "-" "Python/3.12 aiohttp/3.11.18"
+2025-06-09 17:08:16,394 - root - INFO - Получен запрос на загрузку
+2025-06-09 17:08:16,394 - root - DEBUG - Заголовки запроса: {'Host': 'causally-enthralled-rat.cloudpub.ru', 'Accept': '*/*', 'Accept-Encoding': 'gzip, deflate', 'User-Agent': 'Python/3.12 aiohttp/3.11.18', 'Content-Length': '263193', 'Content-Type': 'multipart/form-data; boundary=eb2ac9b26dc541c88f22416f76c5f6c9', 'X-Forwarded-For': '89.109.50.246', 'x-forwarded-port': '443', 'X-Forwarded-Host': 'causally-enthralled-rat.cloudpub.ru', 'X-Forwarded-Proto': 'https', 'x-real-ip': '89.109.50.246', 'x-real-port': '7118'}
+2025-06-09 17:08:16,395 - root - DEBUG - Обработка поля: order_id
+2025-06-09 17:08:16,407 - root - INFO - ID заказа: 11
+2025-06-09 17:08:16,407 - root - DEBUG - Обработка поля: user_id
+2025-06-09 17:08:16,407 - root - INFO - ID пользователя: 1609896577
+2025-06-09 17:08:16,408 - root - DEBUG - Обработка поля: file
+2025-06-09 17:08:16,459 - root - INFO - Найдено поле с файлом
+2025-06-09 17:08:16,459 - root - INFO - Получен файл: order_11.jpg (размер: 262734 байт)
+2025-06-09 17:08:17,327 - root - INFO - Файл успешно загружен в Telegram: https://api.telegram.org/file/bot7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ/documents/file_510.jpg
+2025-06-09 17:08:17,328 - aiohttp.access - INFO - 127.0.0.1 [09/Jun/2025:17:08:16 +0300] "POST /upload_to_telegram HTTP/1.1" 200 279 "-" "Python/3.12 aiohttp/3.11.18"
+2025-06-09 17:08:18,863 - root - INFO - Получен запрос на загрузку
+2025-06-09 17:08:18,864 - root - DEBUG - Заголовки запроса: {'Host': 'causally-enthralled-rat.cloudpub.ru', 'Accept': '*/*', 'Accept-Encoding': 'gzip, deflate', 'User-Agent': 'Python/3.12 aiohttp/3.11.18', 'Content-Length': '63160', 'Content-Type': 'multipart/form-data; boundary=d7b03d0080f64914b584c7c8546f90dc', 'X-Forwarded-For': '89.109.50.246', 'x-forwarded-port': '443', 'X-Forwarded-Host': 'causally-enthralled-rat.cloudpub.ru', 'X-Forwarded-Proto': 'https', 'x-real-ip': '89.109.50.246', 'x-real-port': '7464'}
+2025-06-09 17:08:18,864 - root - DEBUG - Обработка поля: order_id
+2025-06-09 17:08:18,864 - root - INFO - ID заказа: 12
+2025-06-09 17:08:18,864 - root - DEBUG - Обработка поля: user_id
+2025-06-09 17:08:18,875 - root - INFO - ID пользователя: 1609896577
+2025-06-09 17:08:18,875 - root - DEBUG - Обработка поля: file
+2025-06-09 17:08:18,899 - root - INFO - Найдено поле с файлом
+2025-06-09 17:08:18,900 - root - INFO - Получен файл: order_12.jpg (размер: 62701 байт)
+2025-06-09 17:08:19,290 - root - INFO - Файл успешно загружен в Telegram: https://api.telegram.org/file/bot7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ/documents/file_511.jpg
+2025-06-09 17:08:19,291 - aiohttp.access - INFO - 127.0.0.1 [09/Jun/2025:17:08:18 +0300] "POST /upload_to_telegram HTTP/1.1" 200 279 "-" "Python/3.12 aiohttp/3.11.18"
+2025-06-09 17:08:21,310 - root - INFO - Получен запрос на загрузку
+2025-06-09 17:08:21,310 - root - DEBUG - Заголовки запроса: {'Host': 'causally-enthralled-rat.cloudpub.ru', 'Accept': '*/*', 'Accept-Encoding': 'gzip, deflate', 'User-Agent': 'Python/3.12 aiohttp/3.11.18', 'Content-Length': '25547', 'Content-Type': 'multipart/form-data; boundary=0d49849336734c57b6a5ed83d4e10b0e', 'X-Forwarded-For': '89.109.50.246', 'x-forwarded-port': '443', 'X-Forwarded-Host': 'causally-enthralled-rat.cloudpub.ru', 'X-Forwarded-Proto': 'https', 'x-real-ip': '89.109.50.246', 'x-real-port': '7466'}
+2025-06-09 17:08:21,310 - root - DEBUG - Обработка поля: order_id
+2025-06-09 17:08:21,311 - root - INFO - ID заказа: 13
+2025-06-09 17:08:21,311 - root - DEBUG - Обработка поля: user_id
+2025-06-09 17:08:21,311 - root - INFO - ID пользователя: 1609896577
+2025-06-09 17:08:21,311 - root - DEBUG - Обработка поля: file
+2025-06-09 17:08:21,311 - root - INFO - Найдено поле с файлом
+2025-06-09 17:08:21,311 - root - INFO - Получен файл: order_13.doc (размер: 25088 байт)
+2025-06-09 17:08:21,470 - root - INFO - Файл успешно загружен в Telegram: https://api.telegram.org/file/bot7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ/documents/file_512.doc
+2025-06-09 17:08:21,471 - aiohttp.access - INFO - 127.0.0.1 [09/Jun/2025:17:08:21 +0300] "POST /upload_to_telegram HTTP/1.1" 200 279 "-" "Python/3.12 aiohttp/3.11.18"
+2025-06-09 17:08:26,734 - root - INFO - Получен запрос на загрузку
+2025-06-09 17:08:26,735 - root - DEBUG - Заголовки запроса: {'Host': 'causally-enthralled-rat.cloudpub.ru', 'Accept': '*/*', 'Accept-Encoding': 'gzip, deflate', 'User-Agent': 'Python/3.12 aiohttp/3.11.18', 'Content-Length': '30667', 'Content-Type': 'multipart/form-data; boundary=b960320efe2a473ba408c4f0a4212e16', 'X-Forwarded-For': '89.109.50.246', 'x-forwarded-port': '443', 'X-Forwarded-Host': 'causally-enthralled-rat.cloudpub.ru', 'X-Forwarded-Proto': 'https', 'x-real-ip': '89.109.50.246', 'x-real-port': '7441'}
+2025-06-09 17:08:26,735 - root - DEBUG - Обработка поля: order_id
+2025-06-09 17:08:26,759 - root - INFO - ID заказа: 14
+2025-06-09 17:08:26,759 - root - DEBUG - Обработка поля: user_id
+2025-06-09 17:08:26,759 - root - INFO - ID пользователя: 1609896577
+2025-06-09 17:08:26,760 - root - DEBUG - Обработка поля: file
+2025-06-09 17:08:26,760 - root - INFO - Найдено поле с файлом
+2025-06-09 17:08:26,760 - root - INFO - Получен файл: order_14.doc (размер: 30208 байт)
+2025-06-09 17:08:26,949 - root - INFO - Файл успешно загружен в Telegram: https://api.telegram.org/file/bot7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ/documents/file_513.doc
+2025-06-09 17:08:26,950 - aiohttp.access - INFO - 127.0.0.1 [09/Jun/2025:17:08:26 +0300] "POST /upload_to_telegram HTTP/1.1" 200 279 "-" "Python/3.12 aiohttp/3.11.18"
+2025-06-09 17:09:37,063 - root - INFO - Получен запрос на загрузку
+2025-06-09 17:09:37,063 - root - DEBUG - Заголовки запроса: {'Host': 'causally-enthralled-rat.cloudpub.ru', 'Accept': '*/*', 'Accept-Encoding': 'gzip, deflate', 'User-Agent': 'Python/3.12 aiohttp/3.11.18', 'Content-Length': '63158', 'Content-Type': 'multipart/form-data; boundary=65c3407b51714ddaac3871c92c81ad05', 'X-Forwarded-For': '89.109.50.246', 'x-forwarded-port': '443', 'X-Forwarded-Host': 'causally-enthralled-rat.cloudpub.ru', 'X-Forwarded-Proto': 'https', 'x-real-ip': '89.109.50.246', 'x-real-port': '7498'}
+2025-06-09 17:09:37,063 - root - DEBUG - Обработка поля: order_id
+2025-06-09 17:09:37,077 - root - INFO - ID заказа: 6
+2025-06-09 17:09:37,077 - root - DEBUG - Обработка поля: user_id
+2025-06-09 17:09:37,077 - root - INFO - ID пользователя: 1609896577
+2025-06-09 17:09:37,077 - root - DEBUG - Обработка поля: file
+2025-06-09 17:09:37,090 - root - INFO - Найдено поле с файлом
+2025-06-09 17:09:37,090 - root - INFO - Получен файл: order_6.jpg (размер: 62701 байт)
+2025-06-09 17:09:37,429 - root - INFO - Файл успешно загружен в Telegram: https://api.telegram.org/file/bot7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ/documents/file_514.jpg
+2025-06-09 17:09:37,430 - aiohttp.access - INFO - 127.0.0.1 [09/Jun/2025:17:09:37 +0300] "POST /upload_to_telegram HTTP/1.1" 200 279 "-" "Python/3.12 aiohttp/3.11.18"
+2025-06-09 17:21:39,545 - aiogram.dispatcher - INFO - Polling stopped
+2025-06-09 17:21:39,816 - aiogram.dispatcher - INFO - Polling stopped for bot @print_there_bot id=7818669005 - 'Send to print and pick up!'

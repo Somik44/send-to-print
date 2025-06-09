@@ -7,6 +7,7 @@ import asyncio
 import json
 import requests
 import traceback
+import aiofiles
 from PyQt6.QtCore import Qt, QTimer, QThread, pyqtSignal
 from PyQt6.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QListWidget, QPushButton,
@@ -17,8 +18,9 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtGui import QIcon
 import qasync
 from qasync import asyncSlot, QEventLoop
+from typing import Optional
 
-API_URL = "https://heatedly-effectual-bison.cloudpub.ru"
+API_URL = "https://pugnaciously-quickened-gobbler.cloudpub.ru"
 DOWNLOAD_DIR = os.path.abspath('downloads')
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
@@ -46,6 +48,10 @@ class FileReceiverApp(QWidget):
         self.current_items = {}
         self.init_ui()
         self.setup_timers()
+
+        self.current_downloads = {}
+        self.downloaded_files = set()
+        self.load_existing_files()
 
     def init_ui(self):
 
@@ -187,6 +193,77 @@ class FileReceiverApp(QWidget):
     async def on_timer_timeout(self):
         await self.load_orders()
 
+    @asyncSlot()
+    async def handle_download(self, order_id):
+        """Обработчик загрузки файла"""
+        # Блокируем кнопку для этого заказа
+        self.current_downloads[order_id] = True
+        await self.load_orders()  # Обновляем список
+
+        try:
+            async with aiohttp.ClientSession() as session:
+                # Запрашиваем загрузку файла
+                async with session.post(
+                        f"{API_URL}/orders/{order_id}/download"
+                ) as resp:
+                    if resp.status == 200:
+                        data = await resp.json()
+                        file_url = data['file_url']
+
+                        # Определяем имя файла
+                        async with session.get(
+                                f"{API_URL}/orders/{order_id}"
+                        ) as order_resp:
+                            order_data = await order_resp.json()
+                            file_extension = os.path.splitext(order_data['file_path'])[1]
+                            filename = f"order_{order_id}{file_extension}"
+
+                            # Скачиваем файл
+                            filepath = await self.download_file(file_url, filename)
+
+                            if filepath:
+                                # Добавляем файл в список загруженных
+                                self.downloaded_files.add(filename)
+                                # Открываем папку downloads после загрузки
+                                self.open_downloads_folder()
+                            else:
+                                self.show_error("Не удалось скачать файл")
+                    else:
+                        error_text = await resp.text()
+                        self.show_error(f"Ошибка загрузки (код {resp.status}): {error_text}")
+                        logging.error(f"Ошибка загрузки файла заказа {order_id}: {error_text}")
+        except Exception as e:
+            self.show_error(f"Ошибка загрузки: {str(e)}")
+        finally:
+            # Разблокируем кнопку
+            if order_id in self.current_downloads:
+                del self.current_downloads[order_id]
+            await self.load_orders()  # Обновляем список
+
+    async def download_file(self, url: str, filename: str) -> Optional[str]:
+        try:
+            filepath = os.path.join(DOWNLOAD_DIR, filename)
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url) as resp:
+                    if resp.status == 200:
+                        content = await resp.read()
+                        async with aiofiles.open(filepath, 'wb') as f:
+                            await f.write(content)
+                        return filepath
+        except Exception as e:
+            logging.error(f"Download error: {str(e)}")
+        return None
+
+    def validate_order(self, order):
+        required_fields = ['ID', 'status', 'file_path']
+        return all(field in order for field in required_fields)
+
+    def load_existing_files(self):
+        if os.path.exists(DOWNLOAD_DIR):
+            for filename in os.listdir(DOWNLOAD_DIR):
+                if filename.startswith("order_"):
+                    self.downloaded_files.add(filename)
+
     async def load_orders(self):
         try:
             async with aiohttp.ClientSession() as session:
@@ -216,25 +293,15 @@ class FileReceiverApp(QWidget):
                 item = QListWidgetItem()
                 widget = self.create_order_widget(order)
 
-                if order['status'] == 'received':
-                    self.received_list.addItem(item)
-                else:
-                    self.ready_list.addItem(item)
-
                 item.setSizeHint(widget.sizeHint())
                 target_list = self.received_list if order['status'] == 'received' else self.ready_list
+                target_list.addItem(item)
                 target_list.setItemWidget(item, widget)
+
                 self.current_items[order['ID']] = (item, widget)
 
-                if order['status'] == 'received' and order['file_path'] not in self.file_cache:
-                    asyncio.create_task(self.download_file(order['file_path']))
-
             except Exception as e:
-                logging.error(f"Ошибка обработки заказа: {traceback.format_exc()}")
-
-    def validate_order(self, order):
-        required_fields = ['ID', 'status', 'file_path']
-        return all(field in order for field in required_fields)
+                logging.error(f"Ошибка обработки заказа {order.get('ID', 'неизвестно')}: {traceback.format_exc()}")
 
     def create_order_widget(self, order):
         widget = QWidget()
@@ -251,12 +318,26 @@ class FileReceiverApp(QWidget):
 
         buttons = []
         if order['status'] == 'received':
-            # btn_print = QPushButton("Печать")
-            # btn_print.clicked.connect(lambda: self.print_file(order))
-            btn_open = QPushButton("Загрузить")
-            btn_open.clicked.connect(self. open_downloads_folder)
+            # Определяем имя файла для этого заказа
+            file_extension = os.path.splitext(order['file_path'])[1]
+            local_filename = f"order_{order['ID']}{file_extension}"
+
+            # Проверяем, загружен ли файл
+            is_downloaded = local_filename in self.downloaded_files
+
+            # Создаем кнопку в зависимости от состояния
+            if is_downloaded:
+                btn_open = QPushButton("Открыть папку")
+                btn_open.clicked.connect(self.open_downloads_folder)
+            else:
+                btn_open = QPushButton("Загрузить")
+                if order['ID'] in self.current_downloads:
+                    btn_open.setEnabled(False)
+                    btn_open.setText("Загрузка...")
+                else:
+                    btn_open.clicked.connect(lambda: self.handle_download(order['ID']))
+
             btn_ready = QPushButton("Готово")
-            # Добавляем подтверждение для кнопки "Готово"
             btn_ready.clicked.connect(lambda: self.confirm_status_change(
                 order['ID'],
                 'ready',
@@ -267,7 +348,6 @@ class FileReceiverApp(QWidget):
             buttons = [btn_info, btn_open, btn_ready]
         else:
             btn_complete = QPushButton("Выдать")
-            # Добавляем подтверждение для кнопки "Выдать"
             btn_complete.clicked.connect(lambda: self.confirm_status_change(
                 order['ID'],
                 'completed',
@@ -283,6 +363,7 @@ class FileReceiverApp(QWidget):
                 border: 1px solid #dee2e6; 
                 border-radius: 4px; 
                 padding: 6px 12px;
+                min-width: 120px;  /* Фиксированная ширина с запасом */
             }
             QPushButton:hover { 
                 background-color: #e2e6ea; 
@@ -302,6 +383,10 @@ class FileReceiverApp(QWidget):
         else:
             import subprocess
             subprocess.Popen(["xdg-open", DOWNLOAD_DIR])
+
+    def open_downloaded_file(self):
+        """Открывает папку downloads"""
+        self.open_downloads_folder()
 
     def confirm_status_change(self, order_id, new_status, message):
         reply = QMessageBox.question(
@@ -327,22 +412,6 @@ class FileReceiverApp(QWidget):
                        f"Код подтверждения: {order['con_code']}\n" \
                        f"Стоимость печати: {order['price']} руб."
         QMessageBox.information(self, "Проверочный код", info_message)
-
-    async def download_file(self, filename):
-        try:
-            filepath = os.path.join(DOWNLOAD_DIR, filename)
-            if os.path.exists(filepath):
-                return
-
-            async with aiohttp.ClientSession() as session:
-                async with session.get(f"{API_URL}/uploads/{filename}") as resp:
-                    if resp.status == 200:
-                        content = await resp.read()
-                        with open(filepath, 'wb') as f:
-                            f.write(content)
-                        self.file_cache.add(filename)
-        except Exception as e:
-            self.show_error(f"Ошибка загрузки: {str(e)}")
 
     # def print_file(self, order):
     #     filepath = os.path.join(DOWNLOAD_DIR, order['file_path'])
@@ -384,6 +453,13 @@ class FileReceiverApp(QWidget):
                     logging.error(f"Ошибка удаления файла {filename}: {str(e)}")
 
         super().closeEvent(event)
+
+        def load_existing_files(self):
+            """Загружаем список уже скачанных файлов при запуске"""
+            if os.path.exists(DOWNLOAD_DIR):
+                for filename in os.listdir(DOWNLOAD_DIR):
+                    if filename.startswith("order_"):
+                        self.downloaded_files.add(filename)
 
 
 class LoginDialog(QDialog):
