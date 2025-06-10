@@ -20,7 +20,7 @@ import qasync
 from qasync import asyncSlot, QEventLoop
 from typing import Optional
 
-API_URL = "https://pugnaciously-quickened-gobbler.cloudpub.ru"
+API_URL = "https://heatedly-effectual-bison.cloudpub.ru"
 DOWNLOAD_DIR = os.path.abspath('downloads')
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
@@ -243,7 +243,9 @@ class FileReceiverApp(QWidget):
     async def download_file(self, url: str, filename: str) -> Optional[str]:
         try:
             filepath = os.path.join(DOWNLOAD_DIR, filename)
-            async with aiohttp.ClientSession() as session:
+            # Создаем коннектор с отключенной проверкой SSL
+            connector = aiohttp.TCPConnector(ssl=False)
+            async with aiohttp.ClientSession(connector=connector) as session:
                 async with session.get(url) as resp:
                     if resp.status == 200:
                         content = await resp.read()
@@ -252,6 +254,7 @@ class FileReceiverApp(QWidget):
                         return filepath
         except Exception as e:
             logging.error(f"Download error: {str(e)}")
+            traceback.print_exc()
         return None
 
     def validate_order(self, order):
