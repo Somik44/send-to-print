@@ -243,7 +243,8 @@ class FileReceiverApp(QWidget):
     async def download_file(self, url: str, filename: str) -> Optional[str]:
         try:
             filepath = os.path.join(DOWNLOAD_DIR, filename)
-            async with aiohttp.ClientSession() as session:
+            connector = aiohttp.TCPConnector(ssl=False)
+            async with aiohttp.ClientSession(connector=connector) as session:
                 async with session.get(url) as resp:
                     if resp.status == 200:
                         content = await resp.read()
@@ -252,6 +253,7 @@ class FileReceiverApp(QWidget):
                         return filepath
         except Exception as e:
             logging.error(f"Download error: {str(e)}")
+            traceback.print_exc()
         return None
 
     def validate_order(self, order):
@@ -385,7 +387,6 @@ class FileReceiverApp(QWidget):
             subprocess.Popen(["xdg-open", DOWNLOAD_DIR])
 
     def open_downloaded_file(self):
-        """Открывает папку downloads"""
         self.open_downloads_folder()
 
     def confirm_status_change(self, order_id, new_status, message):
@@ -455,7 +456,6 @@ class FileReceiverApp(QWidget):
         super().closeEvent(event)
 
         def load_existing_files(self):
-            """Загружаем список уже скачанных файлов при запуске"""
             if os.path.exists(DOWNLOAD_DIR):
                 for filename in os.listdir(DOWNLOAD_DIR):
                     if filename.startswith("order_"):
