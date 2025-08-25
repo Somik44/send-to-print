@@ -327,8 +327,8 @@ async def process_file(message: types.Message, state: FSMContext):
         logging.info(f"Начинаем загрузку файла: {file_url}")
 
         # 3. Скачиваем файл (с отключенной проверкой SSL для теста)
-        connector = aiohttp.TCPConnector(ssl=False)  # ВНИМАНИЕ: Не для продакшена!
-        async with aiohttp.ClientSession(connector=connector) as session:
+        # connector = aiohttp.TCPConnector(ssl=False)  # ВНИМАНИЕ: Не для продакшена!  connector=connector
+        async with aiohttp.ClientSession() as session:
             async with session.get(file_url) as resp:
                 if resp.status != 200:
                     raise ValueError(f"Ошибка HTTP {resp.status}: {await resp.text()}")
@@ -489,7 +489,7 @@ async def process_comment(message: types.Message, state: FSMContext):
         f"• Тип: {user_data['color']}\n"
         f"{cost_line}\n"  
         f"• Комментарий: {comment if comment else 'нет'}\n"
-        f"Внимание! Это предварительная цена, не являющееся публичной офертой. Итоговую стоимость уточняйте на точке печати"
+        f"Внимание! Это предварительная цена, не являющаяся публичной офертой. Итоговую стоимость уточняйте на точке печати"
     )
 
     markup = ReplyKeyboardMarkup(
