@@ -197,10 +197,7 @@ class FileReceiverApp(QWidget):
     async def handle_download_or_open(self, order):
         """Обработчик загрузки или открытия файла"""
         order_id = order['ID']
-
-        # Определяем путь к файлу
-        file_extension = os.path.splitext(order['file_path'])[1]
-        filename = f"order_{order_id}{file_extension}"
+        filename = order['file_path']  # Имя файла из базы данных
         filepath = os.path.join(DOWNLOAD_DIR, filename)
 
         # Если файл уже существует, просто открываем папку
@@ -208,33 +205,22 @@ class FileReceiverApp(QWidget):
             self.open_downloads_folder()
             return
 
-        # Если файла нет, скачиваем его
+        # Прямая загрузка файла с сервера
+        file_url = f"{API_URL}/uploads/{filename}"
+
         # Блокируем кнопку для этого заказа
         self.current_downloads[order_id] = True
         await self.load_orders()  # Обновляем список
 
         try:
-            async with aiohttp.ClientSession() as session:
-                # Запрашиваем загрузку файла
-                async with session.post(
-                        f"{API_URL}/orders/{order_id}/download"
-                ) as resp:
-                    if resp.status == 200:
-                        data = await resp.json()
-                        file_url = data['file_url']
+            # Скачиваем файл напрямую
+            success = await self.download_file(file_url, filename)
 
-                        # Скачиваем файл
-                        downloaded_filepath = await self.download_file(file_url, filename)
-
-                        if downloaded_filepath:
-                            # Открываем папку downloads после загрузки
-                            self.open_downloads_folder()
-                        else:
-                            self.show_error("Не удалось скачать файл")
-                    else:
-                        error_text = await resp.text()
-                        self.show_error(f"Ошибка загрузки (код {resp.status}): {error_text}")
-                        logging.error(f"Ошибка загрузки файла заказа {order_id}: {error_text}")
+            if success:
+                # Открываем папку downloads после загрузки
+                self.open_downloads_folder()
+            else:
+                self.show_error("Не удалось скачать файл")
         except Exception as e:
             self.show_error(f"Ошибка загрузки: {str(e)}")
         finally:
@@ -243,22 +229,21 @@ class FileReceiverApp(QWidget):
                 del self.current_downloads[order_id]
             await self.load_orders()  # Обновляем список
 
-    async def download_file(self, url: str, filename: str) -> Optional[str]:
+    async def download_file(self, url: str, filename: str) -> bool:
         try:
             filepath = os.path.join(DOWNLOAD_DIR, filename)
-            # Создаем коннектор с отключенной проверкой SSL
-            # connector = aiohttp.TCPConnector(ssl=False)  connector=connector
             async with aiohttp.ClientSession() as session:
                 async with session.get(url) as resp:
                     if resp.status == 200:
                         content = await resp.read()
                         async with aiofiles.open(filepath, 'wb') as f:
                             await f.write(content)
-                        return filepath
+                        return True
+            return False
         except Exception as e:
             logging.error(f"Download error: {str(e)}")
             traceback.print_exc()
-        return None
+            return False
 
     def validate_order(self, order):
         required_fields = ['ID', 'status', 'file_path']
