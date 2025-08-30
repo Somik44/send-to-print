@@ -247,8 +247,8 @@ class FileReceiverApp(QWidget):
         try:
             filepath = os.path.join(DOWNLOAD_DIR, filename)
             # Создаем коннектор с отключенной проверкой SSL
-            connector = aiohttp.TCPConnector(ssl=False)
-            async with aiohttp.ClientSession(connector=connector) as session:
+            # connector = aiohttp.TCPConnector(ssl=False)  connector=connector
+            async with aiohttp.ClientSession() as session:
                 async with session.get(url) as resp:
                     if resp.status == 200:
                         content = await resp.read()
