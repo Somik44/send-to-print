@@ -236,8 +236,7 @@ async def process_file(message: types.Message, state: FSMContext):
         file_url = f"https://api.telegram.org/file/bot{API_TOKEN}/{file_info.file_path}"
         logging.info(f"Начинаем загрузку файла: {file_url}")
 
-        # 3. Скачиваем файл (с отключенной проверкой SSL для теста)
-        # connector = aiohttp.TCPConnector(ssl=False)  # ВНИМАНИЕ: Не для продакшена!  connector=connector
+        # 3. Скачиваем файл
         async with aiohttp.ClientSession() as session:
             async with session.get(file_url) as resp:
                 if resp.status != 200:
