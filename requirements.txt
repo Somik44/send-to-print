@@ -1,0 +1,14 @@
+aiohttp==3.9.3
+aiofiles==23.2.1
+aiogram==3.1.1
+aiomysql==0.2.0
+fastapi==0.104.1
+PyPDF2==3.0.1
+PyQt6==6.6.1
+PyQt5==5.15.10
+pymysql==1.1.0
+pywin32==306
+qasync==0.27.0
+requests==2.31.0
+uvicorn==0.24.0
+websockets==12.0
