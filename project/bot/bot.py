@@ -27,7 +27,7 @@ logging.basicConfig(
 )
 
 API_TOKEN = '7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ'
-API_URL = 'https://pugnaciously-quickened-gobbler.cloudpub.ru'
+API_URL = 'https://grumpily-meaningful-anemone.cloudpub.ru'
 UPLOAD_FOLDER = 'D:\\projects_py\\projectsWithGit\\send-to-print\\project\\api\\uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
@@ -209,7 +209,7 @@ async def process_shop(message: types.Message, state: FSMContext):
     await state.update_data(shop=shop)
     response = (
         f"🏪 Выбрана точка: {shop['name']}\n"
-        f"⌚ Время работы: пн-чт 9-16, пт 9-15"
+        f"⌚ Время работы: пн-чт 9-16, пт 9-15\n"
         f"📍 Адрес: {shop['address']}\n"
         f"💰 Цены:\n"
         f"• Черно-белая: {shop['price_bw']:.2f} руб/стр\n"

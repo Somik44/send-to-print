@@ -20,7 +20,7 @@ import qasync
 from qasync import asyncSlot, QEventLoop
 from typing import Optional
 
-API_URL = "https://pugnaciously-quickened-gobbler.cloudpub.ru"
+API_URL = "https://grumpily-meaningful-anemone.cloudpub.ru"
 DOWNLOAD_DIR = os.path.abspath('downloads')
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
@@ -144,9 +144,9 @@ class FileReceiverApp(QWidget):
 
     def show_instructions(self):
         QMessageBox.information(self, "Инструкция",
-                                "1. Для обновления списка заказов нажмите кнопку 'Обновить список'\n(По умолчанию список обновляется каждые 3 минуты)\n"
+                                "1. Для обновления списка заказов нажмите кнопку 'Обновить список'\n(По умолчанию список обновляется каждые 5 минут)\n"
                                 "2. Перед печатью посмотрите информацию о заказе(тип печати, комментарий). Для просмотра нажмите кнопку 'Информация'\n"
-                                "3. Для получения достпупа к файлу нажмите кнопку 'Загрузить'\n"
+                                "3. Для получения достпупа к файлу нажмите кнопку 'Файл'\n"
                                 "4. После успешной печати измените статус на 'Готово'\n"
                                 "5. Перед тем, как отдавать распечатку сверьте код выдачи по кнопке 'Код выдачи'\n"
                                 "6. После успешной проверки отдайте распечатку клиенту и нажмите 'Выдать'")
@@ -186,7 +186,7 @@ class FileReceiverApp(QWidget):
     def setup_timers(self):
         self.timer = QTimer()
         self.timer.timeout.connect(self.on_timer_timeout)
-        self.timer.start(180000)
+        self.timer.start(350000)
         self.on_timer_timeout()
 
     @asyncSlot()
@@ -263,7 +263,6 @@ class FileReceiverApp(QWidget):
                 ) as resp:
                     if resp.status == 200:
                         orders = await resp.json()
-                        print(orders)
                         unique_orders = {order['ID']: order for order in orders}.values()
                         self.handle_orders(list(unique_orders))
         except Exception as e:
