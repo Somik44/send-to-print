@@ -20,7 +20,7 @@ import qasync
 from qasync import asyncSlot, QEventLoop
 from typing import Optional
 
-API_URL = "https://grumpily-meaningful-anemone.cloudpub.ru"
+API_URL = "https://helpfully-accustomed-falcon.cloudpub.ru"
 DOWNLOAD_DIR = os.path.abspath('downloads')
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 

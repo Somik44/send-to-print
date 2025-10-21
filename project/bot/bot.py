@@ -27,9 +27,9 @@ logging.basicConfig(
 )
 
 API_TOKEN = '7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ'
-API_URL = 'https://grumpily-meaningful-anemone.cloudpub.ru'
+API_URL = 'https://helpfully-accustomed-falcon.cloudpub.ru'
 # UPLOAD_FOLDER = 'D:\\projects_py\\projectsWithGit\\send-to-print\\project\\api\\uploads'
-UPLOAD_FOLDER = 'C:\\Users\\PrintServer\\Documents\\Project\\send-to-print\\project\\api\\uploads'
+UPLOAD_FOLDER = 'C:\\Users\\print_server\\Documents\\Projects\\send-to-print\\project\\api\\uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 
