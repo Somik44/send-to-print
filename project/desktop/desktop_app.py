@@ -22,7 +22,10 @@ from typing import Optional
 import jwt
 from datetime import datetime, timedelta, timezone
 
-API_URL = "https://pugnaciously-quickened-gobbler.cloudpub.ru"
+# API для AG
+# API_URL = "https://pugnaciously-quickened-gobbler.cloudpub.ru"
+# API для server
+API_URL = "https://helpfully-accustomed-falcon.cloudpub.ru"
 DOWNLOAD_DIR = os.path.abspath('downloads')
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 

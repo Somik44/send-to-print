@@ -27,9 +27,14 @@ logging.basicConfig(
 )
 
 API_TOKEN = '7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ'
-API_URL = 'https://pugnaciously-quickened-gobbler.cloudpub.ru'
-UPLOAD_FOLDER = 'D:\\projects_py\\projectsWithGit\\send-to-print\\project\\api\\uploads'
-# UPLOAD_FOLDER = 'C:\\Users\\print_server\\Documents\\Projects\\send-to-print\\project\\api\\uploads'
+# API для AG
+# API_URL = 'https://pugnaciously-quickened-gobbler.cloudpub.ru'
+# API для server
+API_URL = 'https://helpfully-accustomed-falcon.cloudpub.ru'
+# folder для AG
+# UPLOAD_FOLDER = 'D:\\projects_py\\projectsWithGit\\send-to-print\\project\\api\\uploads'
+# folder для server
+UPLOAD_FOLDER = 'C:\\Users\\print_server\\Documents\\Projects\\send-to-print\\project\\api\\uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 
