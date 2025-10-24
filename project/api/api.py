@@ -7,9 +7,14 @@ import json
 import asyncio
 import websockets
 import aiomysql
-from fastapi import FastAPI, HTTPException, UploadFile, Form, File, Query, WebSocket
+import jwt
+import hashlib
+import secrets
+from datetime import datetime, timedelta, timezone
+from fastapi import FastAPI, HTTPException, UploadFile, Form, File, Query, WebSocket, Depends
 from fastapi.responses import JSONResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
 from typing import Optional, List
 from decimal import Decimal
@@ -67,6 +72,17 @@ LOGGING_CONFIG = {
     },
 }
 
+JWT_SECRET = "fQzoPHqr-PLxYFFIORSlOHSe8mhfv3M0WroY5a75i9VGR678LvPGcGh9AA7sa5arhepAnmHIVoBd8fIlsNw1KQ"
+JWT_ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_HOURS = 24
+
+security = HTTPBearer()
+
+
+class TokenData(BaseModel):
+    shop_id: int
+    exp: datetime
+
 
 class OrderUpdate(BaseModel):
     status: Optional[str] = None
@@ -76,7 +92,7 @@ app = FastAPI()
 # WS_URL = 'ws://tcp.cloudpub.ru:55000/bot'
 UPLOAD_FOLDER = os.path.abspath('uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-app.mount("/uploads", StaticFiles(directory=UPLOAD_FOLDER), name="uploads")
+# app.mount("/uploads", StaticFiles(directory=UPLOAD_FOLDER), name="uploads")
 
 
 # Database configuration
@@ -134,12 +150,103 @@ def decimal_to_float(obj):
     raise TypeError
 
 
+# JWT функции
+async def create_access_token(shop_data: dict) -> str:
+    expires_delta = timedelta(hours=ACCESS_TOKEN_EXPIRE_HOURS)
+    expire = datetime.now(timezone.utc) + expires_delta
+
+    payload = {
+        "shop_id": shop_data['ID_shop'],
+        "shop_name": shop_data['name'],
+        "exp": expire,
+        "iat": datetime.now(timezone.utc),
+        "type": "access"
+    }
+
+    token = jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
+    logging.info(f"Created token for shop {shop_data['ID_shop']}, expires at: {expire}")
+    return token
+
+
+async def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)) -> TokenData:
+    """Верификация JWT токена"""
+    try:
+        token = credentials.credentials
+        payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+
+        shop_id = payload.get("shop_id")
+        if shop_id is None:
+            raise HTTPException(
+                status_code=401,
+                detail="Invalid token payload"
+            )
+
+        return TokenData(shop_id=shop_id, exp=datetime.fromtimestamp(payload['exp'], tz=timezone.utc))
+
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token expired")
+    except jwt.InvalidTokenError:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
+
+# Новые эндпоинты аутентификации
+@app.post("/auth/login")
+async def shop_login(password_hash: str = Form(...)):
+    """Аутентификация точки и выдача токена"""
+    try:
+        async with await get_db() as conn:
+            async with conn.cursor(aiomysql.DictCursor) as cursor:
+                await cursor.execute(
+                    "SELECT ID_shop, name, address FROM shop WHERE password = %s",
+                    (password_hash,)
+                )
+                shop = await cursor.fetchone()
+
+                if not shop:
+                    # Просто возвращаем ошибку без логирования
+                    raise HTTPException(status_code=401, detail="Invalid credentials")
+
+                # Создаем токен
+                access_token = await create_access_token(shop)
+
+                return {
+                    "access_token": access_token,
+                    "token_type": "bearer",
+                    "expires_in": ACCESS_TOKEN_EXPIRE_HOURS * 3600,
+                    "shop_info": {
+                        "ID_shop": shop['ID_shop'],
+                        "name": shop['name'],
+                        "address": shop['address']
+                    }
+                }
+
+    except HTTPException:
+        # Пробрасываем HTTP исключения без логирования
+        raise
+    except Exception as e:
+        # Логируем только для админа, но не показываем пользователю
+        logging.error(f"Login error: {str(e)}")
+        raise HTTPException(status_code=500, detail="Authentication error")
+
+
+@app.get("/auth/verify")
+async def verify_token_endpoint(current_shop: TokenData = Depends(verify_token)):
+    """Эндпоинт для проверки валидности токена"""
+    return {
+        "valid": True,
+        "shop_id": current_shop.shop_id,
+        "expires_at": current_shop.exp.isoformat()
+    }
+
+
 # Orders endpoints
 @app.get("/orders", response_model=List[dict])
 async def get_orders(
-        status: List[str] = Query(..., title="Статусы заказов"),
-        shop_id: Optional[int] = Query(None, title="ID магазина")
+    status: List[str] = Query(..., title="Статусы заказов"),
+    shop_id: Optional[int] = Query(None, title="ID магазина"),
+    current_shop: TokenData = Depends(verify_token)
 ):
+    """Получение заказов для авторизованной точки"""
     try:
         async with await get_db() as conn:
             async with conn.cursor() as cursor:
@@ -150,6 +257,10 @@ async def get_orders(
                 if shop_id is not None:
                     query += " AND ID_shop = %s"
                     params.append(shop_id)
+                else:
+                    # Если shop_id не указан, показываем только заказы текущей точки
+                    query += " AND ID_shop = %s"
+                    params.append(current_shop.shop_id)
 
                 await cursor.execute(query, params)
                 result = await cursor.fetchall()
@@ -162,15 +273,16 @@ async def get_orders(
 
 
 @app.post("/orders/{order_id}/ready")
-async def mark_order_ready(order_id: int):
+async def mark_order_ready(order_id: int, current_shop: TokenData = Depends(verify_token)):
+    """Пометить заказ как готовый"""
     try:
         async with await get_db() as conn:
             async with conn.cursor() as cursor:
                 await conn.begin()
-                # Получаем user_id перед изменением статуса
+                # Проверяем что заказ принадлежит точке
                 await cursor.execute(
-                    "SELECT user_id FROM `order` WHERE ID = %s FOR UPDATE",
-                    (order_id,)
+                    "SELECT user_id FROM `order` WHERE ID = %s AND ID_shop = %s FOR UPDATE",
+                    (order_id, current_shop.shop_id)
                 )
                 current = await cursor.fetchone()
 
@@ -178,13 +290,11 @@ async def mark_order_ready(order_id: int):
                     await conn.rollback()
                     raise HTTPException(404, detail="Order not found")
 
-                # Обновляем статус
                 await cursor.execute(
-                    "UPDATE `order` SET status = 'ready' WHERE ID = %s",
-                    (order_id,)
+                    "UPDATE `order` SET status = 'ready' WHERE ID = %s AND ID_shop = %s",
+                    (order_id, current_shop.shop_id)
                 )
                 await conn.commit()
-                # await notify_bot(order_id, "ready")
                 return {"status": "ready"}
     except Exception as e:
         logging.error(f"Error: {traceback.format_exc()}")
@@ -192,19 +302,19 @@ async def mark_order_ready(order_id: int):
 
 
 @app.post("/orders/{order_id}/complete")
-async def complete_order(order_id: int):
+async def complete_order(order_id: int, current_shop: TokenData = Depends(verify_token)):
+    """Завершить заказ (выдать клиенту)"""
     try:
         async with await get_db() as conn:
             async with conn.cursor() as cursor:
                 await conn.begin()
 
-                # 1. Получаем данные заказа с блокировкой
                 await cursor.execute(
                     """SELECT status, user_id, file_path 
                        FROM `order` 
-                       WHERE ID = %s 
+                       WHERE ID = %s AND ID_shop = %s
                        FOR UPDATE""",
-                    (order_id,)
+                    (order_id, current_shop.shop_id)
                 )
                 current = await cursor.fetchone()
 
@@ -219,7 +329,6 @@ async def complete_order(order_id: int):
                         detail=f"Невозможно завершить заказ в статусе {current['status']}"
                     )
 
-                # 2. Удаление файла
                 file_path = os.path.join(UPLOAD_FOLDER, current['file_path'])
                 try:
                     if os.path.exists(file_path):
@@ -227,15 +336,12 @@ async def complete_order(order_id: int):
                         logging.info(f"Файл заказа {order_id} удален: {file_path}")
                 except Exception as e:
                     logging.error(f"Ошибка удаления файла: {str(e)}")
-                    # Не прерываем выполнение, только логируем
 
-                # 3. Обновление статуса
                 await cursor.execute(
-                    "UPDATE `order` SET status = 'completed' WHERE ID = %s",
-                    (order_id,)
+                    "UPDATE `order` SET status = 'completed' WHERE ID = %s AND ID_shop = %s",
+                    (order_id, current_shop.shop_id)
                 )
                 await conn.commit()
-                # await notify_bot(order_id, "completed")
                 return {"status": "completed"}
 
     except HTTPException:
@@ -302,6 +408,7 @@ async def create_order(
 # Shops endpoints
 @app.get("/shops")
 async def get_shops():
+    """Получение списка магазинов (публичный эндпоинт для бота)"""
     try:
         async with await get_db() as conn:
             async with conn.cursor() as cursor:
@@ -315,9 +422,9 @@ async def get_shops():
         logging.error(f"Error: {traceback.format_exc()}")
         raise HTTPException(500, detail="Server error")
 
-
 @app.get("/shops/{shop_name}")
 async def get_shop(shop_name: str):
+    """Получение информации о магазине (публичный эндпоинт для бота)"""
     try:
         async with await get_db() as conn:
             async with conn.cursor(aiomysql.DictCursor) as cursor:
@@ -337,12 +444,13 @@ async def get_shop(shop_name: str):
 
 
 @app.get("/shop/{password_hash}")
-async def get_shop_by_password(password_hash: str):
+async def get_shop_by_password(password_hash: str, current_shop: TokenData = Depends(verify_token)):
+    """Получение магазина по паролю (только для авторизованных точек)"""
     try:
         async with await get_db() as conn:
-            async with conn.cursor(aiomysql.DictCursor) as cursor:  # Используем DictCursor
+            async with conn.cursor(aiomysql.DictCursor) as cursor:
                 await cursor.execute(
-                    "SELECT ID_shop, name, address FROM shop WHERE password = %s",  # Добавили address
+                    "SELECT ID_shop, name, address FROM shop WHERE password = %s",
                     (password_hash,)
                 )
                 shop = await cursor.fetchone()
@@ -351,7 +459,7 @@ async def get_shop_by_password(password_hash: str):
                         content={"detail": "Invalid password"},
                         status_code=401
                     )
-                return shop  # Теперь возвращает ID, название и адрес
+                return shop
     except Exception as e:
         logging.error(f"Error: {traceback.format_exc()}")
         raise HTTPException(500, detail="Server error")
@@ -359,11 +467,39 @@ async def get_shop_by_password(password_hash: str):
 
 # Files endpoint
 @app.get("/files/{filename}")
-async def get_file(filename: str):
-    file_path = os.path.join(UPLOAD_FOLDER, filename)
-    if not os.path.exists(file_path):
-        raise HTTPException(404, detail="File not found")
-    return FileResponse(file_path)
+async def get_file(
+        filename: str,
+        current_shop: TokenData = Depends(verify_token)
+):
+    """Защищенный доступ к файлам - только для авторизованных точек"""
+    try:
+        # Проверяем, принадлежит ли файл заказа текущей точке
+        async with await get_db() as conn:
+            async with conn.cursor(aiomysql.DictCursor) as cursor:
+                await cursor.execute("""
+                    SELECT o.ID_shop 
+                    FROM `order` o 
+                    WHERE o.file_path = %s AND o.ID_shop = %s
+                """, (filename, current_shop.shop_id))
+                order = await cursor.fetchone()
+
+                if not order:
+                    raise HTTPException(
+                        status_code=403,
+                        detail="Access denied - file does not belong to your shop"
+                    )
+
+        file_path = os.path.join(UPLOAD_FOLDER, filename)
+        if not os.path.exists(file_path):
+            raise HTTPException(404, detail="File not found")
+
+        return FileResponse(file_path)
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"File access error: {traceback.format_exc()}")
+        raise HTTPException(500, detail="Server error")
 
 
 if __name__ == "__main__":

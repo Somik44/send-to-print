@@ -27,9 +27,8 @@ logging.basicConfig(
 )
 
 API_TOKEN = '7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ'
-API_URL = 'https://grumpily-meaningful-anemone.cloudpub.ru'
-# UPLOAD_FOLDER = 'D:\\projects_py\\projectsWithGit\\send-to-print\\project\\api\\uploads'
-UPLOAD_FOLDER = 'C:\\Users\\PrintServer\\Documents\\Project\\send-to-print\\project\\api\\uploads'
+API_URL = 'https://pugnaciously-quickened-gobbler.cloudpub.ru'
+UPLOAD_FOLDER = 'D:\\projects_py\\projectsWithGit\\send-to-print\\project\\api\\uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 
@@ -238,8 +237,7 @@ async def process_file(message: types.Message, state: FSMContext):
         logging.info(f"Начинаем загрузку файла: {file_url}")
 
         # 3. Скачиваем файл
-        connector = aiohttp.TCPConnector(ssl=False)
-        async with aiohttp.ClientSession(connector=connector) as session:
+        async with aiohttp.ClientSession() as session:
             async with session.get(file_url) as resp:
                 if resp.status != 200:
                     raise ValueError(f"Ошибка HTTP {resp.status}: {await resp.text()}")
