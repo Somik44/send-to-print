@@ -429,7 +429,7 @@ async def get_shop(shop_name: str):
         async with await get_db() as conn:
             async with conn.cursor(aiomysql.DictCursor) as cursor:
                 await cursor.execute(
-                    "SELECT name, ID_shop, address, price_bw, price_cl FROM shop WHERE name = %s",
+                    "SELECT name, ID_shop, address, w_hours, price_bw, price_cl FROM shop WHERE name = %s",
                     (shop_name,)
                 )
                 shop = await cursor.fetchone()
