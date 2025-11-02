@@ -44,6 +44,7 @@ class ShopApp(QMainWindow):
         fields = [
             ("Название магазина:", "name_input"),
             ("Адрес:", "address_input"),
+            ("Часы работы:", "w_hours_input"),
             ("Цена черно-белая:", "bw_price_input"),
             ("Цена цветная:", "color_price_input"),
             ("Пароль:", "password_input")
@@ -85,6 +86,7 @@ class ShopApp(QMainWindow):
         fields = {
             'name': self.name_input.text().strip(),
             'address': self.address_input.text().strip(),
+            'w_hours': self.w_hours_input.text().strip(),
             'bw_price': self.bw_price_input.text().strip(),
             'color_price': self.color_price_input.text().strip(),
             'password': self.password_input.text().strip()
@@ -115,12 +117,13 @@ class ShopApp(QMainWindow):
         try:
             with self.db_connection.cursor() as cursor:
                 query = """
-                INSERT INTO shop (name, address, price_bw, price_cl, password)
-                VALUES (%s, %s, %s, %s, %s)
+                INSERT INTO shop (name, address, w_hours, price_bw, price_cl, password)
+                VALUES (%s, %s, %s, %s, %s, %s)
                 """
                 cursor.execute(query, (
                     fields['name'],
                     fields['address'],
+                    fields['w_hours'],
                     fields['bw_price'],
                     fields['color_price'],
                     password_hash
@@ -129,7 +132,7 @@ class ShopApp(QMainWindow):
 
             self.existing_hashes.add(password_hash)
 
-            for field in ['name', 'address', 'bw_price', 'color_price', 'password']:
+            for field in ['name', 'address', 'w_hours', 'bw_price', 'color_price', 'password']:
                 getattr(self, f"{field}_input").clear()
 
             QMessageBox.information(self, "Успех", "Магазин успешно добавлен!")
