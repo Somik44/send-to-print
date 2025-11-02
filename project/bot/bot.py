@@ -592,6 +592,22 @@ async def process_comment(message: types.Message, state: FSMContext):
     else:
         comment = message.text
 
+    # Проверяем длину комментария
+    if len(comment) > 254:
+        markup = ReplyKeyboardMarkup(
+            keyboard=[
+                [KeyboardButton(text="Без комментария")]
+            ],
+            resize_keyboard=True,
+            one_time_keyboard=True
+        )
+        await message.answer(
+            "❌ Комментарий слишком длинный! Максимальная длина - 254 символа.\n"
+            "📝 Введите комментарий к заказу или нажмите кнопку ниже:",
+            reply_markup=markup
+        )
+        return  # Остаемся в состоянии Form.comment
+
     await state.update_data(comment=comment)
     user_data = await state.get_data()
 
