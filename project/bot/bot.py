@@ -154,17 +154,17 @@ async def get_page_count(file_path: str, ext: str) -> int:
             return await get_pdf_page_count(file_path)
 
         # Для Word документов используем LibreOffice как основной метод
-        # if ext.lower() in ('.doc', '.docx', '.odt', '.rtf'):
-        #     liboffice_result = await get_word_page_count_via_libreoffice(file_path)
-        #     if liboffice_result > 0:
-        #         return liboffice_result
-        #     else:
-        #         # Если LibreOffice вернул 0 или ошибку, используем fallback
-        #         return await get_fallback_page_count(file_path, ext)
-        if ext.lower() == '.docx':
-            return await get_docx_page_count_metadata(file_path)
-        if ext.lower() == '.doc':
-            return 0
+        if ext.lower() in ('.doc', '.docx', '.odt', '.rtf'):
+            liboffice_result = await get_word_page_count_via_libreoffice(file_path)
+            if liboffice_result > 0:
+                return liboffice_result
+            else:
+                # Если LibreOffice вернул 0 или ошибку, используем fallback
+                return await get_fallback_page_count(file_path, ext)
+        # if ext.lower() == '.docx':
+        #     return await get_docx_page_count_metadata(file_path)
+        # if ext.lower() == '.doc':
+        #     return 0
     except Exception as e:
         logging.error(f"Error counting pages for {file_path}: {str(e)}")
         # return await get_fallback_page_count(file_path, ext)
@@ -198,90 +198,88 @@ async def get_pdf_page_count(file_path: str) -> int:
         logging.error(f"PDF page count error: {str(e)}")
 
 
->>>>>>> 2cefdfef7e7f058512c43cb82f136d3f039091e9
-# async def get_word_page_count_via_libreoffice(file_path: str) -> int:
-#     """
-#     Точный подсчет страниц Word документов через LibreOffice
-#     """
-#     temp_dir = None
-#     try:
-#         # Создаем временную директорию для PDF
-#         temp_dir = tempfile.mkdtemp()
-#         pdf_output_path = os.path.join(temp_dir, "output.pdf")
+async def get_word_page_count_via_libreoffice(file_path: str) -> int:
+    """
+    Точный подсчет страниц Word документов через LibreOffice
+    """
+    temp_dir = None
+    try:
+        # Создаем временную директорию для PDF
+        temp_dir = tempfile.mkdtemp()
+        pdf_output_path = os.path.join(temp_dir, "output.pdf")
+
+        # Конвертируем документ в PDF через LibreOffice
+        cmd = [
+            'libreoffice', '--headless', '--convert-to', 'pdf',
+            '--outdir', temp_dir, file_path
+        ]
+
+        # Запускаем процесс конвертации
+        process = await asyncio.create_subprocess_exec(
+            *cmd,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE
+        )
+
+        stdout, stderr = await process.communicate()
+
+        if process.returncode != 0:
+            logging.error(f"LibreOffice conversion failed: {stderr.decode()}")
+            return await get_fallback_page_count(file_path, '.docx')
+
+        # Проверяем, создался ли PDF файл
+        if not os.path.exists(pdf_output_path):
+            logging.error("PDF file was not created by LibreOffice")
+            return await get_fallback_page_count(file_path, '.docx')
+
+        # Подсчитываем страницы в PDF
+        page_count = await get_pdf_page_count(pdf_output_path)
+
+        # Очищаем временные файлы
+        try:
+            os.remove(pdf_output_path)
+            os.rmdir(temp_dir)
+        except:
+            pass
+
+        return page_count
+
+    except Exception as e:
+        logging.error(f"LibreOffice page count error: {str(e)}")
+
+        # Очистка временных файлов при ошибке
+        if temp_dir and os.path.exists(temp_dir):
+            try:
+                for file in os.listdir(temp_dir):
+                    os.remove(os.path.join(temp_dir, file))
+                os.rmdir(temp_dir)
+            except:
+                pass
+
+        return await get_fallback_page_count(file_path, '.docx')
 #
-#         # Конвертируем документ в PDF через LibreOffice
-#         cmd = [
-#             'libreoffice', '--headless', '--convert-to', 'pdf',
-#             '--outdir', temp_dir, file_path
-#         ]
 #
-#         # Запускаем процесс конвертации
-#         process = await asyncio.create_subprocess_exec(
-#             *cmd,
-#             stdout=asyncio.subprocess.PIPE,
-#             stderr=asyncio.subprocess.PIPE
-#         )
-#
-#         stdout, stderr = await process.communicate()
-#
-#         if process.returncode != 0:
-#             logging.error(f"LibreOffice conversion failed: {stderr.decode()}")
-#             return await get_fallback_page_count(file_path, '.docx')
-#
-#         # Проверяем, создался ли PDF файл
-#         if not os.path.exists(pdf_output_path):
-#             logging.error("PDF file was not created by LibreOffice")
-#             return await get_fallback_page_count(file_path, '.docx')
-#
-#         # Подсчитываем страницы в PDF
-#         page_count = await get_pdf_page_count(pdf_output_path)
-#
-#         # Очищаем временные файлы
-#         try:
-#             os.remove(pdf_output_path)
-#             os.rmdir(temp_dir)
-#         except:
-#             pass
-#
-#         return page_count
-#
-#     except Exception as e:
-#         logging.error(f"LibreOffice page count error: {str(e)}")
-#
-#         # Очистка временных файлов при ошибке
-#         if temp_dir and os.path.exists(temp_dir):
-#             try:
-#                 for file in os.listdir(temp_dir):
-#                     os.remove(os.path.join(temp_dir, file))
-#                 os.rmdir(temp_dir)
-#             except:
-#                 pass
-#
-#         return await get_fallback_page_count(file_path, '.docx')
-#
-#
- async def get_fallback_page_count(file_path: str, ext: str) -> int:
-     """
-     Fallback метод для подсчета страниц, если LibreOffice не сработал
-     """
-     try:
-         # Метод 1: python-docx для .docx файлов
-         if ext.lower() == '.docx':
-             return await get_docx_page_count_via_python_docx(file_path)
-         if ext.lower() == '.doc':
-             return await get_doc_page_count_fallback(file_path)
+# async def get_fallback_page_count(file_path: str, ext: str) -> int:
+#      """
+#      Fallback метод для подсчета страниц, если LibreOffice не сработал
+#      """
+#      try:
+#          # Метод 1: python-docx для .docx файлов
+#          if ext.lower() == '.docx':
+#              return await get_docx_page_count_via_python_docx(file_path)
+#          if ext.lower() == '.doc':
+#              return await get_doc_page_count_fallback(file_path)
 #         # Метод 2: Анализ метаданных DOCX
 #         if ext.lower() == '.docx':
 #             return await get_docx_page_count_metadata(file_path)
-<<<<<<< HEAD
 #         # Метод 3: Приблизительный подсчет по размеру файла
 #         file_size = os.path.getsize(file_path)
 #         # Эмпирическая формула: ~2000 байт на страницу для текста
 #         return max(1, file_size // 2000)
-     except Exception:
-         logging.error(f"Fallback methods page count error: {str(e)}")
-#
-#
+#      except Exception:
+#          logging.error(f"Fallback methods page count error: {str(e)}")
+
+
 # async def get_docx_page_count_metadata(file_path: str) -> int:
 #     """
 #     Подсчет страниц через метаданные DOCX (менее точный, но быстрый)
@@ -295,95 +293,40 @@ async def get_pdf_page_count(file_path: str) -> int:
 #             return page_count
 #     except Exception as e:
 #         logging.error(f"DOCX metadata page count error: {str(e)}")
+
+
+# async def get_doc_page_count_fallback(file_path: str) -> int:
+#      """
+#      Fallback для .doc файлов через antiword
+#      """
+#      try:
+#          # Проверяем доступность antiword
+#          result = subprocess.run(['which', 'antiword'], capture_output=True, text=True)
+#          if result.returncode != 0:
+#              logging.warning("antiword not found, using file size estimation")
+#              return await get_doc_page_count_by_size(file_path)
 #
+#          # Используем antiword для подсчета страниц
+#          cmd = ['antiword', file_path]
+#          process = await asyncio.create_subprocess_exec(
+#              *cmd,
+#              stdout=asyncio.subprocess.PIPE,
+#              stderr=asyncio.subprocess.PIPE
+#          )
 #
- async def get_doc_page_count_fallback(file_path: str) -> int:
-     """
-     Fallback для .doc файлов через antiword
-     """
-     try:
-         # Проверяем доступность antiword
-         result = subprocess.run(['which', 'antiword'], capture_output=True, text=True)
-         if result.returncode != 0:
-             logging.warning("antiword not found, using file size estimation")
-             return await get_doc_page_count_by_size(file_path)
-
-         # Используем antiword для подсчета страниц
-         cmd = ['antiword', file_path]
-         process = await asyncio.create_subprocess_exec(
-             *cmd,
-             stdout=asyncio.subprocess.PIPE,
-             stderr=asyncio.subprocess.PIPE
-         )
-
-         stdout, stderr = await process.communicate()
-
-         if process.returncode == 0:
-             text = stdout.decode('utf-8', errors='ignore')
-             # Подсчет страниц по количеству символов (приблизительно)
-             # В среднем 1800-2000 символов на страницу
-             char_count = len(text)
-             page_count = max(1, char_count // 1800)
-             return page_count
-         else:
-             logging.error(f"antiword failed: {stderr.decode()}")
-     except Exception as e:
-         logging.error(f"antiword page count error: {str(e)}")
-
-
- async def get_docx_page_count_via_python_docx(file_path: str) -> int:
-     """
-     Подсчет страниц через python-docx (более точный чем метаданные)
-     """
-     try:
-         from docx import Document
-
-         doc = Document(file_path)
-
-         # Подсчет через анализ структуры документа
-         # Это приблизительный метод, но лучше чем метаданные
-
-         total_pages = 0
-
-         # Учитываем явные разрывы страниц
-         for paragraph in doc.paragraphs:
-             if 'w:br' in paragraph._p.xml and 'type="page"' in paragraph._p.xml:
-                 total_pages += 1
-
-         # Учитываем разделы документа
-         if hasattr(doc, 'sections'):
-             total_pages += len(doc.sections)
-
-         # Минимальное количество страниц
-         total_pages = max(1, total_pages)
-
-         # Эвристика: если документ большой, но мало разрывов
-         if len(doc.paragraphs) > 50 and total_pages == 1:
-             total_pages = max(total_pages, len(doc.paragraphs) // 30)
-
-         logging.info(f"python-docx estimated pages: {total_pages}")
-         return total_pages
-
-     except Exception as e:
-         logging.error(f"python-docx page count error: {str(e)}")
-         # Пробуем метаданные как резервный вариант
-         return await get_docx_page_count_metadata(file_path)
-=======
-#     except Exception:
-#         logging.error(f"Fallback methods page count error: {str(e)}")
-
-
-async def get_docx_page_count_metadata(file_path: str) -> int:
-    try:
-        with zipfile.ZipFile(file_path, 'r') as document:
-            dxml = document.read('docProps/app.xml')
-            uglyXml = xml.dom.minidom.parseString(dxml)
-            page_element = uglyXml.getElementsByTagName('Pages')[0]
-            page_count = int(page_element.childNodes[0].nodeValue)
-            return page_count
-    except Exception as e:
-        logging.error(f"DOCX metadata page count error: {str(e)}")
->>>>>>> 2cefdfef7e7f058512c43cb82f136d3f039091e9
+#          stdout, stderr = await process.communicate()
+#
+#          if process.returncode == 0:
+#              text = stdout.decode('utf-8', errors='ignore')
+#              # Подсчет страниц по количеству символов (приблизительно)
+#              # В среднем 1800-2000 символов на страницу
+#              char_count = len(text)
+#              page_count = max(1, char_count // 1800)
+#              return page_count
+#          else:
+#              logging.error(f"antiword failed: {stderr.decode()}")
+#      except Exception as e:
+#          logging.error(f"antiword page count error: {str(e)}")
 
 
 @dp.message(Command("start"))
