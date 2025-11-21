@@ -120,73 +120,85 @@ async def confirmation_timeout(chat_id: int, state: FSMContext):
         logging.info("1-минутный таймер отменен")
 
 
-#async def get_page_count(file_path: str, ext: str) -> int:
-#    try:
-#        if ext in ('.png', '.jpg', '.jpeg'):
-#            return 1
-#        if ext == '.pdf':
-#            async with aiofiles.open(file_path, 'rb') as f:
-#                content = await f.read()
-#                pdf = PdfReader(BytesIO(content))  # Используем BytesIO
-#                return len(pdf.pages)
+# async def get_page_count(file_path: str, ext: str) -> int:
+#     try:
+#         if ext in ('.png', '.jpg', '.jpeg'):
+#             return 1
+#         if ext == '.pdf':
+#             async with aiofiles.open(file_path, 'rb') as f:
+#                 content = await f.read()
+#                 pdf = PdfReader(BytesIO(content))  # Используем BytesIO
+#                 return len(pdf.pages)
 #
-#        return await asyncio.to_thread(_process_word_file, file_path)
-#        # return await get_word_page_count_via_libreoffice(file_path)
+#         return await asyncio.to_thread(_process_word_file, file_path)
+#         # return await get_word_page_count_via_libreoffice(file_path)
 #
-#    except Exception as e:
-#        logging.error(f"Ошибка подсчета страниц: {traceback.format_exc()}")
-#       raise
-#
-#
- async def get_page_count(file_path: str, ext: str) -> int:
-     """
-     Универсальная функция подсчета страниц с приоритетами:
-     1. LibreOffice (самый точный)
-     2. python-docx (для .docx)
-     3. Метаданные DOCX
-     4. Размер файла (последний fallback)
-     """
-     try:
-         if ext.lower() in ('.png', '.jpg', '.jpeg'):
-             return 1
+#     except Exception as e:
+#         logging.error(f"Ошибка подсчета страниц: {traceback.format_exc()}")
+#         raise
 
-         if ext.lower() == '.pdf':
-            async with aiofiles.open(file_path, 'rb') as f:
-                content = await f.read()
-                pdf = PdfReader(BytesIO(content))  # Используем BytesIO
-                return len(pdf.pages)
 
-         # Для Word документов используем LibreOffice как основной метод
-         if ext.lower() in ('.doc', '.docx', '.odt', '.rtf'):
-             liboffice_result = await get_word_page_count_via_libreoffice(file_path)
-             if liboffice_result > 0:
-                 return liboffice_result
-             else:
-                 # Если LibreOffice вернул 0 или ошибку, используем fallback
-                 return await get_fallback_page_count(file_path, ext)
+async def get_page_count(file_path: str, ext: str) -> int:
+    """
+    Универсальная функция подсчета страниц с приоритетами:
+    1. LibreOffice (самый точный)
+    2. python-docx (для .docx)
+    3. Метаданные DOCX
+    4. Размер файла (последний fallback)
+    """
+    try:
+        if ext.lower() in ('.png', '.jpg', '.jpeg'):
+            return 1
 
-     except Exception as e:
-         logging.error(f"Error counting pages for {file_path}: {str(e)}")
-         return await get_fallback_page_count(file_path, ext)
-#
-#
-#def _process_word_file(file_path: str) -> int:
-#    pythoncom.CoInitialize()
-#    try:
-#        word = win32com.client.Dispatch("Word.Application")
-#        word.Visible = False
-#        doc = word.Documents.Open(os.path.abspath(file_path))
-#        count = doc.ComputeStatistics(2)
-#        doc.Close(False)
-#        return count
-#    except Exception as e:
-#        logging.error(f"Word COM Error: {str(e)}")
-#        raise
-#    finally:
-#        word.Quit()
-#        pythoncom.CoUninitialize()
-#
-#
+        if ext.lower() == '.pdf':
+            return await get_pdf_page_count(file_path)
+
+        # Для Word документов используем LibreOffice как основной метод
+        # if ext.lower() in ('.doc', '.docx', '.odt', '.rtf'):
+        #     liboffice_result = await get_word_page_count_via_libreoffice(file_path)
+        #     if liboffice_result > 0:
+        #         return liboffice_result
+        #     else:
+        #         # Если LibreOffice вернул 0 или ошибку, используем fallback
+        #         return await get_fallback_page_count(file_path, ext)
+        if ext.lower() == '.docx':
+            return await get_docx_page_count_metadata(file_path)
+        if ext.lower() == '.doc':
+            return 0
+    except Exception as e:
+        logging.error(f"Error counting pages for {file_path}: {str(e)}")
+        # return await get_fallback_page_count(file_path, ext)
+
+
+# def _process_word_file(file_path: str) -> int:
+#     pythoncom.CoInitialize()
+#     try:
+#         word = win32com.client.Dispatch("Word.Application")
+#         word.Visible = False
+#         doc = word.Documents.Open(os.path.abspath(file_path))
+#         count = doc.ComputeStatistics(2)
+#         doc.Close(False)
+#         return count
+#     except Exception as e:
+#         logging.error(f"Word COM Error: {str(e)}")
+#         raise
+#     finally:
+#         word.Quit()
+#         pythoncom.CoUninitialize()
+
+
+async def get_pdf_page_count(file_path: str) -> int:
+    """Подсчет страниц в PDF файле"""
+    try:
+        async with aiofiles.open(file_path, 'rb') as f:
+            content = await f.read()
+            pdf = PdfReader(BytesIO(content))
+            return len(pdf.pages)
+    except Exception as e:
+        logging.error(f"PDF page count error: {str(e)}")
+
+
+>>>>>>> 2cefdfef7e7f058512c43cb82f136d3f039091e9
 # async def get_word_page_count_via_libreoffice(file_path: str) -> int:
 #     """
 #     Точный подсчет страниц Word документов через LibreOffice
@@ -261,6 +273,7 @@ async def confirmation_timeout(chat_id: int, state: FSMContext):
 #         # Метод 2: Анализ метаданных DOCX
 #         if ext.lower() == '.docx':
 #             return await get_docx_page_count_metadata(file_path)
+<<<<<<< HEAD
 #         # Метод 3: Приблизительный подсчет по размеру файла
 #         file_size = os.path.getsize(file_path)
 #         # Эмпирическая формула: ~2000 байт на страницу для текста
@@ -355,6 +368,22 @@ async def confirmation_timeout(chat_id: int, state: FSMContext):
          logging.error(f"python-docx page count error: {str(e)}")
          # Пробуем метаданные как резервный вариант
          return await get_docx_page_count_metadata(file_path)
+=======
+#     except Exception:
+#         logging.error(f"Fallback methods page count error: {str(e)}")
+
+
+async def get_docx_page_count_metadata(file_path: str) -> int:
+    try:
+        with zipfile.ZipFile(file_path, 'r') as document:
+            dxml = document.read('docProps/app.xml')
+            uglyXml = xml.dom.minidom.parseString(dxml)
+            page_element = uglyXml.getElementsByTagName('Pages')[0]
+            page_count = int(page_element.childNodes[0].nodeValue)
+            return page_count
+    except Exception as e:
+        logging.error(f"DOCX metadata page count error: {str(e)}")
+>>>>>>> 2cefdfef7e7f058512c43cb82f136d3f039091e9
 
 
 @dp.message(Command("start"))
@@ -593,7 +622,7 @@ async def process_comment(message: types.Message, state: FSMContext):
         comment = message.text
 
     # Проверяем длину комментария
-    if len(comment) > 254:
+    if len(comment) > 255:
         markup = ReplyKeyboardMarkup(
             keyboard=[
                 [KeyboardButton(text="Без комментария")]
@@ -602,7 +631,7 @@ async def process_comment(message: types.Message, state: FSMContext):
             one_time_keyboard=True
         )
         await message.answer(
-            "❌ Комментарий слишком длинный! Максимальная длина - 254 символа.\n"
+            "❌ Комментарий слишком длинный! Максимальная длина - 255 символов.\n"
             "📝 Введите комментарий к заказу или нажмите кнопку ниже:",
             reply_markup=markup
         )

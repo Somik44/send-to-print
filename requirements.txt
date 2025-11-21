@@ -13,4 +13,3 @@ aiogram
 PyPDF2
 pywin32
 python-dotenv
-python-docx
