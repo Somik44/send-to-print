@@ -160,7 +160,7 @@ async def get_page_count(file_path: str, ext: str) -> int:
                 return liboffice_result
             else:
                 # Если LibreOffice вернул 0 или ошибку, используем fallback
-                return await get_fallback_page_count(file_path, ext)
+                return await get_docx_page_count_metadata(file_path)
         # if ext.lower() == '.docx':
         #     return await get_docx_page_count_metadata(file_path)
         # if ext.lower() == '.doc':
@@ -280,19 +280,19 @@ async def get_word_page_count_via_libreoffice(file_path: str) -> int:
 #          logging.error(f"Fallback methods page count error: {str(e)}")
 
 
-# async def get_docx_page_count_metadata(file_path: str) -> int:
-#     """
-#     Подсчет страниц через метаданные DOCX (менее точный, но быстрый)
-#     """
-#     try:
-#         with zipfile.ZipFile(file_path, 'r') as document:
-#             dxml = document.read('docProps/app.xml')
-#             uglyXml = xml.dom.minidom.parseString(dxml)
-#             page_element = uglyXml.getElementsByTagName('Pages')[0]
-#             page_count = int(page_element.childNodes[0].nodeValue)
-#             return page_count
-#     except Exception as e:
-#         logging.error(f"DOCX metadata page count error: {str(e)}")
+async def get_docx_page_count_metadata(file_path: str) -> int:
+    """
+    Подсчет страниц через метаданные DOCX (менее точный, но быстрый)
+    """
+    try:
+        with zipfile.ZipFile(file_path, 'r') as document:
+            dxml = document.read('docProps/app.xml')
+            uglyXml = xml.dom.minidom.parseString(dxml)
+            page_element = uglyXml.getElementsByTagName('Pages')[0]
+            page_count = int(page_element.childNodes[0].nodeValue)
+            return page_count
+    except Exception as e:
+        logging.error(f"DOCX metadata page count error: {str(e)}")
 
 
 # async def get_doc_page_count_fallback(file_path: str) -> int:
