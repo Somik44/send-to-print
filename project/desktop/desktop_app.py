@@ -21,6 +21,7 @@ from qasync import asyncSlot, QEventLoop
 from typing import Optional
 import jwt
 from datetime import datetime, timedelta, timezone
+import urllib.request
 
 # API для AG
 # API_URL = "https://pugnaciously-quickened-gobbler.cloudpub.ru"
@@ -44,6 +45,100 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 
+# Функция для получения настроек прокси из системы
+def get_proxy_settings():
+    """Получение настроек прокси из системных переменных и настроек Windows"""
+    proxy_settings = {}
+
+    # Получаем настройки прокси через urllib (считывает системные настройки)
+    proxies = urllib.request.getproxies()
+
+    # Для aiohttp и requests
+    if proxies.get('http'):
+        proxy_settings['http'] = proxies['http']
+    if proxies.get('https'):
+        proxy_settings['https'] = proxies['https']
+
+    # Также проверяем переменные окружения
+    env_proxy = os.environ.get('HTTP_PROXY') or os.environ.get('http_proxy')
+    if env_proxy:
+        proxy_settings['http'] = env_proxy
+        if 'https' not in proxy_settings:
+            proxy_settings['https'] = env_proxy
+
+    env_https_proxy = os.environ.get('HTTPS_PROXY') or os.environ.get('https_proxy')
+    if env_https_proxy:
+        proxy_settings['https'] = env_https_proxy
+
+    logging.info(f"Detected proxy settings: {proxy_settings}")
+    return proxy_settings
+
+
+# Функция для создания aiohttp сессии с прокси
+async def create_aiohttp_session():
+    """Создание aiohttp сессии с настройками прокси"""
+    proxy_settings = get_proxy_settings()
+
+    # Создаем TCP connector с настройками
+    connector = aiohttp.TCPConnector(
+        ssl=False,
+        limit=20,
+        limit_per_host=5
+    )
+
+    # Создаем сессию с прокси, если он настроен
+    session = aiohttp.ClientSession(connector=connector)
+
+    return session, proxy_settings
+
+
+# Функция для создания aiohttp сессии для одного запроса
+async def make_aiohttp_request(method, url, **kwargs):
+    """Универсальная функция для aiohttp запросов через прокси"""
+    proxy_settings = get_proxy_settings()
+
+    # Добавляем прокси в параметры запроса
+    if proxy_settings.get('http') and url.startswith('http:'):
+        kwargs['proxy'] = proxy_settings['http']
+    elif proxy_settings.get('https') and url.startswith('https:'):
+        kwargs['proxy'] = proxy_settings['https']
+
+    # Настраиваем таймауты
+    if 'timeout' not in kwargs:
+        kwargs['timeout'] = aiohttp.ClientTimeout(total=30)
+
+    connector = aiohttp.TCPConnector(ssl=False)
+    async with aiohttp.ClientSession(connector=connector) as session:
+        async with session.request(method, url, **kwargs) as response:
+            return response
+
+
+# Функция для синхронных requests запросов с прокси
+def make_requests_request(method, url, **kwargs):
+    """Универсальная функция для requests запросов через прокси"""
+    proxy_settings = get_proxy_settings()
+
+    # Добавляем прокси в параметры запроса
+    proxies = {}
+    if proxy_settings.get('http') and url.startswith('http:'):
+        proxies['http'] = proxy_settings['http']
+    if proxy_settings.get('https') and url.startswith('https:'):
+        proxies['https'] = proxy_settings['https']
+
+    if proxies:
+        kwargs['proxies'] = proxies
+
+    # Добавляем стандартные таймауты
+    if 'timeout' not in kwargs:
+        kwargs['timeout'] = 30
+
+    # Отключаем проверку SSL для корпоративных прокси (опционально)
+    kwargs['verify'] = False
+
+    with requests.Session() as session:
+        return session.request(method, url, **kwargs)
+
+
 class AuthManager:
     def __init__(self):
         self.access_token = None
@@ -51,14 +146,12 @@ class AuthManager:
         self.shop_info = None
 
     def is_token_valid(self):
-        # Просто проверяем, что токен есть, а срок проверяет сервер
         return self.access_token is not None
 
     async def make_authenticated_request(self, method: str, url: str, **kwargs):
-        """Выполняет авторизованный запрос с JWT токеном"""
-        logging.info(f"Making authenticated request, token valid: {self.is_token_valid()}")
+        """Выполняет авторизованный запрос с JWT токеном через прокси"""
+        logging.info(f"Making authenticated request through proxy, token valid: {self.is_token_valid()}")
 
-        # ВКЛЮЧИТЬ проверку валидности токена
         if not self.is_token_valid():
             raise Exception("Token expired or invalid")
 
@@ -66,29 +159,34 @@ class AuthManager:
         headers['Authorization'] = f'Bearer {self.access_token}'
         kwargs['headers'] = headers
 
-        async with aiohttp.ClientSession() as session:
-            response = await session.request(method, url, **kwargs)
-            logging.info(f"Request to {url} returned status: {response.status}")
-            return response
+        # Используем нашу функцию с поддержкой прокси
+        response = await make_aiohttp_request(method, url, **kwargs)
+        logging.info(f"Request to {url} returned status: {response.status}")
+        return response
 
     async def login(self, password: str) -> bool:
+        """Асинхронный логин через прокси"""
         try:
             hashed = hashlib.sha256(password.encode()).hexdigest()
 
-            async with aiohttp.ClientSession() as session:
-                async with session.post(
-                        f"{API_URL}/auth/login",
-                        data={"password_hash": hashed},
-                        timeout=aiohttp.ClientTimeout(total=10)
-                ) as resp:
-                    if resp.status == 200:
-                        data = await resp.json()
-                        self.access_token = data['access_token']
-                        self.shop_info = data['shop_info']
-                        return True
-                    else:
-                        return False
-        except Exception:
+            # Используем нашу функцию с поддержкой прокси
+            response = await make_aiohttp_request(
+                'POST',
+                f"{API_URL}/auth/login",
+                data={"password_hash": hashed},
+                timeout=aiohttp.ClientTimeout(total=10)
+            )
+
+            if response.status == 200:
+                data = await response.json()
+                self.access_token = data['access_token']
+                self.shop_info = data['shop_info']
+                return True
+            else:
+                logging.error(f"Login failed with status: {response.status}")
+                return False
+        except Exception as e:
+            logging.error(f"Login error: {str(e)}")
             return False
 
 
@@ -107,7 +205,6 @@ class LoginDialog(QDialog):
         self.password_input = QLineEdit()
         self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
         self.password_input.setPlaceholderText("Введите пароль магазина")
-        # self.password_input.returnPressed.connect(self.authenticate)
 
         buttons = QDialogButtonBox(
             QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
@@ -129,37 +226,40 @@ class LoginDialog(QDialog):
         buttons = self.findChildren(QDialogButtonBox)[0]
         buttons.setEnabled(False)
 
-        # Используем ТОЛЬКО синхронный запрос
+        # Используем синхронный запрос через прокси
         self.sync_authenticate(password)
 
     def sync_authenticate(self, password: str):
-        """Синхронная аутентификация с упрощенной обработкой ошибок"""
+        """Синхронная аутентификация с использованием прокси"""
         try:
             hashed = hashlib.sha256(password.encode()).hexdigest()
 
-            # Простой запрос без диагностики
-            new_response = requests.post(
+            # Используем нашу функцию с поддержкой прокси
+            response = make_requests_request(
+                'POST',
                 f"{API_URL}/auth/login",
                 data={"password_hash": hashed},
                 timeout=10
             )
 
-            if new_response.status_code == 200:
-                data = new_response.json()
+            if response.status_code == 200:
+                data = response.json()
                 self.auth_manager.access_token = data['access_token']
                 self.auth_manager.shop_info = data['shop_info']
                 self.accept()
-            elif new_response.status_code == 401:
+            elif response.status_code == 401:
                 QMessageBox.critical(self, "Ошибка", "Неверный пароль")
             else:
-                QMessageBox.critical(self, "Ошибка", "Ошибка подключения")
+                QMessageBox.critical(self, "Ошибка", f"Ошибка подключения: {response.status_code}")
 
+        except requests.exceptions.ProxyError as e:
+            QMessageBox.critical(self, "Ошибка прокси", f"Не удалось подключиться через прокси:\n{str(e)}")
         except requests.exceptions.ConnectionError:
             QMessageBox.critical(self, "Ошибка", "Нет подключения к интернету")
         except requests.exceptions.Timeout:
             QMessageBox.critical(self, "Ошибка", "Сервер не отвечает")
         except Exception as e:
-            QMessageBox.critical(self, "Ошибка", "Ошибка подключения")
+            QMessageBox.critical(self, "Ошибка", f"Ошибка подключения: {str(e)}")
         finally:
             # Восстанавливаем UI
             self.setEnabled(True)
@@ -177,7 +277,6 @@ class FileReceiverApp(QWidget):
         self.file_cache = set()
         self.current_items = {}
 
-        # Проверяем что shop_info не None
         if not self.shop_info:
             logging.error("shop_info is None in FileReceiverApp constructor!")
             raise ValueError("shop_info cannot be None")
@@ -248,6 +347,11 @@ class FileReceiverApp(QWidget):
         instruction_action.triggered.connect(self.show_instructions)
         contacts_action = menu.addAction("Контакты")
         contacts_action.triggered.connect(self.show_contacts)
+
+        # Добавляем пункт для проверки прокси
+        proxy_check_action = menu.addAction("Проверить прокси")
+        proxy_check_action.triggered.connect(self.check_proxy_settings)
+
         self.menu_btn.setMenu(menu)
         top_panel.addWidget(self.menu_btn)
 
@@ -290,6 +394,29 @@ class FileReceiverApp(QWidget):
                                 "Телефон: +7 (920) 021-91-71\n"
                                 "Telegram: @shmoshlover")
 
+    def check_proxy_settings(self):
+        """Проверка текущих настроек прокси"""
+        proxy_settings = get_proxy_settings()
+        import urllib.request
+
+        system_proxies = urllib.request.getproxies()
+
+        message = f"""Текущие настройки прокси:
+
+Системные настройки:
+- HTTP прокси: {system_proxies.get('http', 'Не настроен')}
+- HTTPS прокси: {system_proxies.get('https', 'Не настроен')}
+
+Переменные окружения:
+- HTTP_PROXY: {os.environ.get('HTTP_PROXY', 'Не задана')}
+- HTTPS_PROXY: {os.environ.get('HTTPS_PROXY', 'Не задана')}
+
+Приложение будет использовать:
+- HTTP: {proxy_settings.get('http', 'Прямое соединение')}
+- HTTPS: {proxy_settings.get('https', 'Прямое соединение')}"""
+
+        QMessageBox.information(self, "Настройки прокси", message)
+
     @asyncSlot()
     async def on_refresh_clicked(self):
         if self.is_refreshing:
@@ -321,7 +448,7 @@ class FileReceiverApp(QWidget):
 
     @asyncSlot()
     async def handle_download_or_open(self, order):
-        """Обработчик загрузки или открытия файла (рабочая версия из старого кода)"""
+        """Обработчик загрузки или открытия файла через прокси"""
         order_id = order['ID']
         filename = order['file_path']
         filepath = os.path.join(DOWNLOAD_DIR, filename)
@@ -339,7 +466,7 @@ class FileReceiverApp(QWidget):
         await self.load_orders()  # Обновляем список
 
         try:
-            # Скачиваем файл напрямую
+            # Скачиваем файл напрямую через прокси
             success = await self.download_file(file_url, filename)
 
             if success:
@@ -356,7 +483,7 @@ class FileReceiverApp(QWidget):
             await self.load_orders()  # Обновляем список
 
     async def download_file(self, url: str, filename: str) -> bool:
-        """Скачивание файла с поддержкой JWT токена"""
+        """Скачивание файла с поддержкой JWT токена и прокси"""
         try:
             filepath = os.path.join(DOWNLOAD_DIR, filename)
 
@@ -365,16 +492,25 @@ class FileReceiverApp(QWidget):
             if self.auth_manager.access_token:
                 headers['Authorization'] = f'Bearer {self.auth_manager.access_token}'
 
-            async with aiohttp.ClientSession() as session:
-                async with session.get(url, headers=headers) as resp:
-                    if resp.status == 200:
-                        content = await resp.read()
-                        async with aiofiles.open(filepath, 'wb') as f:
-                            await f.write(content)
-                        return True
-                    else:
-                        logging.error(f"Download failed with status: {resp.status}")
-                        return False
+            # Используем нашу функцию с поддержкой прокси
+            response = await make_aiohttp_request(
+                'GET',
+                url,
+                headers=headers
+            )
+
+            if response.status == 200:
+                content = await response.read()
+                async with aiofiles.open(filepath, 'wb') as f:
+                    await f.write(content)
+                return True
+            else:
+                logging.error(f"Download failed with status: {response.status}")
+                return False
+        except aiohttp.ClientProxyConnectionError as e:
+            logging.error(f"Proxy connection error during download: {str(e)}")
+            self.show_error(f"Ошибка подключения через прокси: {str(e)}")
+            return False
         except Exception as e:
             logging.error(f"Download error: {str(e)}")
             traceback.print_exc()
@@ -390,11 +526,9 @@ class FileReceiverApp(QWidget):
     @asyncSlot()
     async def load_orders(self):
         try:
-            logging.info("Loading orders...")
-            logging.info(f"Shop info: {self.shop_info}")
-            logging.info(f"Token: {self.auth_manager.access_token}")
+            logging.info("Loading orders through proxy...")
 
-            # Сначала проверим токен через специальный эндпоинт
+            # Проверяем токен через специальный эндпоинт
             try:
                 verify_resp = await self.auth_manager.make_authenticated_request(
                     'GET', f"{API_URL}/auth/verify"
@@ -407,7 +541,7 @@ class FileReceiverApp(QWidget):
             except Exception as e:
                 logging.error(f"Token verification error: {str(e)}")
 
-            # Затем загружаем заказы
+            # Загружаем заказы
             resp = await self.auth_manager.make_authenticated_request(
                 'GET',
                 f"{API_URL}/orders",
@@ -427,6 +561,9 @@ class FileReceiverApp(QWidget):
                 error_text = await resp.text()
                 logging.error(f"Failed to load orders: {resp.status}, {error_text}")
                 self.show_error(f"Ошибка загрузки заказов: {resp.status}")
+        except aiohttp.ClientProxyConnectionError as e:
+            logging.error(f"Proxy connection error: {str(e)}")
+            self.show_error(f"Ошибка подключения через прокси:\n{str(e)}\n\nПроверьте настройки прокси.")
         except Exception as e:
             logging.error(f"Load orders error: {str(e)}\n{traceback.format_exc()}")
             self.show_error(f"Ошибка запроса: {str(e)}")
@@ -529,7 +666,6 @@ class FileReceiverApp(QWidget):
         )
 
         if reply == QMessageBox.StandardButton.Yes:
-            # Используем QTimer для запуска асинхронной задачи
             QTimer.singleShot(0, lambda: asyncio.ensure_future(self.update_status(order_id, new_status)))
 
     def show_order_info(self, order):
@@ -579,6 +715,11 @@ def main():
     """Главная функция приложения"""
     try:
         logging.info("Starting application...")
+
+        # Логируем начальные настройки прокси
+        proxy_settings = get_proxy_settings()
+        logging.info(f"Initial proxy settings: {proxy_settings}")
+
         app = QApplication(sys.argv)
 
         app.setStyleSheet("""
