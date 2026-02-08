@@ -22,6 +22,7 @@ from typing import Optional
 import jwt
 from datetime import datetime, timedelta, timezone
 import urllib.request
+import ssl
 
 # API для AG
 # API_URL = "https://pugnaciously-quickened-gobbler.cloudpub.ru"
@@ -92,25 +93,22 @@ async def create_aiohttp_session():
     return session, proxy_settings
 
 
-# Функция для создания aiohttp сессии для одного запроса
 async def make_aiohttp_request(method, url, **kwargs):
-    """Универсальная функция для aiohttp запросов через прокси"""
+    """Универсальная функция для aiohttp запросов, которая НЕ ЧИТАЕТ тело ответа."""
     proxy_settings = get_proxy_settings()
-
-    # Добавляем прокси в параметры запроса
     if proxy_settings.get('http') and url.startswith('http:'):
         kwargs['proxy'] = proxy_settings['http']
     elif proxy_settings.get('https') and url.startswith('https:'):
         kwargs['proxy'] = proxy_settings['https']
-
-    # Настраиваем таймауты
     if 'timeout' not in kwargs:
         kwargs['timeout'] = aiohttp.ClientTimeout(total=30)
-
-    connector = aiohttp.TCPConnector(ssl=False)
-    async with aiohttp.ClientSession(connector=connector) as session:
-        async with session.request(method, url, **kwargs) as response:
-            return response
+    ssl_context = ssl.create_default_context()
+    ssl_context.check_hostname = False
+    ssl_context.verify_mode = ssl.CERT_NONE
+    connector = aiohttp.TCPConnector(ssl=ssl_context)
+    session = aiohttp.ClientSession(connector=connector)
+    response = await session.request(method, url, **kwargs)
+    return response
 
 
 # Функция для синхронных requests запросов с прокси
@@ -134,6 +132,7 @@ def make_requests_request(method, url, **kwargs):
 
     # Отключаем проверку SSL для корпоративных прокси (опционально)
     kwargs['verify'] = False
+    # kwargs['verify'] = True
 
     with requests.Session() as session:
         return session.request(method, url, **kwargs)
@@ -259,7 +258,11 @@ class LoginDialog(QDialog):
         except requests.exceptions.Timeout:
             QMessageBox.critical(self, "Ошибка", "Сервер не отвечает")
         except Exception as e:
-            QMessageBox.critical(self, "Ошибка", f"Ошибка подключения: {str(e)}")
+            # Логируем полную ошибку в файл
+            logging.error(f"Full traceback during authentication: {traceback.format_exc()}")
+            # Показываем пользователю более информативное сообщение
+            QMessageBox.critical(self, "Критическая ошибка",
+                                 f"Произошла непредвиденная ошибка подключения: {str(e)}\n\nОбратитесь в поддержку и проверьте лог-файл desktop_app.log.")
         finally:
             # Восстанавливаем UI
             self.setEnabled(True)
@@ -391,8 +394,13 @@ class FileReceiverApp(QWidget):
     def show_contacts(self):
         QMessageBox.information(self, "Контакты",
                                 "Техническая поддержка:\n"
-                                "Телефон: +7 (920) 021-91-71\n"
-                                "Telegram: @shmoshlover")
+                                "Герман Андреевич\n"
+                                "Телефон: +7 (930) 709-80-86\n"
+                                "Telegram: @shmoshlover\n\n"
+                                "Михаил Валерьевич\n"
+                                "Телефон: +7 (953) 575-43-11\n"
+                                "Telegram: @Somik288\n"
+                                "Рекомендуем писать в Telegram, звонить только в экстренных случаях")
 
     def check_proxy_settings(self):
         """Проверка текущих настроек прокси"""
@@ -528,20 +536,6 @@ class FileReceiverApp(QWidget):
         try:
             logging.info("Loading orders through proxy...")
 
-            # Проверяем токен через специальный эндпоинт
-            try:
-                verify_resp = await self.auth_manager.make_authenticated_request(
-                    'GET', f"{API_URL}/auth/verify"
-                )
-                if verify_resp.status == 200:
-                    verify_data = await verify_resp.json()
-                    logging.info(f"Token verification: {verify_data}")
-                else:
-                    logging.warning(f"Token verification failed: {verify_resp.status}")
-            except Exception as e:
-                logging.error(f"Token verification error: {str(e)}")
-
-            # Загружаем заказы
             resp = await self.auth_manager.make_authenticated_request(
                 'GET',
                 f"{API_URL}/orders",
@@ -549,6 +543,7 @@ class FileReceiverApp(QWidget):
             )
 
             if resp.status == 200:
+                # Читаем JSON только если статус успешный
                 orders = await resp.json()
                 logging.info(f"Loaded {len(orders)} orders")
                 unique_orders = {order['ID']: order for order in orders}.values()
@@ -561,6 +556,9 @@ class FileReceiverApp(QWidget):
                 error_text = await resp.text()
                 logging.error(f"Failed to load orders: {resp.status}, {error_text}")
                 self.show_error(f"Ошибка загрузки заказов: {resp.status}")
+
+            await resp.release()
+
         except aiohttp.ClientProxyConnectionError as e:
             logging.error(f"Proxy connection error: {str(e)}")
             self.show_error(f"Ошибка подключения через прокси:\n{str(e)}\n\nПроверьте настройки прокси.")

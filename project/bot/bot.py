@@ -120,71 +120,72 @@ async def confirmation_timeout(chat_id: int, state: FSMContext):
         logging.info("1-минутный таймер отменен")
 
 
-# async def get_page_count(file_path: str, ext: str) -> int:
-#     try:
-#         if ext in ('.png', '.jpg', '.jpeg'):
-#             return 1
-#         if ext == '.pdf':
-#             async with aiofiles.open(file_path, 'rb') as f:
-#                 content = await f.read()
-#                 pdf = PdfReader(BytesIO(content))  # Используем BytesIO
-#                 return len(pdf.pages)
-#
-#         return await asyncio.to_thread(_process_word_file, file_path)
-#         # return await get_word_page_count_via_libreoffice(file_path)
-#
-#     except Exception as e:
-#         logging.error(f"Ошибка подсчета страниц: {traceback.format_exc()}")
-#         raise
-
-
 async def get_page_count(file_path: str, ext: str) -> int:
-    """
-    Универсальная функция подсчета страниц с приоритетами:
-    1. LibreOffice (самый точный)
-    2. python-docx (для .docx)
-    3. Метаданные DOCX
-    4. Размер файла (последний fallback)
-    """
     try:
-        if ext.lower() in ('.png', '.jpg', '.jpeg'):
+        if ext in ('.png', '.jpg', '.jpeg'):
             return 1
+        if ext == '.pdf':
+            async with aiofiles.open(file_path, 'rb') as f:
+                content = await f.read()
+                pdf = PdfReader(BytesIO(content))  # Используем BytesIO
+                return len(pdf.pages)
 
-        if ext.lower() == '.pdf':
-            return await get_pdf_page_count(file_path)
+        # return await asyncio.to_thread(_process_word_file, file_path)
+        return await asyncio.to_thread(get_docx_page_count_metadata, file_path)
+        # return await get_word_page_count_via_libreoffice(file_path)
 
-        # Для Word документов используем LibreOffice как основной метод
-        if ext.lower() in ('.doc', '.docx', '.odt', '.rtf'):
-            liboffice_result = await get_word_page_count_via_libreoffice(file_path)
-            if liboffice_result > 0:
-                return liboffice_result
-            else:
-                # Если LibreOffice вернул 0 или ошибку, используем fallback
-                return await get_docx_page_count_metadata(file_path)
-        # if ext.lower() == '.docx':
-        #     return await get_docx_page_count_metadata(file_path)
-        # if ext.lower() == '.doc':
-        #     return 0
     except Exception as e:
-        logging.error(f"Error counting pages for {file_path}: {str(e)}")
-        # return await get_fallback_page_count(file_path, ext)
+        logging.error(f"Ошибка подсчета страниц: {traceback.format_exc()}")
+        raise
 
 
-# def _process_word_file(file_path: str) -> int:
-#     pythoncom.CoInitialize()
+# async def get_page_count(file_path: str, ext: str) -> int:
+#     """
+#     Универсальная функция подсчета страниц с приоритетами:
+#     1. LibreOffice (самый точный)
+#     2. python-docx (для .docx)
+#     3. Метаданные DOCX
+#     4. Размер файла (последний fallback)
+#     """
 #     try:
-#         word = win32com.client.Dispatch("Word.Application")
-#         word.Visible = False
-#         doc = word.Documents.Open(os.path.abspath(file_path))
-#         count = doc.ComputeStatistics(2)
-#         doc.Close(False)
-#         return count
+#         if ext.lower() in ('.png', '.jpg', '.jpeg'):
+#             return 1
+#
+#         if ext.lower() == '.pdf':
+#             return await get_pdf_page_count(file_path)
+#
+#         # Для Word документов используем LibreOffice как основной метод
+#         if ext.lower() in ('.doc', '.docx', '.odt', '.rtf'):
+#             liboffice_result = await get_word_page_count_via_libreoffice(file_path)
+#             if liboffice_result > 0:
+#                 return liboffice_result
+#             else:
+#                 # Если LibreOffice вернул 0 или ошибку, используем fallback
+#                 return await get_docx_page_count_metadata(file_path)
+#         # if ext.lower() == '.docx':
+#         #     return await get_docx_page_count_metadata(file_path)
+#         # if ext.lower() == '.doc':
+#         #     return 0
 #     except Exception as e:
-#         logging.error(f"Word COM Error: {str(e)}")
-#         raise
-#     finally:
-#         word.Quit()
-#         pythoncom.CoUninitialize()
+#         logging.error(f"Error counting pages for {file_path}: {str(e)}")
+#         # return await get_fallback_page_count(file_path, ext)
+
+
+def _process_word_file(file_path: str) -> int:
+    pythoncom.CoInitialize()
+    try:
+        word = win32com.client.Dispatch("Word.Application")
+        word.Visible = False
+        doc = word.Documents.Open(os.path.abspath(file_path))
+        count = doc.ComputeStatistics(2)
+        doc.Close(False)
+        return count
+    except Exception as e:
+        logging.error(f"Word COM Error: {str(e)}")
+        raise
+    finally:
+        word.Quit()
+        pythoncom.CoUninitialize()
 
 
 async def get_pdf_page_count(file_path: str) -> int:
@@ -198,67 +199,67 @@ async def get_pdf_page_count(file_path: str) -> int:
         logging.error(f"PDF page count error: {str(e)}")
 
 
-async def get_word_page_count_via_libreoffice(file_path: str) -> int:
-    """
-    Точный подсчет страниц Word документов через LibreOffice
-    """
-    temp_dir = None
-    try:
-        # Создаем временную директорию для PDF
-        temp_dir = tempfile.mkdtemp()
-        pdf_output_path = os.path.join(temp_dir, "output.pdf")
-
-        # Конвертируем документ в PDF через LibreOffice
-        cmd = [
-            'libreoffice', '--headless', '--convert-to', 'pdf',
-            '--outdir', temp_dir, file_path
-        ]
-
-        # Запускаем процесс конвертации
-        process = await asyncio.create_subprocess_exec(
-            *cmd,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE
-        )
-
-        stdout, stderr = await process.communicate()
-
-        if process.returncode != 0:
-            logging.error(f"LibreOffice conversion failed: {stderr.decode()}")
-            return await get_fallback_page_count(file_path, '.docx')
-
-        # Проверяем, создался ли PDF файл
-        if not os.path.exists(pdf_output_path):
-            logging.error("PDF file was not created by LibreOffice")
-            return await get_fallback_page_count(file_path, '.docx')
-
-        # Подсчитываем страницы в PDF
-        page_count = await get_pdf_page_count(pdf_output_path)
-
-        # Очищаем временные файлы
-        try:
-            os.remove(pdf_output_path)
-            os.rmdir(temp_dir)
-        except:
-            pass
-
-        return page_count
-
-    except Exception as e:
-        logging.error(f"LibreOffice page count error: {str(e)}")
-
-        # Очистка временных файлов при ошибке
-        if temp_dir and os.path.exists(temp_dir):
-            try:
-                for file in os.listdir(temp_dir):
-                    os.remove(os.path.join(temp_dir, file))
-                os.rmdir(temp_dir)
-            except:
-                pass
-
-        return await get_fallback_page_count(file_path, '.docx')
+# async def get_word_page_count_via_libreoffice(file_path: str) -> int:
+#     """
+#     Точный подсчет страниц Word документов через LibreOffice
+#     """
+#     temp_dir = None
+#     try:
+#         # Создаем временную директорию для PDF
+#         temp_dir = tempfile.mkdtemp()
+#         pdf_output_path = os.path.join(temp_dir, "output.pdf")
 #
+#         # Конвертируем документ в PDF через LibreOffice
+#         cmd = [
+#             'libreoffice', '--headless', '--convert-to', 'pdf',
+#             '--outdir', temp_dir, file_path
+#         ]
 #
+#         # Запускаем процесс конвертации
+#         process = await asyncio.create_subprocess_exec(
+#             *cmd,
+#             stdout=asyncio.subprocess.PIPE,
+#             stderr=asyncio.subprocess.PIPE
+#         )
+#
+#         stdout, stderr = await process.communicate()
+#
+#         if process.returncode != 0:
+#             logging.error(f"LibreOffice conversion failed: {stderr.decode()}")
+#             return await get_fallback_page_count(file_path, '.docx')
+#
+#         # Проверяем, создался ли PDF файл
+#         if not os.path.exists(pdf_output_path):
+#             logging.error("PDF file was not created by LibreOffice")
+#             return await get_fallback_page_count(file_path, '.docx')
+#
+#         # Подсчитываем страницы в PDF
+#         page_count = await get_pdf_page_count(pdf_output_path)
+#
+#         # Очищаем временные файлы
+#         try:
+#             os.remove(pdf_output_path)
+#             os.rmdir(temp_dir)
+#         except:
+#             pass
+#
+#         return page_count
+#
+#     except Exception as e:
+#         logging.error(f"LibreOffice page count error: {str(e)}")
+#
+#         # Очистка временных файлов при ошибке
+#         if temp_dir and os.path.exists(temp_dir):
+#             try:
+#                 for file in os.listdir(temp_dir):
+#                     os.remove(os.path.join(temp_dir, file))
+#                 os.rmdir(temp_dir)
+#             except:
+#                 pass
+#
+#         return await get_fallback_page_count(file_path, '.docx')
+
+
 # async def get_fallback_page_count(file_path: str, ext: str) -> int:
 #      """
 #      Fallback метод для подсчета страниц, если LibreOffice не сработал
