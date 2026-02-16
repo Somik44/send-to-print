@@ -131,7 +131,7 @@ async def get_page_count(file_path: str, ext: str) -> int:
                 return len(pdf.pages)
 
         # return await asyncio.to_thread(_process_word_file, file_path)
-        return await asyncio.to_thread(get_docx_page_count_metadata, file_path)
+        return await get_docx_page_count_metadata(file_path)
         # return await get_word_page_count_via_libreoffice(file_path)
 
     except Exception as e:
@@ -333,7 +333,9 @@ async def get_docx_page_count_metadata(file_path: str) -> int:
 @dp.message(Command("start"))
 async def cmd_start(message: types.Message):
     await message.answer(
-        f"Привет, {message.from_user.first_name}! Рады приветствовать тебя на нашем сервисе по распечатке документов в любое удобное время! Чтобы начать новый заказ, используйте команду /new_order.", reply_markup=types.ReplyKeyboardRemove()
+        f"Привет, {message.from_user.first_name}! Рады приветствовать тебя на нашем сервисе по распечатке "
+        f"документов в любое удобное время! Чтобы начать новый заказ, используйте команду /new_order.",
+        reply_markup=types.ReplyKeyboardRemove()
     )
 
 

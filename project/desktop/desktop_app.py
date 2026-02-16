@@ -102,10 +102,10 @@ async def make_aiohttp_request(method, url, **kwargs):
         kwargs['proxy'] = proxy_settings['https']
     if 'timeout' not in kwargs:
         kwargs['timeout'] = aiohttp.ClientTimeout(total=30)
-    ssl_context = ssl.create_default_context()
-    ssl_context.check_hostname = False
-    ssl_context.verify_mode = ssl.CERT_NONE
-    connector = aiohttp.TCPConnector(ssl=ssl_context)
+    # ssl_context = ssl.create_default_context()
+    # ssl_context.check_hostname = False
+    # ssl_context.verify_mode = ssl.CERT_NONE
+    connector = aiohttp.TCPConnector()  # ssl=ssl_context
     session = aiohttp.ClientSession(connector=connector)
     response = await session.request(method, url, **kwargs)
     return response
@@ -131,8 +131,8 @@ def make_requests_request(method, url, **kwargs):
         kwargs['timeout'] = 30
 
     # Отключаем проверку SSL для корпоративных прокси (опционально)
-    kwargs['verify'] = False
-    # kwargs['verify'] = True
+    # kwargs['verify'] = False
+    kwargs['verify'] = True
 
     with requests.Session() as session:
         return session.request(method, url, **kwargs)
