@@ -31,6 +31,8 @@ API_URL = "https://helpfully-accustomed-falcon.cloudpub.ru"
 DOWNLOAD_DIR = os.path.abspath('downloads')
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
+aiohttp_session: Optional[aiohttp.ClientSession] = None
+
 logging.basicConfig(
     level=logging.DEBUG,
     format="%(asctime)s - %(levelname)s - %(message)s",
@@ -46,95 +48,42 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 
-# Функция для получения настроек прокси из системы
-def get_proxy_settings():
-    """Получение настроек прокси из системных переменных и настроек Windows"""
-    proxy_settings = {}
-
-    # Получаем настройки прокси через urllib (считывает системные настройки)
-    proxies = urllib.request.getproxies()
-
-    # Для aiohttp и requests
-    if proxies.get('http'):
-        proxy_settings['http'] = proxies['http']
-    if proxies.get('https'):
-        proxy_settings['https'] = proxies['https']
-
-    # Также проверяем переменные окружения
-    env_proxy = os.environ.get('HTTP_PROXY') or os.environ.get('http_proxy')
-    if env_proxy:
-        proxy_settings['http'] = env_proxy
-        if 'https' not in proxy_settings:
-            proxy_settings['https'] = env_proxy
-
-    env_https_proxy = os.environ.get('HTTPS_PROXY') or os.environ.get('https_proxy')
-    if env_https_proxy:
-        proxy_settings['https'] = env_https_proxy
-
-    logging.info(f"Detected proxy settings: {proxy_settings}")
-    return proxy_settings
-
-
-# Функция для создания aiohttp сессии с прокси
-async def create_aiohttp_session():
-    """Создание aiohttp сессии с настройками прокси"""
-    proxy_settings = get_proxy_settings()
-
-    # Создаем TCP connector с настройками
-    connector = aiohttp.TCPConnector(
-        ssl=False,
-        limit=20,
-        limit_per_host=5
-    )
-
-    # Создаем сессию с прокси, если он настроен
-    session = aiohttp.ClientSession(connector=connector)
-
-    return session, proxy_settings
-
-
 async def make_aiohttp_request(method, url, **kwargs):
-    """Универсальная функция для aiohttp запросов, которая НЕ ЧИТАЕТ тело ответа."""
-    proxy_settings = get_proxy_settings()
-    if proxy_settings.get('http') and url.startswith('http:'):
-        kwargs['proxy'] = proxy_settings['http']
-    elif proxy_settings.get('https') and url.startswith('https:'):
-        kwargs['proxy'] = proxy_settings['https']
-    if 'timeout' not in kwargs:
-        kwargs['timeout'] = aiohttp.ClientTimeout(total=30)
-    # ssl_context = ssl.create_default_context()
-    # ssl_context.check_hostname = False
-    # ssl_context.verify_mode = ssl.CERT_NONE
-    connector = aiohttp.TCPConnector()  # ssl=ssl_context
-    session = aiohttp.ClientSession(connector=connector)
-    response = await session.request(method, url, **kwargs)
-    return response
+    global aiohttp_session
+
+    if aiohttp_session is None or aiohttp_session.closed:
+        await init_aiohttp_session()
+
+    return await aiohttp_session.request(method, url, **kwargs)
+
+
+async def init_aiohttp_session():
+    global aiohttp_session
+
+    if aiohttp_session is None or aiohttp_session.closed:
+        aiohttp_session = aiohttp.ClientSession(
+            trust_env=True,  # 🔥 автоматически использовать системный прокси
+            timeout=aiohttp.ClientTimeout(total=30),
+            connector=aiohttp.TCPConnector(
+                ssl=False,
+                limit=50,
+                limit_per_host=10
+            )
+        )
 
 
 # Функция для синхронных requests запросов с прокси
 def make_requests_request(method, url, **kwargs):
-    """Универсальная функция для requests запросов через прокси"""
-    proxy_settings = get_proxy_settings()
+    """Универсальная функция для requests запросов через системный прокси"""
 
-    # Добавляем прокси в параметры запроса
-    proxies = {}
-    if proxy_settings.get('http') and url.startswith('http:'):
-        proxies['http'] = proxy_settings['http']
-    if proxy_settings.get('https') and url.startswith('https:'):
-        proxies['https'] = proxy_settings['https']
-
-    if proxies:
-        kwargs['proxies'] = proxies
-
-    # Добавляем стандартные таймауты
     if 'timeout' not in kwargs:
         kwargs['timeout'] = 30
 
-    # Отключаем проверку SSL для корпоративных прокси (опционально)
-    # kwargs['verify'] = False
+    # Поменять на False для отключения проверки SSL сертификата
     kwargs['verify'] = True
 
     with requests.Session() as session:
+        session.trust_env = True  # 🔥 использовать системный прокси
         return session.request(method, url, **kwargs)
 
 
@@ -399,31 +348,35 @@ class FileReceiverApp(QWidget):
                                 "Telegram: @shmoshlover\n\n"
                                 "Михаил Валерьевич\n"
                                 "Телефон: +7 (953) 575-43-11\n"
-                                "Telegram: @Somik288\n"
+                                "Telegram: @Somik288\n\n"
                                 "Рекомендуем писать в Telegram, звонить только в экстренных случаях")
 
     def check_proxy_settings(self):
-        """Проверка текущих настроек прокси"""
-        proxy_settings = get_proxy_settings()
-        import urllib.request
+        try:
+            proxies = urllib.request.getproxies()
 
-        system_proxies = urllib.request.getproxies()
+            if proxies:
+                proxy_info = "\n".join(
+                    [f"{protocol}: {address}" for protocol, address in proxies.items()]
+                )
+                QMessageBox.information(
+                    self,
+                    "Настройки прокси",
+                    f"Обнаружены системные прокси:\n\n{proxy_info}"
+                )
+            else:
+                QMessageBox.information(
+                    self,
+                    "Настройки прокси",
+                    "Системные прокси не обнаружены"
+                )
 
-        message = f"""Текущие настройки прокси:
-
-Системные настройки:
-- HTTP прокси: {system_proxies.get('http', 'Не настроен')}
-- HTTPS прокси: {system_proxies.get('https', 'Не настроен')}
-
-Переменные окружения:
-- HTTP_PROXY: {os.environ.get('HTTP_PROXY', 'Не задана')}
-- HTTPS_PROXY: {os.environ.get('HTTPS_PROXY', 'Не задана')}
-
-Приложение будет использовать:
-- HTTP: {proxy_settings.get('http', 'Прямое соединение')}
-- HTTPS: {proxy_settings.get('https', 'Прямое соединение')}"""
-
-        QMessageBox.information(self, "Настройки прокси", message)
+        except Exception as e:
+            QMessageBox.warning(
+                self,
+                "Ошибка",
+                f"Ошибка получения настроек прокси:\n{str(e)}"
+            )
 
     @asyncSlot()
     async def on_refresh_clicked(self):
@@ -709,14 +662,16 @@ class FileReceiverApp(QWidget):
         super().closeEvent(event)
 
 
+async def close_aiohttp():
+    global aiohttp_session
+    if aiohttp_session and not aiohttp_session.closed:
+        await aiohttp_session.close()
+
+
 def main():
     """Главная функция приложения"""
     try:
         logging.info("Starting application...")
-
-        # Логируем начальные настройки прокси
-        proxy_settings = get_proxy_settings()
-        logging.info(f"Initial proxy settings: {proxy_settings}")
 
         app = QApplication(sys.argv)
 
@@ -741,7 +696,12 @@ def main():
 
             # Запускаем event loop
             with loop:
-                loop.run_forever()
+                try:
+                    loop.run_forever()
+                finally:
+                    logging.info("Shutting down aiohttp session...")
+                    loop.run_until_complete(close_aiohttp())
+
         else:
             logging.info("Login failed or cancelled, exiting...")
             sys.exit(0)
