@@ -83,6 +83,13 @@ class TokenData(BaseModel):
     shop_id: int
     exp: datetime
 
+class ShopCreate(BaseModel):
+    name: str
+    address: str
+    w_hours: str
+    price_bw: float
+    price_cl: float
+    password: str
 
 class OrderUpdate(BaseModel):
     status: Optional[str] = None
@@ -404,6 +411,30 @@ async def create_order(
         logging.error(f"Order creation error: {traceback.format_exc()}")
         raise HTTPException(500, detail=str(e))
 
+@app.post("/shops", status_code=201)
+async def create_shop(shop: ShopCreate):
+    """Создание нового магазина (доступно без авторизации для админ-приложения)"""
+    try:
+        async with await get_db() as conn:
+            async with conn.cursor() as cursor:
+                # Проверяем уникальность пароля (хеша)
+                await cursor.execute("SELECT ID_shop FROM shop WHERE password = %s", (shop.password,))
+                existing = await cursor.fetchone()
+                if existing:
+                    raise HTTPException(status_code=409, detail="Shop with this password already exists")
+
+                # Вставляем нового магазина
+                await cursor.execute("""
+                    INSERT INTO shop (name, address, w_hours, price_bw, price_cl, password)
+                    VALUES (%s, %s, %s, %s, %s, %s)
+                """, (shop.name, shop.address, shop.w_hours, shop.price_bw, shop.price_cl, shop.password))
+                await conn.commit()
+                return {"message": "Shop created successfully", "id": cursor.lastrowid}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"Error creating shop: {traceback.format_exc()}")
+        raise HTTPException(500, detail="Internal server error")
 
 # Shops endpoints
 @app.get("/shops")

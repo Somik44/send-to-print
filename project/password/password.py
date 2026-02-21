@@ -1,12 +1,16 @@
 import sys
-from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QMessageBox)
+import requests
+import hashlib
+from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
+                             QLabel, QLineEdit, QPushButton, QMessageBox)
 from PyQt5.QtCore import Qt
-import pymysql
-from hashlib import sha256
 import logging
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
+
+# Адрес сервера (должен совпадать с api.py)
+API_URL = "https://helpfully-accustomed-falcon.cloudpub.ru"
 
 
 class ShopApp(QMainWindow):
@@ -14,25 +18,7 @@ class ShopApp(QMainWindow):
         super().__init__()
         self.setWindowTitle("Добавление магазина")
         self.setGeometry(100, 100, 400, 300)
-
-        try:
-            # Подключение к базе данных через PyMySQL
-            self.db_connection = pymysql.connect(
-                host="localhost",
-                user="root",
-                password="Qwerty123",
-                database="send_to_print",
-                charset='utf8mb4',
-                cursorclass=pymysql.cursors.DictCursor
-            )
-            logger.info("Успешное подключение к базе данных")
-        except pymysql.Error as err:
-            logger.error(f"Ошибка подключения к базе данных: {err}")
-            QMessageBox.critical(self, "Ошибка", f"Не удалось подключиться к базе данных: {err}")
-            sys.exit(1)
-
         self.initUI()
-        self.check_existing_passwords()
 
     def initUI(self):
         central_widget = QWidget()
@@ -41,27 +27,26 @@ class ShopApp(QMainWindow):
         layout = QVBoxLayout()
 
         # Поля ввода
+        self.name_input = QLineEdit()
+        self.address_input = QLineEdit()
+        self.w_hours_input = QLineEdit()
+        self.bw_price_input = QLineEdit()
+        self.color_price_input = QLineEdit()
+        self.password_input = QLineEdit()
+        self.password_input.setEchoMode(QLineEdit.Password)
+
         fields = [
-            ("Название магазина:", "name_input"),
-            ("Адрес:", "address_input"),
-            ("Часы работы:", "w_hours_input"),
-            ("Цена черно-белая:", "bw_price_input"),
-            ("Цена цветная:", "color_price_input"),
-            ("Пароль:", "password_input")
+            ("Название магазина:", self.name_input),
+            ("Адрес:", self.address_input),
+            ("Часы работы:", self.w_hours_input),
+            ("Цена черно-белая:", self.bw_price_input),
+            ("Цена цветная:", self.color_price_input),
+            ("Пароль:", self.password_input),
         ]
 
-        for field in fields:
-            label_text = field[0]
-            attr_name = field[1]
-            label = QLabel(label_text)
-            input_field = QLineEdit()
-
-            if len(field) > 2:
-                input_field.setEchoMode(field[2])
-
-            setattr(self, attr_name, input_field)
-            layout.addWidget(label)
-            layout.addWidget(input_field)
+        for label_text, field in fields:
+            layout.addWidget(QLabel(label_text))
+            layout.addWidget(field)
 
         # Кнопка отправки
         self.submit_button = QPushButton("Добавить магазин")
@@ -70,82 +55,82 @@ class ShopApp(QMainWindow):
 
         central_widget.setLayout(layout)
 
-    def check_existing_passwords(self):
-        self.existing_hashes = set()
-        try:
-            with self.db_connection.cursor() as cursor:
-                cursor.execute("SELECT password FROM shop")
-                for row in cursor:
-                    self.existing_hashes.add(row['password'])
-        except pymysql.Error as err:
-            logger.error(f"Ошибка при загрузке паролей: {err}")
-            QMessageBox.warning(self, "Ошибка", f"Ошибка при загрузке паролей: {err}")
-
     def add_shop(self):
-        # Получаем данные из полей ввода
-        fields = {
-            'name': self.name_input.text().strip(),
-            'address': self.address_input.text().strip(),
-            'w_hours': self.w_hours_input.text().strip(),
-            'bw_price': self.bw_price_input.text().strip(),
-            'color_price': self.color_price_input.text().strip(),
-            'password': self.password_input.text().strip()
-        }
+        # Собираем данные
+        name = self.name_input.text().strip()
+        address = self.address_input.text().strip()
+        w_hours = self.w_hours_input.text().strip()
+        bw_price = self.bw_price_input.text().strip()
+        color_price = self.color_price_input.text().strip()
+        password = self.password_input.text().strip()
 
-        # Проверка заполнения полей
-        if not all(fields.values()):
+        # Проверка заполнения
+        if not all([name, address, w_hours, bw_price, color_price, password]):
             QMessageBox.warning(self, "Ошибка", "Все поля должны быть заполнены!")
             return
 
         # Проверка числовых значений
         try:
-            fields['bw_price'] = float(fields['bw_price'])
-            fields['color_price'] = float(fields['color_price'])
+            bw_price = float(bw_price)
+            color_price = float(color_price)
         except ValueError:
             QMessageBox.warning(self, "Ошибка", "Цены должны быть числовыми!")
             return
 
-        # Хеширование пароля
-        password_hash = sha256(fields['password'].encode()).hexdigest()
+        # Хеширование пароля (как в desktop_app)
+        password_hash = hashlib.sha256(password.encode()).hexdigest()
 
-        # Проверка на уникальность пароля
-        if password_hash in self.existing_hashes:
-            QMessageBox.warning(self, "Ошибка", "Пароль уже существует!")
-            return
+        # Формируем JSON для отправки на сервер
+        payload = {
+            "name": name,
+            "address": address,
+            "w_hours": w_hours,
+            "price_bw": bw_price,
+            "price_cl": color_price,
+            "password": password_hash,
+        }
 
-        # Добавление в базу данных
+        # Отправляем POST-запрос
         try:
-            with self.db_connection.cursor() as cursor:
-                query = """
-                INSERT INTO shop (name, address, w_hours, price_bw, price_cl, password)
-                VALUES (%s, %s, %s, %s, %s, %s)
-                """
-                cursor.execute(query, (
-                    fields['name'],
-                    fields['address'],
-                    fields['w_hours'],
-                    fields['bw_price'],
-                    fields['color_price'],
-                    password_hash
-                ))
-            self.db_connection.commit()
+            response = requests.post(
+                f"{API_URL}/shops",
+                json=payload,
+                timeout=10,
+                headers={"Content-Type": "application/json"}
+            )
 
-            self.existing_hashes.add(password_hash)
+            if response.status_code == 201:
+                # Очищаем поля при успехе
+                self.name_input.clear()
+                self.address_input.clear()
+                self.w_hours_input.clear()
+                self.bw_price_input.clear()
+                self.color_price_input.clear()
+                self.password_input.clear()
 
-            for field in ['name', 'address', 'w_hours', 'bw_price', 'color_price', 'password']:
-                getattr(self, f"{field}_input").clear()
+                QMessageBox.information(self, "Успех", "Магазин успешно добавлен!")
+                logger.info("Shop added via API")
+            elif response.status_code == 409:
+                QMessageBox.warning(self, "Ошибка", "Магазин с таким паролем уже существует")
+            else:
+                # Пытаемся извлечь детали ошибки из ответа сервера
+                try:
+                    error_msg = response.json().get("detail", "Неизвестная ошибка")
+                except:
+                    error_msg = response.text
+                QMessageBox.critical(self, "Ошибка сервера", f"Код {response.status_code}: {error_msg}")
+                logger.error(f"Server error: {response.status_code} - {error_msg}")
 
-            QMessageBox.information(self, "Успех", "Магазин успешно добавлен!")
-            logger.info("Магазин успешно добавлен")
-        except pymysql.Error as err:
-            self.db_connection.rollback()
-            logger.error(f"Ошибка при добавлении магазина: {err}")
-            QMessageBox.warning(self, "Ошибка", f"Ошибка при добавлении магазина: {err}")
+        except requests.exceptions.ConnectionError:
+            QMessageBox.critical(self, "Ошибка", "Нет подключения к серверу")
+        except requests.exceptions.Timeout:
+            QMessageBox.critical(self, "Ошибка", "Сервер не отвечает")
+        except Exception as e:
+            QMessageBox.critical(self, "Ошибка", f"Неизвестная ошибка: {str(e)}")
+            logger.exception("Unexpected error")
 
     def closeEvent(self, event):
-        if hasattr(self, 'db_connection'):
-            self.db_connection.close()
-            logger.info("Соединение с базой данных закрыто")
+        # Ничего не закрываем, соединений с БД больше нет
         event.accept()
 
 
