@@ -9,7 +9,9 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-# Адрес сервера (должен совпадать с api.py)
+# API для AG
+# API_URL = "https://pugnaciously-quickened-gobbler.cloudpub.ru"
+# API для server
 API_URL = "https://helpfully-accustomed-falcon.cloudpub.ru"
 
 
