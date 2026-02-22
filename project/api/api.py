@@ -24,6 +24,8 @@ from json import JSONDecodeError
 from starlette.websockets import WebSocketState, WebSocketDisconnect
 import aiohttp
 from dotenv import load_dotenv
+from cryptography.fernet import Fernet
+from yookassa import Configuration, Payment
 
 # logging.basicConfig(
 #     level=logging.DEBUG,
@@ -76,16 +78,24 @@ LOGGING_CONFIG = {
 env_path = os.path.join(os.path.dirname(__file__), 'config.env')
 load_dotenv(dotenv_path=env_path)
 
+MASTER_KEY = os.getenv("MASTER_KEY")
+if not MASTER_KEY:
+    raise ValueError("MASTER_KEY not set")
+
+cipher = Fernet(MASTER_KEY.encode())
+
 JWT_SECRET = os.getenv("JWT_SECRET")
 JWT_ALGORITHM = os.getenv("JWT_ALGORITHM")
 ACCESS_TOKEN_EXPIRE_HOURS = int(os.getenv("ACCESS_TOKEN_EXPIRE_HOURS"))
 
+API_URL = os.getenv("API_URL")
 security = HTTPBearer()
 
 
 class TokenData(BaseModel):
     shop_id: int
     exp: datetime
+
 
 class ShopCreate(BaseModel):
     name: str
@@ -95,8 +105,19 @@ class ShopCreate(BaseModel):
     price_cl: float
     password: str
 
+
 class OrderUpdate(BaseModel):
     status: Optional[str] = None
+
+
+class FranchiseCreate(BaseModel):
+    name: str
+    yk_shop_id: str
+    yk_secret_key: str
+
+
+class PaymentCreateRequest(BaseModel):
+    order_id: int
 
 
 app = FastAPI()
@@ -159,6 +180,57 @@ def decimal_to_float(obj):
     if isinstance(obj, Decimal):
         return float(obj)
     raise TypeError
+
+
+def encrypt_value(value: str) -> str:
+    return cipher.encrypt(value.encode()).decode()
+
+
+def decrypt_value(value: str) -> str:
+    return cipher.decrypt(value.encode()).decode()
+
+
+async def get_franchise_credentials(franchise_id: int):
+    async with await get_db() as conn:
+        async with conn.cursor(aiomysql.DictCursor) as cursor:
+            await cursor.execute("""
+                SELECT yk_shop_id, yk_secret_key
+                FROM franchise
+                WHERE id = %s AND is_active = 1
+            """, (franchise_id,))
+
+            data = await cursor.fetchone()
+
+            if not data:
+                raise HTTPException(404, detail="Franchise not found or inactive")
+
+            try:
+                decrypted_secret = decrypt_value(data['yk_secret_key'])
+            except Exception:
+                logging.error("Failed to decrypt YooKassa secret key")
+                raise HTTPException(500, detail="Decryption error")
+
+            return {
+                "shop_id": data['yk_shop_id'],
+                "secret_key": decrypted_secret
+            }
+
+
+async def get_franchise_id_by_shop(shop_id: int) -> int:
+    async with await get_db() as conn:
+        async with conn.cursor(aiomysql.DictCursor) as cursor:
+            await cursor.execute("""
+                SELECT franchise_id
+                FROM shop
+                WHERE ID_shop = %s AND is_active = 1
+            """, (shop_id,))
+
+            data = await cursor.fetchone()
+
+            if not data or not data['franchise_id']:
+                raise HTTPException(404, detail="Shop has no franchise assigned")
+
+            return data['franchise_id']
 
 
 # JWT функции
@@ -383,7 +455,7 @@ async def create_order(
                     INSERT INTO `order` (
                         ID_shop, price, note, con_code, color, status, 
                         user_id, pages, file_extension, file_path
-                    ) VALUES (%s, %s, %s, %s, %s, 'received', %s, %s, %s, 'temp')
+                    ) VALUES (%s, %s, %s, %s, %s, 'created', %s, %s, %s, 'temp')
                 """, (
                     ID_shop, price, note, con_code, color,
                     user_id, pages, file_extension
@@ -415,6 +487,67 @@ async def create_order(
         logging.error(f"Order creation error: {traceback.format_exc()}")
         raise HTTPException(500, detail=str(e))
 
+
+@app.post("/payments/create")
+async def create_payment_endpoint(data: PaymentCreateRequest):
+    async with await get_db() as conn:
+        async with conn.cursor(aiomysql.DictCursor) as cursor:
+            await cursor.execute("""
+                SELECT *
+                FROM `order`
+                WHERE ID = %s
+            """, (data.order_id,))
+
+            order = await cursor.fetchone()
+
+            if not order:
+                raise HTTPException(404, detail="Order not found")
+
+            if order['status'] != 'created':
+                raise HTTPException(400, detail="Order already processed")
+
+    franchise_id = await get_franchise_id_by_shop(order['ID_shop'])
+    creds = await get_franchise_credentials(franchise_id)
+
+    Configuration.account_id = creds["shop_id"]
+    Configuration.secret_key = creds["secret_key"]
+
+    idempotence_key = str(uuid.uuid4())
+
+    payment = Payment.create({
+        "amount": {
+            "value": str(order["price"]),
+            "currency": "RUB"
+        },
+        "confirmation": {
+            "type": "redirect",
+            "return_url": f"{API_URL}/payment-return"
+        },
+        "capture": True,
+        "description": f"Оплата заказа #{order['ID']}"
+    }, idempotence_key)
+
+    async with await get_db() as conn:
+        async with conn.cursor() as cursor:
+            await cursor.execute("""
+                UPDATE `order`
+                SET payment_id = %s,
+                    payment_status = %s,
+                    idempotence_key = %s
+                WHERE ID = %s
+            """, (
+                payment.id,
+                payment.status,
+                idempotence_key,
+                data.order_id
+            ))
+            await conn.commit()
+
+    return {
+        "confirmation_url": payment.confirmation.confirmation_url
+    }
+
+
 @app.post("/shops", status_code=201)
 async def create_shop(shop: ShopCreate):
     """Создание нового магазина (доступно без авторизации для админ-приложения)"""
@@ -440,6 +573,7 @@ async def create_shop(shop: ShopCreate):
         logging.error(f"Error creating shop: {traceback.format_exc()}")
         raise HTTPException(500, detail="Internal server error")
 
+
 # Shops endpoints
 @app.get("/shops")
 async def get_shops():
@@ -456,6 +590,7 @@ async def get_shops():
     except Exception as e:
         logging.error(f"Error: {traceback.format_exc()}")
         raise HTTPException(500, detail="Server error")
+
 
 @app.get("/shops/{shop_name}")
 async def get_shop(shop_name: str):
@@ -500,6 +635,30 @@ async def get_shop_by_password(password_hash: str, current_shop: TokenData = Dep
         raise HTTPException(500, detail="Server error")
 
 
+@app.post("/franchise", status_code=201)
+async def create_franchise(franchise: FranchiseCreate):
+    try:
+        encrypted_secret = encrypt_value(franchise.yk_secret_key)
+
+        async with await get_db() as conn:
+            async with conn.cursor() as cursor:
+                await cursor.execute("""
+                    INSERT INTO franchise (name, yk_shop_id, yk_secret_key)
+                    VALUES (%s, %s, %s)
+                """, (
+                    franchise.name,
+                    franchise.yk_shop_id,
+                    encrypted_secret
+                ))
+                await conn.commit()
+
+        return {"message": "Franchise created successfully"}
+
+    except Exception as e:
+        logging.error(f"Franchise creation error: {traceback.format_exc()}")
+        raise HTTPException(500, detail="Internal server error")
+
+
 # Files endpoint
 @app.get("/files/{filename}")
 async def get_file(
@@ -535,6 +694,50 @@ async def get_file(
     except Exception as e:
         logging.error(f"File access error: {traceback.format_exc()}")
         raise HTTPException(500, detail="Server error")
+
+
+# payment endpoints
+@app.get("/payments/check/{order_id}")
+async def check_payment_status(order_id: int):
+    async with await get_db() as conn:
+        async with conn.cursor(aiomysql.DictCursor) as cursor:
+            await cursor.execute("""
+                SELECT o.payment_id, o.status, o.ID_shop, o.con_code
+                FROM `order` o
+                WHERE o.ID = %s
+            """, (order_id,))
+
+            order = await cursor.fetchone()
+
+            if not order or not order["payment_id"]:
+                raise HTTPException(404, detail="Payment not found")
+
+    # Получаем franchise_id
+    franchise_id = await get_franchise_id_by_shop(order["ID_shop"])
+    creds = await get_franchise_credentials(franchise_id)
+
+    Configuration.account_id = creds["shop_id"]
+    Configuration.secret_key = creds["secret_key"]
+
+    # Получаем статус из YooKassa
+    payment = Payment.find_one(order["payment_id"])
+
+    if payment.status == "succeeded" and order["status"] != "paid":
+        async with await get_db() as conn:
+            async with conn.cursor() as cursor:
+                await cursor.execute("""
+                        UPDATE `order`
+                        SET status = 'paid',
+                            payment_status = 'succeeded'
+                        WHERE ID = %s
+                    """, (order_id,))
+                await conn.commit()
+
+        # Возвращаем больше данных
+        return {"status": "paid", "con_code": order["con_code"]}
+
+        # Возвращаем текущий статус, если он не "succeeded"
+    return {"status": payment.status}
 
 
 if __name__ == "__main__":

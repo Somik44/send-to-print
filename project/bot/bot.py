@@ -111,7 +111,7 @@ async def confirmation_timeout(chat_id: int, state: FSMContext):
         if chat_id in confirmation_timers:
             user_data = await state.get_data()
             await cleanup_order_data(user_data)
-            await bot.send_message(chat_id, "❌ Время подтверждения истекло, ваш заказ отменен", reply_markup=types.ReplyKeyboardRemove())
+            await bot.send_message(chat_id, "❌ Время оплаты истекло, ваш заказ отменен", reply_markup=types.ReplyKeyboardRemove())
             await state.clear()
             del confirmation_timers[chat_id]
     except asyncio.CancelledError:
@@ -605,7 +605,7 @@ async def process_comment(message: types.Message, state: FSMContext):
     )
 
     markup = ReplyKeyboardMarkup(
-        keyboard=[[KeyboardButton(text="Подтвердить"), KeyboardButton(text="Отменить")]],
+        keyboard=[[KeyboardButton(text="💳 Оплатить"), KeyboardButton(text="Отменить")]],
         resize_keyboard=True
     )
 
@@ -620,12 +620,12 @@ async def process_comment(message: types.Message, state: FSMContext):
 
 @dp.message(Form.confirmation)
 async def process_confirmation(message: types.Message, state: FSMContext):
-    if message.text not in ["Подтвердить", "Отменить"]:
+    if message.text not in ["💳 Оплатить", "Отменить"]:
         markup = ReplyKeyboardMarkup(
-            keyboard=[[KeyboardButton(text="Подтвердить"), KeyboardButton(text="Отменить")]],
+            keyboard=[[KeyboardButton(text="💳 Оплатить"), KeyboardButton(text="Отменить")]],
             resize_keyboard=True
         )
-        await message.answer("⚠️ Пожалуйста, используйте кнопки для подтверждения:", reply_markup=markup)
+        await message.answer("⚠️ Пожалуйста, используйте кнопки для оплаты:", reply_markup=markup)
         return
 
     if message.chat.id in timers:
@@ -669,10 +669,29 @@ async def process_confirmation(message: types.Message, state: FSMContext):
             async with session.post(f"{API_URL}/orders", data=form_data) as resp:
                 if resp.status == 201:
                     data = await resp.json()
+                    order_id = data["order_id"]
+
+                    async with session.post(
+                            f"{API_URL}/payments/create",
+                            json={"order_id": order_id}
+                    ) as payment_resp:
+
+                        if payment_resp.status != 200:
+                            await message.answer("❌ Ошибка создания платежа")
+                            return
+
+                        payment_data = await payment_resp.json()
+                        confirmation_url = payment_data["confirmation_url"]
+
                     await message.answer(
-                        f"✅ Заказ №{data['order_id']} принят! Проверочный код: {check_code}",
+                        f"💳 Для завершения заказа перейдите по ссылке для оплаты:\n{confirmation_url}",
                         reply_markup=types.ReplyKeyboardRemove()
                     )
+
+                    asyncio.create_task(
+                        start_payment_polling(order_id, message.chat.id)
+                    )
+
                     if temp_file_path and os.path.exists(temp_file_path):
                         try:
                             os.remove(temp_file_path)
@@ -680,7 +699,7 @@ async def process_confirmation(message: types.Message, state: FSMContext):
                         except Exception as e:
                             logging.error(f"Ошибка удаления временного файла: {str(e)}")
                 else:
-                    await message.answer("❌ Ошибка подтверждения заказа")
+                    await message.answer("❌ Ошибка оплаты заказа")
     except Exception as e:
         await message.answer("❌ Ошибка создания заказа")
         logging.error(f"Ошибка подтверждения: {traceback.format_exc()}")
@@ -731,6 +750,50 @@ async def cmd_reset(message: types.Message, state: FSMContext):
 @dp.message()
 async def handle_unknown(message: types.Message):
     await message.reply("Не понимаю тебя, попробуй повторить запрос ☺️")
+
+
+async def start_payment_polling(order_id: int, chat_id: int):
+    max_attempts = 36  # 3 минуты (5 сек * 36)
+    attempt = 0
+
+    async with aiohttp.ClientSession() as session:
+        while attempt < max_attempts:
+            await asyncio.sleep(5)
+            attempt += 1
+
+            try:
+                async with session.get(
+                    f"{API_URL}/payments/check/{order_id}"
+                ) as resp:
+
+                    if resp.status == 200:
+                        data = await resp.json()
+
+                        if data["status"] == "paid":
+                            check_code = data.get("con_code", "Не найден")
+                            await bot.send_message(
+                                chat_id,
+                                f"✅ Оплата прошла успешно! Заказ №{order_id} принят в работу.\n"
+                                f"Проверочный код: {check_code}. По готовности вам придет уведомление.",
+                                reply_markup=types.ReplyKeyboardRemove()
+                            )
+                            return
+
+                        elif data["status"] == "canceled":
+                            await bot.send_message(
+                                chat_id,
+                                "❌ Платёж отменён."
+                            )
+                            return
+
+            except Exception as e:
+                logging.error(f"Polling error: {str(e)}")
+
+    # Если время вышло
+    await bot.send_message(
+        chat_id,
+        "⌛ Не удалось подтвердить оплату. Если вы оплатили — заказ всё равно обработается автоматически."
+    )
 
 
 async def main():

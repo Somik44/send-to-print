@@ -493,7 +493,7 @@ class FileReceiverApp(QWidget):
             resp = await self.auth_manager.make_authenticated_request(
                 'GET',
                 f"{API_URL}/orders",
-                params={'status': ['received', 'ready']}
+                params={'status': ['paid', 'ready']}
             )
 
             if resp.status == 200:
@@ -534,7 +534,7 @@ class FileReceiverApp(QWidget):
                 widget = self.create_order_widget(order)
                 item.setSizeHint(widget.sizeHint())
 
-                target_list = self.received_list if order['status'] == 'received' else self.ready_list
+                target_list = self.received_list if order['status'] == 'paid' else self.ready_list
                 target_list.addItem(item)
                 target_list.setItemWidget(item, widget)
                 self.current_items[order['ID']] = (item, widget)
@@ -553,11 +553,11 @@ class FileReceiverApp(QWidget):
         label_text = f"Заказ №{order['ID']}: {file_name}"
         label = QLabel(label_text)
         label.setWordWrap(True)
-        color = "#dc3545" if order['status'] == 'received' else "#28a745"
+        color = "#dc3545" if order['status'] == 'paid' else "#28a745"
         label.setStyleSheet(f"QLabel {{ color: {color}; font-weight: 600; font-size: 13px; padding: 5px; }}")
 
         buttons = []
-        if order['status'] == 'received':
+        if order['status'] == 'paid':
             btn_download = QPushButton("Файл")
             if order['ID'] in self.current_downloads:
                 btn_download.setEnabled(False)
