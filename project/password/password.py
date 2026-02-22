@@ -5,14 +5,16 @@ from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
                              QLabel, QLineEdit, QPushButton, QMessageBox)
 from PyQt5.QtCore import Qt
 import logging
+from dotenv import load_dotenv
+import os
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-# API для AG
-# API_URL = "https://pugnaciously-quickened-gobbler.cloudpub.ru"
-# API для server
-API_URL = "https://helpfully-accustomed-falcon.cloudpub.ru"
+env_path = os.path.join(os.path.dirname(__file__), 'config.env')
+load_dotenv(dotenv_path=env_path)
+
+API_URL = os.getenv("API_URL")
 
 
 class ShopApp(QMainWindow):

@@ -23,6 +23,7 @@ from starlette.websockets import WebSocketDisconnect
 from json import JSONDecodeError
 from starlette.websockets import WebSocketState, WebSocketDisconnect
 import aiohttp
+from dotenv import load_dotenv
 
 # logging.basicConfig(
 #     level=logging.DEBUG,
@@ -72,9 +73,12 @@ LOGGING_CONFIG = {
     },
 }
 
-JWT_SECRET = "fQzoPHqr-PLxYFFIORSlOHSe8mhfv3M0WroY5a75i9VGR678LvPGcGh9AA7sa5arhepAnmHIVoBd8fIlsNw1KQ"
-JWT_ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_HOURS = 24
+env_path = os.path.join(os.path.dirname(__file__), 'config.env')
+load_dotenv(dotenv_path=env_path)
+
+JWT_SECRET = os.getenv("JWT_SECRET")
+JWT_ALGORITHM = os.getenv("JWT_ALGORITHM")
+ACCESS_TOKEN_EXPIRE_HOURS = int(os.getenv("ACCESS_TOKEN_EXPIRE_HOURS"))
 
 security = HTTPBearer()
 
@@ -105,10 +109,10 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 # Database configuration
 async def get_db():
     return await aiomysql.connect(
-        host=os.getenv("DB_HOST", "localhost"),
-        user=os.getenv("DB_USER", "root"),
-        password=os.getenv("DB_PASSWORD", "Qwerty123"),
-        db=os.getenv("DB_NAME", "send_to_print"),
+        host=os.getenv("DB_HOST"),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD"),
+        db=os.getenv("DB_NAME"),
         autocommit=False,
         cursorclass=aiomysql.DictCursor
     )
@@ -535,5 +539,6 @@ async def get_file(
 
 if __name__ == "__main__":
     import uvicorn
-
-    uvicorn.run(app, host="0.0.0.0", port=5000, log_config=LOGGING_CONFIG)
+    host = os.getenv("API_HOST")
+    port = int(os.getenv("API_PORT"))
+    uvicorn.run(app, host=host, port=port, log_config=LOGGING_CONFIG)

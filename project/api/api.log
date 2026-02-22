@@ -1,1 +1,15 @@
 2026-02-22 13:58:43 - INFO - 95.26.156.248:0 - "POST /shops HTTP/1.1" 201 Created
+2026-02-22 19:06:49 - INFO - 161.35.214.24:0 - "POST /auth/login HTTP/1.1" 200 OK
+2026-02-22 19:06:50 - INFO - 161.35.214.24:0 - "GET /orders?status=received&status=ready HTTP/1.1" 200 OK
+2026-02-22 19:06:52 - INFO - 161.35.214.24:0 - "GET /orders?status=received&status=ready HTTP/1.1" 200 OK
+2026-02-22 19:08:03 - INFO - 161.35.214.24:0 - "GET /shops HTTP/1.1" 200 OK
+2026-02-22 19:08:07 - INFO - 161.35.214.24:0 - "GET /shops/%D0%A4%D1%83%D0%BD%D0%B4%D0%B0%D0%BC%D0%B5%D0%BD%D1%82%D0%B0%D0%BB%D1%8C%D0%BD%D0%B0%D1%8F%20%D0%B1%D0%B8%D0%B1%D0%BB%D0%B8%D0%BE%D1%82%D0%B5%D0%BA%D0%B0 HTTP/1.1" 200 OK
+2026-02-22 19:08:55 - INFO - 161.35.214.24:0 - "POST /orders HTTP/1.1" 201 Created
+2026-02-22 19:08:58 - INFO - 161.35.214.24:0 - "GET /orders?status=received&status=ready HTTP/1.1" 200 OK
+2026-02-22 19:08:59 - INFO - 161.35.214.24:0 - "GET /orders?status=received&status=ready HTTP/1.1" 200 OK
+2026-02-22 19:09:00 - INFO - 161.35.214.24:0 - "GET /files/order_57.docx HTTP/1.1" 200 OK
+2026-02-22 19:09:00 - INFO - 161.35.214.24:0 - "GET /orders?status=received&status=ready HTTP/1.1" 200 OK
+2026-02-22 19:09:06 - INFO - 161.35.214.24:0 - "POST /orders/57/ready HTTP/1.1" 200 OK
+2026-02-22 19:09:06 - INFO - 161.35.214.24:0 - "GET /orders?status=received&status=ready HTTP/1.1" 200 OK
+2026-02-22 19:09:08 - INFO - 161.35.214.24:0 - "POST /orders/57/complete HTTP/1.1" 200 OK
+2026-02-22 19:09:09 - INFO - 161.35.214.24:0 - "GET /orders?status=received&status=ready HTTP/1.1" 200 OK
