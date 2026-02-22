@@ -23,6 +23,7 @@ import tempfile
 import zipfile
 import xml.dom.minidom
 import docx
+from dotenv import load_dotenv
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -30,15 +31,12 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 
-API_TOKEN = '7818669005:AAFyAMagVNx7EfJsK-pVLUBkGLfmMp9J2EQ'
-# API для AG
-# API_URL = 'https://pugnaciously-quickened-gobbler.cloudpub.ru'
-# API для server
-API_URL = 'https://helpfully-accustomed-falcon.cloudpub.ru'
-# folder для AG
-# UPLOAD_FOLDER = 'D:\\projects_py\\projectsWithGit\\send-to-print\\project\\api\\uploads'
-# folder для server
-UPLOAD_FOLDER = 'C:\\Users\\print_server\\Documents\\Projects\\send-to-print\\project\\api\\uploads'
+env_path = os.path.join(os.path.dirname(__file__), 'config.env')
+load_dotenv(dotenv_path=env_path)
+
+API_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+API_URL = os.getenv("API_URL")
+UPLOAD_FOLDER = os.getenv("UPLOAD_FOLDER")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 
