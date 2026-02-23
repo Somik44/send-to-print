@@ -121,7 +121,6 @@ class PaymentCreateRequest(BaseModel):
 
 
 app = FastAPI()
-# WS_URL = 'ws://tcp.cloudpub.ru:55000/bot'
 UPLOAD_FOLDER = os.path.abspath('uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 # app.mount("/uploads", StaticFiles(directory=UPLOAD_FOLDER), name="uploads")
@@ -139,40 +138,41 @@ async def get_db():
     )
 
 
-# @app.websocket("/ws/notify")
-# async def websocket_notify(websocket: WebSocket):
-#     await websocket.accept()
-#     try:
-#         while True:
-#             await websocket.receive_text()
-#     except Exception as e:
-#         logging.error(f"WebSocket connection closed: {str(e)}")
-#
-#
-# async def notify_bot(order_id: int, status: str):
-#     try:
-#         # Используем существующее подключение через get_db()
-#         async with await get_db() as conn:
-#             async with conn.cursor(aiomysql.DictCursor) as cursor:
-#                 await cursor.execute("""
-#                     SELECT o.user_id, o.ID, s.address
-#                     FROM `order` o
-#                     JOIN shop s ON o.ID_shop = s.ID_shop
-#                     WHERE o.ID = %s
-#                 """, (order_id,))
-#                 data = await cursor.fetchone()
-#
-#         # Исправляем адрес WebSocket на порт 8001
-#         async with websockets.connect("ws://tcp.cloudpub.ru:55000") as ws:
-#             await ws.send(json.dumps({
-#                 "type": "status_update",
-#                 "status": status,
-#                 "user_id": data['user_id'],
-#                 "order_id": data['ID'],
-#                 "address": data['address']
-#             }))
-#     except Exception as e:
-#         logging.error(f"WebSocket notification error: {traceback.format_exc()}")
+async def notify_bot(order_id: int, status: str):
+    try:
+        async with await get_db() as conn:
+            async with conn.cursor(aiomysql.DictCursor) as cursor:
+                await cursor.execute("""
+                    SELECT o.user_id, o.ID, s.address, o.con_code
+                    FROM `order` o
+                    JOIN shop s ON o.ID_shop = s.ID_shop
+                    WHERE o.ID = %s
+                """, (order_id,))
+                data = await cursor.fetchone()
+
+        if not data:
+            logging.warning(f"Could not find order data for notification. Order ID: {order_id}")
+            return
+
+        bot_websocket_url = "ws://localhost:8001"
+
+        logging.info(f"Connecting to bot WebSocket at {bot_websocket_url}...")
+        async with websockets.connect(bot_websocket_url) as ws:
+            payload = {
+                "type": "status_update",
+                "status": status,
+                "user_id": data['user_id'],
+                "order_id": data['ID'],
+                "address": data['address'],
+                "con_code": data['con_code']
+            }
+            await ws.send(json.dumps(payload))
+            logging.info(f"Sent status '{status}' for order {order_id} to user {data['user_id']}")
+
+    except ConnectionRefusedError:
+        logging.error(f"WebSocket connection refused. Is the bot's WebSocket server running at {bot_websocket_url}?")
+    except Exception as e:
+        logging.error(f"WebSocket notification error for order {order_id}: {traceback.format_exc()}")
 
 
 # Helper functions
@@ -378,9 +378,13 @@ async def mark_order_ready(order_id: int, current_shop: TokenData = Depends(veri
                     (order_id, current_shop.shop_id)
                 )
                 await conn.commit()
-                return {"status": "ready"}
+        try:
+            await notify_bot(order_id, 'ready')
+        except Exception as e:
+            logging.error(f"Failed to send 'ready' notification for order {order_id}: {e}")
+        return {"status": "ready"}
     except Exception as e:
-        logging.error(f"Error: {traceback.format_exc()}")
+        logging.error(f"Error in mark_order_ready: {traceback.format_exc()}")
         raise HTTPException(500, detail="Internal server error")
 
 
@@ -389,7 +393,7 @@ async def complete_order(order_id: int, current_shop: TokenData = Depends(verify
     """Завершить заказ (выдать клиенту)"""
     try:
         async with await get_db() as conn:
-            async with conn.cursor() as cursor:
+            async with conn.cursor(aiomysql.DictCursor) as cursor:
                 await conn.begin()
 
                 await cursor.execute(
@@ -412,6 +416,8 @@ async def complete_order(order_id: int, current_shop: TokenData = Depends(verify
                         detail=f"Невозможно завершить заказ в статусе {current['status']}"
                     )
 
+                user_id_for_notification = current['user_id']
+
                 file_path = os.path.join(UPLOAD_FOLDER, current['file_path'])
                 try:
                     if os.path.exists(file_path):
@@ -425,7 +431,11 @@ async def complete_order(order_id: int, current_shop: TokenData = Depends(verify
                     (order_id, current_shop.shop_id)
                 )
                 await conn.commit()
-                return {"status": "completed"}
+        try:
+            await notify_bot(order_id, 'completed')
+        except Exception as e:
+            logging.error(f"Failed to send 'completed' notification for order {order_id}: {e}")
+        return {"status": "completed"}
 
     except HTTPException:
         raise
@@ -504,7 +514,7 @@ async def create_payment_endpoint(data: PaymentCreateRequest):
                 raise HTTPException(404, detail="Order not found")
 
             if order['status'] != 'created':
-                raise HTTPException(400, detail="Order already processed")
+                raise HTTPException(400, detail=f"Cannot create payment for order with status '{order['status']}'")
 
     franchise_id = await get_franchise_id_by_shop(order['ID_shop'])
     creds = await get_franchise_credentials(franchise_id)
@@ -521,7 +531,7 @@ async def create_payment_endpoint(data: PaymentCreateRequest):
         },
         "confirmation": {
             "type": "redirect",
-            "return_url": f"{API_URL}/payment-return"
+            "return_url": f"{API_URL}/payment-return"  # Этот URL сейчас не используется, но лучше его оставить
         },
         "capture": True,
         "description": f"Оплата заказа #{order['ID']}"
@@ -532,6 +542,7 @@ async def create_payment_endpoint(data: PaymentCreateRequest):
             await cursor.execute("""
                 UPDATE `order`
                 SET payment_id = %s,
+                    status = 'waiting_payment',
                     payment_status = %s,
                     idempotence_key = %s
                 WHERE ID = %s
@@ -542,6 +553,8 @@ async def create_payment_endpoint(data: PaymentCreateRequest):
                 data.order_id
             ))
             await conn.commit()
+
+    logging.info(f"Created payment {payment.id} for order {data.order_id}. Status: waiting_payment")
 
     return {
         "confirmation_url": payment.confirmation.confirmation_url
@@ -706,38 +719,79 @@ async def check_payment_status(order_id: int):
                 FROM `order` o
                 WHERE o.ID = %s
             """, (order_id,))
-
             order = await cursor.fetchone()
 
             if not order or not order["payment_id"]:
-                raise HTTPException(404, detail="Payment not found")
+                raise HTTPException(404, detail="Payment not found for this order")
 
-    # Получаем franchise_id
+    if order["status"] in ["paid", "canceled"]:
+        return {"status": order["status"], "con_code": order.get("con_code")}
+
     franchise_id = await get_franchise_id_by_shop(order["ID_shop"])
     creds = await get_franchise_credentials(franchise_id)
 
     Configuration.account_id = creds["shop_id"]
     Configuration.secret_key = creds["secret_key"]
 
-    # Получаем статус из YooKassa
     payment = Payment.find_one(order["payment_id"])
+    yookassa_status = payment.status
 
-    if payment.status == "succeeded" and order["status"] != "paid":
+    if yookassa_status == "succeeded" and order["status"] != "paid":
         async with await get_db() as conn:
             async with conn.cursor() as cursor:
                 await cursor.execute("""
-                        UPDATE `order`
-                        SET status = 'paid',
-                            payment_status = 'succeeded'
-                        WHERE ID = %s
-                    """, (order_id,))
+                    UPDATE `order`
+                    SET status = 'paid', payment_status = 'succeeded', paid_at = NOW()
+                    WHERE ID = %s
+                """, (order_id,))
                 await conn.commit()
-
-        # Возвращаем больше данных
+        logging.info(f"Order {order_id} status updated to 'paid'.")
         return {"status": "paid", "con_code": order["con_code"]}
 
-        # Возвращаем текущий статус, если он не "succeeded"
-    return {"status": payment.status}
+    elif yookassa_status == "canceled" and order["status"] != "canceled":
+        async with await get_db() as conn:
+            async with conn.cursor() as cursor:
+                await cursor.execute("""
+                    UPDATE `order`
+                    SET status = 'canceled', payment_status = 'canceled'
+                    WHERE ID = %s
+                """, (order_id,))
+                await conn.commit()
+        logging.warning(f"Order {order_id} canceled. YooKassa payment status: 'canceled'.")
+        return {"status": "canceled"}
+
+    return {"status": yookassa_status}
+
+
+@app.post("/orders/{order_id}/cancel-timeout")
+async def cancel_order_due_to_timeout(order_id: int):
+    """
+    Отмена заказа из-за истечения времени ожидания платежа.
+    Вызывается ботом после 3-минутного таймаута.
+    """
+    try:
+        async with await get_db() as conn:
+            async with conn.cursor(aiomysql.DictCursor) as cursor:
+                await cursor.execute(
+                    "UPDATE `order` SET status = 'canceled' WHERE ID = %s AND status = 'waiting_payment'",
+                    (order_id,)
+                )
+                await conn.commit()
+
+                if cursor.rowcount > 0:
+                    logging.warning(f"Order {order_id} has been automatically canceled due to payment timeout.")
+                    return {"status": "canceled"}
+                else:
+                    await cursor.execute("SELECT status FROM `order` WHERE ID = %s", (order_id,))
+                    order = await cursor.fetchone()
+                    current_status = order['status'] if order else 'not_found'
+                    logging.info(
+                        f"Timeout cancellation for order {order_id} ignored. Current status: {current_status}.")
+                    return {"status": "ignored", "current_status": current_status}
+
+    except Exception as e:
+        logging.error(f"Error canceling order {order_id} on timeout: {traceback.format_exc()}")
+        raise HTTPException(500, detail="Internal server error")
 
 
 if __name__ == "__main__":

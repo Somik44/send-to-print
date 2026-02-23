@@ -51,36 +51,39 @@ class Form(StatesGroup):
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher()
 timers = {}
-confirmation_timers = {}
 
 
-# async def websocket_server():
-#     # Слушаем на всех интерфейсах и правильном порту
-#     async with websockets.serve(handler, "0.0.0.0", 8001):
-#         await asyncio.Future()  # Бесконечное ожидание
-#
-#
-# async def handler(websocket):
-#     async for message in websocket:
-#         try:
-#             data = json.loads(message)
-#             if data['type'] == 'status_update':
-#                 user_id = data['user_id']
-#                 order_id = data['order_id']
-#                 address = data['address']
-#
-#                 if data['status'] == 'ready':
-#                     await bot.send_message(
-#                         user_id,
-#                         f"🖨️ Заказ №{order_id} готов! Адрес получения: {address}"
-#                     )
-#                 elif data['status'] == 'completed':
-#                     await bot.send_message(
-#                         user_id,
-#                         f"✅ Заказ №{order_id} выдан! Спасибо, что воспользовались нашим сервисом! Ждем вас снова!"
-#                     )
-#         except Exception as e:
-#             logging.error(f"WebSocket Error: {traceback.format_exc()}")
+async def websocket_server():
+    # Слушаем на всех интерфейсах и правильном порту
+    async with websockets.serve(handler, "0.0.0.0", 8001):
+        await asyncio.Future()  # Бесконечное ожидание
+
+
+async def handler(websocket):
+    async for message in websocket:
+        try:
+            data = json.loads(message)
+            if data['type'] == 'status_update':
+                user_id = data['user_id']
+                order_id = data['order_id']
+                address = data['address']
+                check_code = data['con_code']
+
+                if data['status'] == 'ready':
+                    await bot.send_message(
+                        user_id,
+                        f"🖨️ Заказ №{order_id} готов!\n"
+                        f"• Адрес получения: {address}.\n"
+                        f"• Проверочный код: {check_code}\n"
+                        f"Пожалуйста, назовите этот код сотруднику, чтобы забрать заказ."
+                    )
+                elif data['status'] == 'completed':
+                    await bot.send_message(
+                        user_id,
+                        f"✅ Заказ №{order_id} выдан! Спасибо, что воспользовались нашим сервисом! Ждем вас снова!"
+                    )
+        except Exception as e:
+            logging.error(f"WebSocket Error: {traceback.format_exc()}")
 
 
 async def cleanup_order_data(user_data: dict):
@@ -103,19 +106,6 @@ async def start_order_timer(chat_id: int, state: FSMContext):
             del timers[chat_id]
     except asyncio.CancelledError:
         logging.info("10-минутный таймер отменен")
-
-
-async def confirmation_timeout(chat_id: int, state: FSMContext):
-    try:
-        await asyncio.sleep(60)
-        if chat_id in confirmation_timers:
-            user_data = await state.get_data()
-            await cleanup_order_data(user_data)
-            await bot.send_message(chat_id, "❌ Время оплаты истекло, ваш заказ отменен", reply_markup=types.ReplyKeyboardRemove())
-            await state.clear()
-            del confirmation_timers[chat_id]
-    except asyncio.CancelledError:
-        logging.info("1-минутный таймер отменен")
 
 
 async def get_page_count(file_path: str, ext: str) -> int:
@@ -343,10 +333,6 @@ async def cmd_new_order(message: types.Message, state: FSMContext):
         timers[message.chat.id].cancel()
         del timers[message.chat.id]
 
-    if message.chat.id in confirmation_timers:
-        confirmation_timers[message.chat.id].cancel()
-        del confirmation_timers[message.chat.id]
-
     user_data = await state.get_data()
     temp_file = user_data.get('temp_file')
 
@@ -401,6 +387,7 @@ async def process_shop(message: types.Message, state: FSMContext):
         f"• Черно-белая: {shop['price_bw']:.2f} руб/стр\n"
         f"• Цветная: {shop['price_cl']:.2f} руб/стр\n\n"
         f"📎 Отправьте PDF, DOC, DOCX файл или PNG, JPEG, JPG картинку размером не более 20 МБ для расчета стоимости\n"
+        f"❗ Внимание! Если вы отправляете картинку, то прикрепляйте ее в виде файла!\n"
         f"Используйте /reset для отмены заказа."
     )
     await message.answer(response, reply_markup=types.ReplyKeyboardRemove())
@@ -490,9 +477,6 @@ async def process_file(message: types.Message, state: FSMContext):
         if message.chat.id in timers:
             timers[message.chat.id].cancel()
             del timers[message.chat.id]
-        if message.chat.id in confirmation_timers:
-            confirmation_timers[message.chat.id].cancel()
-            del confirmation_timers[message.chat.id]
         await state.clear()
 
         error_msg = f"❌ Ошибка: {str(ve)}. Используйте /new_order для начала нового заказа"
@@ -503,9 +487,6 @@ async def process_file(message: types.Message, state: FSMContext):
         if message.chat.id in timers:
             timers[message.chat.id].cancel()
             del timers[message.chat.id]
-        if message.chat.id in confirmation_timers:
-            confirmation_timers[message.chat.id].cancel()
-            del confirmation_timers[message.chat.id]
         await state.clear()
 
         error_msg = f"❌ Критическая ошибка обработки файла: {str(e)}"
@@ -584,24 +565,14 @@ async def process_comment(message: types.Message, state: FSMContext):
     await state.update_data(comment=comment)
     user_data = await state.get_data()
 
-    # Определяем расширение файла
-    file_ext = user_data.get('file_extension', '').lower()
-
-    # Формируем строку стоимости
-    cost_line = (
-        "• Стоимость: уточняйте на точке"
-        if file_ext in ('png', 'jpg', 'jpeg')
-        else f"• Стоимость: {user_data['price']:.2f} руб"
-    )
-
     response = (
         f"🔍 Подтвердите заказ:\n"
         f"• Точка: {user_data['shop']['name']} по адресу {user_data['shop']['address']}\n"
         f"• Страниц: {user_data['pages']}\n"
         f"• Тип: {user_data['color']}\n"
-        f"{cost_line}\n"  
+        f"• Стоимость: {user_data['price']:.2f} руб\n"  
         f"• Комментарий: {comment if comment else 'нет'}\n"
-        f"Внимание! Это предварительная цена, не являющаяся публичной офертой. Итоговую стоимость уточняйте на точке печати"
+        f"Если все верно, нажмите кнопку '💳 Оплатить'"
     )
 
     markup = ReplyKeyboardMarkup(
@@ -611,9 +582,6 @@ async def process_comment(message: types.Message, state: FSMContext):
 
     confirmation_msg = await message.answer(response, reply_markup=markup)
 
-    confirmation_timers[message.chat.id] = asyncio.create_task(
-        confirmation_timeout(message.chat.id, state)
-    )
     await state.update_data(confirmation_msg_id=confirmation_msg.message_id)
     await state.set_state(Form.confirmation)
 
@@ -631,9 +599,6 @@ async def process_confirmation(message: types.Message, state: FSMContext):
     if message.chat.id in timers:
         timers[message.chat.id].cancel()
         del timers[message.chat.id]
-    if message.chat.id in confirmation_timers:
-        confirmation_timers[message.chat.id].cancel()
-        del confirmation_timers[message.chat.id]
 
     user_data = await state.get_data()
     temp_file_path = user_data.get('temp_file')
@@ -714,10 +679,6 @@ async def cmd_reset(message: types.Message, state: FSMContext):
             timers[message.chat.id].cancel()
             del timers[message.chat.id]
 
-        if message.chat.id in confirmation_timers:
-            confirmation_timers[message.chat.id].cancel()
-            del confirmation_timers[message.chat.id]
-
         user_data = await state.get_data()
         temp_file = user_data.get('temp_file')
 
@@ -755,6 +716,7 @@ async def handle_unknown(message: types.Message):
 async def start_payment_polling(order_id: int, chat_id: int):
     max_attempts = 36  # 3 минуты (5 сек * 36)
     attempt = 0
+    payment_settled = False
 
     async with aiohttp.ClientSession() as session:
         while attempt < max_attempts:
@@ -762,42 +724,58 @@ async def start_payment_polling(order_id: int, chat_id: int):
             attempt += 1
 
             try:
-                async with session.get(
-                    f"{API_URL}/payments/check/{order_id}"
-                ) as resp:
-
+                async with session.get(f"{API_URL}/payments/check/{order_id}") as resp:
                     if resp.status == 200:
                         data = await resp.json()
+                        status = data.get("status")
 
-                        if data["status"] == "paid":
+                        if status == "paid":
                             check_code = data.get("con_code", "Не найден")
                             await bot.send_message(
                                 chat_id,
                                 f"✅ Оплата прошла успешно! Заказ №{order_id} принят в работу.\n"
-                                f"Проверочный код: {check_code}. По готовности вам придет уведомление.",
+                                f"По готовности вам придет уведомление.",
                                 reply_markup=types.ReplyKeyboardRemove()
                             )
-                            return
+                            payment_settled = True
+                            return  # Успешно, выходим из цикла
 
-                        elif data["status"] == "canceled":
+                        elif status == "canceled":
                             await bot.send_message(
                                 chat_id,
-                                "❌ Платёж отменён."
+                                f"❌ Платёж для заказа №{order_id} был отменён или отклонен. Заказ аннулирован.",
+                                reply_markup=types.ReplyKeyboardRemove()
                             )
-                            return
+                            payment_settled = True
+                            return  # Платеж отменен, выходим из цикла
 
             except Exception as e:
-                logging.error(f"Polling error: {str(e)}")
+                logging.error(f"Polling error for order {order_id}: {str(e)}")
 
-    # Если время вышло
-    await bot.send_message(
-        chat_id,
-        "⌛ Не удалось подтвердить оплату. Если вы оплатили — заказ всё равно обработается автоматически."
-    )
+    # Если цикл завершился, а статус платежа не определен (не paid и не canceled)
+    if not payment_settled:
+        try:
+            # Вызываем API для отмены заказа по тайм-ауту
+            async with aiohttp.ClientSession() as session:
+                async with session.post(f"{API_URL}/orders/{order_id}/cancel-timeout") as resp:
+                    if resp.status == 200:
+                        logging.info(f"Order {order_id} successfully canceled due to payment timeout by bot.")
+                    else:
+                        logging.error(
+                            f"API call to cancel timed out order {order_id} failed with status: {resp.status}")
+
+            await bot.send_message(
+                chat_id,
+                f"⌛ Время на оплату заказа №{order_id} истекло, и он был автоматически отменен.\n"
+                "Чтобы попробовать снова, создайте новый заказ: /new_order",
+                reply_markup=types.ReplyKeyboardRemove()
+            )
+        except Exception as e:
+            logging.error(f"Error handling payment timeout for order {order_id}: {e}")
 
 
 async def main():
-    await asyncio.gather(dp.start_polling(bot), )  # + websocket_server()
+    await asyncio.gather(dp.start_polling(bot), websocket_server())
 
 
 if __name__ == "__main__":
