@@ -11,8 +11,8 @@ import jwt
 import hashlib
 import secrets
 from datetime import datetime, timedelta, timezone
-from fastapi import FastAPI, HTTPException, UploadFile, Form, File, Query, WebSocket, Depends
-from fastapi.responses import JSONResponse, FileResponse
+from fastapi import FastAPI, HTTPException, UploadFile, Form, File, Query, WebSocket, Depends, Header
+from fastapi.responses import JSONResponse, FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
@@ -75,6 +75,8 @@ LOGGING_CONFIG = {
     },
 }
 
+TELEGRAM_BOT_URL = "https://t.me/print_there_bot"
+
 env_path = os.path.join(os.path.dirname(__file__), 'config.env')
 load_dotenv(dotenv_path=env_path)
 
@@ -83,6 +85,10 @@ if not MASTER_KEY:
     raise ValueError("MASTER_KEY not set")
 
 cipher = Fernet(MASTER_KEY.encode())
+
+ADMIN_API_KEY = os.getenv("ADMIN_API_KEY")
+if not ADMIN_API_KEY:
+    raise ValueError("ADMIN_API_KEY is not set in the environment file!")
 
 JWT_SECRET = os.getenv("JWT_SECRET")
 JWT_ALGORITHM = os.getenv("JWT_ALGORITHM")
@@ -188,6 +194,12 @@ def encrypt_value(value: str) -> str:
 
 def decrypt_value(value: str) -> str:
     return cipher.decrypt(value.encode()).decode()
+
+
+async def verify_admin_key(x_admin_key: str = Header(None)):
+    """Проверяет наличие и правильность секретного админского ключа."""
+    if x_admin_key != ADMIN_API_KEY:
+        raise HTTPException(status_code=403, detail="Invalid or missing Admin API Key")
 
 
 async def get_franchise_credentials(franchise_id: int):
@@ -561,7 +573,7 @@ async def create_payment_endpoint(data: PaymentCreateRequest):
     }
 
 
-@app.post("/shops", status_code=201)
+@app.post("/shops", status_code=201, dependencies=[Depends(verify_admin_key)])
 async def create_shop(shop: ShopCreate):
     """Создание нового магазина (доступно без авторизации для админ-приложения)"""
     try:
@@ -648,7 +660,7 @@ async def get_shop_by_password(password_hash: str, current_shop: TokenData = Dep
         raise HTTPException(500, detail="Server error")
 
 
-@app.post("/franchise", status_code=201)
+@app.post("/franchise", status_code=201, dependencies=[Depends(verify_admin_key)])
 async def create_franchise(franchise: FranchiseCreate):
     try:
         encrypted_secret = encrypt_value(franchise.yk_secret_key)
@@ -721,8 +733,8 @@ async def check_payment_status(order_id: int):
             """, (order_id,))
             order = await cursor.fetchone()
 
-            if not order or not order["payment_id"]:
-                raise HTTPException(404, detail="Payment not found for this order")
+    if not order or not order["payment_id"]:
+        raise HTTPException(404, detail="Payment not found for this order")
 
     if order["status"] in ["paid", "canceled"]:
         return {"status": order["status"], "con_code": order.get("con_code")}
@@ -736,42 +748,49 @@ async def check_payment_status(order_id: int):
     payment = Payment.find_one(order["payment_id"])
     yookassa_status = payment.status
 
-    if yookassa_status == "succeeded" and order["status"] != "paid":
+    if yookassa_status == "succeeded":
         async with await get_db() as conn:
             async with conn.cursor() as cursor:
-                await cursor.execute("""
-                    UPDATE `order`
-                    SET status = 'paid', payment_status = 'succeeded', paid_at = NOW()
-                    WHERE ID = %s
-                """, (order_id,))
+                await cursor.execute(
+                    "UPDATE `order` SET status = 'paid', payment_status = 'succeeded', paid_at = NOW() "
+                    "WHERE ID = %s AND status = 'waiting_payment'",
+                    (order_id,)
+                )
                 await conn.commit()
-        logging.info(f"Order {order_id} status updated to 'paid'.")
-        return {"status": "paid", "con_code": order["con_code"]}
+        return {"status": "paid", "con_code": order.get("con_code")}
 
-    elif yookassa_status == "canceled" and order["status"] != "canceled":
+    elif yookassa_status == "canceled":
         async with await get_db() as conn:
             async with conn.cursor() as cursor:
-                await cursor.execute("""
-                    UPDATE `order`
-                    SET status = 'canceled', payment_status = 'canceled'
-                    WHERE ID = %s
-                """, (order_id,))
+                await cursor.execute(
+                    "UPDATE `order` SET status = 'canceled', payment_status = 'canceled' "
+                    "WHERE ID = %s AND status = 'waiting_payment'",
+                    (order_id,)
+                )
                 await conn.commit()
-        logging.warning(f"Order {order_id} canceled. YooKassa payment status: 'canceled'.")
         return {"status": "canceled"}
 
-    return {"status": yookassa_status}
+    return {"status": "pending"}
 
 
 @app.post("/orders/{order_id}/cancel-timeout")
 async def cancel_order_due_to_timeout(order_id: int):
     """
-    Отмена заказа из-за истечения времени ожидания платежа.
-    Вызывается ботом после 3-минутного таймаута.
+    Безопасная отмена "зависшего" заказа по тайм-ауту из бота.
     """
     try:
         async with await get_db() as conn:
             async with conn.cursor(aiomysql.DictCursor) as cursor:
+                await cursor.execute(
+                    "SELECT status FROM `order` WHERE ID = %s", (order_id,)
+                )
+                order = await cursor.fetchone()
+
+        if not order or order['status'] in ['paid', 'canceled']:
+            return {"status": "ignored"}
+
+        async with await get_db() as conn:
+            async with conn.cursor() as cursor:
                 await cursor.execute(
                     "UPDATE `order` SET status = 'canceled' WHERE ID = %s AND status = 'waiting_payment'",
                     (order_id,)
@@ -779,19 +798,25 @@ async def cancel_order_due_to_timeout(order_id: int):
                 await conn.commit()
 
                 if cursor.rowcount > 0:
-                    logging.warning(f"Order {order_id} has been automatically canceled due to payment timeout.")
+                    logging.warning(f"Order {order_id} safely canceled by bot timeout.")
                     return {"status": "canceled"}
                 else:
-                    await cursor.execute("SELECT status FROM `order` WHERE ID = %s", (order_id,))
-                    order = await cursor.fetchone()
-                    current_status = order['status'] if order else 'not_found'
-                    logging.info(
-                        f"Timeout cancellation for order {order_id} ignored. Current status: {current_status}.")
-                    return {"status": "ignored", "current_status": current_status}
+                    logging.info(f"Timeout cancellation for order {order_id} ignored, status was already paid.")
+                    return {"status": "ignored"}
 
     except Exception as e:
-        logging.error(f"Error canceling order {order_id} on timeout: {traceback.format_exc()}")
+        logging.error(f"Error in cancel_order_due_to_timeout for order {order_id}: {e}")
         raise HTTPException(500, detail="Internal server error")
+
+
+@app.get("/payment-return", response_class=RedirectResponse)
+async def payment_return():
+    """
+    Этот эндпоинт принимает пользователя от YooKassa после оплаты
+    и немедленно перенаправляет его в Telegram-бота.
+    """
+    logging.info("User redirected back to the bot after payment attempt.")
+    return RedirectResponse(url=TELEGRAM_BOT_URL, status_code=302)
 
 
 if __name__ == "__main__":

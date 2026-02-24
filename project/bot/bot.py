@@ -92,7 +92,7 @@ async def cleanup_order_data(user_data: dict):
             async with aiohttp.ClientSession() as session:
                 await session.delete(f"{API_URL}/orders/{user_data['order_id']}")
     except Exception as e:
-        logging.error(f"Ошибка очистки: {str(e)}")
+        logging.error(f"Cleaning error: {str(e)}")
 
 
 async def start_order_timer(chat_id: int, state: FSMContext):
@@ -105,7 +105,7 @@ async def start_order_timer(chat_id: int, state: FSMContext):
             await state.clear()
             del timers[chat_id]
     except asyncio.CancelledError:
-        logging.info("10-минутный таймер отменен")
+        logging.info("The 10-minute timer has been canceled")
 
 
 async def get_page_count(file_path: str, ext: str) -> int:
@@ -123,7 +123,7 @@ async def get_page_count(file_path: str, ext: str) -> int:
         # return await get_word_page_count_via_libreoffice(file_path)
 
     except Exception as e:
-        logging.error(f"Ошибка подсчета страниц: {traceback.format_exc()}")
+        logging.error(f"Page count error: {traceback.format_exc()}")
         raise
 
 
@@ -339,16 +339,16 @@ async def cmd_new_order(message: types.Message, state: FSMContext):
     if temp_file and os.path.exists(temp_file):
         try:
             os.remove(temp_file)
-            logging.info(f"Удален временный файл: {temp_file}")
+            logging.info(f"Temporary file deleted: {temp_file}")
         except Exception as e:
-            logging.error(f"Ошибка удаления файла: {str(e)}")
+            logging.error(f"Error deleting a temporary file: {str(e)}")
 
     confirmation_msg_id = user_data.get('confirmation_msg_id')
     if confirmation_msg_id:
         try:
             await bot.delete_message(message.chat.id, confirmation_msg_id)
         except Exception as e:
-            logging.error(f"Ошибка удаления сообщения: {str(e)}")
+            logging.error(f"Message deletion error: {str(e)}")
 
     await state.clear()
 
@@ -407,7 +407,7 @@ async def process_file(message: types.Message, state: FSMContext):
 
         # 2. Формируем URL для скачивания
         file_url = f"https://api.telegram.org/file/bot{API_TOKEN}/{file_info.file_path}"
-        logging.info(f"Начинаем загрузку файла: {file_url}")
+        logging.info(f"Starting the file download: {file_url}")
 
         # 3. Скачиваем файл
         connector = aiohttp.TCPConnector(ssl=False)
@@ -440,7 +440,7 @@ async def process_file(message: types.Message, state: FSMContext):
 
         # 7. Подсчитываем количество страниц
         pages = await get_page_count(temp_path, file_ext)
-        logging.info(f"Определено страниц: {pages}")
+        logging.info(f"Defined pages: {pages}")
 
         if pages < 1:
             raise ValueError("⚠️ Не удалось определить количество страниц")
@@ -497,14 +497,14 @@ async def process_file(message: types.Message, state: FSMContext):
         if temp_path and os.path.exists(temp_path) and ('temp_file' not in await state.get_data()):
             try:
                 os.remove(temp_path)
-                logging.info(f"Удален временный файл: {temp_path}")
+                logging.info(f"Temporary file deleted: {temp_path}")
             except Exception as e:
-                logging.error(f"Ошибка удаления временного файла: {str(e)}")
+                logging.error(f"Error deleting a temporary file: {str(e)}")
 
         try:
             await bot.delete_message(message.chat.id, processing_msg.message_id)
         except Exception as e:
-            logging.error(f"Ошибка удаления сообщения: {str(e)}")
+            logging.error(f"Message deletion error: {str(e)}")
 
 
 @dp.message(Form.color_selection)
@@ -572,7 +572,7 @@ async def process_comment(message: types.Message, state: FSMContext):
         f"• Тип: {user_data['color']}\n"
         f"• Стоимость: {user_data['price']:.2f} руб\n"  
         f"• Комментарий: {comment if comment else 'нет'}\n"
-        f"Если все верно, нажмите кнопку '💳 Оплатить'"
+        f"Если все верно - нажмите кнопку '💳 Оплатить'"
     )
 
     markup = ReplyKeyboardMarkup(
@@ -608,9 +608,9 @@ async def process_confirmation(message: types.Message, state: FSMContext):
         if temp_file_path and os.path.exists(temp_file_path):
             try:
                 os.remove(temp_file_path)
-                logging.info(f"Удалён временный файл: {temp_file_path}")
+                logging.info(f"Temporary file deleted: {temp_file_path}")
             except Exception as e:
-                logging.error(f"Ошибка удаления временного файла: {str(e)}")
+                logging.error(f"Error deleting a temporary file: {str(e)}")
         await state.clear()
         return
 
@@ -648,26 +648,26 @@ async def process_confirmation(message: types.Message, state: FSMContext):
                         payment_data = await payment_resp.json()
                         confirmation_url = payment_data["confirmation_url"]
 
-                    await message.answer(
+                    payment_link_message = await message.answer(
                         f"💳 Для завершения заказа перейдите по ссылке для оплаты:\n{confirmation_url}",
                         reply_markup=types.ReplyKeyboardRemove()
                     )
-
+                    link_message_id = payment_link_message.message_id
                     asyncio.create_task(
-                        start_payment_polling(order_id, message.chat.id)
+                        start_payment_polling(order_id, message.chat.id, link_message_id)
                     )
 
                     if temp_file_path and os.path.exists(temp_file_path):
                         try:
                             os.remove(temp_file_path)
-                            logging.info(f"Удалён временный файл: {temp_file_path}")
+                            logging.info(f"Temporary file deleted: {temp_file_path}")
                         except Exception as e:
-                            logging.error(f"Ошибка удаления временного файла: {str(e)}")
+                            logging.error(f"Error deleting a temporary file: {str(e)}")
                 else:
                     await message.answer("❌ Ошибка оплаты заказа")
     except Exception as e:
         await message.answer("❌ Ошибка создания заказа")
-        logging.error(f"Ошибка подтверждения: {traceback.format_exc()}")
+        logging.error(f"Confirmation error: {traceback.format_exc()}")
     finally:
         await state.clear()
 
@@ -685,9 +685,9 @@ async def cmd_reset(message: types.Message, state: FSMContext):
         if temp_file and os.path.exists(temp_file):
             try:
                 os.remove(temp_file)
-                logging.info(f"Удален временный файл: {temp_file}")
+                logging.info(f"Temporary file deleted: {temp_file}")
             except Exception as e:
-                logging.error(f"Ошибка удаления файла: {str(e)}")
+                logging.error(f"Error deleting a temporary file: {str(e)}")
 
         await state.clear()
 
@@ -696,7 +696,7 @@ async def cmd_reset(message: types.Message, state: FSMContext):
             try:
                 await bot.delete_message(message.chat.id, confirmation_msg_id)
             except Exception as e:
-                logging.error(f"Ошибка удаления сообщения: {str(e)}")
+                logging.error(f"Message deletion error: {str(e)}")
 
         await message.answer(
             "🔄 Все данные сброшены. Вы можете начать новый заказ с помощью /new_order",
@@ -704,7 +704,7 @@ async def cmd_reset(message: types.Message, state: FSMContext):
         )
 
     except Exception as e:
-        logging.error(f"Ошибка в reset: {traceback.format_exc()}")
+        logging.error(f"Error in reset: {traceback.format_exc()}")
         await message.answer("❌ Произошла ошибка при сбросе")
 
 
@@ -713,65 +713,87 @@ async def handle_unknown(message: types.Message):
     await message.reply("Не понимаю тебя, попробуй повторить запрос ☺️")
 
 
-async def start_payment_polling(order_id: int, chat_id: int):
-    max_attempts = 36  # 3 минуты (5 сек * 36)
-    attempt = 0
-    payment_settled = False
-
-    async with aiohttp.ClientSession() as session:
-        while attempt < max_attempts:
-            await asyncio.sleep(5)
-            attempt += 1
-
+async def start_payment_polling(order_id: int, chat_id: int, link_message_id: int):
+    try:
+        # Активная фаза: 3 минуты
+        hot_attempts = 36  # 3 минуты (36 * 5 сек)
+        for i in range(hot_attempts):
             try:
-                async with session.get(f"{API_URL}/payments/check/{order_id}") as resp:
-                    if resp.status == 200:
-                        data = await resp.json()
-                        status = data.get("status")
+                async with aiohttp.ClientSession() as session:
+                    async with session.get(f"{API_URL}/payments/check/{order_id}") as resp:
+                        if resp.status == 200:
+                            data = await resp.json()
+                            status = data.get("status")
 
-                        if status == "paid":
-                            check_code = data.get("con_code", "Не найден")
-                            await bot.send_message(
-                                chat_id,
-                                f"✅ Оплата прошла успешно! Заказ №{order_id} принят в работу.\n"
-                                f"По готовности вам придет уведомление.",
-                                reply_markup=types.ReplyKeyboardRemove()
-                            )
-                            payment_settled = True
-                            return  # Успешно, выходим из цикла
+                            # Сценарий 1: Успешная оплата
+                            if status == "paid":
+                                check_code = data.get("con_code", "Не найден")
+                                await bot.send_message(chat_id, f"✅ Оплата прошла успешно! Заказ №{order_id} принят в работу.\n"
+                                                                f"По готовности вам придет уведомление.",
+                                                       reply_markup=types.ReplyKeyboardRemove())
+                                return  # Успех, полностью выходим
 
-                        elif status == "canceled":
-                            await bot.send_message(
-                                chat_id,
-                                f"❌ Платёж для заказа №{order_id} был отменён или отклонен. Заказ аннулирован.",
-                                reply_markup=types.ReplyKeyboardRemove()
-                            )
-                            payment_settled = True
-                            return  # Платеж отменен, выходим из цикла
+                            # Сценарий 2: Платеж отклонен или отменен пользователем
+                            elif status == "canceled":
+                                await bot.send_message(
+                                    chat_id,
+                                    f"❌ Платёж по заказу №{order_id} был отклонён или отменён. "
+                                    "Вы можете попробовать оплатить снова, создав новый заказ: /new_order",
+                                    reply_markup=types.ReplyKeyboardRemove()
+                                )
+                                return  # Отмена, полностью выходим
 
+                            # Если статус 'pending', цикл просто продолжится
             except Exception as e:
-                logging.error(f"Polling error for order {order_id}: {str(e)}")
+                logging.error(f"Hot polling for order {order_id} failed: {e}")
+                continue
+            await asyncio.sleep(5)
 
-    # Если цикл завершился, а статус платежа не определен (не paid и не canceled)
-    if not payment_settled:
+        # --- ФАЗА 2: "Теплый" опрос (с 3-й по 12-ю минуту) ---
+        # 10 минут = 10 попыток с интервалом 60 сек
+        warm_attempts = 8
+        for i in range(warm_attempts):
+            await asyncio.sleep(60)  # Ждем 1 минуту
+            try:
+                async with aiohttp.ClientSession() as session:
+                    async with session.get(f"{API_URL}/payments/check/{order_id}") as resp:
+                        if resp.status == 200:
+                            data = await resp.json()
+                            status = data.get("status")
+
+                            if status == "paid":  # Все еще можем поймать успешную оплату
+                                await bot.send_message(chat_id,
+                                                       f"✅ Оплата прошла успешно! Заказ №{order_id} принят в работу.\n"
+                                                       f"По готовности вам придет уведомление.",
+                                                       reply_markup=types.ReplyKeyboardRemove())
+                                return
+                            elif status == "canceled":
+                                await bot.send_message(chat_id,
+                                                       f"❌ Платёж по заказу №{order_id} был отклонён или отменён.",
+                                                       reply_markup=types.ReplyKeyboardRemove())
+                                return
+            except Exception as e:
+                logging.error(f"Polling (warm phase) for order {order_id} failed on attempt {i + 1}: {e}")
+                continue
+
+        # --- ФАЗА 3: Финальная отмена ---
+        # Этот блок сработает, только если за 12 минут ничего не произошло
+        logging.info(f"Finalizing order {order_id} after 12 minutes.")
+        async with aiohttp.ClientSession() as session:
+            async with session.post(f"{API_URL}/orders/{order_id}/cancel-timeout") as resp:
+                if resp.status == 200 and (await resp.json()).get("status") == "canceled":
+                    await bot.send_message(
+                        chat_id,
+                        f"⌛ Время на оплату заказа №{order_id} истекло, и он был автоматически отменен.\n"
+                        "Чтобы попробовать снова, создайте новый заказ: /new_order",
+                        reply_markup=types.ReplyKeyboardRemove()
+                    )
+    finally:
         try:
-            # Вызываем API для отмены заказа по тайм-ауту
-            async with aiohttp.ClientSession() as session:
-                async with session.post(f"{API_URL}/orders/{order_id}/cancel-timeout") as resp:
-                    if resp.status == 200:
-                        logging.info(f"Order {order_id} successfully canceled due to payment timeout by bot.")
-                    else:
-                        logging.error(
-                            f"API call to cancel timed out order {order_id} failed with status: {resp.status}")
-
-            await bot.send_message(
-                chat_id,
-                f"⌛ Время на оплату заказа №{order_id} истекло, и он был автоматически отменен.\n"
-                "Чтобы попробовать снова, создайте новый заказ: /new_order",
-                reply_markup=types.ReplyKeyboardRemove()
-            )
-        except Exception as e:
-            logging.error(f"Error handling payment timeout for order {order_id}: {e}")
+            await bot.delete_message(chat_id, link_message_id)
+            logging.info(f"Payment link message {link_message_id} deleted for chat {chat_id}.")
+        except Exception:
+            pass
 
 
 async def main():

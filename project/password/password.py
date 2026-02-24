@@ -15,6 +15,7 @@ env_path = os.path.join(os.path.dirname(__file__), 'config.env')
 load_dotenv(dotenv_path=env_path)
 
 API_URL = os.getenv("API_URL")
+ADMIN_API_KEY = os.getenv("ADMIN_API_KEY")
 
 
 class ShopApp(QMainWindow):
@@ -96,11 +97,16 @@ class ShopApp(QMainWindow):
 
         # Отправляем POST-запрос
         try:
+            headers = {
+                "Content-Type": "application/json",
+                "X-Admin-Key": ADMIN_API_KEY
+            }
+
             response = requests.post(
                 f"{API_URL}/shops",
                 json=payload,
                 timeout=10,
-                headers={"Content-Type": "application/json"}
+                headers=headers
             )
 
             if response.status_code == 201:
