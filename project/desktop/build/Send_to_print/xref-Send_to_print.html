@@ -31,6 +31,8 @@ imports:
  &#8226;   <a href="#collections">collections</a>
  &#8226;   <a href="#collections.abc">collections.abc</a>
  &#8226;   <a href="#copyreg">copyreg</a>
+ &#8226;   <a href="#datetime">datetime</a>
+ &#8226;   <a href="#dotenv">dotenv</a>
  &#8226;   <a href="#encodings">encodings</a>
  &#8226;   <a href="#encodings.aliases">encodings.aliases</a>
  &#8226;   <a href="#encodings.ascii">encodings.ascii</a>
@@ -160,6 +162,7 @@ imports:
  &#8226;   <a href="#heapq">heapq</a>
  &#8226;   <a href="#io">io</a>
  &#8226;   <a href="#json">json</a>
+ &#8226;   <a href="#jwt">jwt</a>
  &#8226;   <a href="#keyword">keyword</a>
  &#8226;   <a href="#linecache">linecache</a>
  &#8226;   <a href="#locale">locale</a>
@@ -183,12 +186,14 @@ imports:
  &#8226;   <a href="#sre_compile">sre_compile</a>
  &#8226;   <a href="#sre_constants">sre_constants</a>
  &#8226;   <a href="#sre_parse">sre_parse</a>
+ &#8226;   <a href="#ssl">ssl</a>
  &#8226;   <a href="#stat">stat</a>
  &#8226;   <a href="#subprocess">subprocess</a>
  &#8226;   <a href="#sys">sys</a>
  &#8226;   <a href="#traceback">traceback</a>
  &#8226;   <a href="#types">types</a>
  &#8226;   <a href="#typing">typing</a>
+ &#8226;   <a href="#urllib.request">urllib.request</a>
  &#8226;   <a href="#warnings">warnings</a>
  &#8226;   <a href="#weakref">weakref</a>
 
@@ -271,6 +276,17 @@ imported by:
 </div>
 
 <div class="node">
+  <a name="'IPython.core'"></a>
+  <a target="code" href="" type="text/plain"><tt>'IPython.core'</tt></a>
+<span class="moduletype">MissingModule</span>  <div class="import">
+imported by:
+    <a href="#dotenv.ipython">dotenv.ipython</a>
+
+  </div>
+
+</div>
+
+<div class="node">
   <a name="'OpenSSL.crypto'"></a>
   <a target="code" href="" type="text/plain"><tt>'OpenSSL.crypto'</tt></a>
 <span class="moduletype">MissingModule</span>  <div class="import">
@@ -309,6 +325,29 @@ imported by:
 <span class="moduletype">MissingModule</span>  <div class="import">
 imported by:
     <a href="#qasync">qasync</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="'cryptography.exceptions'"></a>
+  <a target="code" href="" type="text/plain"><tt>'cryptography.exceptions'</tt></a>
+<span class="moduletype">MissingModule</span>  <div class="import">
+imported by:
+    <a href="#jwt.algorithms">jwt.algorithms</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="'cryptography.hazmat'"></a>
+  <a target="code" href="" type="text/plain"><tt>'cryptography.hazmat'</tt></a>
+<span class="moduletype">MissingModule</span>  <div class="import">
+imported by:
+    <a href="#jwt.algorithms">jwt.algorithms</a>
+ &#8226;   <a href="#jwt.utils">jwt.utils</a>
 
   </div>
 
@@ -359,6 +398,17 @@ imported by:
 </div>
 
 <div class="node">
+  <a name="IPython"></a>
+  <a target="code" href="" type="text/plain"><tt>IPython</tt></a>
+<span class="moduletype">MissingModule</span>  <div class="import">
+imported by:
+    <a href="#dotenv.ipython">dotenv.ipython</a>
+
+  </div>
+
+</div>
+
+<div class="node">
   <a name="OpenSSL"></a>
   <a target="code" href="" type="text/plain"><tt>OpenSSL</tt></a>
 <span class="moduletype">MissingModule</span>  <div class="import">
@@ -372,7 +422,7 @@ imported by:
 <div class="node">
   <a name="PyQt5"></a>
   <a target="code" href="" type="text/plain"><tt>PyQt5</tt></a>
-<span class="moduletype">ExcludedModule</span>  <div class="import">
+<span class="moduletype">MissingModule</span>  <div class="import">
 imported by:
     <a href="#qasync">qasync</a>
 
@@ -549,6 +599,11 @@ imported by:
  &#8226;   <a href="#hyperframe.exceptions">hyperframe.exceptions</a>
  &#8226;   <a href="#hyperframe.flags">hyperframe.flags</a>
  &#8226;   <a href="#hyperframe.frame">hyperframe.frame</a>
+ &#8226;   <a href="#jwt.algorithms">jwt.algorithms</a>
+ &#8226;   <a href="#jwt.api_jwk">jwt.api_jwk</a>
+ &#8226;   <a href="#jwt.api_jws">jwt.api_jws</a>
+ &#8226;   <a href="#jwt.api_jwt">jwt.api_jwt</a>
+ &#8226;   <a href="#jwt.jwks_client">jwt.jwks_client</a>
  &#8226;   <a href="#urllib3">urllib3</a>
  &#8226;   <a href="#urllib3._base_connection">urllib3._base_connection</a>
  &#8226;   <a href="#urllib3._collections">urllib3._collections</a>
@@ -1581,6 +1636,7 @@ imported by:
  &#8226;   <a href="#contextlib">contextlib</a>
  &#8226;   <a href="#dataclasses">dataclasses</a>
  &#8226;   <a href="#desktop_app.py">desktop_app.py</a>
+ &#8226;   <a href="#dotenv.variables">dotenv.variables</a>
  &#8226;   <a href="#email._policybase">email._policybase</a>
  &#8226;   <a href="#functools">functools</a>
  &#8226;   <a href="#importlib._abc">importlib._abc</a>
@@ -1589,6 +1645,7 @@ imported by:
  &#8226;   <a href="#importlib.resources.abc">importlib.resources.abc</a>
  &#8226;   <a href="#inspect">inspect</a>
  &#8226;   <a href="#io">io</a>
+ &#8226;   <a href="#jwt.algorithms">jwt.algorithms</a>
  &#8226;   <a href="#multidict._abc">multidict._abc</a>
  &#8226;   <a href="#multiprocessing.reduction">multiprocessing.reduction</a>
  &#8226;   <a href="#numbers">numbers</a>
@@ -5125,6 +5182,7 @@ imported by:
  &#8226;   <a href="#email.encoders">email.encoders</a>
  &#8226;   <a href="#encodings.base64_codec">encodings.base64_codec</a>
  &#8226;   <a href="#h2.connection">h2.connection</a>
+ &#8226;   <a href="#jwt.utils">jwt.utils</a>
  &#8226;   <a href="#requests.auth">requests.auth</a>
  &#8226;   <a href="#secrets">secrets</a>
  &#8226;   <a href="#socks">socks</a>
@@ -5154,6 +5212,8 @@ imported by:
  &#8226;   <a href="#encodings.uu_codec">encodings.uu_codec</a>
  &#8226;   <a href="#h2.events">h2.events</a>
  &#8226;   <a href="#hyperframe.frame">hyperframe.frame</a>
+ &#8226;   <a href="#jwt.api_jws">jwt.api_jws</a>
+ &#8226;   <a href="#jwt.utils">jwt.utils</a>
  &#8226;   <a href="#quopri">quopri</a>
  &#8226;   <a href="#urllib3.filepost">urllib3.filepost</a>
  &#8226;   <a href="#urllib3.util.ssl_">urllib3.util.ssl_</a>
@@ -5279,6 +5339,7 @@ imported by:
  &#8226;   <a href="#aiohttp.cookiejar">aiohttp.cookiejar</a>
  &#8226;   <a href="#email._parseaddr">email._parseaddr</a>
  &#8226;   <a href="#http.cookiejar">http.cookiejar</a>
+ &#8226;   <a href="#jwt.api_jwt">jwt.api_jwt</a>
  &#8226;   <a href="#requests.cookies">requests.cookies</a>
  &#8226;   <a href="#ssl">ssl</a>
 
@@ -5592,6 +5653,7 @@ imported by:
  &#8226;   <a href="#charset_normalizer.constant">charset_normalizer.constant</a>
  &#8226;   <a href="#charset_normalizer.utils">charset_normalizer.utils</a>
  &#8226;   <a href="#desktop_app.py">desktop_app.py</a>
+ &#8226;   <a href="#dotenv.parser">dotenv.parser</a>
  &#8226;   <a href="#encodings">encodings</a>
  &#8226;   <a href="#encodings.ascii">encodings.ascii</a>
  &#8226;   <a href="#encodings.base64_codec">encodings.base64_codec</a>
@@ -5774,6 +5836,7 @@ imported by:
  &#8226;   <a href="#contextlib">contextlib</a>
  &#8226;   <a href="#desktop_app.py">desktop_app.py</a>
  &#8226;   <a href="#dis">dis</a>
+ &#8226;   <a href="#dotenv.main">dotenv.main</a>
  &#8226;   <a href="#email.feedparser">email.feedparser</a>
  &#8226;   <a href="#functools">functools</a>
  &#8226;   <a href="#h2.settings">h2.settings</a>
@@ -5856,6 +5919,9 @@ imported by:
  &#8226;   <a href="#hyperframe.flags">hyperframe.flags</a>
  &#8226;   <a href="#hyperframe.frame">hyperframe.frame</a>
  &#8226;   <a href="#inspect">inspect</a>
+ &#8226;   <a href="#jwt.api_jwk">jwt.api_jwk</a>
+ &#8226;   <a href="#jwt.api_jws">jwt.api_jws</a>
+ &#8226;   <a href="#jwt.api_jwt">jwt.api_jwt</a>
  &#8226;   <a href="#logging">logging</a>
  &#8226;   <a href="#multidict">multidict</a>
  &#8226;   <a href="#multidict._abc">multidict._abc</a>
@@ -6024,6 +6090,7 @@ imported by:
  &#8226;   <a href="#asyncio.staggered">asyncio.staggered</a>
  &#8226;   <a href="#attr._make">attr._make</a>
  &#8226;   <a href="#attr.validators">attr.validators</a>
+ &#8226;   <a href="#dotenv.main">dotenv.main</a>
  &#8226;   <a href="#getpass">getpass</a>
  &#8226;   <a href="#importlib.metadata">importlib.metadata</a>
  &#8226;   <a href="#importlib.resources._adapters">importlib.resources._adapters</a>
@@ -6237,8 +6304,10 @@ imported by:
  &#8226;   <a href="#aiohttp.web_request">aiohttp.web_request</a>
  &#8226;   <a href="#aiohttp.web_response">aiohttp.web_response</a>
  &#8226;   <a href="#calendar">calendar</a>
+ &#8226;   <a href="#desktop_app.py">desktop_app.py</a>
  &#8226;   <a href="#email.utils">email.utils</a>
  &#8226;   <a href="#http.cookiejar">http.cookiejar</a>
+ &#8226;   <a href="#jwt.api_jwt">jwt.api_jwt</a>
  &#8226;   <a href="#requests.models">requests.models</a>
  &#8226;   <a href="#requests.sessions">requests.sessions</a>
  &#8226;   <a href="#urllib3.connection">urllib3.connection</a>
@@ -6283,6 +6352,114 @@ imports:
   <div class="import">
 imported by:
     <a href="#inspect">inspect</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="dotenv"></a>
+  <a target="code" href="///C:/Users/petry/AppData/Local/Programs/Python/Python312/Lib/site-packages/dotenv/__init__.py" type="text/plain"><tt>dotenv</tt></a>
+<span class="moduletype">Package</span>  <div class="import">
+imports:
+    <a href="#dotenv.ipython">dotenv.ipython</a>
+ &#8226;   <a href="#dotenv.main">dotenv.main</a>
+ &#8226;   <a href="#typing">typing</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#desktop_app.py">desktop_app.py</a>
+ &#8226;   <a href="#dotenv.ipython">dotenv.ipython</a>
+ &#8226;   <a href="#dotenv.main">dotenv.main</a>
+ &#8226;   <a href="#dotenv.parser">dotenv.parser</a>
+ &#8226;   <a href="#dotenv.variables">dotenv.variables</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="dotenv.ipython"></a>
+  <a target="code" href="///C:/Users/petry/AppData/Local/Programs/Python/Python312/Lib/site-packages/dotenv/ipython.py" type="text/plain"><tt>dotenv.ipython</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#'IPython.core'">'IPython.core'</a>
+ &#8226;   <a href="#IPython">IPython</a>
+ &#8226;   <a href="#dotenv">dotenv</a>
+ &#8226;   <a href="#dotenv.main">dotenv.main</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#dotenv">dotenv</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="dotenv.main"></a>
+  <a target="code" href="///C:/Users/petry/AppData/Local/Programs/Python/Python312/Lib/site-packages/dotenv/main.py" type="text/plain"><tt>dotenv.main</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#collections">collections</a>
+ &#8226;   <a href="#contextlib">contextlib</a>
+ &#8226;   <a href="#dotenv">dotenv</a>
+ &#8226;   <a href="#dotenv.parser">dotenv.parser</a>
+ &#8226;   <a href="#dotenv.variables">dotenv.variables</a>
+ &#8226;   <a href="#io">io</a>
+ &#8226;   <a href="#logging">logging</a>
+ &#8226;   <a href="#os">os</a>
+ &#8226;   <a href="#pathlib">pathlib</a>
+ &#8226;   <a href="#shutil">shutil</a>
+ &#8226;   <a href="#sys">sys</a>
+ &#8226;   <a href="#tempfile">tempfile</a>
+ &#8226;   <a href="#typing">typing</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#dotenv">dotenv</a>
+ &#8226;   <a href="#dotenv.ipython">dotenv.ipython</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="dotenv.parser"></a>
+  <a target="code" href="///C:/Users/petry/AppData/Local/Programs/Python/Python312/Lib/site-packages/dotenv/parser.py" type="text/plain"><tt>dotenv.parser</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#codecs">codecs</a>
+ &#8226;   <a href="#dotenv">dotenv</a>
+ &#8226;   <a href="#re">re</a>
+ &#8226;   <a href="#typing">typing</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#dotenv.main">dotenv.main</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="dotenv.variables"></a>
+  <a target="code" href="///C:/Users/petry/AppData/Local/Programs/Python/Python312/Lib/site-packages/dotenv/variables.py" type="text/plain"><tt>dotenv.variables</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#abc">abc</a>
+ &#8226;   <a href="#dotenv">dotenv</a>
+ &#8226;   <a href="#re">re</a>
+ &#8226;   <a href="#typing">typing</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#dotenv.main">dotenv.main</a>
 
   </div>
 
@@ -9543,6 +9720,7 @@ imported by:
  &#8226;   <a href="#importlib.resources._legacy">importlib.resources._legacy</a>
  &#8226;   <a href="#inspect">inspect</a>
  &#8226;   <a href="#ipaddress">ipaddress</a>
+ &#8226;   <a href="#jwt.jwks_client">jwt.jwks_client</a>
  &#8226;   <a href="#linecache">linecache</a>
  &#8226;   <a href="#locale">locale</a>
  &#8226;   <a href="#multiprocessing.reduction">multiprocessing.reduction</a>
@@ -10023,6 +10201,7 @@ imported by:
  &#8226;   <a href="#charset_normalizer.models">charset_normalizer.models</a>
  &#8226;   <a href="#desktop_app.py">desktop_app.py</a>
  &#8226;   <a href="#hmac">hmac</a>
+ &#8226;   <a href="#jwt.algorithms">jwt.algorithms</a>
  &#8226;   <a href="#random">random</a>
  &#8226;   <a href="#requests.auth">requests.auth</a>
  &#8226;   <a href="#urllib.request">urllib.request</a>
@@ -10067,7 +10246,8 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#multiprocessing.connection">multiprocessing.connection</a>
+    <a href="#jwt.algorithms">jwt.algorithms</a>
+ &#8226;   <a href="#multiprocessing.connection">multiprocessing.connection</a>
  &#8226;   <a href="#secrets">secrets</a>
  &#8226;   <a href="#urllib3.util.ssl_">urllib3.util.ssl_</a>
 
@@ -10610,7 +10790,6 @@ imports:
  &#8226;   <a href="#importlib">importlib</a>
  &#8226;   <a href="#importlib._bootstrap">importlib._bootstrap</a>
  &#8226;   <a href="#importlib._bootstrap_external">importlib._bootstrap_external</a>
- &#8226;   <a href="#importlib.machinery">importlib.machinery</a>
  &#8226;   <a href="#sys">sys</a>
  &#8226;   <a href="#warnings">warnings</a>
 
@@ -10748,8 +10927,7 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#importlib">importlib</a>
- &#8226;   <a href="#importlib.abc">importlib.abc</a>
+    <a href="#importlib.abc">importlib.abc</a>
  &#8226;   <a href="#inspect">inspect</a>
  &#8226;   <a href="#pkgutil">pkgutil</a>
  &#8226;   <a href="#py_compile">py_compile</a>
@@ -11205,6 +11383,7 @@ imported by:
  &#8226;   <a href="#csv">csv</a>
  &#8226;   <a href="#desktop_app.py">desktop_app.py</a>
  &#8226;   <a href="#dis">dis</a>
+ &#8226;   <a href="#dotenv.main">dotenv.main</a>
  &#8226;   <a href="#email.feedparser">email.feedparser</a>
  &#8226;   <a href="#email.generator">email.generator</a>
  &#8226;   <a href="#email.iterators">email.iterators</a>
@@ -11374,6 +11553,11 @@ imported by:
  &#8226;   <a href="#json.decoder">json.decoder</a>
  &#8226;   <a href="#json.encoder">json.encoder</a>
  &#8226;   <a href="#json.scanner">json.scanner</a>
+ &#8226;   <a href="#jwt.algorithms">jwt.algorithms</a>
+ &#8226;   <a href="#jwt.api_jwk">jwt.api_jwk</a>
+ &#8226;   <a href="#jwt.api_jws">jwt.api_jws</a>
+ &#8226;   <a href="#jwt.api_jwt">jwt.api_jwt</a>
+ &#8226;   <a href="#jwt.jwks_client">jwt.jwks_client</a>
  &#8226;   <a href="#requests.compat">requests.compat</a>
  &#8226;   <a href="#urllib3._request_methods">urllib3._request_methods</a>
  &#8226;   <a href="#urllib3.contrib.emscripten.fetch">urllib3.contrib.emscripten.fetch</a>
@@ -11436,6 +11620,286 @@ imports:
 imported by:
     <a href="#json">json</a>
  &#8226;   <a href="#json.decoder">json.decoder</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="jwt"></a>
+  <a target="code" href="///C:/Users/petry/AppData/Local/Programs/Python/Python312/Lib/site-packages/jwt/__init__.py" type="text/plain"><tt>jwt</tt></a>
+<span class="moduletype">Package</span>  <div class="import">
+imports:
+    <a href="#jwt.api_jwk">jwt.api_jwk</a>
+ &#8226;   <a href="#jwt.api_jws">jwt.api_jws</a>
+ &#8226;   <a href="#jwt.api_jwt">jwt.api_jwt</a>
+ &#8226;   <a href="#jwt.exceptions">jwt.exceptions</a>
+ &#8226;   <a href="#jwt.jwks_client">jwt.jwks_client</a>
+ &#8226;   <a href="#jwt.warnings">jwt.warnings</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#desktop_app.py">desktop_app.py</a>
+ &#8226;   <a href="#jwt.algorithms">jwt.algorithms</a>
+ &#8226;   <a href="#jwt.api_jwk">jwt.api_jwk</a>
+ &#8226;   <a href="#jwt.api_jws">jwt.api_jws</a>
+ &#8226;   <a href="#jwt.api_jwt">jwt.api_jwt</a>
+ &#8226;   <a href="#jwt.exceptions">jwt.exceptions</a>
+ &#8226;   <a href="#jwt.jwk_set_cache">jwt.jwk_set_cache</a>
+ &#8226;   <a href="#jwt.jwks_client">jwt.jwks_client</a>
+ &#8226;   <a href="#jwt.types">jwt.types</a>
+ &#8226;   <a href="#jwt.utils">jwt.utils</a>
+ &#8226;   <a href="#jwt.warnings">jwt.warnings</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="jwt.algorithms"></a>
+  <a target="code" href="///C:/Users/petry/AppData/Local/Programs/Python/Python312/Lib/site-packages/jwt/algorithms.py" type="text/plain"><tt>jwt.algorithms</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#'cryptography.exceptions'">'cryptography.exceptions'</a>
+ &#8226;   <a href="#'cryptography.hazmat'">'cryptography.hazmat'</a>
+ &#8226;   <a href="#__future__">__future__</a>
+ &#8226;   <a href="#abc">abc</a>
+ &#8226;   <a href="#hashlib">hashlib</a>
+ &#8226;   <a href="#hmac">hmac</a>
+ &#8226;   <a href="#json">json</a>
+ &#8226;   <a href="#jwt">jwt</a>
+ &#8226;   <a href="#jwt.exceptions">jwt.exceptions</a>
+ &#8226;   <a href="#jwt.types">jwt.types</a>
+ &#8226;   <a href="#jwt.utils">jwt.utils</a>
+ &#8226;   <a href="#os">os</a>
+ &#8226;   <a href="#sys">sys</a>
+ &#8226;   <a href="#typing">typing</a>
+ &#8226;   <a href="#typing_extensions">typing_extensions</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#jwt.api_jwk">jwt.api_jwk</a>
+ &#8226;   <a href="#jwt.api_jws">jwt.api_jws</a>
+ &#8226;   <a href="#jwt.api_jwt">jwt.api_jwt</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="jwt.api_jwk"></a>
+  <a target="code" href="///C:/Users/petry/AppData/Local/Programs/Python/Python312/Lib/site-packages/jwt/api_jwk.py" type="text/plain"><tt>jwt.api_jwk</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#__future__">__future__</a>
+ &#8226;   <a href="#collections.abc">collections.abc</a>
+ &#8226;   <a href="#json">json</a>
+ &#8226;   <a href="#jwt">jwt</a>
+ &#8226;   <a href="#jwt.algorithms">jwt.algorithms</a>
+ &#8226;   <a href="#jwt.exceptions">jwt.exceptions</a>
+ &#8226;   <a href="#jwt.types">jwt.types</a>
+ &#8226;   <a href="#time">time</a>
+ &#8226;   <a href="#typing">typing</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#jwt">jwt</a>
+ &#8226;   <a href="#jwt.api_jws">jwt.api_jws</a>
+ &#8226;   <a href="#jwt.api_jwt">jwt.api_jwt</a>
+ &#8226;   <a href="#jwt.jwk_set_cache">jwt.jwk_set_cache</a>
+ &#8226;   <a href="#jwt.jwks_client">jwt.jwks_client</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="jwt.api_jws"></a>
+  <a target="code" href="///C:/Users/petry/AppData/Local/Programs/Python/Python312/Lib/site-packages/jwt/api_jws.py" type="text/plain"><tt>jwt.api_jws</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#__future__">__future__</a>
+ &#8226;   <a href="#binascii">binascii</a>
+ &#8226;   <a href="#collections.abc">collections.abc</a>
+ &#8226;   <a href="#json">json</a>
+ &#8226;   <a href="#jwt">jwt</a>
+ &#8226;   <a href="#jwt.algorithms">jwt.algorithms</a>
+ &#8226;   <a href="#jwt.api_jwk">jwt.api_jwk</a>
+ &#8226;   <a href="#jwt.exceptions">jwt.exceptions</a>
+ &#8226;   <a href="#jwt.types">jwt.types</a>
+ &#8226;   <a href="#jwt.utils">jwt.utils</a>
+ &#8226;   <a href="#jwt.warnings">jwt.warnings</a>
+ &#8226;   <a href="#typing">typing</a>
+ &#8226;   <a href="#warnings">warnings</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#jwt">jwt</a>
+ &#8226;   <a href="#jwt.api_jwt">jwt.api_jwt</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="jwt.api_jwt"></a>
+  <a target="code" href="///C:/Users/petry/AppData/Local/Programs/Python/Python312/Lib/site-packages/jwt/api_jwt.py" type="text/plain"><tt>jwt.api_jwt</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#__future__">__future__</a>
+ &#8226;   <a href="#calendar">calendar</a>
+ &#8226;   <a href="#collections.abc">collections.abc</a>
+ &#8226;   <a href="#datetime">datetime</a>
+ &#8226;   <a href="#json">json</a>
+ &#8226;   <a href="#jwt">jwt</a>
+ &#8226;   <a href="#jwt.algorithms">jwt.algorithms</a>
+ &#8226;   <a href="#jwt.api_jwk">jwt.api_jwk</a>
+ &#8226;   <a href="#jwt.api_jws">jwt.api_jws</a>
+ &#8226;   <a href="#jwt.exceptions">jwt.exceptions</a>
+ &#8226;   <a href="#jwt.types">jwt.types</a>
+ &#8226;   <a href="#jwt.warnings">jwt.warnings</a>
+ &#8226;   <a href="#os">os</a>
+ &#8226;   <a href="#sys">sys</a>
+ &#8226;   <a href="#typing">typing</a>
+ &#8226;   <a href="#typing_extensions">typing_extensions</a>
+ &#8226;   <a href="#warnings">warnings</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#jwt">jwt</a>
+ &#8226;   <a href="#jwt.jwks_client">jwt.jwks_client</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="jwt.exceptions"></a>
+  <a target="code" href="///C:/Users/petry/AppData/Local/Programs/Python/Python312/Lib/site-packages/jwt/exceptions.py" type="text/plain"><tt>jwt.exceptions</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#jwt">jwt</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#jwt">jwt</a>
+ &#8226;   <a href="#jwt.algorithms">jwt.algorithms</a>
+ &#8226;   <a href="#jwt.api_jwk">jwt.api_jwk</a>
+ &#8226;   <a href="#jwt.api_jws">jwt.api_jws</a>
+ &#8226;   <a href="#jwt.api_jwt">jwt.api_jwt</a>
+ &#8226;   <a href="#jwt.jwks_client">jwt.jwks_client</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="jwt.jwk_set_cache"></a>
+  <a target="code" href="///C:/Users/petry/AppData/Local/Programs/Python/Python312/Lib/site-packages/jwt/jwk_set_cache.py" type="text/plain"><tt>jwt.jwk_set_cache</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#jwt">jwt</a>
+ &#8226;   <a href="#jwt.api_jwk">jwt.api_jwk</a>
+ &#8226;   <a href="#time">time</a>
+ &#8226;   <a href="#typing">typing</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#jwt.jwks_client">jwt.jwks_client</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="jwt.jwks_client"></a>
+  <a target="code" href="///C:/Users/petry/AppData/Local/Programs/Python/Python312/Lib/site-packages/jwt/jwks_client.py" type="text/plain"><tt>jwt.jwks_client</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#__future__">__future__</a>
+ &#8226;   <a href="#functools">functools</a>
+ &#8226;   <a href="#json">json</a>
+ &#8226;   <a href="#jwt">jwt</a>
+ &#8226;   <a href="#jwt.api_jwk">jwt.api_jwk</a>
+ &#8226;   <a href="#jwt.api_jwt">jwt.api_jwt</a>
+ &#8226;   <a href="#jwt.exceptions">jwt.exceptions</a>
+ &#8226;   <a href="#jwt.jwk_set_cache">jwt.jwk_set_cache</a>
+ &#8226;   <a href="#ssl">ssl</a>
+ &#8226;   <a href="#typing">typing</a>
+ &#8226;   <a href="#urllib.error">urllib.error</a>
+ &#8226;   <a href="#urllib.request">urllib.request</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#jwt">jwt</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="jwt.types"></a>
+  <a target="code" href="///C:/Users/petry/AppData/Local/Programs/Python/Python312/Lib/site-packages/jwt/types.py" type="text/plain"><tt>jwt.types</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#jwt">jwt</a>
+ &#8226;   <a href="#typing">typing</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#jwt.algorithms">jwt.algorithms</a>
+ &#8226;   <a href="#jwt.api_jwk">jwt.api_jwk</a>
+ &#8226;   <a href="#jwt.api_jws">jwt.api_jws</a>
+ &#8226;   <a href="#jwt.api_jwt">jwt.api_jwt</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="jwt.utils"></a>
+  <a target="code" href="///C:/Users/petry/AppData/Local/Programs/Python/Python312/Lib/site-packages/jwt/utils.py" type="text/plain"><tt>jwt.utils</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#'cryptography.hazmat'">'cryptography.hazmat'</a>
+ &#8226;   <a href="#base64">base64</a>
+ &#8226;   <a href="#binascii">binascii</a>
+ &#8226;   <a href="#jwt">jwt</a>
+ &#8226;   <a href="#re">re</a>
+ &#8226;   <a href="#typing">typing</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#jwt.algorithms">jwt.algorithms</a>
+ &#8226;   <a href="#jwt.api_jws">jwt.api_jws</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="jwt.warnings"></a>
+  <a target="code" href="///C:/Users/petry/AppData/Local/Programs/Python/Python312/Lib/site-packages/jwt/warnings.py" type="text/plain"><tt>jwt.warnings</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#jwt">jwt</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#jwt">jwt</a>
+ &#8226;   <a href="#jwt.api_jws">jwt.api_jws</a>
+ &#8226;   <a href="#jwt.api_jwt">jwt.api_jwt</a>
 
   </div>
 
@@ -11549,6 +12013,7 @@ imported by:
  &#8226;   <a href="#charset_normalizer.utils">charset_normalizer.utils</a>
  &#8226;   <a href="#concurrent.futures._base">concurrent.futures._base</a>
  &#8226;   <a href="#desktop_app.py">desktop_app.py</a>
+ &#8226;   <a href="#dotenv.main">dotenv.main</a>
  &#8226;   <a href="#hashlib">hashlib</a>
  &#8226;   <a href="#hpack.hpack">hpack.hpack</a>
  &#8226;   <a href="#hpack.table">hpack.table</a>
@@ -12794,6 +13259,7 @@ imported by:
  &#8226;   <a href="#contextlib">contextlib</a>
  &#8226;   <a href="#ctypes">ctypes</a>
  &#8226;   <a href="#desktop_app.py">desktop_app.py</a>
+ &#8226;   <a href="#dotenv.main">dotenv.main</a>
  &#8226;   <a href="#email.utils">email.utils</a>
  &#8226;   <a href="#fnmatch">fnmatch</a>
  &#8226;   <a href="#frozenlist">frozenlist</a>
@@ -12808,6 +13274,8 @@ imported by:
  &#8226;   <a href="#importlib.resources._legacy">importlib.resources._legacy</a>
  &#8226;   <a href="#importlib.resources.abc">importlib.resources.abc</a>
  &#8226;   <a href="#inspect">inspect</a>
+ &#8226;   <a href="#jwt.algorithms">jwt.algorithms</a>
+ &#8226;   <a href="#jwt.api_jwt">jwt.api_jwt</a>
  &#8226;   <a href="#linecache">linecache</a>
  &#8226;   <a href="#locale">locale</a>
  &#8226;   <a href="#logging">logging</a>
@@ -12921,6 +13389,7 @@ imported by:
  &#8226;   <a href="#aiohttp.helpers">aiohttp.helpers</a>
  &#8226;   <a href="#aiohttp.web_fileresponse">aiohttp.web_fileresponse</a>
  &#8226;   <a href="#aiohttp.web_urldispatcher">aiohttp.web_urldispatcher</a>
+ &#8226;   <a href="#dotenv.main">dotenv.main</a>
  &#8226;   <a href="#importlib.metadata">importlib.metadata</a>
  &#8226;   <a href="#importlib.resources._common">importlib.resources._common</a>
  &#8226;   <a href="#importlib.resources._legacy">importlib.resources._legacy</a>
@@ -13499,6 +13968,8 @@ imported by:
  &#8226;   <a href="#csv">csv</a>
  &#8226;   <a href="#dataclasses">dataclasses</a>
  &#8226;   <a href="#desktop_app.py">desktop_app.py</a>
+ &#8226;   <a href="#dotenv.parser">dotenv.parser</a>
+ &#8226;   <a href="#dotenv.variables">dotenv.variables</a>
  &#8226;   <a href="#email._encoded_words">email._encoded_words</a>
  &#8226;   <a href="#email._header_value_parser">email._header_value_parser</a>
  &#8226;   <a href="#email.feedparser">email.feedparser</a>
@@ -13527,6 +13998,7 @@ imported by:
  &#8226;   <a href="#json.decoder">json.decoder</a>
  &#8226;   <a href="#json.encoder">json.encoder</a>
  &#8226;   <a href="#json.scanner">json.scanner</a>
+ &#8226;   <a href="#jwt.utils">jwt.utils</a>
  &#8226;   <a href="#locale">locale</a>
  &#8226;   <a href="#logging">logging</a>
  &#8226;   <a href="#pathlib">pathlib</a>
@@ -14255,6 +14727,7 @@ imports:
   <div class="import">
 imported by:
     <a href="#argparse">argparse</a>
+ &#8226;   <a href="#dotenv.main">dotenv.main</a>
  &#8226;   <a href="#multiprocessing.util">multiprocessing.util</a>
  &#8226;   <a href="#tarfile">tarfile</a>
  &#8226;   <a href="#tempfile">tempfile</a>
@@ -14485,8 +14958,10 @@ imported by:
  &#8226;   <a href="#asyncio.base_events">asyncio.base_events</a>
  &#8226;   <a href="#asyncio.selector_events">asyncio.selector_events</a>
  &#8226;   <a href="#asyncio.sslproto">asyncio.sslproto</a>
+ &#8226;   <a href="#desktop_app.py">desktop_app.py</a>
  &#8226;   <a href="#ftplib">ftplib</a>
  &#8226;   <a href="#http.client">http.client</a>
+ &#8226;   <a href="#jwt.jwks_client">jwt.jwks_client</a>
  &#8226;   <a href="#requests">requests</a>
  &#8226;   <a href="#requests.adapters">requests.adapters</a>
  &#8226;   <a href="#urllib.request">urllib.request</a>
@@ -14735,6 +15210,7 @@ imported by:
  &#8226;   <a href="#dataclasses">dataclasses</a>
  &#8226;   <a href="#desktop_app.py">desktop_app.py</a>
  &#8226;   <a href="#dis">dis</a>
+ &#8226;   <a href="#dotenv.main">dotenv.main</a>
  &#8226;   <a href="#email._header_value_parser">email._header_value_parser</a>
  &#8226;   <a href="#email.generator">email.generator</a>
  &#8226;   <a href="#email.iterators">email.iterators</a>
@@ -14757,6 +15233,8 @@ imported by:
  &#8226;   <a href="#importlib.metadata">importlib.metadata</a>
  &#8226;   <a href="#importlib.util">importlib.util</a>
  &#8226;   <a href="#inspect">inspect</a>
+ &#8226;   <a href="#jwt.algorithms">jwt.algorithms</a>
+ &#8226;   <a href="#jwt.api_jwt">jwt.api_jwt</a>
  &#8226;   <a href="#linecache">linecache</a>
  &#8226;   <a href="#locale">locale</a>
  &#8226;   <a href="#logging">logging</a>
@@ -14894,6 +15372,7 @@ imported by:
     <a href="#aiofiles.tempfile">aiofiles.tempfile</a>
  &#8226;   <a href="#aiohttp.web_request">aiohttp.web_request</a>
  &#8226;   <a href="#asyncio.windows_utils">asyncio.windows_utils</a>
+ &#8226;   <a href="#dotenv.main">dotenv.main</a>
  &#8226;   <a href="#importlib.resources._common">importlib.resources._common</a>
  &#8226;   <a href="#multiprocessing.connection">multiprocessing.connection</a>
  &#8226;   <a href="#multiprocessing.heap">multiprocessing.heap</a>
@@ -15026,6 +15505,8 @@ imported by:
  &#8226;   <a href="#gzip">gzip</a>
  &#8226;   <a href="#http.cookiejar">http.cookiejar</a>
  &#8226;   <a href="#http.cookies">http.cookies</a>
+ &#8226;   <a href="#jwt.api_jwk">jwt.api_jwk</a>
+ &#8226;   <a href="#jwt.jwk_set_cache">jwt.jwk_set_cache</a>
  &#8226;   <a href="#logging">logging</a>
  &#8226;   <a href="#multiprocessing.connection">multiprocessing.connection</a>
  &#8226;   <a href="#multiprocessing.managers">multiprocessing.managers</a>
@@ -15328,6 +15809,10 @@ imported by:
  &#8226;   <a href="#charset_normalizer.models">charset_normalizer.models</a>
  &#8226;   <a href="#charset_normalizer.utils">charset_normalizer.utils</a>
  &#8226;   <a href="#desktop_app.py">desktop_app.py</a>
+ &#8226;   <a href="#dotenv">dotenv</a>
+ &#8226;   <a href="#dotenv.main">dotenv.main</a>
+ &#8226;   <a href="#dotenv.parser">dotenv.parser</a>
+ &#8226;   <a href="#dotenv.variables">dotenv.variables</a>
  &#8226;   <a href="#functools">functools</a>
  &#8226;   <a href="#h2.config">h2.config</a>
  &#8226;   <a href="#h2.connection">h2.connection</a>
@@ -15348,6 +15833,14 @@ imported by:
  &#8226;   <a href="#importlib.resources._common">importlib.resources._common</a>
  &#8226;   <a href="#importlib.resources._legacy">importlib.resources._legacy</a>
  &#8226;   <a href="#importlib.resources.abc">importlib.resources.abc</a>
+ &#8226;   <a href="#jwt.algorithms">jwt.algorithms</a>
+ &#8226;   <a href="#jwt.api_jwk">jwt.api_jwk</a>
+ &#8226;   <a href="#jwt.api_jws">jwt.api_jws</a>
+ &#8226;   <a href="#jwt.api_jwt">jwt.api_jwt</a>
+ &#8226;   <a href="#jwt.jwk_set_cache">jwt.jwk_set_cache</a>
+ &#8226;   <a href="#jwt.jwks_client">jwt.jwks_client</a>
+ &#8226;   <a href="#jwt.types">jwt.types</a>
+ &#8226;   <a href="#jwt.utils">jwt.utils</a>
  &#8226;   <a href="#multidict">multidict</a>
  &#8226;   <a href="#multidict._abc">multidict._abc</a>
  &#8226;   <a href="#multidict._multidict_py">multidict._multidict_py</a>
@@ -15423,6 +15916,8 @@ imports:
 imported by:
     <a href="#charset_normalizer.legacy">charset_normalizer.legacy</a>
  &#8226;   <a href="#hpack.struct">hpack.struct</a>
+ &#8226;   <a href="#jwt.algorithms">jwt.algorithms</a>
+ &#8226;   <a href="#jwt.api_jwt">jwt.api_jwt</a>
  &#8226;   <a href="#multidict._multidict_py">multidict._multidict_py</a>
  &#8226;   <a href="#urllib3._collections">urllib3._collections</a>
  &#8226;   <a href="#urllib3.connectionpool">urllib3.connectionpool</a>
@@ -15480,7 +15975,8 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#urllib.request">urllib.request</a>
+    <a href="#jwt.jwks_client">jwt.jwks_client</a>
+ &#8226;   <a href="#urllib.request">urllib.request</a>
 
   </div>
 
@@ -15567,7 +16063,9 @@ imports:
   <div class="import">
 imported by:
     <a href="#aiohttp.helpers">aiohttp.helpers</a>
+ &#8226;   <a href="#desktop_app.py">desktop_app.py</a>
  &#8226;   <a href="#http.cookiejar">http.cookiejar</a>
+ &#8226;   <a href="#jwt.jwks_client">jwt.jwks_client</a>
  &#8226;   <a href="#requests.compat">requests.compat</a>
  &#8226;   <a href="#xml.sax.saxutils">xml.sax.saxutils</a>
 
@@ -16801,6 +17299,8 @@ imported by:
  &#8226;   <a href="#importlib.metadata._adapters">importlib.metadata._adapters</a>
  &#8226;   <a href="#importlib.resources._common">importlib.resources._common</a>
  &#8226;   <a href="#importlib.resources._legacy">importlib.resources._legacy</a>
+ &#8226;   <a href="#jwt.api_jws">jwt.api_jws</a>
+ &#8226;   <a href="#jwt.api_jwt">jwt.api_jwt</a>
  &#8226;   <a href="#locale">locale</a>
  &#8226;   <a href="#logging">logging</a>
  &#8226;   <a href="#multiprocessing.forkserver">multiprocessing.forkserver</a>
