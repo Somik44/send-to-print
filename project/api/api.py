@@ -103,6 +103,7 @@ class TokenData(BaseModel):
     exp: datetime
 
 
+# Изменение в POST /shops
 class ShopCreate(BaseModel):
     name: str
     address: str
@@ -110,6 +111,21 @@ class ShopCreate(BaseModel):
     price_bw: float
     price_cl: float
     password: str
+    franchise_id: int
+
+    # Новые модели
+class ShopUpdate(BaseModel):
+        name: Optional[str] = None
+        address: Optional[str] = None
+        w_hours: Optional[str] = None
+        price_bw: Optional[float] = None
+        price_cl: Optional[float] = None
+        password: Optional[str] = None
+        franchise_id: Optional[int] = None
+
+class FranchiseOut(BaseModel):
+    id: int
+    name: str
 
 
 class OrderUpdate(BaseModel):
@@ -587,9 +603,10 @@ async def create_shop(shop: ShopCreate):
 
                 # Вставляем нового магазина
                 await cursor.execute("""
-                    INSERT INTO shop (name, address, w_hours, price_bw, price_cl, password)
-                    VALUES (%s, %s, %s, %s, %s, %s)
-                """, (shop.name, shop.address, shop.w_hours, shop.price_bw, shop.price_cl, shop.password))
+                    INSERT INTO shop (name, address, w_hours, price_bw, price_cl, password, franchise_id)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s)
+                """, (
+                shop.name, shop.address, shop.w_hours, shop.price_bw, shop.price_cl, shop.password, shop.franchise_id))
                 await conn.commit()
                 return {"message": "Shop created successfully", "id": cursor.lastrowid}
     except HTTPException:
@@ -597,6 +614,75 @@ async def create_shop(shop: ShopCreate):
     except Exception as e:
         logging.error(f"Error creating shop: {traceback.format_exc()}")
         raise HTTPException(500, detail="Internal server error")
+
+@app.get("/franchise", response_model=List[FranchiseOut], dependencies=[Depends(verify_admin_key)])
+async def get_franchises():
+    async with await get_db() as conn:
+        async with conn.cursor(aiomysql.DictCursor) as cursor:
+            await cursor.execute("SELECT id, name FROM franchise WHERE is_active = 1")
+            franchises = await cursor.fetchall()
+            return franchises
+
+# Эндпоинт для получения одного магазина (без пароля)
+@app.get("/shops/{shop_id}", dependencies=[Depends(verify_admin_key)])
+async def get_shop_by_id(shop_id: int):
+    async with await get_db() as conn:
+        async with conn.cursor(aiomysql.DictCursor) as cursor:
+            await cursor.execute("""
+                SELECT ID_shop, name, address, w_hours, price_bw, price_cl, franchise_id
+                FROM shop WHERE ID_shop = %s
+            """, (shop_id,))
+            shop = await cursor.fetchone()
+            if not shop:
+                raise HTTPException(404, detail="Shop not found")
+            return shop
+
+# Эндпоинт для обновления магазина (PATCH)
+@app.patch("/shops/{shop_id}", dependencies=[Depends(verify_admin_key)])
+async def update_shop(shop_id: int, update_data: ShopUpdate):
+    async with await get_db() as conn:
+        async with conn.cursor() as cursor:
+            # Проверяем существование магазина
+            await cursor.execute("SELECT ID_shop FROM shop WHERE ID_shop = %s", (shop_id,))
+            if not await cursor.fetchone():
+                raise HTTPException(404, detail="Shop not found")
+
+            # Формируем динамический запрос на обновление
+            fields = []
+            values = []
+            if update_data.name is not None:
+                fields.append("name = %s")
+                values.append(update_data.name)
+            if update_data.address is not None:
+                fields.append("address = %s")
+                values.append(update_data.address)
+            if update_data.w_hours is not None:
+                fields.append("w_hours = %s")
+                values.append(update_data.w_hours)
+            if update_data.price_bw is not None:
+                fields.append("price_bw = %s")
+                values.append(update_data.price_bw)
+            if update_data.price_cl is not None:
+                fields.append("price_cl = %s")
+                values.append(update_data.price_cl)
+            if update_data.franchise_id is not None:
+                fields.append("franchise_id = %s")
+                values.append(update_data.franchise_id)
+            if update_data.password is not None and update_data.password.strip():
+                # Если передан новый пароль (не пустой), хешируем его
+                fields.append("password = %s")
+                values.append(update_data.password)  # предполагаем, что уже хеш
+
+            if not fields:
+                return {"message": "No fields to update"}
+
+            query = f"UPDATE shop SET {', '.join(fields)} WHERE ID_shop = %s"
+            values.append(shop_id)
+
+            await cursor.execute(query, values)
+            await conn.commit()
+
+            return {"message": "Shop updated successfully"}
 
 
 # Shops endpoints
