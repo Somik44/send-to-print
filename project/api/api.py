@@ -113,7 +113,8 @@ class ShopCreate(BaseModel):
     password: str
     franchise_id: int
 
-    # Новые модели
+
+# Новые модели
 class ShopUpdate(BaseModel):
         name: Optional[str] = None
         address: Optional[str] = None
@@ -122,6 +123,8 @@ class ShopUpdate(BaseModel):
         price_cl: Optional[float] = None
         password: Optional[str] = None
         franchise_id: Optional[int] = None
+        is_active: Optional[int] = None
+
 
 class FranchiseOut(BaseModel):
     id: int
@@ -589,7 +592,7 @@ async def create_payment_endpoint(data: PaymentCreateRequest):
     }
 
 
-@app.post("/shops", status_code=201, dependencies=[Depends(verify_admin_key)])
+@app.post("/admin/shops", status_code=201, dependencies=[Depends(verify_admin_key)])
 async def create_shop(shop: ShopCreate):
     """Создание нового магазина (доступно без авторизации для админ-приложения)"""
     try:
@@ -615,7 +618,8 @@ async def create_shop(shop: ShopCreate):
         logging.error(f"Error creating shop: {traceback.format_exc()}")
         raise HTTPException(500, detail="Internal server error")
 
-@app.get("/franchise", response_model=List[FranchiseOut], dependencies=[Depends(verify_admin_key)])
+
+@app.get("/admin/franchise", response_model=List[FranchiseOut], dependencies=[Depends(verify_admin_key)])
 async def get_franchises():
     async with await get_db() as conn:
         async with conn.cursor(aiomysql.DictCursor) as cursor:
@@ -623,13 +627,14 @@ async def get_franchises():
             franchises = await cursor.fetchall()
             return franchises
 
+
 # Эндпоинт для получения одного магазина (без пароля)
-@app.get("/shops/{shop_id}", dependencies=[Depends(verify_admin_key)])
+@app.get("/admin/shops/{shop_id}", dependencies=[Depends(verify_admin_key)])
 async def get_shop_by_id(shop_id: int):
     async with await get_db() as conn:
         async with conn.cursor(aiomysql.DictCursor) as cursor:
             await cursor.execute("""
-                SELECT ID_shop, name, address, w_hours, price_bw, price_cl, franchise_id
+                SELECT ID_shop, name, address, w_hours, price_bw, price_cl, franchise_id, is_active
                 FROM shop WHERE ID_shop = %s
             """, (shop_id,))
             shop = await cursor.fetchone()
@@ -637,8 +642,9 @@ async def get_shop_by_id(shop_id: int):
                 raise HTTPException(404, detail="Shop not found")
             return shop
 
+
 # Эндпоинт для обновления магазина (PATCH)
-@app.patch("/shops/{shop_id}", dependencies=[Depends(verify_admin_key)])
+@app.patch("/admin/shops/{shop_id}", dependencies=[Depends(verify_admin_key)])
 async def update_shop(shop_id: int, update_data: ShopUpdate):
     async with await get_db() as conn:
         async with conn.cursor() as cursor:
@@ -668,6 +674,9 @@ async def update_shop(shop_id: int, update_data: ShopUpdate):
             if update_data.franchise_id is not None:
                 fields.append("franchise_id = %s")
                 values.append(update_data.franchise_id)
+            if update_data.is_active is not None:
+                fields.append("is_active = %s")
+                values.append(update_data.is_active)
             if update_data.password is not None and update_data.password.strip():
                 # Если передан новый пароль (не пустой), хешируем его
                 fields.append("password = %s")
@@ -685,6 +694,23 @@ async def update_shop(shop_id: int, update_data: ShopUpdate):
             return {"message": "Shop updated successfully"}
 
 
+@app.get("/admin/shops", dependencies=[Depends(verify_admin_key)])
+async def get_shops():
+    """Получение списка магазинов (приватный эндпоинт для редактирования точек)"""
+    try:
+        async with await get_db() as conn:
+            async with conn.cursor() as cursor:
+                await cursor.execute("SELECT name, ID_shop, address FROM shop")
+                shops = await cursor.fetchall()
+                return shops or JSONResponse(
+                    content={"message": "No shops found"},
+                    status_code=404
+                )
+    except Exception as e:
+        logging.error(f"Error: {traceback.format_exc()}")
+        raise HTTPException(500, detail="Server error")
+
+
 # Shops endpoints
 @app.get("/shops")
 async def get_shops():
@@ -692,7 +718,7 @@ async def get_shops():
     try:
         async with await get_db() as conn:
             async with conn.cursor() as cursor:
-                await cursor.execute("SELECT name, ID_shop, address FROM shop")
+                await cursor.execute("SELECT name, ID_shop, address FROM shop WHERE is_active = 1")
                 shops = await cursor.fetchall()
                 return shops or JSONResponse(
                     content={"message": "No shops found"},
@@ -710,7 +736,7 @@ async def get_shop(shop_name: str):
         async with await get_db() as conn:
             async with conn.cursor(aiomysql.DictCursor) as cursor:
                 await cursor.execute(
-                    "SELECT name, ID_shop, address, w_hours, price_bw, price_cl FROM shop WHERE name = %s",
+                    "SELECT name, ID_shop, address, w_hours, price_bw, price_cl FROM shop WHERE name = %s AND is_active = 1",
                     (shop_name,)
                 )
                 shop = await cursor.fetchone()
@@ -746,7 +772,7 @@ async def get_shop_by_password(password_hash: str, current_shop: TokenData = Dep
         raise HTTPException(500, detail="Server error")
 
 
-@app.post("/franchise", status_code=201, dependencies=[Depends(verify_admin_key)])
+@app.post("/admin/franchise", status_code=201, dependencies=[Depends(verify_admin_key)])
 async def create_franchise(franchise: FranchiseCreate):
     try:
         encrypted_secret = encrypt_value(franchise.yk_secret_key)

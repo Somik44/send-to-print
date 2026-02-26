@@ -64,7 +64,7 @@ class ShopApp(QMainWindow):
         """Загружает список франшиз и обновляет комбобокс, если нужно."""
         try:
             headers = {"X-Admin-Key": ADMIN_API_KEY}
-            response = requests.get(f"{API_URL}/franchise", headers=headers, timeout=10)
+            response = requests.get(f"{API_URL}/admin/franchise", headers=headers, timeout=10)
             if response.status_code == 200:
                 self.franchises = response.json()
                 logger.info("Franchises loaded")
@@ -81,7 +81,8 @@ class ShopApp(QMainWindow):
     def fetch_shops(self):
         """Загружает список магазинов и обновляет комбобокс, если нужно."""
         try:
-            response = requests.get(f"{API_URL}/shops", timeout=10)
+            headers = {"X-Admin-Key": ADMIN_API_KEY}
+            response = requests.get(f"{API_URL}/admin/shops", headers=headers, timeout=10)
             if response.status_code == 200:
                 self.shops = response.json()
                 logger.info("Shops fetched")
@@ -220,6 +221,12 @@ class ShopApp(QMainWindow):
             self.card_layout.addWidget(field)
             self.edit_labels.append(label)
 
+        # ---- КНОПКА ВКЛ/ВЫКЛ ----
+        self.toggle_button = QPushButton()
+        self.toggle_button.clicked.connect(self.toggle_shop_status)
+        self.toggle_button.setVisible(False)
+        self.card_layout.addWidget(self.toggle_button)
+
         # Теперь загружаем магазины – сигнал сработает, но поля уже существуют
         self.fetch_shops()
 
@@ -259,16 +266,26 @@ class ShopApp(QMainWindow):
                     label.setVisible(False)
                     field.setVisible(False)
                 self.submit_button.setEnabled(False)
+                if hasattr(self, "toggle_button"):
+                    self.toggle_button.setVisible(False)
             except RuntimeError:
                 pass
             return
 
         try:
             headers = {"X-Admin-Key": ADMIN_API_KEY}
-            response = requests.get(f"{API_URL}/shops/{shop_id}", headers=headers, timeout=10)
+            response = requests.get(f"{API_URL}/admin/shops/{shop_id}", headers=headers, timeout=10)
             if response.status_code == 200:
                 data = response.json()
                 self.current_shop_data = data
+                is_active = data.get("is_active", 1)
+
+                if is_active == 1:
+                    self.toggle_button.setText("Выключить точку")
+                else:
+                    self.toggle_button.setText("Включить точку")
+
+                self.toggle_button.setVisible(True)
 
                 # Заполняем поля (проверяем, что виджеты ещё существуют)
                 try:
@@ -346,7 +363,7 @@ class ShopApp(QMainWindow):
 
         try:
             headers = {"Content-Type": "application/json", "X-Admin-Key": ADMIN_API_KEY}
-            response = requests.post(f"{API_URL}/shops", json=payload, timeout=10, headers=headers)
+            response = requests.post(f"{API_URL}/admin/shops", json=payload, timeout=10, headers=headers)
 
             if response.status_code == 201:
                 self.name_input.clear()
@@ -418,7 +435,7 @@ class ShopApp(QMainWindow):
 
         try:
             headers = {"Content-Type": "application/json", "X-Admin-Key": ADMIN_API_KEY}
-            response = requests.patch(f"{API_URL}/shops/{shop_id}", json=payload, timeout=10, headers=headers)
+            response = requests.patch(f"{API_URL}/admin/shops/{shop_id}", json=payload, timeout=10, headers=headers)
 
             if response.status_code == 200:
                 QMessageBox.information(self, "Успех", "Данные магазина обновлены")
@@ -450,7 +467,7 @@ class ShopApp(QMainWindow):
 
         try:
             headers = {"Content-Type": "application/json", "X-Admin-Key": ADMIN_API_KEY}
-            response = requests.post(f"{API_URL}/franchise", json=payload, timeout=10, headers=headers)
+            response = requests.post(f"{API_URL}/admin/franchise", json=payload, timeout=10, headers=headers)
 
             if response.status_code == 201:
                 self.franchise_name_input.clear()
@@ -463,6 +480,57 @@ class ShopApp(QMainWindow):
                 QMessageBox.critical(self, "Ошибка", f"Код {response.status_code}: {error_msg}")
         except Exception as e:
             QMessageBox.critical(self, "Ошибка", f"Не удалось отправить запрос: {str(e)}")
+
+    def toggle_shop_status(self):
+        if not self.current_shop_data:
+            return
+
+        shop_id = self.current_shop_data['ID_shop']
+        current_status = self.current_shop_data.get("is_active", 1)
+
+        new_status = 0 if current_status == 1 else 1
+        action_text = "выключить" if current_status == 1 else "включить"
+
+        reply = QMessageBox.question(
+            self,
+            "Подтверждение",
+            f"Вы уверены, что хотите {action_text} эту точку?",
+            QMessageBox.Yes | QMessageBox.No,
+            QMessageBox.No
+        )
+
+        if reply != QMessageBox.Yes:
+            return
+
+        try:
+            headers = {
+                "Content-Type": "application/json",
+                "X-Admin-Key": ADMIN_API_KEY
+            }
+
+            response = requests.patch(
+                f"{API_URL}/admin/shops/{shop_id}",
+                json={"is_active": new_status},
+                headers=headers,
+                timeout=10
+            )
+
+            if response.status_code == 200:
+                self.current_shop_data["is_active"] = new_status
+
+                if new_status == 1:
+                    self.toggle_button.setText("Выключить точку")
+                    QMessageBox.information(self, "Успех", "Точка включена")
+                else:
+                    self.toggle_button.setText("Включить точку")
+                    QMessageBox.information(self, "Успех", "Точка выключена")
+
+            else:
+                error_msg = response.json().get("detail", "Ошибка сервера") if response.text else "Ошибка"
+                QMessageBox.critical(self, "Ошибка", error_msg)
+
+        except Exception as e:
+            QMessageBox.critical(self, "Ошибка", str(e))
 
 
 if __name__ == "__main__":
