@@ -1,3 +1,8 @@
 *.docx
+*.pdf
+*.jpeg
+*.jpg
+*.png
 *.log
+*.env
 __pycache__/
