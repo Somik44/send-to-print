@@ -25,7 +25,7 @@ load_dotenv(dotenv_path=env_path)
 
 API_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 API_URL = os.getenv("API_URL")
-UPLOAD_FOLDER = os.getenv("UPLOAD_FOLDER")
+UPLOAD_FOLDER = os.path.abspath('uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 
@@ -108,6 +108,21 @@ async def cmd_new_order(message: types.Message, state: FSMContext):
 
     await state.clear()
 
+    # ПРОВЕРКА АКТИВНЫХ ЗАКАЗОВ
+    async with aiohttp.ClientSession() as session:
+        async with session.get(f"{API_URL}/orders/count/{message.chat.id}") as resp:
+            if resp.status != 200:
+                await message.answer("❌ Ошибка проверки заказов")
+                return
+
+            data = await resp.json()
+            if data["active_orders"] >= 2:
+                await message.answer(
+                    "❌ Максимальное количество заказов на пользователя: 2.\n"
+                    "Пожалуйста, для начала заберите предыдущие заказы.", reply_markup=types.ReplyKeyboardRemove()
+                )
+                return
+
     async with aiohttp.ClientSession() as session:
         async with session.get(f"{API_URL}/shops") as resp:
             if resp.status != 200:
@@ -150,7 +165,6 @@ async def process_shop(message: types.Message, state: FSMContext):
 @dp.message(Form.file_processing, F.content_type == ContentType.DOCUMENT)
 async def process_file(message: types.Message, state: FSMContext):
     processing_msg = await message.answer("⏳ Файл обрабатывается, подождите пожалуйста...")
-    temp_path = None
 
     try:
         file_info = await bot.get_file(message.document.file_id)
@@ -280,6 +294,33 @@ async def process_confirmation(message: types.Message, state: FSMContext):
         await message.answer("❌ Ошибка сети", reply_markup=types.ReplyKeyboardRemove())
     finally:
         await state.clear()
+
+
+@dp.message(Command("my_orders"))
+async def cmd_my_orders(message: types.Message):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(f"{API_URL}/orders/user/{message.chat.id}") as resp:
+            if resp.status != 200:
+                await message.answer("❌ Ошибка получения заказов")
+                return
+
+            orders = await resp.json()
+
+    if not orders:
+        await message.answer("📭 У вас нет активных заказов.")
+        return
+
+    text = "📦 Ваши активные заказы:\n\n"
+
+    for order in orders:
+        text += (
+            f"🟡 Заказ №{order['ID']}\n"
+            f"🏪 Точка: {order['shop_name']}\n"
+            f"📍 Адрес: {order['address']}\n"
+            f"📄 Файл: {order['user_file_name']}\n\n"
+        )
+
+    await message.answer(text)
 
 
 @dp.message(Command("reset"))

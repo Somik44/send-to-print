@@ -12,6 +12,7 @@ from typing import Optional, List
 import aiomysql
 import jwt
 from decimal import Decimal
+from urllib.parse import unquote
 from dotenv import load_dotenv
 
 # Логирование
@@ -214,6 +215,45 @@ async def complete_order(order_id: int, current_shop: TokenData = Depends(verify
         raise HTTPException(500, detail="Internal server error")
 
 
+@app.get("/orders/count/{user_id}")
+async def get_active_orders_count(user_id: int):
+    try:
+        async with await get_db() as conn:
+            async with conn.cursor(aiomysql.DictCursor) as cursor:
+                await cursor.execute("""
+                    SELECT COUNT(*) as cnt
+                    FROM `order`
+                    WHERE user_id = %s AND status = 'received'
+                """, (user_id,))
+
+                result = await cursor.fetchone()
+                return {"active_orders": result['cnt']}
+    except Exception as e:
+        logging.error(f"Count error: {traceback.format_exc()}")
+        raise HTTPException(500, detail="Server error")
+
+
+@app.get("/orders/user/{user_id}")
+async def get_user_orders(user_id: int):
+    try:
+        async with await get_db() as conn:
+            async with conn.cursor(aiomysql.DictCursor) as cursor:
+                await cursor.execute("""
+                    SELECT o.ID, o.user_file_name, s.name AS shop_name, s.address
+                    FROM `order` o
+                    JOIN shop s ON o.ID_shop = s.ID_shop
+                    WHERE o.user_id = %s
+                      AND o.status = 'received'
+                    ORDER BY o.ID DESC
+                """, (user_id,))
+
+                orders = await cursor.fetchall()
+                return orders or []
+    except Exception:
+        logging.error(f"User orders error: {traceback.format_exc()}")
+        raise HTTPException(500, detail="Server error")
+
+
 @app.post("/orders")
 async def create_order(
     file: UploadFile = File(...),
@@ -224,10 +264,15 @@ async def create_order(
         async with await get_db() as conn:
             async with conn.cursor(aiomysql.DictCursor) as cursor:
                 # Вставляем запись о заказе
+                decoded_filename = unquote(file.filename).strip()
+
+                # ограничим длину
+                decoded_filename = decoded_filename[:200]
+
                 await cursor.execute("""
-                    INSERT INTO `order` (ID_shop, user_id, file_path, status)
-                    VALUES (%s, %s, %s, 'received')
-                """, (ID_shop, user_id, 'temp'))
+                    INSERT INTO `order` (ID_shop, user_id, file_path, user_file_name, status)
+                    VALUES (%s, %s, %s, %s, 'received')
+                """, (ID_shop, user_id, 'temp', decoded_filename))
                 order_id = cursor.lastrowid
 
                 # Генерируем имя файла и сохраняем
@@ -343,4 +388,4 @@ if __name__ == "__main__":
 
     host = os.getenv("API_HOST")
     port = int(os.getenv("API_PORT"))
-    uvicorn.run(app, host=host, port=port, log_config=LOGGING_CONFIG)
+    # uvicorn.run(app, host=host, port=port, log_config=LOGGING_CONFIG)
