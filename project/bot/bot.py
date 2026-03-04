@@ -9,7 +9,7 @@ import websockets
 import uuid
 import traceback
 from aiogram import Bot, Dispatcher, types, F
-from aiogram.filters import Command
+from aiogram.filters import Command, StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
@@ -24,6 +24,8 @@ import zipfile
 import xml.dom.minidom
 import docx
 from dotenv import load_dotenv
+from aiogram.utils.media_group import MediaGroupBuilder
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -36,8 +38,17 @@ load_dotenv(dotenv_path=env_path)
 
 API_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 API_URL = os.getenv("API_URL")
+LIBREOFFICE_PATH = os.getenv("LIBREOFFICE_PATH")
+ADMIN_IDS_STR = os.getenv("ADMIN_IDS", "")
+ADMIN_IDS = [int(id.strip()) for id in ADMIN_IDS_STR.split(",") if id.strip()]
+INTERNAL_API_KEY = os.getenv("INTERNAL_API_KEY")
+
 UPLOAD_FOLDER = os.getenv("UPLOAD_FOLDER")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+
+def is_admin(message: types.Message):
+    return message.from_user.id in ADMIN_IDS
 
 
 class Form(StatesGroup):
@@ -46,6 +57,8 @@ class Form(StatesGroup):
     color_selection = State()
     comment = State()
     confirmation = State()
+    admin_broadcast = State()
+    confirm_broadcast = State()
 
 
 bot = Bot(token=API_TOKEN)
@@ -119,44 +132,11 @@ async def get_page_count(file_path: str, ext: str) -> int:
                 return len(pdf.pages)
 
         # return await asyncio.to_thread(_process_word_file, file_path)
-        return await get_docx_page_count_metadata(file_path)
-        # return await get_word_page_count_via_libreoffice(file_path)
+        return await get_word_page_count_via_libreoffice(file_path)
 
     except Exception as e:
         logging.error(f"Page count error: {traceback.format_exc()}")
         raise
-
-
-# async def get_page_count(file_path: str, ext: str) -> int:
-#     """
-#     Универсальная функция подсчета страниц с приоритетами:
-#     1. LibreOffice (самый точный)
-#     2. python-docx (для .docx)
-#     3. Метаданные DOCX
-#     4. Размер файла (последний fallback)
-#     """
-#     try:
-#         if ext.lower() in ('.png', '.jpg', '.jpeg'):
-#             return 1
-#
-#         if ext.lower() == '.pdf':
-#             return await get_pdf_page_count(file_path)
-#
-#         # Для Word документов используем LibreOffice как основной метод
-#         if ext.lower() in ('.doc', '.docx', '.odt', '.rtf'):
-#             liboffice_result = await get_word_page_count_via_libreoffice(file_path)
-#             if liboffice_result > 0:
-#                 return liboffice_result
-#             else:
-#                 # Если LibreOffice вернул 0 или ошибку, используем fallback
-#                 return await get_docx_page_count_metadata(file_path)
-#         # if ext.lower() == '.docx':
-#         #     return await get_docx_page_count_metadata(file_path)
-#         # if ext.lower() == '.doc':
-#         #     return 0
-#     except Exception as e:
-#         logging.error(f"Error counting pages for {file_path}: {str(e)}")
-#         # return await get_fallback_page_count(file_path, ext)
 
 
 def _process_word_file(file_path: str) -> int:
@@ -187,23 +167,105 @@ async def get_pdf_page_count(file_path: str) -> int:
         logging.error(f"PDF page count error: {str(e)}")
 
 
+async def get_word_page_count_via_libreoffice(file_path: str) -> int:
+    """
+    Точный подсчет страниц Word документов через LibreOffice для Windows.
+    """
+    temp_dir = None
+
+    try:
+        # 1. Создаем временную директорию
+        temp_dir = tempfile.mkdtemp()
+
+        base_name = os.path.basename(file_path)
+        file_name_without_ext = os.path.splitext(base_name)[0]
+        pdf_output_path = os.path.join(temp_dir, f"{file_name_without_ext}.pdf")
+
+        # 2. Запускаем конвертацию
+        cmd = [
+            LIBREOFFICE_PATH, '--headless', '--convert-to', 'pdf',
+            '--outdir', temp_dir, file_path
+        ]
+
+        process = await asyncio.create_subprocess_exec(
+            *cmd,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE
+        )
+
+        stdout, stderr = await process.communicate()
+
+        # 3. Проверка результата конвертации
+        if process.returncode != 0:
+            logging.error(f"LibreOffice conversion failed: {stderr.decode()}")
+            return await get_docx_page_count_metadata(file_path) if file_path.endswith('.docx') else 0
+
+        if not os.path.exists(pdf_output_path):
+            logging.error(f"PDF file was not created. Expected path: {pdf_output_path}")
+            return await get_docx_page_count_metadata(file_path) if file_path.endswith('.docx') else 0
+        logging.info("LibreOffice conversation successfully")
+        # 4. Подсчет страниц
+        page_count = await get_pdf_page_count(pdf_output_path)
+
+        # 5. Очистка
+        try:
+            if os.path.exists(pdf_output_path):
+                os.remove(pdf_output_path)
+            if temp_dir and os.path.exists(temp_dir):
+                os.rmdir(temp_dir)
+        except Exception as e:
+            logging.warning(f"Cleanup error: {e}")
+
+        return page_count or 0
+
+    except Exception as e:
+        logging.error(f"LibreOffice critical error: {traceback.format_exc()}")
+
+        # Финальная очистка при крахе
+        if temp_dir and os.path.exists(temp_dir):
+            try:
+                for f in os.listdir(temp_dir):
+                    os.remove(os.path.join(temp_dir, f))
+                os.rmdir(temp_dir)
+            except:
+                pass
+
+        if file_path.lower().endswith('.docx'):
+            try:
+                return await get_docx_page_count_metadata(file_path)
+            except:
+                return 0
+        return 0
+
+
+# Версия подсчета страниц через либреофис для Linux
 # async def get_word_page_count_via_libreoffice(file_path: str) -> int:
 #     """
-#     Точный подсчет страниц Word документов через LibreOffice
+#     Точный подсчет страниц Word документов через LibreOffice (версия для Linux)
 #     """
+#     # В Linux команда обычно доступна просто как 'libreoffice' или 'soffice'
+#     libreoffice_bin = "libreoffice"
 #     temp_dir = None
-#     try:
-#         # Создаем временную директорию для PDF
-#         temp_dir = tempfile.mkdtemp()
-#         pdf_output_path = os.path.join(temp_dir, "output.pdf")
 #
-#         # Конвертируем документ в PDF через LibreOffice
+#     try:
+#         temp_dir = tempfile.mkdtemp()
+#
+#         # В Linux LibreOffice создает PDF с тем же именем, что и оригинал
+#         base_name = os.path.basename(file_path)
+#         file_name_without_ext = os.path.splitext(base_name)[0]
+#         pdf_output_path = os.path.join(temp_dir, f"{file_name_without_ext}.pdf")
+#
+#         # Команда для Linux.
+#         # Добавляем параметр -env для изоляции профиля пользователя (нужно для стабильности на сервере)
 #         cmd = [
-#             'libreoffice', '--headless', '--convert-to', 'pdf',
-#             '--outdir', temp_dir, file_path
+#             libreoffice_bin,
+#             '--headless',
+#             f'-env:UserInstallation=file://{temp_dir}/profile',
+#             '--convert-to', 'pdf',
+#             '--outdir', temp_dir,
+#             file_path
 #         ]
 #
-#         # Запускаем процесс конвертации
 #         process = await asyncio.create_subprocess_exec(
 #             *cmd,
 #             stdout=asyncio.subprocess.PIPE,
@@ -213,65 +275,40 @@ async def get_pdf_page_count(file_path: str) -> int:
 #         stdout, stderr = await process.communicate()
 #
 #         if process.returncode != 0:
-#             logging.error(f"LibreOffice conversion failed: {stderr.decode()}")
-#             return await get_fallback_page_count(file_path, '.docx')
+#             logging.error(f"LibreOffice failed: {stderr.decode()}")
+#             # Если не сработало, пробуем метод через метаданные (для .docx)
+#             if file_path.lower().endswith('.docx'):
+#                 return await get_docx_page_count_metadata(file_path)
+#             return 0
 #
-#         # Проверяем, создался ли PDF файл
 #         if not os.path.exists(pdf_output_path):
-#             logging.error("PDF file was not created by LibreOffice")
-#             return await get_fallback_page_count(file_path, '.docx')
+#             logging.error(f"PDF not found at {pdf_output_path}")
+#             return 0
 #
-#         # Подсчитываем страницы в PDF
 #         page_count = await get_pdf_page_count(pdf_output_path)
 #
-#         # Очищаем временные файлы
+#         # Очистка
 #         try:
-#             os.remove(pdf_output_path)
-#             os.rmdir(temp_dir)
+#             import shutil
+#             shutil.rmtree(temp_dir)
 #         except:
 #             pass
 #
-#         return page_count
+#         return page_count or 0
 #
 #     except Exception as e:
-#         logging.error(f"LibreOffice page count error: {str(e)}")
-#
-#         # Очистка временных файлов при ошибке
-#         if temp_dir and os.path.exists(temp_dir):
+#         logging.error(f"Linux LibreOffice error: {str(e)}")
+#         if file_path.lower().endswith('.docx'):
 #             try:
-#                 for file in os.listdir(temp_dir):
-#                     os.remove(os.path.join(temp_dir, file))
-#                 os.rmdir(temp_dir)
+#                 return await get_docx_page_count_metadata(file_path)
 #             except:
 #                 pass
-#
-#         return await get_fallback_page_count(file_path, '.docx')
-
-
-# async def get_fallback_page_count(file_path: str, ext: str) -> int:
-#      """
-#      Fallback метод для подсчета страниц, если LibreOffice не сработал
-#      """
-#      try:
-#          # Метод 1: python-docx для .docx файлов
-#          if ext.lower() == '.docx':
-#              return await get_docx_page_count_via_python_docx(file_path)
-#          if ext.lower() == '.doc':
-#              return await get_doc_page_count_fallback(file_path)
-#         # Метод 2: Анализ метаданных DOCX
-#         if ext.lower() == '.docx':
-#             return await get_docx_page_count_metadata(file_path)
-#         # Метод 3: Приблизительный подсчет по размеру файла
-#         file_size = os.path.getsize(file_path)
-#         # Эмпирическая формула: ~2000 байт на страницу для текста
-#         return max(1, file_size // 2000)
-#      except Exception:
-#          logging.error(f"Fallback methods page count error: {str(e)}")
+#         return 0
 
 
 async def get_docx_page_count_metadata(file_path: str) -> int:
     """
-    Подсчет страниц через метаданные DOCX (менее точный, но быстрый)
+    Подсчет страниц через метаданные DOCX (быстрый, достаточно точный, но не умеет работать с .doc и файлами без metadata)
     """
     try:
         with zipfile.ZipFile(file_path, 'r') as document:
@@ -327,6 +364,227 @@ async def cmd_start(message: types.Message):
     )
 
 
+@dp.message(Command("reset"), StateFilter('*'))
+async def cmd_reset(message: types.Message, state: FSMContext):
+    try:
+        if message.chat.id in timers:
+            timers[message.chat.id].cancel()
+            del timers[message.chat.id]
+
+        user_data = await state.get_data()
+        pending_task = user_data.get('pending_task')
+        if pending_task and not pending_task.done():
+            pending_task.cancel()
+            try:
+                await pending_task
+            except asyncio.CancelledError:
+                pass
+        temp_file = user_data.get('temp_file')
+
+        if temp_file and os.path.exists(temp_file):
+            try:
+                os.remove(temp_file)
+                logging.info(f"Temporary file deleted: {temp_file}")
+            except Exception as e:
+                logging.error(f"Error deleting a temporary file: {str(e)}")
+
+        await state.clear()
+
+        confirmation_msg_id = user_data.get('confirmation_msg_id')
+        if confirmation_msg_id:
+            try:
+                await bot.delete_message(message.chat.id, confirmation_msg_id)
+            except Exception as e:
+                logging.error(f"Message deletion error: {str(e)}")
+
+        await message.answer(
+            "🔄 Все данные сброшены. Вы можете начать новый заказ с помощью /new_order",
+            reply_markup=types.ReplyKeyboardRemove()
+        )
+
+    except Exception as e:
+        logging.error(f"Error in reset: {traceback.format_exc()}")
+        await message.answer("❌ Произошла ошибка при сбросе")
+
+
+@dp.message(Command("broadcast"), is_admin)
+async def start_broadcast(message: types.Message, state: FSMContext):
+    await state.set_state(Form.admin_broadcast)
+    await message.answer("📝 Пришлите сообщение для рассылки (текст/фото).\nДля отмены: /reset")
+
+
+@dp.message(Form.admin_broadcast, is_admin)
+async def preview_broadcast(message: types.Message, state: FSMContext):
+    data = await state.get_data()
+    photos = data.get("broadcast_photos", [])
+    caption = data.get("broadcast_caption", "")
+    pending_task = data.get("pending_task")
+    current_group_id = data.get("media_group_id")
+
+    # Если пришло фото
+    if message.photo:
+        file_id = message.photo[-1].file_id
+        group_id = message.media_group_id
+
+        # Берём подпись, если есть
+        if message.caption:
+            caption = message.caption
+
+        # Одиночное фото (без group_id) – сразу показываем превью
+        if group_id is None:
+            # Отменяем предыдущую задачу, если была
+            if pending_task and not pending_task.done():
+                pending_task.cancel()
+                try:
+                    await pending_task
+                except asyncio.CancelledError:
+                    pass
+            photos = [file_id]
+            await state.update_data(
+                broadcast_photos=photos,
+                broadcast_caption=caption,
+                pending_task=None,
+                media_group_id=None
+            )
+            await show_broadcast_preview(message, state, photos, caption)
+            return
+
+        # Это альбом – добавляем фото
+        photos.append(file_id)
+        await state.update_data(
+            broadcast_photos=photos,
+            broadcast_caption=caption,
+            media_group_id=group_id
+        )
+
+        # Если задача уже существует для этой же группы – просто ждём
+        if pending_task and not pending_task.done() and current_group_id == group_id:
+            return
+
+        # Если есть задача для другой группы – отменяем её
+        if pending_task and not pending_task.done():
+            pending_task.cancel()
+            try:
+                await pending_task
+            except asyncio.CancelledError:
+                pass
+
+        # Запускаем новую задачу ожидания завершения альбома
+        async def delayed_show():
+            await asyncio.sleep(1.0)  # даём время собрать все фото
+            current_data = await state.get_data()
+            if current_data.get("media_group_id") == group_id:
+                await show_broadcast_preview(
+                    message, state,
+                    current_data.get("broadcast_photos", []),
+                    current_data.get("broadcast_caption", "")
+                )
+
+        task = asyncio.create_task(delayed_show())
+        await state.update_data(pending_task=task, media_group_id=group_id)
+
+    # Если пришёл текст (не фото)
+    elif message.text:
+        # Отменяем предыдущую задачу, если была
+        if pending_task and not pending_task.done():
+            pending_task.cancel()
+            try:
+                await pending_task
+            except asyncio.CancelledError:
+                pass
+        await state.update_data(
+            broadcast_caption=message.text,
+            broadcast_photos=[],
+            pending_task=None,
+            media_group_id=None
+        )
+        await show_broadcast_preview(message, state, [], message.text)
+
+
+async def show_broadcast_preview(message: types.Message, state: FSMContext, photos: list, caption: str):
+    """Показывает предпросмотр рассылки и переводит в состояние подтверждения"""
+    # Очищаем временные данные, связанные с альбомом
+    await state.update_data(pending_task=None, media_group_id=None)
+    await state.set_state(Form.confirm_broadcast)
+
+    builder = InlineKeyboardBuilder()
+    builder.button(text="✅ Подтвердить и отправить", callback_data="send_now")
+    builder.button(text="❌ Отмена", callback_data="reset_broadcast")
+
+    await message.answer("👇 Превью рассылки:")
+
+    if photos:
+        album = MediaGroupBuilder(caption=caption)
+        for p_id in photos:
+            album.add_photo(media=p_id)
+        await bot.send_media_group(chat_id=message.chat.id, media=album.build())
+    else:
+        await message.answer(caption)
+
+    await message.answer("Отправить это сообщение всем пользователям?", reply_markup=builder.as_markup())
+
+
+@dp.callback_query(Form.confirm_broadcast, F.data == "send_now")
+async def final_send_broadcast(callback: types.CallbackQuery, state: FSMContext):
+    data = await state.get_data()
+    pending_task = data.get('pending_task')
+    if pending_task and not pending_task.done():
+        pending_task.cancel()
+        try:
+            await pending_task
+        except asyncio.CancelledError:
+            pass
+    photos = data.get("broadcast_photos", [])
+    caption = data.get("broadcast_caption", "")
+    await state.clear()
+
+    await callback.message.edit_text("⏳ Получаю список пользователей...")
+    headers = {"X-API-Key": INTERNAL_API_KEY}
+
+    async with aiohttp.ClientSession() as session:
+        async with session.get(f"{API_URL}/users/all-ids", headers=headers) as resp:
+            if resp.status != 200:
+                await callback.message.answer("❌ Ошибка API.")
+                return
+            user_ids = await resp.json()
+
+    await callback.message.answer(f"🚀 Рассылка на {len(user_ids)} чел...")
+    sent, blocked = 0, 0
+
+    for uid in user_ids:
+        try:
+            if photos:
+                # ВОТ ЗДЕСЬ ОТПРАВКА ОДНИМ СООБЩЕНИЕМ (АЛЬБОМОМ)
+                album = MediaGroupBuilder(caption=caption)
+                for p_id in photos[:10]:  # Лимит ТГ - 10 фото
+                    album.add_photo(media=p_id)
+                await bot.send_media_group(chat_id=uid, media=album.build())
+            else:
+                await bot.send_message(chat_id=uid, text=caption)
+
+            sent += 1
+            await asyncio.sleep(0.05)
+        except Exception:
+            blocked += 1
+
+    await callback.message.answer(f"📊 Итог:\n✅ Успешно: {sent}\n🚫 Заблокировали: {blocked}")
+
+
+@dp.callback_query(Form.confirm_broadcast, F.data == "reset_broadcast")
+async def cancel_broadcast(callback: types.CallbackQuery, state: FSMContext):
+    data = await state.get_data()
+    pending_task = data.get('pending_task')
+    if pending_task and not pending_task.done():
+        pending_task.cancel()
+        try:
+            await pending_task
+        except asyncio.CancelledError:
+            pass
+    await state.clear()
+    await callback.message.edit_text("❌ Рассылка отменена.")
+    await callback.answer()
+
+
 @dp.message(Command("new_order"))
 async def cmd_new_order(message: types.Message, state: FSMContext):
     if message.chat.id in timers:
@@ -353,7 +611,7 @@ async def cmd_new_order(message: types.Message, state: FSMContext):
     await state.clear()
 
     async with aiohttp.ClientSession() as session:
-        async with session.get(f"{API_URL}/shops") as resp:
+        async with session.get(f"{API_URL}/shops", headers={"x-api-key": INTERNAL_API_KEY}) as resp:
             if resp.status != 200:
                 await message.answer("❌ Ошибка загрузки магазинов")
                 return
@@ -372,7 +630,7 @@ async def cmd_new_order(message: types.Message, state: FSMContext):
 @dp.message(Form.shop_selection)
 async def process_shop(message: types.Message, state: FSMContext):
     async with aiohttp.ClientSession() as session:
-        async with session.get(f"{API_URL}/shops/{message.text}") as resp:
+        async with session.get(f"{API_URL}/shops/{message.text}", headers={"x-api-key": INTERNAL_API_KEY}) as resp:
             if resp.status != 200:
                 await message.answer("❌ Точка не найдена. /new_order")
                 return
@@ -442,7 +700,7 @@ async def process_file(message: types.Message, state: FSMContext):
         pages = await get_page_count(temp_path, file_ext)
         logging.info(f"Defined pages: {pages}")
 
-        if pages < 1:
+        if pages is None or pages < 1:
             raise ValueError("⚠️ Не удалось определить количество страниц")
 
         # 8. Сохраняем данные в состояние
@@ -538,7 +796,7 @@ async def process_color(message: types.Message, state: FSMContext):
     await state.set_state(Form.comment)
 
 
-@dp.message(Form.comment)
+@dp.message(Form.comment, ~F.text.startswith("/"))
 async def process_comment(message: types.Message, state: FSMContext):
     # Обрабатываем кнопку "Без комментария"
     if message.text == "Без комментария":
@@ -631,7 +889,7 @@ async def process_confirmation(message: types.Message, state: FSMContext):
             with open(temp_file_path, 'rb') as file:
                 form_data.add_field('file', file.read(), filename=user_data['filename'])
 
-            async with session.post(f"{API_URL}/orders", data=form_data) as resp:
+            async with session.post(f"{API_URL}/orders", data=form_data, headers={"x-api-key": INTERNAL_API_KEY}) as resp:
                 if resp.status == 201:
                     data = await resp.json()
                     order_id = data["order_id"]
@@ -672,42 +930,6 @@ async def process_confirmation(message: types.Message, state: FSMContext):
         await state.clear()
 
 
-@dp.message(Command("reset"))
-async def cmd_reset(message: types.Message, state: FSMContext):
-    try:
-        if message.chat.id in timers:
-            timers[message.chat.id].cancel()
-            del timers[message.chat.id]
-
-        user_data = await state.get_data()
-        temp_file = user_data.get('temp_file')
-
-        if temp_file and os.path.exists(temp_file):
-            try:
-                os.remove(temp_file)
-                logging.info(f"Temporary file deleted: {temp_file}")
-            except Exception as e:
-                logging.error(f"Error deleting a temporary file: {str(e)}")
-
-        await state.clear()
-
-        confirmation_msg_id = user_data.get('confirmation_msg_id')
-        if confirmation_msg_id:
-            try:
-                await bot.delete_message(message.chat.id, confirmation_msg_id)
-            except Exception as e:
-                logging.error(f"Message deletion error: {str(e)}")
-
-        await message.answer(
-            "🔄 Все данные сброшены. Вы можете начать новый заказ с помощью /new_order",
-            reply_markup=types.ReplyKeyboardRemove()
-        )
-
-    except Exception as e:
-        logging.error(f"Error in reset: {traceback.format_exc()}")
-        await message.answer("❌ Произошла ошибка при сбросе")
-
-
 @dp.message()
 async def handle_unknown(message: types.Message):
     await message.reply("Не понимаю тебя, попробуй повторить запрос ☺️")
@@ -720,7 +942,7 @@ async def start_payment_polling(order_id: int, chat_id: int, link_message_id: in
         for i in range(hot_attempts):
             try:
                 async with aiohttp.ClientSession() as session:
-                    async with session.get(f"{API_URL}/payments/check/{order_id}") as resp:
+                    async with session.get(f"{API_URL}/payments/check/{order_id}", headers={"x-api-key": INTERNAL_API_KEY}) as resp:
                         if resp.status == 200:
                             data = await resp.json()
                             status = data.get("status")
@@ -780,7 +1002,7 @@ async def start_payment_polling(order_id: int, chat_id: int, link_message_id: in
         # Этот блок сработает, только если за 12 минут ничего не произошло
         logging.info(f"Finalizing order {order_id} after 12 minutes.")
         async with aiohttp.ClientSession() as session:
-            async with session.post(f"{API_URL}/orders/{order_id}/cancel-timeout") as resp:
+            async with session.post(f"{API_URL}/orders/{order_id}/cancel-timeout", headers={"x-api-key": INTERNAL_API_KEY}) as resp:
                 if resp.status == 200 and (await resp.json()).get("status") == "canceled":
                     await bot.send_message(
                         chat_id,

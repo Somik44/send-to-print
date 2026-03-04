@@ -90,6 +90,10 @@ ADMIN_API_KEY = os.getenv("ADMIN_API_KEY")
 if not ADMIN_API_KEY:
     raise ValueError("ADMIN_API_KEY is not set in the environment file!")
 
+INTERNAL_API_KEY = os.getenv("INTERNAL_API_KEY")
+if not INTERNAL_API_KEY:
+    raise ValueError("INTERNAL_API_KEY is not set in the environment file!")
+
 JWT_SECRET = os.getenv("JWT_SECRET")
 JWT_ALGORITHM = os.getenv("JWT_ALGORITHM")
 ACCESS_TOKEN_EXPIRE_HOURS = int(os.getenv("ACCESS_TOKEN_EXPIRE_HOURS"))
@@ -486,8 +490,10 @@ async def create_order(
         user_id: str = Form(...),
         note: str = Form(''),
         con_code: int = Form(...),
-        file_extension: str = Form(...)
+        file_extension: str = Form(...),
+        x_api_key: str = Header(None)
 ):
+    if x_api_key != INTERNAL_API_KEY: raise HTTPException(403)
     try:
         async with await get_db() as conn:
             async with conn.cursor() as cursor:
@@ -713,8 +719,9 @@ async def get_shops():
 
 # Shops endpoints
 @app.get("/shops")
-async def get_shops():
+async def get_shops(x_api_key: str = Header(None)):
     """Получение списка магазинов (публичный эндпоинт для бота)"""
+    if x_api_key != INTERNAL_API_KEY: raise HTTPException(403)
     try:
         async with await get_db() as conn:
             async with conn.cursor() as cursor:
@@ -730,8 +737,9 @@ async def get_shops():
 
 
 @app.get("/shops/{shop_name}")
-async def get_shop(shop_name: str):
+async def get_shop(shop_name: str, x_api_key: str = Header(None)):
     """Получение информации о магазине (публичный эндпоинт для бота)"""
+    if x_api_key != INTERNAL_API_KEY: raise HTTPException(403)
     try:
         async with await get_db() as conn:
             async with conn.cursor(aiomysql.DictCursor) as cursor:
@@ -796,6 +804,27 @@ async def create_franchise(franchise: FranchiseCreate):
         raise HTTPException(500, detail="Internal server error")
 
 
+@app.get("/users/all-ids")
+async def get_all_user_ids(x_api_key: str = Header(None)):
+    if not INTERNAL_API_KEY or x_api_key != INTERNAL_API_KEY:
+        logging.warning(f"Unauthorized access attempt to user IDs. Key: {x_api_key}")
+        raise HTTPException(status_code=403, detail="Access denied")
+
+    try:
+        async with await get_db() as conn:
+            # Используем DictCursor, так как он у тебя в get_db по умолчанию
+            async with conn.cursor(aiomysql.DictCursor) as cursor:
+                await cursor.execute("SELECT DISTINCT user_id FROM `order` WHERE user_id IS NOT NULL")
+                result = await cursor.fetchall()
+
+                # Обращаемся по имени колонки, а не по индексу
+                return [row['user_id'] for row in result]
+
+    except Exception as e:
+        logging.error(f"DB Error in get_all_user_ids: {traceback.format_exc()}")
+        raise HTTPException(500, detail="Database error")
+
+
 # Files endpoint
 @app.get("/files/{filename}")
 async def get_file(
@@ -835,7 +864,8 @@ async def get_file(
 
 # payment endpoints
 @app.get("/payments/check/{order_id}")
-async def check_payment_status(order_id: int):
+async def check_payment_status(order_id: int, x_api_key: str = Header(None)):
+    if x_api_key != INTERNAL_API_KEY: raise HTTPException(403)
     async with await get_db() as conn:
         async with conn.cursor(aiomysql.DictCursor) as cursor:
             await cursor.execute("""
@@ -886,15 +916,18 @@ async def check_payment_status(order_id: int):
 
 
 @app.post("/orders/{order_id}/cancel-timeout")
-async def cancel_order_due_to_timeout(order_id: int):
+async def cancel_order_due_to_timeout(order_id: int, x_api_key: str = Header(None)):
     """
-    Безопасная отмена "зависшего" заказа по тайм-ауту из бота.
+    Безопасная отмена "зависшего" заказа по тайм-ауту из бота с удалением файла.
     """
+    if x_api_key != os.getenv("INTERNAL_API_KEY"):
+        raise HTTPException(403, "Unauthorized")
     try:
         async with await get_db() as conn:
             async with conn.cursor(aiomysql.DictCursor) as cursor:
+                # Добавили получение file_path в твой первый запрос
                 await cursor.execute(
-                    "SELECT status FROM `order` WHERE ID = %s", (order_id,)
+                    "SELECT status, file_path FROM `order` WHERE ID = %s", (order_id,)
                 )
                 order = await cursor.fetchone()
 
@@ -910,6 +943,16 @@ async def cancel_order_due_to_timeout(order_id: int):
                 await conn.commit()
 
                 if cursor.rowcount > 0:
+                    # УДАЛЕНИЕ ФАЙЛА: происходит только если статус реально изменился
+                    if order.get('file_path'):
+                        file_p = os.path.join(UPLOAD_FOLDER, order['file_path'])
+                        if os.path.exists(file_p):
+                            try:
+                                os.remove(file_p)
+                                logging.info(f"Physical file {order['file_path']} deleted for order {order_id}")
+                            except Exception as fe:
+                                logging.error(f"Failed to delete file {file_p}: {fe}")
+
                     logging.warning(f"Order {order_id} safely canceled by bot timeout.")
                     return {"status": "canceled"}
                 else:
