@@ -102,6 +102,7 @@ def main():
             "  `paid_at` datetime DEFAULT NULL,"
             "  `payment_amount` decimal(10,2) DEFAULT NULL,"
             "  `idempotence_key` varchar(255) DEFAULT NULL,"
+            "  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,"
             "  PRIMARY KEY (`ID`),"
             "  UNIQUE KEY `payment_id` (`payment_id`),"
             "  KEY `ID_shop` (`ID_shop`),"
@@ -131,6 +132,9 @@ def main():
                     print("уже существует.")
                 else:
                     print(err.msg)
+
+        # Фиксируем изменения
+        cnx.commit()
 
     except mysql.connector.Error as err:
         print(f"Ошибка подключения к MySQL: {err}")

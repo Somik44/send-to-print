@@ -198,6 +198,14 @@ class LoginDialog(QDialog):
                 self.accept()
             elif response.status_code == 401:
                 QMessageBox.critical(self, "Ошибка", "Неверный пароль")
+            elif response.status_code == 403:
+                QMessageBox.critical(
+                    self,
+                    "Ошибка",
+                    "Точка выключена или недоступна.\nОбратитесь к администратору."
+                )
+            elif response.status_code == 429:
+                QMessageBox.critical(self, "Ошибка", "Слишком много запросов, подождите пожалуйста.")
             else:
                 QMessageBox.critical(self, "Ошибка", f"Ошибка подключения: {response.status_code}")
 
@@ -506,6 +514,9 @@ class FileReceiverApp(QWidget):
                 logging.warning("Session expired - received 401 from server")
                 self.show_error("Сессия истекла. Пожалуйста, перезайдите.")
                 self.close()
+            elif resp.status == 429:
+                logging.error(f"Too many requests")
+                self.show_error("Слишком много запросов, подождите пожалуйста.")
             else:
                 error_text = await resp.text()
                 logging.error(f"Failed to load orders: {resp.status}, {error_text}")

@@ -13,3 +13,8 @@ aiogram
 PyPDF2
 pywin32
 python-dotenv
+cryptography
+yookassa
+slowapi
+mysql-connector-python
+PyQt5

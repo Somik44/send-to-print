@@ -46,6 +46,9 @@ INTERNAL_API_KEY = os.getenv("INTERNAL_API_KEY")
 UPLOAD_FOLDER = os.getenv("UPLOAD_FOLDER")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+active_orders = {}
+payment_messages = {}
+
 
 def is_admin(message: types.Message):
     return message.from_user.id in ADMIN_IDS
@@ -79,10 +82,23 @@ async def handler(websocket):
             if data['type'] == 'status_update':
                 user_id = data['user_id']
                 order_id = data['order_id']
-                address = data['address']
-                check_code = data['con_code']
+                status = data['status']
 
-                if data['status'] == 'ready':
+                if status in ('paid', 'expired', 'canceled'):
+                    await delete_payment_message(user_id)
+                    if user_id in active_orders and active_orders[user_id] == order_id:
+                        del active_orders[user_id]
+                        logging.info(f"Removed order {order_id} from active_orders for user {user_id}")
+
+                if status == 'paid':
+                    await bot.send_message(
+                        user_id,
+                        f"✅ Оплата прошла успешно! Заказ №{order_id} принят в работу.\n"
+                        "По готовности вам придет уведомление."
+                    )
+                elif status == 'ready':
+                    address = data['address']
+                    check_code = data['con_code']
                     await bot.send_message(
                         user_id,
                         f"🖨️ Заказ №{order_id} готов!\n"
@@ -90,10 +106,22 @@ async def handler(websocket):
                         f"• Проверочный код: {check_code}\n"
                         f"Пожалуйста, назовите этот код сотруднику, чтобы забрать заказ."
                     )
-                elif data['status'] == 'completed':
+                elif status == 'completed':
                     await bot.send_message(
                         user_id,
                         f"✅ Заказ №{order_id} выдан! Спасибо, что воспользовались нашим сервисом! Ждем вас снова!"
+                    )
+                elif status == 'expired':
+                    await bot.send_message(
+                        user_id,
+                        f"⌛ Время оплаты заказа №{order_id} истекло. Заказ отменён.\n"
+                        "Вы можете создать новый заказ: /new_order"
+                    )
+                elif status == 'canceled':
+                    await bot.send_message(
+                        user_id,
+                        f"❌ Платёж по заказу №{order_id} был отклонён или отменён.\n"
+                        "Вы можете попробовать оплатить снова, создав новый заказ: /new_order"
                     )
         except Exception as e:
             logging.error(f"WebSocket Error: {traceback.format_exc()}")
@@ -108,6 +136,20 @@ async def cleanup_order_data(user_data: dict):
         logging.error(f"Cleaning error: {str(e)}")
 
 
+async def cancel_order_via_api(order_id: int):
+    """Отменяет заказ через защищённый эндпоинт API."""
+    try:
+        async with aiohttp.ClientSession() as session:
+            headers = {"X-api-Key": INTERNAL_API_KEY}  # используем INTERNAL_API_KEY
+            async with session.post(f"{API_URL}/admin/orders/{order_id}/cancel", headers=headers) as resp:
+                if resp.status == 200:
+                    logging.info(f"Order {order_id} cancelled via API")
+                else:
+                    logging.error(f"Failed to cancel order {order_id}, status: {resp.status}")
+    except Exception as e:
+        logging.error(f"Error cancelling order {order_id}: {e}")
+
+
 async def start_order_timer(chat_id: int, state: FSMContext):
     try:
         await asyncio.sleep(600)
@@ -119,6 +161,107 @@ async def start_order_timer(chat_id: int, state: FSMContext):
             del timers[chat_id]
     except asyncio.CancelledError:
         logging.info("The 10-minute timer has been canceled")
+
+
+async def start_new_order_process(message: types.Message, state: FSMContext):
+    """Запускает процесс выбора магазина для нового заказа."""
+    user_id = message.chat.id
+
+    await delete_payment_message(user_id)
+
+    # Отменяем старый таймер, если есть
+    if user_id in timers:
+        timers[user_id].cancel()
+        del timers[user_id]
+
+    # Очищаем временные файлы из предыдущего состояния
+    user_data = await state.get_data()
+    temp_file = user_data.get('temp_file')
+    if temp_file and os.path.exists(temp_file):
+        os.remove(temp_file)
+
+    # Получаем список магазинов
+    async with aiohttp.ClientSession() as session:
+        async with session.get(f"{API_URL}/shops", headers={"x-api-key": INTERNAL_API_KEY}) as resp:
+            if resp.status == 429:
+                await message.answer("❗ Не спамьте!")
+                return
+            elif resp.status != 200:
+                await message.answer("❌ Ошибка загрузки магазинов")
+                return
+            shops = await resp.json()
+
+    markup = ReplyKeyboardMarkup(
+        keyboard=[[KeyboardButton(text=shop['name'])] for shop in shops],
+        resize_keyboard=True,
+        one_time_keyboard=True
+    )
+    await message.answer("🏪 Выберите точку печати из списка:", reply_markup=markup)
+
+    # Запускаем таймер
+    timers[user_id] = asyncio.create_task(start_order_timer(user_id, state))
+    await state.set_state(Form.shop_selection)
+
+
+async def handle_cancel_and_start(callback: types.CallbackQuery, state: FSMContext, after_cancel: str):
+    """
+    after_cancel может быть:
+    - 'welcome'  → после отмены отправить приветственное сообщение
+    - 'new_order' → после отмены сразу начать новый заказ (выбор точки)
+    """
+    user_id = callback.from_user.id
+    order_id = active_orders.get(user_id)
+
+    if order_id:
+        await cancel_order_via_api(order_id)
+        await callback.message.answer(
+            f"❌ Платёж по заказу №{order_id} был отклонён или отменён."
+        )
+        del active_orders[user_id]
+    else:
+        await callback.message.answer("Активный заказ не найден.")
+
+    await state.clear()
+
+    if after_cancel == 'welcome':
+        await callback.message.answer(
+            f"Привет, {callback.from_user.first_name}! Рады приветствовать тебя на нашем сервисе по распечатке "
+            f"документов в любое удобное время! Чтобы начать новый заказ, используйте команду /new_order.",
+            reply_markup=types.ReplyKeyboardRemove()
+        )
+    elif after_cancel == 'new_order':
+        await start_new_order_process(callback.message, state)
+
+    await callback.answer()
+
+
+async def is_order_active(order_id: int) -> bool:
+    """Проверяет, находится ли заказ в статусе waiting_payment (активен)"""
+    try:
+        async with aiohttp.ClientSession() as session:
+            headers = {"X-api-Key": INTERNAL_API_KEY}
+            async with session.get(f"{API_URL}/orders/{order_id}", headers=headers) as resp:
+                if resp.status == 200:
+                    order = await resp.json()
+                    return order.get('status') == 'waiting_payment'
+    except Exception as e:
+        logging.error(f"Error checking order status: {e}")
+    return False
+
+
+async def delete_payment_message(user_id: int):
+    """Удаляет сообщение с платёжной ссылкой, если оно есть в словаре"""
+    user_id = int(user_id)
+    if user_id in payment_messages:
+        try:
+            await bot.delete_message(user_id, payment_messages[user_id])
+            logging.info(f"Deleted payment message for user {user_id}")
+            del payment_messages[user_id]
+        except Exception as e:
+            logging.error(f"Failed to delete payment message for user {user_id}: {e}")
+    else:
+        # Полезно для отладки – выводим текущее состояние словаря
+        logging.warning(f"No payment message found for user {user_id}, current_dict={payment_messages}")
 
 
 async def get_page_count(file_path: str, ext: str) -> int:
@@ -356,7 +499,34 @@ async def get_docx_page_count_metadata(file_path: str) -> int:
 
 
 @dp.message(Command("start"))
-async def cmd_start(message: types.Message):
+async def cmd_start(message: types.Message, state: FSMContext):
+    user_id = message.chat.id
+
+    # Проверяем наличие активного заказа в памяти
+    if user_id in active_orders:
+        order_id = active_orders[user_id]
+        # Проверяем реальный статус заказа в БД
+        if not await is_order_active(order_id):
+            # Заказ уже не активен – удаляем из памяти и показываем приветствие
+            del active_orders[user_id]
+            await message.answer(
+                f"Привет, {message.from_user.first_name}! Рады приветствовать тебя на нашем сервисе по распечатке "
+                f"документов в любое удобное время! Чтобы начать новый заказ, используйте команду /new_order.",
+                reply_markup=types.ReplyKeyboardRemove()
+            )
+            return
+
+        # Заказ действительно активен – показываем только диалог отмены
+        builder = InlineKeyboardBuilder()
+        builder.button(text="✅ Отменить и начать заново", callback_data="cancel_and_start_from_start")
+        builder.button(text="❌ Продолжить текущий", callback_data="continue_current")
+        await message.answer(
+            "У вас есть незавершённый заказ (ожидает оплаты). Что хотите сделать?",
+            reply_markup=builder.as_markup()
+        )
+        return
+
+    # Если активного заказа нет, показываем приветствие
     await message.answer(
         f"Привет, {message.from_user.first_name}! Рады приветствовать тебя на нашем сервисе по распечатке "
         f"документов в любое удобное время! Чтобы начать новый заказ, используйте команду /new_order.",
@@ -366,12 +536,18 @@ async def cmd_start(message: types.Message):
 
 @dp.message(Command("reset"), StateFilter('*'))
 async def cmd_reset(message: types.Message, state: FSMContext):
-    try:
-        if message.chat.id in timers:
-            timers[message.chat.id].cancel()
-            del timers[message.chat.id]
+    user_id = message.chat.id
+    user_data = await state.get_data()
 
-        user_data = await state.get_data()
+    try:
+        await delete_payment_message(user_id)
+
+        # Отменяем таймер, если есть
+        if user_id in timers:
+            timers[user_id].cancel()
+            del timers[user_id]
+
+        # Отменяем фоновую задачу, если есть
         pending_task = user_data.get('pending_task')
         if pending_task and not pending_task.done():
             pending_task.cancel()
@@ -379,23 +555,24 @@ async def cmd_reset(message: types.Message, state: FSMContext):
                 await pending_task
             except asyncio.CancelledError:
                 pass
+
+        # Если есть активный заказ, отменяем его через API
+        if user_id in active_orders:
+            order_id = active_orders[user_id]
+            await cancel_order_via_api(order_id)
+            if order_id:
+                await message.answer(
+                    f"❌ Платёж по заказу №{order_id} был отклонён или отменён.\n"
+                )
+            del active_orders[user_id]
+
+        # Удаляем временный файл
         temp_file = user_data.get('temp_file')
-
         if temp_file and os.path.exists(temp_file):
-            try:
-                os.remove(temp_file)
-                logging.info(f"Temporary file deleted: {temp_file}")
-            except Exception as e:
-                logging.error(f"Error deleting a temporary file: {str(e)}")
+            os.remove(temp_file)
 
+        # Очищаем состояние
         await state.clear()
-
-        confirmation_msg_id = user_data.get('confirmation_msg_id')
-        if confirmation_msg_id:
-            try:
-                await bot.delete_message(message.chat.id, confirmation_msg_id)
-            except Exception as e:
-                logging.error(f"Message deletion error: {str(e)}")
 
         await message.answer(
             "🔄 Все данные сброшены. Вы можете начать новый заказ с помощью /new_order",
@@ -405,6 +582,82 @@ async def cmd_reset(message: types.Message, state: FSMContext):
     except Exception as e:
         logging.error(f"Error in reset: {traceback.format_exc()}")
         await message.answer("❌ Произошла ошибка при сбросе")
+
+
+@dp.callback_query(F.data == "cancel_and_start_from_start")
+async def cancel_and_start_from_start(callback: types.CallbackQuery, state: FSMContext):
+    await delete_payment_message(callback.from_user.id)
+    await callback.message.delete()
+
+    user_id = callback.from_user.id
+    order_id = active_orders.get(user_id)
+
+    if order_id:
+        await cancel_order_via_api(order_id)
+
+        # Отправляем уведомление об отмене
+        await callback.message.answer(
+            f"❌ Платёж по заказу №{order_id} был отклонён или отменён.\n"
+        )
+
+        del active_orders[user_id]
+
+        # Отправляем приветствие
+        await callback.message.answer(
+            f"Привет, {callback.from_user.first_name}! Рады приветствовать тебя на нашем сервисе по распечатке "
+            f"документов в любое удобное время! Чтобы начать новый заказ, используйте команду /new_order.",
+            reply_markup=types.ReplyKeyboardRemove()
+        )
+    else:
+        await callback.message.answer("Активный заказ не найден.")
+
+    await state.clear()
+    await callback.answer()
+
+
+@dp.callback_query(F.data == "cancel_and_start_from_new_order")
+async def cancel_and_start_from_new_order(callback: types.CallbackQuery, state: FSMContext):
+    """Отмена заказа из команды /new_order с автоматическим переходом к выбору точки"""
+    await delete_payment_message(callback.from_user.id)
+    await callback.message.delete()
+    user_id = callback.from_user.id
+    order_id = active_orders.get(user_id)
+
+    if order_id:
+        await cancel_order_via_api(order_id)
+        await callback.message.answer(
+            f"❌ Платёж по заказу №{order_id} был отклонён или отменён."
+        )
+        del active_orders[user_id]
+    else:
+        await callback.message.answer("Активный заказ не найден.")
+
+    await state.clear()
+    await start_new_order_process(callback.message, state)
+    await callback.answer()
+
+
+@dp.callback_query(F.data == "reset_and_new")
+async def reset_and_new(callback: types.CallbackQuery, state: FSMContext):
+    # Просто сбрасываем состояние и начинаем новый
+    await callback.message.delete()
+    await state.clear()
+    await start_new_order_process(callback.message, state)
+    await callback.answer()
+
+
+@dp.callback_query(F.data == "continue_current")
+async def continue_current(callback: types.CallbackQuery, state: FSMContext):
+    await callback.message.delete()
+    user_id = callback.from_user.id
+    if user_id in active_orders:
+        await callback.message.answer(
+            "Пожалуйста, завершите оплату текущего заказа. Если возникли проблемы, используйте /reset для отмены."
+        )
+    else:
+        # Если нет активного заказа, но состояние есть, просто напоминаем
+        await callback.message.answer("Продолжайте оформление заказа.")
+    await callback.answer()
 
 
 @dp.message(Command("broadcast"), is_admin)
@@ -587,44 +840,29 @@ async def cancel_broadcast(callback: types.CallbackQuery, state: FSMContext):
 
 @dp.message(Command("new_order"))
 async def cmd_new_order(message: types.Message, state: FSMContext):
-    if message.chat.id in timers:
-        timers[message.chat.id].cancel()
-        del timers[message.chat.id]
+    user_id = message.chat.id
 
-    user_data = await state.get_data()
-    temp_file = user_data.get('temp_file')
+    # Проверяем наличие активного заказа в памяти
+    if user_id in active_orders:
+        order_id = active_orders[user_id]
+        # Проверяем реальный статус заказа в БД
+        if not await is_order_active(order_id):
+            # Заказ уже не активен – удаляем из памяти и начинаем новый
+            del active_orders[user_id]
+            await start_new_order_process(message, state)
+            return
 
-    if temp_file and os.path.exists(temp_file):
-        try:
-            os.remove(temp_file)
-            logging.info(f"Temporary file deleted: {temp_file}")
-        except Exception as e:
-            logging.error(f"Error deleting a temporary file: {str(e)}")
+        # Заказ действительно активен – предлагаем отменить или продолжить
+        builder = InlineKeyboardBuilder()
+        builder.button(text="✅ Отменить", callback_data="cancel_and_start_from_new_order")
+        builder.button(text="❌ Продолжить", callback_data="continue_current")
+        await message.answer(
+            "У вас есть незавершённый заказ (ожидает оплаты). Что хотите сделать?",
+            reply_markup=builder.as_markup()
+        )
+        return
 
-    confirmation_msg_id = user_data.get('confirmation_msg_id')
-    if confirmation_msg_id:
-        try:
-            await bot.delete_message(message.chat.id, confirmation_msg_id)
-        except Exception as e:
-            logging.error(f"Message deletion error: {str(e)}")
-
-    await state.clear()
-
-    async with aiohttp.ClientSession() as session:
-        async with session.get(f"{API_URL}/shops", headers={"x-api-key": INTERNAL_API_KEY}) as resp:
-            if resp.status != 200:
-                await message.answer("❌ Ошибка загрузки магазинов")
-                return
-            shops = await resp.json()
-
-    markup = ReplyKeyboardMarkup(
-        keyboard=[[KeyboardButton(text=shop['name'])] for shop in shops],
-        resize_keyboard=True,
-        one_time_keyboard=True
-    )
-    await message.answer("🏪 Выберите точку печати из списка:", reply_markup=markup)
-    timers[message.chat.id] = asyncio.create_task(start_order_timer(message.chat.id, state))
-    await state.set_state(Form.shop_selection)
+    await start_new_order_process(message, state)
 
 
 @dp.message(Form.shop_selection)
@@ -644,8 +882,7 @@ async def process_shop(message: types.Message, state: FSMContext):
         f"💰 Цены:\n"
         f"• Черно-белая: {shop['price_bw']:.2f} руб/стр\n"
         f"• Цветная: {shop['price_cl']:.2f} руб/стр\n\n"
-        f"📎 Отправьте PDF, DOC, DOCX файл или PNG, JPEG, JPG картинку размером не более 20 МБ для расчета стоимости\n"
-        f"❗ Внимание! Если вы отправляете картинку, то прикрепляйте ее в виде файла!\n"
+        f"📎 Отправьте один PDF, DOC, DOCX, PNG, JPEG, JPG файл или одну фотографию размером не более 20 МБ для расчета стоимости\n"
         f"Используйте /reset для отмены заказа."
     )
     await message.answer(response, reply_markup=types.ReplyKeyboardRemove())
@@ -654,6 +891,22 @@ async def process_shop(message: types.Message, state: FSMContext):
 
 @dp.message(Form.file_processing, F.content_type == ContentType.DOCUMENT)
 async def process_file(message: types.Message, state: FSMContext):
+    user_data = await state.get_data()
+    if user_data.get('temp_file'):
+        await message.answer(
+            "❌ Вы уже отправили файл. Дождитесь обработки или отмените текущий заказ командой /reset.",
+            reply_markup=types.ReplyKeyboardRemove()
+        )
+        return
+
+    # Проверка на альбом (медиа-группу) – несколько файлов в одном сообщении
+    if message.media_group_id:
+        await message.answer(
+            "❌ Пожалуйста, отправляйте файлы по одному. Сначала дождитесь обработки текущего файла.",
+            reply_markup=types.ReplyKeyboardRemove()
+        )
+        return
+
     processing_msg = await message.answer("⏳ Файл обрабатывается, подождите пожалуйста...")
     temp_path = None
 
@@ -668,7 +921,7 @@ async def process_file(message: types.Message, state: FSMContext):
         logging.info(f"Starting the file download: {file_url}")
 
         # 3. Скачиваем файл
-        connector = aiohttp.TCPConnector(ssl=False)
+        connector = aiohttp.TCPConnector(ssl=True)
         async with aiohttp.ClientSession(connector=connector) as session:
             async with session.get(file_url) as resp:
                 if resp.status != 200:
@@ -752,13 +1005,127 @@ async def process_file(message: types.Message, state: FSMContext):
         logging.error(f"{error_msg}\n{traceback.format_exc()}")
     finally:
         # Очистка в случае ошибки
-        if temp_path and os.path.exists(temp_path) and ('temp_file' not in await state.get_data()):
+        state_data = await state.get_data()
+        if temp_path and os.path.exists(temp_path) and state_data.get('temp_file') != temp_path:
             try:
                 os.remove(temp_path)
                 logging.info(f"Temporary file deleted: {temp_path}")
             except Exception as e:
                 logging.error(f"Error deleting a temporary file: {str(e)}")
 
+        try:
+            await bot.delete_message(message.chat.id, processing_msg.message_id)
+        except Exception as e:
+            logging.error(f"Message deletion error: {str(e)}")
+
+
+@dp.message(Form.file_processing, F.content_type == ContentType.PHOTO)
+async def process_photo(message: types.Message, state: FSMContext):
+    user_data = await state.get_data()
+    if user_data.get('temp_file'):
+        await message.answer(
+            "❌ Вы уже отправили файл. Дождитесь обработки или отмените текущий заказ командой /reset.",
+            reply_markup=types.ReplyKeyboardRemove()
+        )
+        return
+
+    # Проверка на альбом (медиа-группу) – несколько фото в одном сообщении
+    if message.media_group_id:
+        await message.answer(
+            "❌ Пожалуйста, отправляйте фото по одному. Сначала дождитесь обработки текущего файла.",
+            reply_markup=types.ReplyKeyboardRemove()
+        )
+        return
+
+    processing_msg = await message.answer("⏳ Фото обрабатывается, подождите пожалуйста...")
+    temp_path = None
+
+    try:
+        # 1. Берём самое большое фото (последний элемент в массиве)
+        photo = message.photo[-1]
+        file_info = await bot.get_file(photo.file_id)
+        if not file_info.file_path:
+            raise ValueError("Telegram не вернул путь к фото")
+
+        # 2. Формируем URL для скачивания
+        file_url = f"https://api.telegram.org/file/bot{API_TOKEN}/{file_info.file_path}"
+        logging.info(f"Starting the photo download: {file_url}")
+
+        # 3. Скачиваем фото
+        connector = aiohttp.TCPConnector(ssl=True)
+        async with aiohttp.ClientSession(connector=connector) as session:
+            async with session.get(file_url) as resp:
+                if resp.status != 200:
+                    raise ValueError(f"Ошибка HTTP {resp.status}: {await resp.text()}")
+                file_content = await resp.read()
+                if not file_content:
+                    raise ValueError("Получен пустой файл")
+
+        # 4. Определяем расширение (Telegram всегда сохраняет фото в JPEG)
+        file_ext = '.jpg'
+        filename = f"photo_{message.from_user.id}_{uuid.uuid4()}.jpg"
+
+        # 5. Сохраняем временный файл
+        temp_name = f"temp_{uuid.uuid4()}{file_ext}"
+        temp_path = os.path.join(UPLOAD_FOLDER, temp_name)
+        async with aiofiles.open(temp_path, 'wb') as f:
+            await f.write(file_content)
+
+        if not os.path.exists(temp_path):
+            raise ValueError("Не удалось сохранить фото на диск")
+
+        # 6. Подсчитываем страницы (для фото всегда 1)
+        pages = 1
+        logging.info(f"Defined pages: {pages}")
+
+        # 7. Сохраняем данные в состояние
+        await state.update_data({
+            'temp_file': temp_path,
+            'pages': pages,
+            'file_extension': 'jpg',  # или 'jpeg'
+            'filename': filename,
+            'original_file_url': file_url
+        })
+
+        # 8. Запрашиваем тип печати
+        markup = ReplyKeyboardMarkup(
+            keyboard=[
+                [KeyboardButton(text="Черно-белая")],
+                [KeyboardButton(text="Цветная")]
+            ],
+            resize_keyboard=True,
+            one_time_keyboard=True
+        )
+
+        await message.answer(
+            f"📸 Фото успешно обработано!\n"
+            f"Количество страниц: {pages}\n"
+            f"Выберите тип печати:",
+            reply_markup=markup
+        )
+        await state.set_state(Form.color_selection)
+
+    except ValueError as ve:
+        if message.chat.id in timers:
+            timers[message.chat.id].cancel()
+            del timers[message.chat.id]
+        await state.clear()
+        await message.answer(f"❌ Ошибка: {str(ve)}. Используйте /new_order для начала нового заказа", reply_markup=types.ReplyKeyboardRemove())
+        logging.warning(str(ve))
+
+    except Exception as e:
+        if message.chat.id in timers:
+            timers[message.chat.id].cancel()
+            del timers[message.chat.id]
+        await state.clear()
+        logging.error(f"Photo processing error: {traceback.format_exc()}")
+        await message.answer("❌ Произошла непредвиденная ошибка. Используйте /new_order для начала нового заказа", reply_markup=types.ReplyKeyboardRemove())
+    finally:
+        if temp_path and os.path.exists(temp_path) and 'temp_file' not in await state.get_data():
+            try:
+                os.remove(temp_path)
+            except Exception as e:
+                logging.error(f"Error deleting temp file: {e}")
         try:
             await bot.delete_message(message.chat.id, processing_msg.message_id)
         except Exception as e:
@@ -830,7 +1197,7 @@ async def process_comment(message: types.Message, state: FSMContext):
         f"• Тип: {user_data['color']}\n"
         f"• Стоимость: {user_data['price']:.2f} руб\n"  
         f"• Комментарий: {comment if comment else 'нет'}\n"
-        f"Если все верно - нажмите кнопку '💳 Оплатить'"
+        f"Если все верно - нажмите кнопку:\n'💳 Оплатить'"
     )
 
     markup = ReplyKeyboardMarkup(
@@ -864,18 +1231,19 @@ async def process_confirmation(message: types.Message, state: FSMContext):
     if message.text == 'Отменить':
         await message.answer("❌ Заказ отменен", reply_markup=types.ReplyKeyboardRemove())
         if temp_file_path and os.path.exists(temp_file_path):
-            try:
-                os.remove(temp_file_path)
-                logging.info(f"Temporary file deleted: {temp_file_path}")
-            except Exception as e:
-                logging.error(f"Error deleting a temporary file: {str(e)}")
+            os.remove(temp_file_path)
         await state.clear()
         return
 
     check_code = random.randint(1000, 9999)
+    processing_msg = await message.answer("⏳ Ссылка на оплату формируется, подождите пожалуйста...")
+
+    order_id = None
+    sent_message = None
 
     try:
         async with aiohttp.ClientSession() as session:
+            # 1. Создаём заказ в API
             form_data = aiohttp.FormData()
             form_data.add_field('ID_shop', str(user_data['shop']['ID_shop']))
             form_data.add_field('price', str(user_data['price']))
@@ -889,133 +1257,103 @@ async def process_confirmation(message: types.Message, state: FSMContext):
             with open(temp_file_path, 'rb') as file:
                 form_data.add_field('file', file.read(), filename=user_data['filename'])
 
-            async with session.post(f"{API_URL}/orders", data=form_data, headers={"x-api-key": INTERNAL_API_KEY}) as resp:
-                if resp.status == 201:
-                    data = await resp.json()
-                    order_id = data["order_id"]
+            async with session.post(f"{API_URL}/orders", data=form_data,
+                                    headers={"x-api-key": INTERNAL_API_KEY}) as resp:
+                if resp.status != 201:
+                    error_text = await resp.text()
+                    logging.error(f"Order creation failed: {resp.status}, {error_text}")
+                    await message.answer("❌ Ошибка создания заказа", reply_markup=types.ReplyKeyboardRemove())
+                    return
+                order_data = await resp.json()
+                order_id = order_data["order_id"]
+                logging.info(f"Order {order_id} created successfully")
 
-                    async with session.post(
-                            f"{API_URL}/payments/create",
-                            json={"order_id": order_id}
-                    ) as payment_resp:
+            # 2. Создаём платёж
+            async with session.post(
+                    f"{API_URL}/payments/create",
+                    json={"order_id": order_id}
+            ) as payment_resp:
+                if payment_resp.status != 200:
+                    error_text = await payment_resp.text()
+                    logging.error(f"Payment creation failed: {payment_resp.status}, {error_text}")
 
-                        if payment_resp.status != 200:
-                            await message.answer("❌ Ошибка создания платежа")
-                            return
+                    if order_id:
+                        await cancel_order_via_api(order_id)
 
-                        payment_data = await payment_resp.json()
-                        confirmation_url = payment_data["confirmation_url"]
+                    await message.answer("❌ Ошибка создания платежа", reply_markup=types.ReplyKeyboardRemove())
+                    return
 
-                    payment_link_message = await message.answer(
-                        f"💳 Для завершения заказа перейдите по ссылке для оплаты:\n{confirmation_url}",
-                        reply_markup=types.ReplyKeyboardRemove()
-                    )
-                    link_message_id = payment_link_message.message_id
-                    asyncio.create_task(
-                        start_payment_polling(order_id, message.chat.id, link_message_id)
-                    )
+                payment_info = await payment_resp.json()
+                confirmation_url = payment_info.get("confirmation_url")
 
-                    if temp_file_path and os.path.exists(temp_file_path):
-                        try:
-                            os.remove(temp_file_path)
-                            logging.info(f"Temporary file deleted: {temp_file_path}")
-                        except Exception as e:
-                            logging.error(f"Error deleting a temporary file: {str(e)}")
-                else:
-                    await message.answer("❌ Ошибка оплаты заказа")
+                if not confirmation_url:
+                    logging.error(f"Payment response missing confirmation_url: {payment_info}")
+                    if order_id:
+                        await cancel_order_via_api(order_id)
+                    await message.answer("❌ Неверный ответ от платёжного шлюза",
+                                         reply_markup=types.ReplyKeyboardRemove())
+                    return
+
+        # 3. Всё хорошо – отправляем ссылку
+        sent_message = await message.answer(
+            f"💳 Для завершения заказа перейдите по ссылке:\n{confirmation_url}",
+            reply_markup=types.ReplyKeyboardRemove()
+        )
+
+        # 4. СОХРАНЯЕМ ВСЁ НЕОБХОДИМОЕ
+        if sent_message:
+            # Сохраняем в словарь для удаления сообщения
+            payment_messages[message.chat.id] = sent_message.message_id
+            logging.info(f"Saved payment message {sent_message.message_id} for user {message.chat.id}")
+
+            # Сохраняем в active_orders
+            active_orders[message.chat.id] = order_id
+            logging.info(f"Order {order_id} saved to active_orders for user {message.chat.id}")
+
+            # Сохраняем в состоянии (для /reset)
+            await state.update_data(
+                order_id=order_id,
+                payment_message_id=sent_message.message_id
+            )
+
     except Exception as e:
-        await message.answer("❌ Ошибка создания заказа")
-        logging.error(f"Confirmation error: {traceback.format_exc()}")
+        logging.error(f"Payment creation error: {traceback.format_exc()}")
+
+        if order_id:
+            await cancel_order_via_api(order_id)
+
+        await message.answer(
+            "❌ Произошла ошибка при создании заказа/платежа. Попробуйте позже.",
+            reply_markup=types.ReplyKeyboardRemove()
+        )
     finally:
-        await state.clear()
+        # Удаляем сообщение "обработка..."
+        try:
+            await bot.delete_message(message.chat.id, processing_msg.message_id)
+        except Exception as e:
+            logging.error(f"Message deletion error: {str(e)}")
+
+        # Удаляем временный файл
+        if temp_file_path and os.path.exists(temp_file_path):
+            os.remove(temp_file_path)
+
+        # Очищаем состояние ТОЛЬКО если была ошибка
+        if not order_id:
+            await state.clear()
+
+
+@dp.message(Form.file_processing)
+async def process_file_invalid(message: types.Message):
+    await message.answer(
+        "❌ Пожалуйста, отправьте файл в формате PDF, DOC, DOCX, PNG, JPEG, JPG.\n"
+        "Используйте /reset для отмены заказа.",
+        reply_markup=types.ReplyKeyboardRemove()
+    )
 
 
 @dp.message()
 async def handle_unknown(message: types.Message):
     await message.reply("Не понимаю тебя, попробуй повторить запрос ☺️")
-
-
-async def start_payment_polling(order_id: int, chat_id: int, link_message_id: int):
-    try:
-        # Активная фаза: 3 минуты
-        hot_attempts = 36  # 3 минуты (36 * 5 сек)
-        for i in range(hot_attempts):
-            try:
-                async with aiohttp.ClientSession() as session:
-                    async with session.get(f"{API_URL}/payments/check/{order_id}", headers={"x-api-key": INTERNAL_API_KEY}) as resp:
-                        if resp.status == 200:
-                            data = await resp.json()
-                            status = data.get("status")
-
-                            # Сценарий 1: Успешная оплата
-                            if status == "paid":
-                                check_code = data.get("con_code", "Не найден")
-                                await bot.send_message(chat_id, f"✅ Оплата прошла успешно! Заказ №{order_id} принят в работу.\n"
-                                                                f"По готовности вам придет уведомление.",
-                                                       reply_markup=types.ReplyKeyboardRemove())
-                                return  # Успех, полностью выходим
-
-                            # Сценарий 2: Платеж отклонен или отменен пользователем
-                            elif status == "canceled":
-                                await bot.send_message(
-                                    chat_id,
-                                    f"❌ Платёж по заказу №{order_id} был отклонён или отменён. "
-                                    "Вы можете попробовать оплатить снова, создав новый заказ: /new_order",
-                                    reply_markup=types.ReplyKeyboardRemove()
-                                )
-                                return  # Отмена, полностью выходим
-
-                            # Если статус 'pending', цикл просто продолжится
-            except Exception as e:
-                logging.error(f"Hot polling for order {order_id} failed: {e}")
-                continue
-            await asyncio.sleep(5)
-
-        # --- ФАЗА 2: "Теплый" опрос (с 3-й по 12-ю минуту) ---
-        # 10 минут = 10 попыток с интервалом 60 сек
-        warm_attempts = 8
-        for i in range(warm_attempts):
-            await asyncio.sleep(60)  # Ждем 1 минуту
-            try:
-                async with aiohttp.ClientSession() as session:
-                    async with session.get(f"{API_URL}/payments/check/{order_id}") as resp:
-                        if resp.status == 200:
-                            data = await resp.json()
-                            status = data.get("status")
-
-                            if status == "paid":  # Все еще можем поймать успешную оплату
-                                await bot.send_message(chat_id,
-                                                       f"✅ Оплата прошла успешно! Заказ №{order_id} принят в работу.\n"
-                                                       f"По готовности вам придет уведомление.",
-                                                       reply_markup=types.ReplyKeyboardRemove())
-                                return
-                            elif status == "canceled":
-                                await bot.send_message(chat_id,
-                                                       f"❌ Платёж по заказу №{order_id} был отклонён или отменён.",
-                                                       reply_markup=types.ReplyKeyboardRemove())
-                                return
-            except Exception as e:
-                logging.error(f"Polling (warm phase) for order {order_id} failed on attempt {i + 1}: {e}")
-                continue
-
-        # --- ФАЗА 3: Финальная отмена ---
-        # Этот блок сработает, только если за 12 минут ничего не произошло
-        logging.info(f"Finalizing order {order_id} after 12 minutes.")
-        async with aiohttp.ClientSession() as session:
-            async with session.post(f"{API_URL}/orders/{order_id}/cancel-timeout", headers={"x-api-key": INTERNAL_API_KEY}) as resp:
-                if resp.status == 200 and (await resp.json()).get("status") == "canceled":
-                    await bot.send_message(
-                        chat_id,
-                        f"⌛ Время на оплату заказа №{order_id} истекло, и он был автоматически отменен.\n"
-                        "Чтобы попробовать снова, создайте новый заказ: /new_order",
-                        reply_markup=types.ReplyKeyboardRemove()
-                    )
-    finally:
-        try:
-            await bot.delete_message(chat_id, link_message_id)
-            logging.info(f"Payment link message {link_message_id} deleted for chat {chat_id}.")
-        except Exception:
-            pass
 
 
 async def main():
