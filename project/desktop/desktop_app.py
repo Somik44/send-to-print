@@ -1,6 +1,5 @@
 import sys
 import os
-import logging
 import hashlib
 import aiohttp
 import asyncio
@@ -34,11 +33,7 @@ os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
 aiohttp_session: Optional[aiohttp.ClientSession] = None
 
-logging.basicConfig(
-    level=logging.DEBUG,
-    format="%(asctime)s - %(levelname)s - %(message)s",
-    filename='desktop_app.log'
-)
+# Логирование полностью удалено
 
 
 def resource_path(relative_path):
@@ -89,14 +84,12 @@ class AuthManager:
         return self.access_token is not None
 
     async def make_authenticated_request(self, method: str, url: str, **kwargs):
-        logging.info(f"Making authenticated request through proxy, token valid: {self.is_token_valid()}")
         if not self.is_token_valid():
             raise Exception("Token expired or invalid")
         headers = kwargs.get('headers', {})
         headers['Authorization'] = f'Bearer {self.access_token}'
         kwargs['headers'] = headers
         response = await make_aiohttp_request(method, url, **kwargs)
-        logging.info(f"Request to {url} returned status: {response.status}")
         return response
 
     async def login(self, password: str) -> bool:
@@ -114,10 +107,8 @@ class AuthManager:
                 self.shop_info = data['shop_info']
                 return True
             else:
-                logging.error(f"Login failed with status: {response.status}")
                 return False
         except Exception as e:
-            logging.error(f"Login error: {str(e)}")
             return False
 
 
@@ -183,9 +174,8 @@ class LoginDialog(QDialog):
         except requests.exceptions.Timeout:
             QMessageBox.critical(self, "Ошибка", "Сервер не отвечает")
         except Exception as e:
-            logging.error(f"Full traceback during authentication: {traceback.format_exc()}")
             QMessageBox.critical(self, "Критическая ошибка",
-                                 f"Произошла непредвиденная ошибка подключения: {str(e)}\n\nОбратитесь в поддержку и проверьте лог-файл desktop_app.log.")
+                                 f"Произошла непредвиденная ошибка подключения: {str(e)}\n\nОбратитесь в поддержку.")
         finally:
             self.setEnabled(True)
             found_buttons = self.findChildren(QDialogButtonBox)
@@ -202,10 +192,7 @@ class FileReceiverApp(QWidget):
         self.current_downloads = {}
 
         if not self.shop_info:
-            logging.error("shop_info is None in FileReceiverApp constructor!")
             raise ValueError("shop_info cannot be None")
-
-        logging.info(f"Initializing FileReceiverApp for shop: {self.shop_info}")
 
         self.init_ui()
         self.setup_timers()
@@ -265,7 +252,6 @@ class FileReceiverApp(QWidget):
         main_layout.addWidget(self.orders_list)
 
         self.setLayout(main_layout)
-        logging.info("FileReceiverApp UI initialized successfully")
 
     def show_instructions(self):
         QMessageBox.information(self, "Инструкция",
@@ -307,7 +293,6 @@ class FileReceiverApp(QWidget):
             self.refresh_btn.setText("Обновление...")
             await self.load_orders()
         except Exception as e:
-            logging.error(f"Refresh error: {str(e)}\n{traceback.format_exc()}")
             self.show_error(f"Ошибка: {str(e)}")
         finally:
             self.is_refreshing = False
@@ -327,7 +312,6 @@ class FileReceiverApp(QWidget):
     @asyncSlot()
     async def load_orders(self):
         try:
-            logging.info("Loading orders through proxy...")
             resp = await self.auth_manager.make_authenticated_request(
                 'GET',
                 f"{API_URL}/orders",
@@ -335,22 +319,17 @@ class FileReceiverApp(QWidget):
             )
             if resp.status == 200:
                 orders = await resp.json()
-                logging.info(f"Loaded {len(orders)} orders")
                 self.handle_orders(orders)
             elif resp.status == 401:
-                logging.warning("Session expired")
                 self.show_error("Сессия истекла. Перезайдите.")
                 self.close()
             else:
                 error_text = await resp.text()
-                logging.error(f"Failed to load orders: {resp.status}, {error_text}")
                 self.show_error(f"Ошибка загрузки заказов: {resp.status}")
             await resp.release()
         except aiohttp.ClientProxyConnectionError as e:
-            logging.error(f"Proxy connection error: {str(e)}")
             self.show_error(f"Ошибка подключения через прокси:\n{str(e)}\n\nПроверьте настройки прокси.")
         except Exception as e:
-            logging.error(f"Load orders error: {str(e)}\n{traceback.format_exc()}")
             self.show_error(f"Ошибка запроса: {str(e)}")
 
     def handle_orders(self, orders):
@@ -364,9 +343,8 @@ class FileReceiverApp(QWidget):
                 item.setSizeHint(widget.sizeHint())
                 self.orders_list.addItem(item)
                 self.orders_list.setItemWidget(item, widget)
-            logging.info(f"Displayed {len(orders)} orders")
         except Exception as e:
-            logging.error(f"Handle orders error: {str(e)}\n{traceback.format_exc()}")
+            pass
 
     def validate_order(self, order):
         required_fields = ['ID', 'file_path']
@@ -460,15 +438,11 @@ class FileReceiverApp(QWidget):
                     await f.write(content)
                 return True
             else:
-                logging.error(f"Download failed with status: {response.status}")
                 return False
         except aiohttp.ClientProxyConnectionError as e:
-            logging.error(f"Proxy connection error during download: {str(e)}")
             self.show_error(f"Ошибка подключения через прокси: {str(e)}")
             return False
         except Exception as e:
-            logging.error(f"Download error: {str(e)}")
-            traceback.print_exc()
             return False
 
     def open_downloads_folder(self):
@@ -497,26 +471,22 @@ class FileReceiverApp(QWidget):
                 await self.load_orders()
             else:
                 error_text = await resp.text()
-                logging.error(f"Status update failed: {resp.status}, {error_text}")
                 self.show_error(f"Ошибка обновления статуса: {resp.status}")
         except Exception as e:
-            logging.error(f"Update status error: {str(e)}\n{traceback.format_exc()}")
             self.show_error(f"Ошибка: {str(e)}")
 
     def show_error(self, message):
         QMessageBox.critical(self, "Ошибка", message)
 
     def closeEvent(self, event):
-        logging.info("Closing application, cleaning up downloads...")
         if os.path.exists(DOWNLOAD_DIR):
             for filename in os.listdir(DOWNLOAD_DIR):
                 file_path = os.path.join(DOWNLOAD_DIR, filename)
                 try:
                     if os.path.isfile(file_path):
                         os.remove(file_path)
-                        logging.info(f"Удален файл: {filename}")
                 except Exception as e:
-                    logging.error(f"Ошибка удаления файла {filename}: {str(e)}")
+                    pass
         super().closeEvent(event)
 
 
@@ -528,7 +498,6 @@ async def close_aiohttp():
 
 def main():
     try:
-        logging.info("Starting application...")
         app = QApplication(sys.argv)
         app.setStyleSheet("QMessageBox { font-size: 14px; }")
 
@@ -539,21 +508,16 @@ def main():
         result = login_dialog.exec()
 
         if result == QDialog.DialogCode.Accepted and login_dialog.auth_manager.shop_info:
-            logging.info("Login successful, creating main window...")
             window = FileReceiverApp(login_dialog.auth_manager)
             window.show()
-            logging.info("Main window shown, starting event loop...")
             with loop:
                 try:
                     loop.run_forever()
                 finally:
-                    logging.info("Shutting down aiohttp session...")
                     loop.run_until_complete(close_aiohttp())
         else:
-            logging.info("Login failed or cancelled, exiting...")
             sys.exit(0)
     except Exception as e:
-        logging.error(f"Fatal error in main: {str(e)}\n{traceback.format_exc()}")
         QMessageBox.critical(None, "Фатальная ошибка", f"Приложение завершилось с ошибкой:\n{str(e)}")
         sys.exit(1)
 
