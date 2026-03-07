@@ -12,16 +12,12 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.enums import ContentType
-from dotenv import load_dotenv
 
 logging.basicConfig(
     level=logging.DEBUG,
     filename='bot.log',
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
-
-env_path = os.path.join(os.path.dirname(__file__), 'config.env')
-load_dotenv(dotenv_path=env_path)
 
 API_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 API_URL = os.getenv("API_URL")
@@ -78,6 +74,15 @@ async def confirmation_timeout(chat_id: int, state: FSMContext):
         logging.info("1-минутный таймер отменен")
 
 
+async def save_temp_file(file_content: bytes, original_filename: str, ext: str) -> str:
+    """Сохраняет временный файл и возвращает путь"""
+    temp_name = f"temp_{uuid.uuid4()}{ext}"
+    temp_path = os.path.join(UPLOAD_FOLDER, temp_name)
+    async with aiofiles.open(temp_path, 'wb') as f:
+        await f.write(file_content)
+    return temp_path
+
+
 @dp.message(Command("start"))
 async def cmd_start(message: types.Message):
     await message.answer(
@@ -85,6 +90,31 @@ async def cmd_start(message: types.Message):
         f" Чтобы начать новый заказ, используйте команду /new_order.",
         reply_markup=types.ReplyKeyboardRemove()
     )
+
+
+@dp.message(Command("reset"))
+async def cmd_reset(message: types.Message, state: FSMContext):
+    try:
+        if message.chat.id in timers:
+            timers[message.chat.id].cancel()
+            del timers[message.chat.id]
+        if message.chat.id in confirmation_timers:
+            confirmation_timers[message.chat.id].cancel()
+            del confirmation_timers[message.chat.id]
+
+        user_data = await state.get_data()
+        temp_file = user_data.get('temp_file')
+        if temp_file and os.path.exists(temp_file):
+            os.remove(temp_file)
+
+        await state.clear()
+        await message.answer(
+            "🔄 Все данные сброшены. Вы можете начать новый заказ с помощью /new_order",
+            reply_markup=types.ReplyKeyboardRemove()
+        )
+    except Exception as e:
+        logging.error(f"Ошибка в reset: {traceback.format_exc()}")
+        await message.answer("❌ Произошла ошибка при сбросе")
 
 
 @dp.message(Command("new_order"))
@@ -154,8 +184,7 @@ async def process_shop(message: types.Message, state: FSMContext):
         f"🏪 Выбрана точка: {shop['name']}\n"
         f"⌚ Время работы: {shop['w_hours']}\n"
         f"📍 Адрес: {shop['address']}\n\n"
-        f"📎 Отправьте файл (PDF, DOC, DOCX, PNG, JPEG, JPG) размером не более 20 МБ.\n"
-        f"❗ Внимание! Если вы отправляете картинку, то прикрепляйте ее в виде файла!\n"
+        f"📎 Отправьте один PDF, DOC, DOCX, PNG, JPEG, JPG файл или одну фотографию размером не более 20 МБ для расчета стоимости\n"
         f"Используйте /reset для отмены заказа."
     )
     await message.answer(response, reply_markup=types.ReplyKeyboardRemove())
@@ -163,7 +192,22 @@ async def process_shop(message: types.Message, state: FSMContext):
 
 
 @dp.message(Form.file_processing, F.content_type == ContentType.DOCUMENT)
-async def process_file(message: types.Message, state: FSMContext):
+async def process_document(message: types.Message, state: FSMContext):
+    user_data = await state.get_data()
+    if user_data.get('temp_file'):
+        await message.answer(
+            "❌ Вы уже отправили файл. Дождитесь обработки или отмените текущий заказ командой /reset.",
+            reply_markup=types.ReplyKeyboardRemove()
+        )
+        return
+
+    if message.media_group_id:
+        await message.answer(
+            "❌ Пожалуйста, отправляйте файлы по одному. Сначала дождитесь обработки текущего файла.",
+            reply_markup=types.ReplyKeyboardRemove()
+        )
+        return
+
     processing_msg = await message.answer("⏳ Файл обрабатывается, подождите пожалуйста...")
 
     try:
@@ -185,10 +229,7 @@ async def process_file(message: types.Message, state: FSMContext):
         if file_ext not in allowed_ext:
             raise ValueError("Поддерживаются только форматы: PDF, DOC, DOCX, PNG, JPEG, JPG")
 
-        temp_name = f"temp_{uuid.uuid4()}{file_ext}"
-        temp_path = os.path.join(UPLOAD_FOLDER, temp_name)
-        async with aiofiles.open(temp_path, 'wb') as f:
-            await f.write(file_content)
+        temp_path = await save_temp_file(file_content, filename, file_ext)
 
         if not os.path.exists(temp_path):
             raise ValueError("Не удалось сохранить файл на диск")
@@ -199,32 +240,10 @@ async def process_file(message: types.Message, state: FSMContext):
         })
 
         # Переход к подтверждению
-        user_data = await state.get_data()
-        shop = user_data['shop']
-        text = (f"🔍 Подтвердите заказ:\n"
-                f"• Точка: {shop['name']}\n"
-                f"• Адрес: {shop['address']}\n"
-                f"• Файл: {filename}\n\n"
-                f"Всё верно?")
-
-        markup = ReplyKeyboardMarkup(
-            keyboard=[[KeyboardButton(text="Подтвердить"), KeyboardButton(text="Отменить")]],
-            resize_keyboard=True
-        )
-        confirmation_msg = await message.answer(text, reply_markup=markup)
-        await state.update_data(confirmation_msg_id=confirmation_msg.message_id)
-        await state.set_state(Form.confirmation)
+        await show_confirmation(message, state)
 
     except ValueError as ve:
-        # Очистка при ошибке
-        if message.chat.id in timers:
-            timers[message.chat.id].cancel()
-            del timers[message.chat.id]
-        if message.chat.id in confirmation_timers:
-            confirmation_timers[message.chat.id].cancel()
-            del confirmation_timers[message.chat.id]
-        await state.clear()
-        await message.answer(f"❌ Ошибка: {str(ve)}. Используйте /new_order", reply_markup=types.ReplyKeyboardRemove())
+        await cancel_order(message, state, str(ve))
     except Exception as e:
         logging.error(f"Критическая ошибка: {traceback.format_exc()}")
         await message.answer("❌ Произошла ошибка. Используйте /new_order", reply_markup=types.ReplyKeyboardRemove())
@@ -234,6 +253,106 @@ async def process_file(message: types.Message, state: FSMContext):
             await bot.delete_message(message.chat.id, processing_msg.message_id)
         except:
             pass
+
+
+@dp.message(Form.file_processing, F.content_type == ContentType.PHOTO)
+async def process_photo(message: types.Message, state: FSMContext):
+    user_data = await state.get_data()
+    if user_data.get('temp_file'):
+        await message.answer(
+            "❌ Вы уже отправили файл. Дождитесь обработки или отмените текущий заказ командой /reset.",
+            reply_markup=types.ReplyKeyboardRemove()
+        )
+        return
+
+    if message.media_group_id:
+        await message.answer(
+            "❌ Пожалуйста, отправляйте фото по одному. Сначала дождитесь обработки текущего.",
+            reply_markup=types.ReplyKeyboardRemove()
+        )
+        return
+
+    processing_msg = await message.answer("⏳ Фото обрабатывается, подождите пожалуйста...")
+
+    try:
+        # Берём самое большое фото (последнее в массиве)
+        photo = message.photo[-1]
+        file_info = await bot.get_file(photo.file_id)
+        if not file_info.file_path:
+            raise ValueError("Telegram не вернул путь к фото")
+
+        file_url = f"https://api.telegram.org/file/bot{API_TOKEN}/{file_info.file_path}"
+        connector = aiohttp.TCPConnector(ssl=False)
+        async with aiohttp.ClientSession(connector=connector) as session:
+            async with session.get(file_url) as resp:
+                if resp.status != 200:
+                    raise ValueError(f"Ошибка HTTP {resp.status}")
+                file_content = await resp.read()
+
+        # Генерируем имя файла (можно использовать дату или просто photo_id)
+        filename = f"photo_{photo.file_id}.jpg"
+        file_ext = '.jpg'  # Telegram хранит фото в JPEG
+        allowed_ext = ('.jpg', '.jpeg', '.png')  # фото всегда jpeg, но оставим
+        if file_ext not in allowed_ext:
+            raise ValueError("Неподдерживаемый формат фото")
+
+        temp_path = await save_temp_file(file_content, filename, file_ext)
+
+        if not os.path.exists(temp_path):
+            raise ValueError("Не удалось сохранить фото на диск")
+
+        await state.update_data({
+            'temp_file': temp_path,
+            'filename': filename
+        })
+
+        # Переход к подтверждению
+        await show_confirmation(message, state)
+
+    except ValueError as ve:
+        await cancel_order(message, state, str(ve))
+    except Exception as e:
+        logging.error(f"Критическая ошибка при обработке фото: {traceback.format_exc()}")
+        await message.answer("❌ Произошла ошибка. Используйте /new_order", reply_markup=types.ReplyKeyboardRemove())
+        await state.clear()
+    finally:
+        try:
+            await bot.delete_message(message.chat.id, processing_msg.message_id)
+        except:
+            pass
+
+
+async def show_confirmation(message: types.Message, state: FSMContext):
+    """Показывает экран подтверждения заказа"""
+    user_data = await state.get_data()
+    shop = user_data['shop']
+    filename = user_data['filename']
+    text = (f"🔍 Подтвердите заказ:\n"
+            f"• Точка: {shop['name']}\n"
+            f"• Адрес: {shop['address']}\n"
+            f"• Файл: {filename}\n\n"
+            f"Всё верно?")
+
+    markup = ReplyKeyboardMarkup(
+        keyboard=[[KeyboardButton(text="Подтвердить"), KeyboardButton(text="Отменить")]],
+        resize_keyboard=True
+    )
+    confirmation_msg = await message.answer(text, reply_markup=markup)
+    await state.update_data(confirmation_msg_id=confirmation_msg.message_id)
+    await state.set_state(Form.confirmation)
+
+
+async def cancel_order(message: types.Message, state: FSMContext, error_text: str = None):
+    """Отмена заказа с очисткой"""
+    if message.chat.id in timers:
+        timers[message.chat.id].cancel()
+        del timers[message.chat.id]
+    if message.chat.id in confirmation_timers:
+        confirmation_timers[message.chat.id].cancel()
+        del confirmation_timers[message.chat.id]
+    await state.clear()
+    error_msg = f"❌ Ошибка: {error_text}. Используйте /new_order" if error_text else "❌ Заказ отменен"
+    await message.answer(error_msg, reply_markup=types.ReplyKeyboardRemove())
 
 
 @dp.message(Form.confirmation)
@@ -323,29 +442,13 @@ async def cmd_my_orders(message: types.Message):
     await message.answer(text)
 
 
-@dp.message(Command("reset"))
-async def cmd_reset(message: types.Message, state: FSMContext):
-    try:
-        if message.chat.id in timers:
-            timers[message.chat.id].cancel()
-            del timers[message.chat.id]
-        if message.chat.id in confirmation_timers:
-            confirmation_timers[message.chat.id].cancel()
-            del confirmation_timers[message.chat.id]
-
-        user_data = await state.get_data()
-        temp_file = user_data.get('temp_file')
-        if temp_file and os.path.exists(temp_file):
-            os.remove(temp_file)
-
-        await state.clear()
-        await message.answer(
-            "🔄 Все данные сброшены. Вы можете начать новый заказ с помощью /new_order",
-            reply_markup=types.ReplyKeyboardRemove()
-        )
-    except Exception as e:
-        logging.error(f"Ошибка в reset: {traceback.format_exc()}")
-        await message.answer("❌ Произошла ошибка при сбросе")
+@dp.message(Form.file_processing)
+async def process_file_invalid(message: types.Message):
+    await message.answer(
+        "❌ Пожалуйста, отправьте файл в формате PDF, DOC, DOCX, PNG, JPEG, JPG.\n"
+        "Используйте /reset для отмены заказа.",
+        reply_markup=types.ReplyKeyboardRemove()
+    )
 
 
 @dp.message()

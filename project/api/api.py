@@ -4,7 +4,7 @@ import logging
 import aiofiles
 import traceback
 from datetime import datetime, timedelta, timezone
-from fastapi import FastAPI, HTTPException, UploadFile, Form, File, Query, Depends
+from fastapi import FastAPI, HTTPException, UploadFile, Form, File, Query, Depends, Request
 from fastapi.responses import JSONResponse, FileResponse
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
@@ -13,7 +13,11 @@ import aiomysql
 import jwt
 from decimal import Decimal
 from urllib.parse import unquote
-from dotenv import load_dotenv
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+from slowapi.middleware import SlowAPIMiddleware
+from slowapi.extension import Limiter
 
 # Логирование
 LOGGING_CONFIG = {
@@ -44,19 +48,26 @@ LOGGING_CONFIG = {
     },
 }
 
-env_path = os.path.join(os.path.dirname(__file__), 'config.env')
-load_dotenv(dotenv_path=env_path)
-
 JWT_SECRET = os.getenv("JWT_SECRET")
 JWT_ALGORITHM = os.getenv("JWT_ALGORITHM")
 ACCESS_TOKEN_EXPIRE_HOURS = int(os.getenv("ACCESS_TOKEN_EXPIRE_HOURS"))
 
 security = HTTPBearer()
 
+# Настройка лимитера для защиты от DDoS
+limiter = Limiter(
+    key_func=get_remote_address,
+    default_limits=["100/minute"],  # Общий лимит для всех эндпоинтов
+    storage_uri="memory://",  # Используем память для хранения счетчиков (можно заменить на redis://)
+)
+
 app = FastAPI()
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.add_middleware(SlowAPIMiddleware)
+
 UPLOAD_FOLDER = os.path.abspath('uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-
 
 # Database connection
 async def get_db():
@@ -69,19 +80,16 @@ async def get_db():
         cursorclass=aiomysql.DictCursor
     )
 
-
 # JWT функции
 class TokenData(BaseModel):
     shop_id: int
     exp: datetime
-
 
 class ShopCreate(BaseModel):
     name: str
     address: str
     w_hours: str
     password: str
-
 
 async def create_access_token(shop_data: dict) -> str:
     expire = datetime.now(timezone.utc) + timedelta(hours=ACCESS_TOKEN_EXPIRE_HOURS)
@@ -93,7 +101,6 @@ async def create_access_token(shop_data: dict) -> str:
         "type": "access"
     }
     return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
-
 
 async def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)) -> TokenData:
     try:
@@ -108,10 +115,13 @@ async def verify_token(credentials: HTTPAuthorizationCredentials = Depends(secur
     except jwt.InvalidTokenError:
         raise HTTPException(status_code=401, detail="Invalid token")
 
-
-# Эндпоинты аутентификации
+# Эндпоинты аутентификации с защитой
 @app.post("/auth/login")
-async def shop_login(password_hash: str = Form(...)):
+@limiter.limit("10/minute")  # Ограничиваем количество попыток входа
+async def shop_login(
+    request: Request,
+    password_hash: str = Form(...)
+):
     try:
         async with await get_db() as conn:
             async with conn.cursor(aiomysql.DictCursor) as cursor:
@@ -140,15 +150,19 @@ async def shop_login(password_hash: str = Form(...)):
         logging.error(f"Login error: {str(e)}")
         raise HTTPException(status_code=500, detail="Authentication error")
 
-
 @app.get("/auth/verify")
-async def verify_token_endpoint(current_shop: TokenData = Depends(verify_token)):
+@limiter.limit("30/minute")
+async def verify_token_endpoint(
+    request: Request,
+    current_shop: TokenData = Depends(verify_token)
+):
     return {"valid": True, "shop_id": current_shop.shop_id, "expires_at": current_shop.exp.isoformat()}
 
-
-# Эндпоинты для заказов
+# Эндпоинты для заказов с защитой
 @app.get("/orders", response_model=List[dict])
+@limiter.limit("10/minute")
 async def get_orders(
+    request: Request,
     status: List[str] = Query(..., title="Статусы заказов"),
     shop_id: Optional[int] = Query(None),
     current_shop: TokenData = Depends(verify_token)
@@ -173,9 +187,13 @@ async def get_orders(
         logging.error(f"Error: {traceback.format_exc()}")
         raise HTTPException(500, detail="Server error")
 
-
 @app.post("/orders/{order_id}/complete")
-async def complete_order(order_id: int, current_shop: TokenData = Depends(verify_token)):
+@limiter.limit("30/minute")
+async def complete_order(
+    request: Request,
+    order_id: int,
+    current_shop: TokenData = Depends(verify_token)
+):
     try:
         async with await get_db() as conn:
             async with conn.cursor(aiomysql.DictCursor) as cursor:
@@ -214,9 +232,12 @@ async def complete_order(order_id: int, current_shop: TokenData = Depends(verify
         logging.error(f"Error: {traceback.format_exc()}")
         raise HTTPException(500, detail="Internal server error")
 
-
 @app.get("/orders/count/{user_id}")
-async def get_active_orders_count(user_id: int):
+@limiter.limit("60/minute")
+async def get_active_orders_count(
+    request: Request,
+    user_id: int
+):
     try:
         async with await get_db() as conn:
             async with conn.cursor(aiomysql.DictCursor) as cursor:
@@ -232,9 +253,12 @@ async def get_active_orders_count(user_id: int):
         logging.error(f"Count error: {traceback.format_exc()}")
         raise HTTPException(500, detail="Server error")
 
-
 @app.get("/orders/user/{user_id}")
-async def get_user_orders(user_id: int):
+@limiter.limit("40/minute")
+async def get_user_orders(
+    request: Request,
+    user_id: int
+):
     try:
         async with await get_db() as conn:
             async with conn.cursor(aiomysql.DictCursor) as cursor:
@@ -253,9 +277,10 @@ async def get_user_orders(user_id: int):
         logging.error(f"User orders error: {traceback.format_exc()}")
         raise HTTPException(500, detail="Server error")
 
-
 @app.post("/orders")
+@limiter.limit("20/minute")  # Ограничиваем создание новых заказов
 async def create_order(
+    request: Request,
     file: UploadFile = File(...),
     ID_shop: int = Form(...),
     user_id: str = Form(...)
@@ -296,10 +321,10 @@ async def create_order(
         logging.error(f"Order creation error: {traceback.format_exc()}")
         raise HTTPException(500, detail=str(e))
 
-
-# Эндпоинты для магазинов (публичные)
+# Эндпоинты для магазинов (публичные) с защитой
 @app.get("/shops")
-async def get_shops():
+@limiter.limit("30/minute")  # Высокий лимит для публичного эндпоинта
+async def get_shops(request: Request):
     try:
         async with await get_db() as conn:
             async with conn.cursor(aiomysql.DictCursor) as cursor:
@@ -310,9 +335,12 @@ async def get_shops():
         logging.error(f"Error: {traceback.format_exc()}")
         raise HTTPException(500, detail="Server error")
 
-
 @app.get("/shops/{shop_name}")
-async def get_shop(shop_name: str):
+@limiter.limit("60/minute")
+async def get_shop(
+    request: Request,
+    shop_name: str
+):
     try:
         async with await get_db() as conn:
             async with conn.cursor(aiomysql.DictCursor) as cursor:
@@ -330,10 +358,14 @@ async def get_shop(shop_name: str):
         logging.error(f"Error: {traceback.format_exc()}")
         raise HTTPException(500, detail="Server error")
 
-
 # Защищённый доступ к файлам
 @app.get("/files/{filename}")
-async def get_file(filename: str, current_shop: TokenData = Depends(verify_token)):
+@limiter.limit("30/minute")
+async def get_file(
+    request: Request,
+    filename: str,
+    current_shop: TokenData = Depends(verify_token)
+):
     try:
         # Проверяем, что файл принадлежит заказу текущей точки
         async with await get_db() as conn:
@@ -356,9 +388,12 @@ async def get_file(filename: str, current_shop: TokenData = Depends(verify_token
         logging.error(f"File access error: {traceback.format_exc()}")
         raise HTTPException(500, detail="Server error")
 
-
 @app.post("/shops", status_code=201)
-async def create_shop(shop: ShopCreate):
+@limiter.limit("10/minute")  # Ограничиваем создание новых магазинов
+async def create_shop(
+    request: Request,
+    shop: ShopCreate
+):
     """Создание нового магазина (доступно без авторизации для админ-приложения)"""
     try:
         async with await get_db() as conn:
@@ -381,7 +416,6 @@ async def create_shop(shop: ShopCreate):
     except Exception as e:
         logging.error(f"Error creating shop: {traceback.format_exc()}")
         raise HTTPException(500, detail="Internal server error")
-
 
 if __name__ == "__main__":
     import uvicorn
