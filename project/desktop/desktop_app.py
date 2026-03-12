@@ -33,8 +33,6 @@ os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
 aiohttp_session: Optional[aiohttp.ClientSession] = None
 
-# Логирование полностью удалено
-
 
 def resource_path(relative_path):
     try:

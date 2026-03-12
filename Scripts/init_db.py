@@ -2,7 +2,6 @@ import asyncio
 import aiomysql
 import os
 
-
 async def init_db():
     conn = await aiomysql.connect(
         host=os.getenv("DB_HOST"),
@@ -12,11 +11,11 @@ async def init_db():
     )
 
     async with conn.cursor() as cursor:
-        # Создание базы данных
+        # Создание базы данных, если её нет
         await cursor.execute("CREATE DATABASE IF NOT EXISTS unn CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;")
         await cursor.execute("USE unn;")
 
-        # Таблица shop
+        # Таблица shop (без изменений)
         await cursor.execute("""
             CREATE TABLE IF NOT EXISTS shop (
                 ID_shop INT NOT NULL AUTO_INCREMENT,
@@ -28,7 +27,7 @@ async def init_db():
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         """)
 
-        # Таблица order
+        # Таблица order с добавленными полями: created_at и расширенный ENUM статуса
         await cursor.execute("""
             CREATE TABLE IF NOT EXISTS `order` (
                 ID INT NOT NULL AUTO_INCREMENT,
@@ -36,7 +35,8 @@ async def init_db():
                 user_id BIGINT NOT NULL,
                 file_path VARCHAR(255) NOT NULL,
                 user_file_name VARCHAR(255) NOT NULL,
-                status ENUM('received','completed') DEFAULT 'received',
+                status ENUM('received','completed','canceled') DEFAULT 'received',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 PRIMARY KEY (ID),
                 INDEX idx_user_status (user_id, status),
                 CONSTRAINT fk_order_shop
@@ -48,7 +48,6 @@ async def init_db():
 
     conn.close()
     print("✅ База данных успешно инициализирована!")
-
 
 if __name__ == "__main__":
     asyncio.run(init_db())

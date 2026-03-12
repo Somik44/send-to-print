@@ -69,6 +69,7 @@ app.add_middleware(SlowAPIMiddleware)
 UPLOAD_FOLDER = os.path.abspath('uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+
 # Database connection
 async def get_db():
     return await aiomysql.connect(
@@ -85,11 +86,13 @@ class TokenData(BaseModel):
     shop_id: int
     exp: datetime
 
+
 class ShopCreate(BaseModel):
     name: str
     address: str
     w_hours: str
     password: str
+
 
 async def create_access_token(shop_data: dict) -> str:
     expire = datetime.now(timezone.utc) + timedelta(hours=ACCESS_TOKEN_EXPIRE_HOURS)
@@ -101,6 +104,7 @@ async def create_access_token(shop_data: dict) -> str:
         "type": "access"
     }
     return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
+
 
 async def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)) -> TokenData:
     try:
@@ -114,6 +118,7 @@ async def verify_token(credentials: HTTPAuthorizationCredentials = Depends(secur
         raise HTTPException(status_code=401, detail="Token expired")
     except jwt.InvalidTokenError:
         raise HTTPException(status_code=401, detail="Invalid token")
+
 
 # Эндпоинты аутентификации с защитой
 @app.post("/auth/login")
@@ -150,6 +155,7 @@ async def shop_login(
         logging.error(f"Login error: {str(e)}")
         raise HTTPException(status_code=500, detail="Authentication error")
 
+
 @app.get("/auth/verify")
 @limiter.limit("30/minute")
 async def verify_token_endpoint(
@@ -157,6 +163,7 @@ async def verify_token_endpoint(
     current_shop: TokenData = Depends(verify_token)
 ):
     return {"valid": True, "shop_id": current_shop.shop_id, "expires_at": current_shop.exp.isoformat()}
+
 
 # Эндпоинты для заказов с защитой
 @app.get("/orders", response_model=List[dict])
@@ -186,6 +193,7 @@ async def get_orders(
     except Exception as e:
         logging.error(f"Error: {traceback.format_exc()}")
         raise HTTPException(500, detail="Server error")
+
 
 @app.post("/orders/{order_id}/complete")
 @limiter.limit("30/minute")
@@ -232,6 +240,7 @@ async def complete_order(
         logging.error(f"Error: {traceback.format_exc()}")
         raise HTTPException(500, detail="Internal server error")
 
+
 @app.get("/orders/count/{user_id}")
 @limiter.limit("60/minute")
 async def get_active_orders_count(
@@ -253,6 +262,7 @@ async def get_active_orders_count(
         logging.error(f"Count error: {traceback.format_exc()}")
         raise HTTPException(500, detail="Server error")
 
+
 @app.get("/orders/user/{user_id}")
 @limiter.limit("40/minute")
 async def get_user_orders(
@@ -263,19 +273,19 @@ async def get_user_orders(
         async with await get_db() as conn:
             async with conn.cursor(aiomysql.DictCursor) as cursor:
                 await cursor.execute("""
-                    SELECT o.ID, o.user_file_name, s.name AS shop_name, s.address
+                    SELECT o.ID, o.user_file_name, s.name AS shop_name, s.address,
+                           CONVERT_TZ(o.created_at, @@session.time_zone, '+00:00') AS created_at
                     FROM `order` o
                     JOIN shop s ON o.ID_shop = s.ID_shop
-                    WHERE o.user_id = %s
-                      AND o.status = 'received'
+                    WHERE o.user_id = %s AND o.status = 'received'
                     ORDER BY o.ID DESC
                 """, (user_id,))
-
                 orders = await cursor.fetchall()
                 return orders or []
     except Exception:
         logging.error(f"User orders error: {traceback.format_exc()}")
         raise HTTPException(500, detail="Server error")
+
 
 @app.post("/orders")
 @limiter.limit("20/minute")  # Ограничиваем создание новых заказов
@@ -321,42 +331,6 @@ async def create_order(
         logging.error(f"Order creation error: {traceback.format_exc()}")
         raise HTTPException(500, detail=str(e))
 
-# Эндпоинты для магазинов (публичные) с защитой
-@app.get("/shops")
-@limiter.limit("30/minute")  # Высокий лимит для публичного эндпоинта
-async def get_shops(request: Request):
-    try:
-        async with await get_db() as conn:
-            async with conn.cursor(aiomysql.DictCursor) as cursor:
-                await cursor.execute("SELECT name, ID_shop, address, w_hours FROM shop")
-                shops = await cursor.fetchall()
-                return shops or []
-    except Exception as e:
-        logging.error(f"Error: {traceback.format_exc()}")
-        raise HTTPException(500, detail="Server error")
-
-@app.get("/shops/{shop_name}")
-@limiter.limit("60/minute")
-async def get_shop(
-    request: Request,
-    shop_name: str
-):
-    try:
-        async with await get_db() as conn:
-            async with conn.cursor(aiomysql.DictCursor) as cursor:
-                await cursor.execute(
-                    "SELECT name, ID_shop, address, w_hours FROM shop WHERE name = %s",
-                    (shop_name,)
-                )
-                shop = await cursor.fetchone()
-                if not shop:
-                    raise HTTPException(404, detail="Shop not found")
-                return shop
-    except HTTPException:
-        raise
-    except Exception as e:
-        logging.error(f"Error: {traceback.format_exc()}")
-        raise HTTPException(500, detail="Server error")
 
 # Защищённый доступ к файлам
 @app.get("/files/{filename}")
@@ -387,6 +361,7 @@ async def get_file(
     except Exception as e:
         logging.error(f"File access error: {traceback.format_exc()}")
         raise HTTPException(500, detail="Server error")
+
 
 @app.post("/shops", status_code=201)
 @limiter.limit("10/minute")  # Ограничиваем создание новых магазинов

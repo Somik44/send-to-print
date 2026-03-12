@@ -1,6 +1,5 @@
 import os
 import logging
-import random
 import asyncio
 import aiohttp
 import aiofiles
@@ -12,6 +11,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.enums import ContentType
+from datetime import datetime, timezone
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -26,7 +26,6 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 
 class Form(StatesGroup):
-    shop_selection = State()
     file_processing = State()
     confirmation = State()
 
@@ -138,56 +137,31 @@ async def cmd_new_order(message: types.Message, state: FSMContext):
 
     await state.clear()
 
-    # ПРОВЕРКА АКТИВНЫХ ЗАКАЗОВ
+    # Проверка активных заказов пользователя
     async with aiohttp.ClientSession() as session:
         async with session.get(f"{API_URL}/orders/count/{message.chat.id}") as resp:
             if resp.status != 200:
                 await message.answer("❌ Ошибка проверки заказов")
                 return
-
             data = await resp.json()
             if data["active_orders"] >= 2:
                 await message.answer(
                     "❌ Максимальное количество заказов на пользователя: 2.\n"
-                    "Пожалуйста, для начала заберите предыдущие заказы.", reply_markup=types.ReplyKeyboardRemove()
+                    "Пожалуйста, для начала заберите предыдущие заказы.",
+                    reply_markup=types.ReplyKeyboardRemove()
                 )
                 return
 
-    async with aiohttp.ClientSession() as session:
-        async with session.get(f"{API_URL}/shops") as resp:
-            if resp.status != 200:
-                await message.answer("❌ Ошибка загрузки магазинов")
-                return
-            shops = await resp.json()
-
-    markup = ReplyKeyboardMarkup(
-        keyboard=[[KeyboardButton(text=shop['name'])] for shop in shops],
-        resize_keyboard=True,
-        one_time_keyboard=True
+    # Отправляем фиксированное сообщение с информацией о точке печати
+    await message.answer(
+        "🏪 Точка печати: Фундаментальная библиотека\n"
+        "⌚ Время работы: пн-чт 9-16, пт 9-15\n"
+        "📍 Адрес: проспект Гагарина, 23к1, каб. 243-2\n\n"
+        "📎 Отправьте один PDF, DOC, DOCX, PNG, JPEG, JPG файл или одну фотографию размером не более 20 МБ для расчета стоимости\n"
+        "Используйте /reset для отмены заказа.",
+        reply_markup=types.ReplyKeyboardRemove()
     )
-    await message.answer("🏪 Выберите точку печати из списка:", reply_markup=markup)
     timers[message.chat.id] = asyncio.create_task(start_order_timer(message.chat.id, state))
-    await state.set_state(Form.shop_selection)
-
-
-@dp.message(Form.shop_selection)
-async def process_shop(message: types.Message, state: FSMContext):
-    async with aiohttp.ClientSession() as session:
-        async with session.get(f"{API_URL}/shops/{message.text}") as resp:
-            if resp.status != 200:
-                await message.answer("❌ Точка не найдена. /new_order")
-                return
-            shop = await resp.json()
-
-    await state.update_data(shop=shop)
-    response = (
-        f"🏪 Выбрана точка: {shop['name']}\n"
-        f"⌚ Время работы: {shop['w_hours']}\n"
-        f"📍 Адрес: {shop['address']}\n\n"
-        f"📎 Отправьте один PDF, DOC, DOCX, PNG, JPEG, JPG файл или одну фотографию размером не более 20 МБ для расчета стоимости\n"
-        f"Используйте /reset для отмены заказа."
-    )
-    await message.answer(response, reply_markup=types.ReplyKeyboardRemove())
     await state.set_state(Form.file_processing)
 
 
@@ -325,11 +299,10 @@ async def process_photo(message: types.Message, state: FSMContext):
 async def show_confirmation(message: types.Message, state: FSMContext):
     """Показывает экран подтверждения заказа"""
     user_data = await state.get_data()
-    shop = user_data['shop']
     filename = user_data['filename']
     text = (f"🔍 Подтвердите заказ:\n"
-            f"• Точка: {shop['name']}\n"
-            f"• Адрес: {shop['address']}\n"
+            f"• Точка: Фундаментальная библиотека\n"
+            f"• Адрес: проспект Гагарина, 23к1, каб. 243-2\n"
             f"• Файл: {filename}\n\n"
             f"Всё верно?")
 
@@ -390,7 +363,8 @@ async def process_confirmation(message: types.Message, state: FSMContext):
     try:
         async with aiohttp.ClientSession() as session:
             form_data = aiohttp.FormData()
-            form_data.add_field('ID_shop', str(user_data['shop']['ID_shop']))
+            # ID магазина всегда 1
+            form_data.add_field('ID_shop', '1')
             form_data.add_field('user_id', str(message.chat.id))
             with open(temp_file_path, 'rb') as file:
                 form_data.add_field('file', file.read(), filename=user_data['filename'])
@@ -398,10 +372,10 @@ async def process_confirmation(message: types.Message, state: FSMContext):
             async with session.post(f"{API_URL}/orders", data=form_data) as resp:
                 if resp.status == 201:
                     data = await resp.json()
-                    user_data = await state.get_data()
-                    shop = user_data['shop']
                     await message.answer(
-                        f"✅ Заказ №{data['order_id']} принят! Ждем вас на точке {shop['name']} по адресу: {shop['address']}",
+                        f"✅ Заказ №{data['order_id']} принят! Ждем вас на точке Фундаментальная библиотека по "
+                        f"адресу: проспект Гагарина, 23к1, каб. 243-2\n"
+                        f"❗ Обращаем ваше внимание, что заказы хранятся 3 дня с момента создания!",
                         reply_markup=types.ReplyKeyboardRemove()
                     )
                     if temp_file_path and os.path.exists(temp_file_path):
@@ -422,7 +396,6 @@ async def cmd_my_orders(message: types.Message):
             if resp.status != 200:
                 await message.answer("❌ Ошибка получения заказов")
                 return
-
             orders = await resp.json()
 
     if not orders:
@@ -430,15 +403,37 @@ async def cmd_my_orders(message: types.Message):
         return
 
     text = "📦 Ваши активные заказы:\n\n"
+    now = datetime.now(timezone.utc)
 
     for order in orders:
+        created_raw = order.get('created_at')
+        time_left = "неизвестно"
+
+        if created_raw:
+            try:
+                # Парсим ISO-строку (например, "2026-03-13T01:31:09+00:00")
+                dt = datetime.fromisoformat(created_raw.replace('Z', '+00:00'))
+                dt_utc = dt.astimezone(timezone.utc)
+                delta = (now - dt_utc).total_seconds()
+                days_old = delta / 86400
+                if days_old < 3:
+                    remaining = 3 - days_old
+                    if remaining < 1:
+                        time_left = f"{int(remaining * 24)} ч."
+                    else:
+                        time_left = f"{remaining:.0f} дн."
+                else:
+                    time_left = "будет удалён"
+            except:
+                time_left = "неизвестно"
+
         text += (
             f"🟡 Заказ №{order['ID']}\n"
             f"🏪 Точка: {order['shop_name']}\n"
             f"📍 Адрес: {order['address']}\n"
-            f"📄 Файл: {order['user_file_name']}\n\n"
+            f"📄 Файл: {order['user_file_name']}\n"
+            f"⏳ Хранится ещё: {time_left}\n\n"
         )
-
     await message.answer(text)
 
 
