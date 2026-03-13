@@ -42,6 +42,7 @@ LIBREOFFICE_PATH = os.getenv("LIBREOFFICE_PATH")
 ADMIN_IDS_STR = os.getenv("ADMIN_IDS", "")
 ADMIN_IDS = [int(id.strip()) for id in ADMIN_IDS_STR.split(",") if id.strip()]
 INTERNAL_API_KEY = os.getenv("INTERNAL_API_KEY")
+MAX_FILE_SIZE = 20 * 1024 * 1024
 
 UPLOAD_FOLDER = os.getenv("UPLOAD_FOLDER")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -84,7 +85,7 @@ async def handler(websocket):
                 order_id = data['order_id']
                 status = data['status']
 
-                if status in ('paid', 'expired', 'canceled'):
+                if status in ('paid', 'expired', 'canceled', 'ready', 'completed'):
                     await delete_payment_message(user_id)
                     if user_id in active_orders and active_orders[user_id] == order_id:
                         del active_orders[user_id]
@@ -931,6 +932,9 @@ async def process_file(message: types.Message, state: FSMContext):
                 if not file_content:
                     raise ValueError("Получен пустой файл")
 
+                if len(file_content) > MAX_FILE_SIZE:
+                    raise ValueError("Файл слишком большой. Максимальный размер — 20 МБ.")
+
         # 4. Проверяем расширение файла
         filename = message.document.file_name or "unnamed_file"
         file_ext = os.path.splitext(filename)[1].lower()
@@ -955,6 +959,9 @@ async def process_file(message: types.Message, state: FSMContext):
 
         if pages is None or pages < 1:
             raise ValueError("⚠️ Не удалось определить количество страниц")
+
+        if pages > 500:
+            raise ValueError("Слишком много страниц")
 
         # 8. Сохраняем данные в состояние
         await state.update_data({

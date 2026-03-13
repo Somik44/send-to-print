@@ -1,9 +1,10 @@
 import sys
 import requests
 import hashlib
-from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
+from PyQt6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
                              QLabel, QLineEdit, QPushButton, QMessageBox,
                              QComboBox, QHBoxLayout, QGroupBox)
+from PyQt6.QtCore import Qt
 import logging
 from dotenv import load_dotenv
 import os
@@ -34,6 +35,7 @@ class ShopApp(QMainWindow):
         self.setCentralWidget(central_widget)
 
         main_layout = QVBoxLayout()
+        central_widget.setLayout(main_layout)
 
         # Выбор режима
         mode_layout = QHBoxLayout()
@@ -54,8 +56,6 @@ class ShopApp(QMainWindow):
         self.submit_button = QPushButton("Выполнить")
         self.submit_button.clicked.connect(self.on_submit)
         main_layout.addWidget(self.submit_button)
-
-        central_widget.setLayout(main_layout)
 
         self.switch_mode(0)
 
@@ -160,7 +160,7 @@ class ShopApp(QMainWindow):
         self.bw_price_input = QLineEdit()
         self.color_price_input = QLineEdit()
         self.password_input = QLineEdit()
-        self.password_input.setEchoMode(QLineEdit.Password)
+        self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
 
         self.franchise_combo = QComboBox()
         self.update_franchise_combo()
@@ -197,7 +197,7 @@ class ShopApp(QMainWindow):
         self.color_price_input = QLineEdit()
         self.password_input = QLineEdit()
         self.password_input.setPlaceholderText("Оставьте пустым, если не меняете")
-        self.password_input.setEchoMode(QLineEdit.Password)
+        self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
 
         self.franchise_combo = QComboBox()
         self.update_franchise_combo()  # заполняем список франшиз
@@ -495,11 +495,11 @@ class ShopApp(QMainWindow):
             self,
             "Подтверждение",
             f"Вы уверены, что хотите {action_text} эту точку?",
-            QMessageBox.Yes | QMessageBox.No,
-            QMessageBox.No
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No
         )
 
-        if reply != QMessageBox.Yes:
+        if reply != QMessageBox.StandardButton.Yes:
             return
 
         try:
@@ -538,7 +538,7 @@ if __name__ == "__main__":
         app = QApplication(sys.argv)
         window = ShopApp()
         window.show()
-        sys.exit(app.exec_())
+        sys.exit(app.exec())
     except Exception as e:
         logger.critical(f"Критическая ошибка: {e}")
         QMessageBox.critical(None, "Ошибка", f"Критическая ошибка: {e}")
