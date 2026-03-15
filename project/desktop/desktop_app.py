@@ -668,9 +668,9 @@ class FileReceiverApp(QWidget):
                 try:
                     if os.path.isfile(file_path):
                         os.remove(file_path)
-                        logging.info(f"Удален файл: {filename}")
+                        logging.info(f"File deleted: {filename}")
                 except Exception as e:
-                    logging.error(f"Ошибка удаления файла {filename}: {str(e)}")
+                    logging.error(f"File deletion error {filename}: {str(e)}")
         super().closeEvent(event)
 
 

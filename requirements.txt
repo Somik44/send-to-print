@@ -17,4 +17,5 @@ cryptography
 yookassa
 slowapi
 mysql-connector-python
-PyQt5
+python-magic-bin
+pyclamd

@@ -709,9 +709,9 @@ async def complete_order(order_id: int, current_shop: TokenData = Depends(verify
                 try:
                     if os.path.exists(file_path):
                         os.remove(file_path)
-                        logging.info(f"Файл заказа {order_id} удален: {file_path}")
+                        logging.info(f"Order file {order_id} deleted: {file_path}")
                 except Exception as e:
-                    logging.error(f"Ошибка удаления файла: {str(e)}")
+                    logging.error(f"File deletion error: {str(e)}")
 
                 await cursor.execute(
                     "UPDATE `order` SET status = 'completed' WHERE ID = %s AND ID_shop = %s",
@@ -728,7 +728,7 @@ async def complete_order(order_id: int, current_shop: TokenData = Depends(verify
         raise
     except Exception as e:
         await conn.rollback()
-        logging.error(f"Ошибка завершения заказа: {traceback.format_exc()}")
+        logging.error(f"Order completion error: {traceback.format_exc()}")
         raise HTTPException(500, detail="Internal server error")
 
 

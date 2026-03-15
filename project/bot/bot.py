@@ -26,6 +26,9 @@ import docx
 from dotenv import load_dotenv
 from aiogram.utils.media_group import MediaGroupBuilder
 from aiogram.utils.keyboard import InlineKeyboardBuilder
+import pyclamd
+import magic
+import zipfile
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -42,8 +45,12 @@ LIBREOFFICE_PATH = os.getenv("LIBREOFFICE_PATH")
 ADMIN_IDS_STR = os.getenv("ADMIN_IDS", "")
 ADMIN_IDS = [int(id.strip()) for id in ADMIN_IDS_STR.split(",") if id.strip()]
 INTERNAL_API_KEY = os.getenv("INTERNAL_API_KEY")
-MAX_FILE_SIZE = 20 * 1024 * 1024
-
+CLAMAV_HOST = os.getenv("CLAMAV_HOST")
+CLAMAV_PORT = int(os.getenv("CLAMAV_PORT"))
+# Лимиты для защиты от Zip-бомб
+MAX_FILE_SIZE = 20 * 1024 * 1024           # 20 МБ
+MAX_ZIP_ENTRIES = 100                      # Не более 100 файлов в архиве
+MAX_UNCOMPRESSED_SIZE = 100 * 1024 * 1024  # 100 МБ лимит на распаковку
 UPLOAD_FOLDER = os.getenv("UPLOAD_FOLDER")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
@@ -265,6 +272,87 @@ async def delete_payment_message(user_id: int):
         logging.warning(f"No payment message found for user {user_id}, current_dict={payment_messages}")
 
 
+def is_file_safe(file_path: str, ext: str) -> bool:
+    """
+    Проверяет файл на соответствие типу (magic) и отсутствие признаков Zip-бомбы.
+    """
+    # 1. Проверка MIME-типа через magic
+    mime = magic.from_file(file_path, mime=True)
+
+    # Карта разрешенных соответствий
+    valid_mime_map = {
+        '.pdf': 'application/pdf',
+        '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        '.png': 'image/png',
+        '.jpg': 'image/jpeg',
+        '.jpeg': 'image/jpeg'
+    }
+
+    if ext.lower() in valid_mime_map:
+        if mime != valid_mime_map[ext.lower()]:
+            logging.error(f"MIME mismatch! Expected {valid_mime_map[ext.lower()]}, got {mime}")
+            return False
+    else:
+        # Если расширение не знакомо — блокируем
+        return False
+
+    # 2. Проверка на Zip-бомбы (только для DOCX, так как это ZIP)
+    if ext.lower() == '.docx':
+        try:
+            with zipfile.ZipFile(file_path, 'r') as zf:
+                # Проверка количества файлов
+                if len(zf.namelist()) > MAX_ZIP_ENTRIES:
+                    logging.error("Zip-bomb detected: too many files")
+                    return False
+
+                # Проверка объема распакованных данных
+                total_size = sum(file.file_size for file in zf.infolist())
+                if total_size > MAX_UNCOMPRESSED_SIZE:
+                    logging.error(f"Zip-bomb detected: too large ({total_size} bytes)")
+                    return False
+        except zipfile.BadZipFile:
+            logging.error("File is not a valid zip")
+            return False
+
+    return True
+
+
+def get_clamav_client():
+    try:
+        client = pyclamd.ClamdNetworkSocket(CLAMAV_HOST, CLAMAV_PORT)
+        client.ping()  # Проверяем, отвечает ли демон
+        return client
+    except Exception as e:
+        logging.error(f"ClamAV Daemon connection failed: {e}")
+        return None
+
+
+cd = get_clamav_client()
+
+
+async def scan_file(file_path: str) -> bool:
+    global cd
+    if cd is None:
+        cd = get_clamav_client() # Пробуем переподключиться, если демон ожил
+        if cd is None:
+            logging.error("ClamAV check skipped: Daemon unavailable")
+            return True # Или False, если политика безопасности строгая
+
+    try:
+        # Используем абсолютный путь для демона
+        abs_path = os.path.abspath(file_path)
+        # Выполняем блокирующее сканирование в отдельном потоке
+        result = await asyncio.to_thread(cd.scan_file, abs_path)
+
+        if result:
+            logging.warning(f"Virus detected: {result}")
+            return False
+        return True
+    except Exception as e:
+        logging.error(f"ClamAV scanning error: {e}")
+        return True
+
+
 async def get_page_count(file_path: str, ext: str) -> int:
     try:
         if ext in ('.png', '.jpg', '.jpeg'):
@@ -276,28 +364,18 @@ async def get_page_count(file_path: str, ext: str) -> int:
                 return len(pdf.pages)
 
         # return await asyncio.to_thread(_process_word_file, file_path)
+        if ext == '.docx':
+            try:
+                return await get_docx_page_count_metadata(file_path)
+            except Exception as e:
+                logging.warning(f"Metadata failed, switching to LibreOffice: {e}")
+                return await get_word_page_count_via_libreoffice(file_path)
+
         return await get_word_page_count_via_libreoffice(file_path)
 
     except Exception as e:
         logging.error(f"Page count error: {traceback.format_exc()}")
-        raise
-
-
-def _process_word_file(file_path: str) -> int:
-    pythoncom.CoInitialize()
-    try:
-        word = win32com.client.Dispatch("Word.Application")
-        word.Visible = False
-        doc = word.Documents.Open(os.path.abspath(file_path))
-        count = doc.ComputeStatistics(2)
-        doc.Close(False)
-        return count
-    except Exception as e:
-        logging.error(f"Word COM Error: {str(e)}")
-        raise
-    finally:
-        word.Quit()
-        pythoncom.CoUninitialize()
+        return 0
 
 
 async def get_pdf_page_count(file_path: str) -> int:
@@ -342,11 +420,11 @@ async def get_word_page_count_via_libreoffice(file_path: str) -> int:
         # 3. Проверка результата конвертации
         if process.returncode != 0:
             logging.error(f"LibreOffice conversion failed: {stderr.decode()}")
-            return await get_docx_page_count_metadata(file_path) if file_path.endswith('.docx') else 0
+            return 0
 
         if not os.path.exists(pdf_output_path):
             logging.error(f"PDF file was not created. Expected path: {pdf_output_path}")
-            return await get_docx_page_count_metadata(file_path) if file_path.endswith('.docx') else 0
+            return 0
         logging.info("LibreOffice conversation successfully")
         # 4. Подсчет страниц
         page_count = await get_pdf_page_count(pdf_output_path)
@@ -374,11 +452,6 @@ async def get_word_page_count_via_libreoffice(file_path: str) -> int:
             except:
                 pass
 
-        if file_path.lower().endswith('.docx'):
-            try:
-                return await get_docx_page_count_metadata(file_path)
-            except:
-                return 0
         return 0
 
 
@@ -420,9 +493,6 @@ async def get_word_page_count_via_libreoffice(file_path: str) -> int:
 #
 #         if process.returncode != 0:
 #             logging.error(f"LibreOffice failed: {stderr.decode()}")
-#             # Если не сработало, пробуем метод через метаданные (для .docx)
-#             if file_path.lower().endswith('.docx'):
-#                 return await get_docx_page_count_metadata(file_path)
 #             return 0
 #
 #         if not os.path.exists(pdf_output_path):
@@ -442,11 +512,6 @@ async def get_word_page_count_via_libreoffice(file_path: str) -> int:
 #
 #     except Exception as e:
 #         logging.error(f"Linux LibreOffice error: {str(e)}")
-#         if file_path.lower().endswith('.docx'):
-#             try:
-#                 return await get_docx_page_count_metadata(file_path)
-#             except:
-#                 pass
 #         return 0
 
 
@@ -460,9 +525,30 @@ async def get_docx_page_count_metadata(file_path: str) -> int:
             uglyXml = xml.dom.minidom.parseString(dxml)
             page_element = uglyXml.getElementsByTagName('Pages')[0]
             page_count = int(page_element.childNodes[0].nodeValue)
+            if page_count is None or page_count < 1:
+                logging.error(f"DOCX metadata page count is null or empty")
+                return await get_word_page_count_via_libreoffice(file_path)
             return page_count
     except Exception as e:
         logging.error(f"DOCX metadata page count error: {str(e)}")
+        return await get_word_page_count_via_libreoffice(file_path)
+
+
+# def _process_word_file(file_path: str) -> int:
+#     pythoncom.CoInitialize()
+#     try:
+#         word = win32com.client.Dispatch("Word.Application")
+#         word.Visible = False
+#         doc = word.Documents.Open(os.path.abspath(file_path))
+#         count = doc.ComputeStatistics(2)
+#         doc.Close(False)
+#         return count
+#     except Exception as e:
+#         logging.error(f"Word COM Error: {str(e)}")
+#         raise
+#     finally:
+#         word.Quit()
+#         pythoncom.CoUninitialize()
 
 
 # async def get_doc_page_count_fallback(file_path: str) -> int:
@@ -949,11 +1035,31 @@ async def process_file(message: types.Message, state: FSMContext):
         async with aiofiles.open(temp_path, 'wb') as f:
             await f.write(file_content)
 
-        # 6. Проверяем что файл сохранился
+        # 6. ПРОВЕРКА: Тип файла и Zip-бомбы
+        file_validated = await asyncio.to_thread(is_file_safe, temp_path, file_ext)
+        if not file_validated:
+            logging.error(f"Wrong file type or ZIP Bomb")
+            if os.path.exists(temp_path):
+                os.remove(temp_path)
+            await message.answer("❌ Ошибка: файл поврежден или имеет неверный формат")
+            await state.clear()
+            return
+
+        # 7. Проверка с помощью антивируса
+        is_safe = await scan_file(temp_path)
+        if not is_safe:
+            logging.error(f"Virus was found")
+            if os.path.exists(temp_path):
+                os.remove(temp_path)
+            await message.answer("❌ Файл содержит вирусы и был удален")
+            await state.clear()
+            return
+
+        # 8. Проверяем что файл сохранился
         if not os.path.exists(temp_path):
             raise ValueError("Не удалось сохранить файл на диск")
 
-        # 7. Подсчитываем количество страниц
+        # 9. Подсчитываем количество страниц
         pages = await get_page_count(temp_path, file_ext)
         logging.info(f"Defined pages: {pages}")
 
@@ -963,7 +1069,7 @@ async def process_file(message: types.Message, state: FSMContext):
         if pages > 500:
             raise ValueError("Слишком много страниц")
 
-        # 8. Сохраняем данные в состояние
+        # 10. Сохраняем данные в состояние
         await state.update_data({
             'temp_file': temp_path,
             'pages': pages,
@@ -972,7 +1078,7 @@ async def process_file(message: types.Message, state: FSMContext):
             'original_file_url': file_url
         })
 
-        # 9. Запрашиваем тип печати
+        # 11. Запрашиваем тип печати
         markup = ReplyKeyboardMarkup(
             keyboard=[
                 [KeyboardButton(text="Черно-белая")],
@@ -1077,6 +1183,15 @@ async def process_photo(message: types.Message, state: FSMContext):
         temp_path = os.path.join(UPLOAD_FOLDER, temp_name)
         async with aiofiles.open(temp_path, 'wb') as f:
             await f.write(file_content)
+
+        is_safe = await scan_file(temp_path)
+
+        if not is_safe:
+            if os.path.exists(temp_path):
+                os.remove(temp_path)
+            await message.answer("❌ Файл содержит вирусы и был удален")
+            await state.clear()
+            return
 
         if not os.path.exists(temp_path):
             raise ValueError("Не удалось сохранить фото на диск")

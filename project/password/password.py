@@ -540,5 +540,5 @@ if __name__ == "__main__":
         window.show()
         sys.exit(app.exec())
     except Exception as e:
-        logger.critical(f"Критическая ошибка: {e}")
+        logger.critical(f"Critical error: {e}")
         QMessageBox.critical(None, "Ошибка", f"Критическая ошибка: {e}")
