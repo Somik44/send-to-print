@@ -29,12 +29,23 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 import pyclamd
 import magic
 import zipfile
+from logging.handlers import RotatingFileHandler
 
-logging.basicConfig(
-    level=logging.DEBUG,
-    filename='bot.log',
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+log_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+log_file = 'bot.log'
+handler = RotatingFileHandler(
+    log_file,
+    maxBytes=10 * 1024 * 1024,  # 10 MB
+    backupCount=5,
+    encoding='utf-8'
 )
+handler.setFormatter(log_formatter)
+handler.setLevel(logging.DEBUG)
+
+# Применяем к корневому логгеру
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
+logger.addHandler(handler)
 
 env_path = os.path.join(os.path.dirname(__file__), 'config.env')
 load_dotenv(dotenv_path=env_path)
@@ -102,7 +113,7 @@ async def handler(websocket):
                     await bot.send_message(
                         user_id,
                         f"✅ Оплата прошла успешно! Заказ №{order_id} принят в работу.\n"
-                        "По готовности вам придет уведомление."
+                        "По готовности вам придет уведомление"
                     )
                 elif status == 'ready':
                     address = data['address']
@@ -112,7 +123,7 @@ async def handler(websocket):
                         f"🖨️ Заказ №{order_id} готов!\n"
                         f"• Адрес получения: {address}.\n"
                         f"• Проверочный код: {check_code}\n"
-                        f"Пожалуйста, назовите этот код сотруднику, чтобы забрать заказ."
+                        f"Пожалуйста, назовите этот код сотруднику, чтобы забрать заказ"
                     )
                 elif status == 'completed':
                     await bot.send_message(
@@ -222,19 +233,16 @@ async def handle_cancel_and_start(callback: types.CallbackQuery, state: FSMConte
 
     if order_id:
         await cancel_order_via_api(order_id)
-        await callback.message.answer(
-            f"❌ Платёж по заказу №{order_id} был отклонён или отменён."
-        )
         del active_orders[user_id]
     else:
-        await callback.message.answer("Активный заказ не найден.")
+        await callback.message.answer("Активный заказ не найден")
 
     await state.clear()
 
     if after_cancel == 'welcome':
         await callback.message.answer(
-            f"Привет, {callback.from_user.first_name}! Рады приветствовать тебя на нашем сервисе по распечатке "
-            f"документов в любое удобное время! Чтобы начать новый заказ, используйте команду /new_order.",
+            f"Привет, {callback.from_user.first_name}! Рады приветствовать тебя на нашем сервисе по печати "
+            f"документов в любое удобное время! Чтобы начать новый заказ, используйте команду /new_order",
             reply_markup=types.ReplyKeyboardRemove()
         )
     elif after_cancel == 'new_order':
@@ -282,6 +290,7 @@ def is_file_safe(file_path: str, ext: str) -> bool:
     # Карта разрешенных соответствий
     valid_mime_map = {
         '.pdf': 'application/pdf',
+        '.doc': 'application/msword',
         '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         '.png': 'image/png',
         '.jpg': 'image/jpeg',
@@ -389,98 +398,24 @@ async def get_pdf_page_count(file_path: str) -> int:
         logging.error(f"PDF page count error: {str(e)}")
 
 
-async def get_word_page_count_via_libreoffice(file_path: str) -> int:
-    """
-    Точный подсчет страниц Word документов через LibreOffice для Windows.
-    """
-    temp_dir = None
-
-    try:
-        # 1. Создаем временную директорию
-        temp_dir = tempfile.mkdtemp()
-
-        base_name = os.path.basename(file_path)
-        file_name_without_ext = os.path.splitext(base_name)[0]
-        pdf_output_path = os.path.join(temp_dir, f"{file_name_without_ext}.pdf")
-
-        # 2. Запускаем конвертацию
-        cmd = [
-            LIBREOFFICE_PATH, '--headless', '--convert-to', 'pdf',
-            '--outdir', temp_dir, file_path
-        ]
-
-        process = await asyncio.create_subprocess_exec(
-            *cmd,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE
-        )
-
-        stdout, stderr = await process.communicate()
-
-        # 3. Проверка результата конвертации
-        if process.returncode != 0:
-            logging.error(f"LibreOffice conversion failed: {stderr.decode()}")
-            return 0
-
-        if not os.path.exists(pdf_output_path):
-            logging.error(f"PDF file was not created. Expected path: {pdf_output_path}")
-            return 0
-        logging.info("LibreOffice conversation successfully")
-        # 4. Подсчет страниц
-        page_count = await get_pdf_page_count(pdf_output_path)
-
-        # 5. Очистка
-        try:
-            if os.path.exists(pdf_output_path):
-                os.remove(pdf_output_path)
-            if temp_dir and os.path.exists(temp_dir):
-                os.rmdir(temp_dir)
-        except Exception as e:
-            logging.warning(f"Cleanup error: {e}")
-
-        return page_count or 0
-
-    except Exception as e:
-        logging.error(f"LibreOffice critical error: {traceback.format_exc()}")
-
-        # Финальная очистка при крахе
-        if temp_dir and os.path.exists(temp_dir):
-            try:
-                for f in os.listdir(temp_dir):
-                    os.remove(os.path.join(temp_dir, f))
-                os.rmdir(temp_dir)
-            except:
-                pass
-
-        return 0
-
-
-# Версия подсчета страниц через либреофис для Linux
 # async def get_word_page_count_via_libreoffice(file_path: str) -> int:
 #     """
-#     Точный подсчет страниц Word документов через LibreOffice (версия для Linux)
+#     Точный подсчет страниц Word документов через LibreOffice для Windows.
 #     """
-#     # В Linux команда обычно доступна просто как 'libreoffice' или 'soffice'
-#     libreoffice_bin = "libreoffice"
 #     temp_dir = None
 #
 #     try:
+#         # 1. Создаем временную директорию
 #         temp_dir = tempfile.mkdtemp()
 #
-#         # В Linux LibreOffice создает PDF с тем же именем, что и оригинал
 #         base_name = os.path.basename(file_path)
 #         file_name_without_ext = os.path.splitext(base_name)[0]
 #         pdf_output_path = os.path.join(temp_dir, f"{file_name_without_ext}.pdf")
 #
-#         # Команда для Linux.
-#         # Добавляем параметр -env для изоляции профиля пользователя (нужно для стабильности на сервере)
+#         # 2. Запускаем конвертацию
 #         cmd = [
-#             libreoffice_bin,
-#             '--headless',
-#             f'-env:UserInstallation=file://{temp_dir}/profile',
-#             '--convert-to', 'pdf',
-#             '--outdir', temp_dir,
-#             file_path
+#             LIBREOFFICE_PATH, '--headless', '--convert-to', 'pdf',
+#             '--outdir', temp_dir, file_path
 #         ]
 #
 #         process = await asyncio.create_subprocess_exec(
@@ -491,28 +426,102 @@ async def get_word_page_count_via_libreoffice(file_path: str) -> int:
 #
 #         stdout, stderr = await process.communicate()
 #
+#         # 3. Проверка результата конвертации
 #         if process.returncode != 0:
-#             logging.error(f"LibreOffice failed: {stderr.decode()}")
+#             logging.error(f"LibreOffice conversion failed: {stderr.decode()}")
 #             return 0
 #
 #         if not os.path.exists(pdf_output_path):
-#             logging.error(f"PDF not found at {pdf_output_path}")
+#             logging.error(f"PDF file was not created. Expected path: {pdf_output_path}")
 #             return 0
-#
+#         logging.info("LibreOffice conversation successfully")
+#         # 4. Подсчет страниц
 #         page_count = await get_pdf_page_count(pdf_output_path)
 #
-#         # Очистка
+#         # 5. Очистка
 #         try:
-#             import shutil
-#             shutil.rmtree(temp_dir)
-#         except:
-#             pass
+#             if os.path.exists(pdf_output_path):
+#                 os.remove(pdf_output_path)
+#             if temp_dir and os.path.exists(temp_dir):
+#                 os.rmdir(temp_dir)
+#         except Exception as e:
+#             logging.warning(f"Cleanup error: {e}")
 #
 #         return page_count or 0
 #
 #     except Exception as e:
-#         logging.error(f"Linux LibreOffice error: {str(e)}")
+#         logging.error(f"LibreOffice critical error: {traceback.format_exc()}")
+#
+#         # Финальная очистка при крахе
+#         if temp_dir and os.path.exists(temp_dir):
+#             try:
+#                 for f in os.listdir(temp_dir):
+#                     os.remove(os.path.join(temp_dir, f))
+#                 os.rmdir(temp_dir)
+#             except:
+#                 pass
+#
 #         return 0
+
+
+# Версия подсчета страниц через либреофис для Linux
+async def get_word_page_count_via_libreoffice(file_path: str) -> int:
+    """
+    Точный подсчет страниц Word документов через LibreOffice (версия для Linux)
+    """
+    # В Linux команда обычно доступна просто как 'libreoffice' или 'soffice'
+    libreoffice_bin = "libreoffice"
+    temp_dir = None
+
+    try:
+        temp_dir = tempfile.mkdtemp()
+
+        # В Linux LibreOffice создает PDF с тем же именем, что и оригинал
+        base_name = os.path.basename(file_path)
+        file_name_without_ext = os.path.splitext(base_name)[0]
+        pdf_output_path = os.path.join(temp_dir, f"{file_name_without_ext}.pdf")
+
+        # Команда для Linux.
+        # Добавляем параметр -env для изоляции профиля пользователя (нужно для стабильности на сервере)
+        cmd = [
+            libreoffice_bin,
+            '--headless',
+            f'-env:UserInstallation=file://{temp_dir}/profile',
+            '--convert-to', 'pdf',
+            '--outdir', temp_dir,
+            file_path
+        ]
+
+        process = await asyncio.create_subprocess_exec(
+            *cmd,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE
+        )
+
+        stdout, stderr = await process.communicate()
+
+        if process.returncode != 0:
+            logging.error(f"LibreOffice failed: {stderr.decode()}")
+            return 0
+
+        if not os.path.exists(pdf_output_path):
+            logging.error(f"PDF not found at {pdf_output_path}")
+            return 0
+
+        page_count = await get_pdf_page_count(pdf_output_path)
+
+        # Очистка
+        try:
+            import shutil
+            shutil.rmtree(temp_dir)
+        except:
+            pass
+
+        return page_count or 0
+
+    except Exception as e:
+        logging.error(f"Linux LibreOffice error: {str(e)}")
+        return 0
 
 
 async def get_docx_page_count_metadata(file_path: str) -> int:
@@ -597,16 +606,16 @@ async def cmd_start(message: types.Message, state: FSMContext):
             # Заказ уже не активен – удаляем из памяти и показываем приветствие
             del active_orders[user_id]
             await message.answer(
-                f"Привет, {message.from_user.first_name}! Рады приветствовать тебя на нашем сервисе по распечатке "
-                f"документов в любое удобное время! Чтобы начать новый заказ, используйте команду /new_order.",
+                f"Привет, {message.from_user.first_name}! Рады приветствовать тебя на нашем сервисе по печати "
+                f"документов в любое удобное время! Чтобы начать новый заказ, используйте команду /new_order",
                 reply_markup=types.ReplyKeyboardRemove()
             )
             return
 
         # Заказ действительно активен – показываем только диалог отмены
         builder = InlineKeyboardBuilder()
-        builder.button(text="✅ Отменить и начать заново", callback_data="cancel_and_start_from_start")
-        builder.button(text="❌ Продолжить текущий", callback_data="continue_current")
+        builder.button(text="❌ Отменить и начать заново", callback_data="cancel_and_start_from_start")
+        builder.button(text="✅ Продолжить текущий", callback_data="continue_current")
         await message.answer(
             "У вас есть незавершённый заказ (ожидает оплаты). Что хотите сделать?",
             reply_markup=builder.as_markup()
@@ -615,8 +624,8 @@ async def cmd_start(message: types.Message, state: FSMContext):
 
     # Если активного заказа нет, показываем приветствие
     await message.answer(
-        f"Привет, {message.from_user.first_name}! Рады приветствовать тебя на нашем сервисе по распечатке "
-        f"документов в любое удобное время! Чтобы начать новый заказ, используйте команду /new_order.",
+        f"Привет, {message.from_user.first_name}! Рады приветствовать тебя на нашем сервисе по печати "
+        f"документов в любое удобное время! Чтобы начать новый заказ, используйте команду /new_order",
         reply_markup=types.ReplyKeyboardRemove()
     )
 
@@ -647,10 +656,6 @@ async def cmd_reset(message: types.Message, state: FSMContext):
         if user_id in active_orders:
             order_id = active_orders[user_id]
             await cancel_order_via_api(order_id)
-            if order_id:
-                await message.answer(
-                    f"❌ Платёж по заказу №{order_id} был отклонён или отменён.\n"
-                )
             del active_orders[user_id]
 
         # Удаляем временный файл
@@ -681,22 +686,15 @@ async def cancel_and_start_from_start(callback: types.CallbackQuery, state: FSMC
 
     if order_id:
         await cancel_order_via_api(order_id)
-
-        # Отправляем уведомление об отмене
-        await callback.message.answer(
-            f"❌ Платёж по заказу №{order_id} был отклонён или отменён.\n"
-        )
-
         del active_orders[user_id]
-
         # Отправляем приветствие
         await callback.message.answer(
-            f"Привет, {callback.from_user.first_name}! Рады приветствовать тебя на нашем сервисе по распечатке "
-            f"документов в любое удобное время! Чтобы начать новый заказ, используйте команду /new_order.",
+            f"Привет, {callback.from_user.first_name}! Рады приветствовать тебя на нашем сервисе по печати "
+            f"документов в любое удобное время! Чтобы начать новый заказ, используйте команду /new_order",
             reply_markup=types.ReplyKeyboardRemove()
         )
     else:
-        await callback.message.answer("Активный заказ не найден.")
+        await callback.message.answer("Активный заказ не найден")
 
     await state.clear()
     await callback.answer()
@@ -712,12 +710,9 @@ async def cancel_and_start_from_new_order(callback: types.CallbackQuery, state: 
 
     if order_id:
         await cancel_order_via_api(order_id)
-        await callback.message.answer(
-            f"❌ Платёж по заказу №{order_id} был отклонён или отменён."
-        )
         del active_orders[user_id]
     else:
-        await callback.message.answer("Активный заказ не найден.")
+        await callback.message.answer("Активный заказ не найден")
 
     await state.clear()
     await start_new_order_process(callback.message, state)
@@ -739,11 +734,11 @@ async def continue_current(callback: types.CallbackQuery, state: FSMContext):
     user_id = callback.from_user.id
     if user_id in active_orders:
         await callback.message.answer(
-            "Пожалуйста, завершите оплату текущего заказа. Если возникли проблемы, используйте /reset для отмены."
+            "Пожалуйста, завершите оплату текущего заказа. Если возникли проблемы, используйте /reset для отмены"
         )
     else:
         # Если нет активного заказа, но состояние есть, просто напоминаем
-        await callback.message.answer("Продолжайте оформление заказа.")
+        await callback.message.answer("Продолжайте оформление заказа")
     await callback.answer()
 
 
@@ -882,9 +877,9 @@ async def final_send_broadcast(callback: types.CallbackQuery, state: FSMContext)
     headers = {"X-API-Key": INTERNAL_API_KEY}
 
     async with aiohttp.ClientSession() as session:
-        async with session.get(f"{API_URL}/users/all-ids", headers=headers) as resp:
+        async with session.get(f"{API_URL}/users/all-ids?platform=telegram", headers=headers) as resp:
             if resp.status != 200:
-                await callback.message.answer("❌ Ошибка API.")
+                await callback.message.answer("❌ Ошибка API")
                 return
             user_ids = await resp.json()
 
@@ -921,7 +916,7 @@ async def cancel_broadcast(callback: types.CallbackQuery, state: FSMContext):
         except asyncio.CancelledError:
             pass
     await state.clear()
-    await callback.message.edit_text("❌ Рассылка отменена.")
+    await callback.message.edit_text("❌ Рассылка отменена")
     await callback.answer()
 
 
@@ -970,7 +965,7 @@ async def process_shop(message: types.Message, state: FSMContext):
         f"• Черно-белая: {shop['price_bw']:.2f} руб/стр\n"
         f"• Цветная: {shop['price_cl']:.2f} руб/стр\n\n"
         f"📎 Отправьте один PDF, DOC, DOCX, PNG, JPEG, JPG файл или одну фотографию размером не более 20 МБ для расчета стоимости\n"
-        f"Используйте /reset для отмены заказа."
+        f"Используйте /reset для отмены заказа"
     )
     await message.answer(response, reply_markup=types.ReplyKeyboardRemove())
     await state.set_state(Form.file_processing)
@@ -981,7 +976,7 @@ async def process_file(message: types.Message, state: FSMContext):
     user_data = await state.get_data()
     if user_data.get('temp_file'):
         await message.answer(
-            "❌ Вы уже отправили файл. Дождитесь обработки или отмените текущий заказ командой /reset.",
+            "❌ Вы уже отправили файл. Дождитесь обработки или отмените текущий заказ командой /reset",
             reply_markup=types.ReplyKeyboardRemove()
         )
         return
@@ -989,7 +984,7 @@ async def process_file(message: types.Message, state: FSMContext):
     # Проверка на альбом (медиа-группу) – несколько файлов в одном сообщении
     if message.media_group_id:
         await message.answer(
-            "❌ Пожалуйста, отправляйте файлы по одному. Сначала дождитесь обработки текущего файла.",
+            "❌ Пожалуйста, отправляйте файлы по одному. Сначала дождитесь обработки текущего файла",
             reply_markup=types.ReplyKeyboardRemove()
         )
         return
@@ -1019,7 +1014,7 @@ async def process_file(message: types.Message, state: FSMContext):
                     raise ValueError("Получен пустой файл")
 
                 if len(file_content) > MAX_FILE_SIZE:
-                    raise ValueError("Файл слишком большой. Максимальный размер — 20 МБ.")
+                    raise ValueError("Файл слишком большой. Максимальный размер — 20 МБ")
 
         # 4. Проверяем расширение файла
         filename = message.document.file_name or "unnamed_file"
@@ -1137,7 +1132,7 @@ async def process_photo(message: types.Message, state: FSMContext):
     user_data = await state.get_data()
     if user_data.get('temp_file'):
         await message.answer(
-            "❌ Вы уже отправили файл. Дождитесь обработки или отмените текущий заказ командой /reset.",
+            "❌ Вы уже отправили файл. Дождитесь обработки или отмените текущий заказ командой /reset",
             reply_markup=types.ReplyKeyboardRemove()
         )
         return
@@ -1145,7 +1140,7 @@ async def process_photo(message: types.Message, state: FSMContext):
     # Проверка на альбом (медиа-группу) – несколько фото в одном сообщении
     if message.media_group_id:
         await message.answer(
-            "❌ Пожалуйста, отправляйте фото по одному. Сначала дождитесь обработки текущего файла.",
+            "❌ Пожалуйста, отправляйте фото по одному. Сначала дождитесь обработки текущего файла",
             reply_markup=types.ReplyKeyboardRemove()
         )
         return
@@ -1316,7 +1311,7 @@ async def process_comment(message: types.Message, state: FSMContext):
         f"🔍 Подтвердите заказ:\n"
         f"• Точка: {user_data['shop']['name']} по адресу {user_data['shop']['address']}\n"
         f"• Страниц: {user_data['pages']}\n"
-        f"• Тип: {user_data['color']}\n"
+        f"• Тип печати: {user_data['color']}\n"
         f"• Стоимость: {user_data['price']:.2f} руб\n"  
         f"• Комментарий: {comment if comment else 'нет'}\n"
         f"Если все верно - нажмите кнопку:\n'💳 Оплатить'"
@@ -1374,6 +1369,7 @@ async def process_confirmation(message: types.Message, state: FSMContext):
             form_data.add_field('user_id', str(message.chat.id))
             form_data.add_field('note', user_data.get('comment', ''))
             form_data.add_field('file_extension', user_data['file_extension'])
+            form_data.add_field('platform', 'telegram')
             form_data.add_field('con_code', str(check_code))
 
             with open(temp_file_path, 'rb') as file:
@@ -1418,7 +1414,8 @@ async def process_confirmation(message: types.Message, state: FSMContext):
 
         # 3. Всё хорошо – отправляем ссылку
         sent_message = await message.answer(
-            f"💳 Для завершения заказа перейдите по ссылке:\n{confirmation_url}",
+            f"💳 Для завершения заказа перейдите по ссылке:\n{confirmation_url}\n"
+            f"❗ Ссылка будет действительна в течение 10 минут",
             reply_markup=types.ReplyKeyboardRemove()
         )
 
@@ -1445,7 +1442,7 @@ async def process_confirmation(message: types.Message, state: FSMContext):
             await cancel_order_via_api(order_id)
 
         await message.answer(
-            "❌ Произошла ошибка при создании заказа/платежа. Попробуйте позже.",
+            "❌ Произошла ошибка при создании заказа/платежа. Попробуйте позже",
             reply_markup=types.ReplyKeyboardRemove()
         )
     finally:
@@ -1468,7 +1465,7 @@ async def process_confirmation(message: types.Message, state: FSMContext):
 async def process_file_invalid(message: types.Message):
     await message.answer(
         "❌ Пожалуйста, отправьте файл в формате PDF, DOC, DOCX, PNG, JPEG, JPG.\n"
-        "Используйте /reset для отмены заказа.",
+        "Используйте /reset для отмены заказа",
         reply_markup=types.ReplyKeyboardRemove()
     )
 

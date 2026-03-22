@@ -33,12 +33,6 @@ from slowapi.middleware import SlowAPIMiddleware
 from contextlib import asynccontextmanager
 import time
 
-# logging.basicConfig(
-#     level=logging.DEBUG,
-#     filename='api.log',
-#     format='%(asctime)s - %(levelname)s - %(message)s'
-# )
-
 LOGGING_CONFIG = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -61,7 +55,7 @@ LOGGING_CONFIG = {
             "formatter": "default",
             "class": "logging.handlers.RotatingFileHandler",
             "filename": "api.log",
-            "maxBytes": 10 * 1024 * 1024,  # 10 MB
+            "maxBytes": 5 * 1024 * 1024,  # 5 MB
             "backupCount": 5,
             "encoding": "utf8",
         },
@@ -69,7 +63,7 @@ LOGGING_CONFIG = {
             "formatter": "access",
             "class": "logging.handlers.RotatingFileHandler",
             "filename": "api.log",
-            "maxBytes": 10 * 1024 * 1024,  # 10 MB
+            "maxBytes": 5 * 1024 * 1024,  # 5 MB
             "backupCount": 5,
             "encoding": "utf8",
         },
@@ -82,6 +76,7 @@ LOGGING_CONFIG = {
 }
 
 TELEGRAM_BOT_URL = "https://t.me/print_there_bot"
+VK_BOT_URL = "https://vk.com/im?sel=-236864741"
 
 env_path = os.path.join(os.path.dirname(__file__), 'config.env')
 load_dotenv(dotenv_path=env_path)
@@ -103,7 +98,6 @@ if not INTERNAL_API_KEY:
 JWT_SECRET = os.getenv("JWT_SECRET")
 JWT_ALGORITHM = os.getenv("JWT_ALGORITHM")
 ACCESS_TOKEN_EXPIRE_HOURS = int(os.getenv("ACCESS_TOKEN_EXPIRE_HOURS"))
-ORDER_TIMEOUT_MINUTES = int(os.getenv("ORDER_TIMEOUT_MINUTES"))
 API_URL = os.getenv("API_URL")
 security = HTTPBearer()
 
@@ -163,15 +157,11 @@ def rate_limit_key(request: Request):
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Запускаем существующие задачи
-    task1 = asyncio.create_task(cancel_expired_orders())
-    task2 = asyncio.create_task(clean_orphaned_files())  # новая задача
+    task = asyncio.create_task(clean_orphaned_files())
     yield
-    task1.cancel()
-    task2.cancel()
+    task.cancel()
     try:
-        await task1
-        await task2
+        await task
     except asyncio.CancelledError:
         pass
 
@@ -183,17 +173,16 @@ app.add_middleware(SlowAPIMiddleware)
 
 UPLOAD_FOLDER = os.path.abspath('uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-# app.mount("/uploads", StaticFiles(directory=UPLOAD_FOLDER), name="uploads")
 
 
 async def notify_bot(order_id: int, status: str):
-    """Отправляет уведомление об изменении статуса заказа в WebSocket-сервер бота."""
+    """Отправляет уведомление об изменении статуса заказа в соответствующий канал (Telegram или VK)."""
     try:
-        # Получаем данные заказа
+        # Получаем данные заказа вместе с платформой
         async with await get_db() as conn:
             async with conn.cursor(aiomysql.DictCursor) as cursor:
                 await cursor.execute("""
-                    SELECT o.user_id, o.ID, s.address, o.con_code
+                    SELECT o.user_id, o.ID, s.address, o.con_code, o.platform
                     FROM `order` o
                     JOIN shop s ON o.ID_shop = s.ID_shop
                     WHERE o.ID = %s
@@ -204,23 +193,51 @@ async def notify_bot(order_id: int, status: str):
             logging.warning(f"Order {order_id} not found for notification")
             return
 
-        # Подключаемся к WebSocket-серверу бота
-        async with websockets.connect("ws://localhost:8001") as ws:
-            payload = {
-                "type": "status_update",
-                "status": status,
-                "user_id": data['user_id'],
-                "order_id": data['ID'],
-                "address": data['address'],
-                "con_code": data['con_code']
-            }
-            await ws.send(json.dumps(payload))
-            logging.info(f"Sent status '{status}' for order {order_id} to user {data['user_id']}")
+        platform = data.get('platform', 'telegram')  # по умолчанию telegram
 
-    except ConnectionRefusedError:
-        logging.error(f"WebSocket connection refused to ws://localhost:8001. Is the bot's WebSocket server running?")
+        if platform == 'telegram':
+            # Отправка уведомления Telegram боту через WebSocket
+            try:
+                async with websockets.connect("ws://localhost:8001") as ws:
+                    payload = {
+                        "type": "status_update",
+                        "status": status,
+                        "user_id": data['user_id'],
+                        "order_id": data['ID'],
+                        "address": data['address'],
+                        "con_code": data['con_code']
+                    }
+                    await ws.send(json.dumps(payload))
+                    logging.info(f"Sent status '{status}' for order {order_id} to Telegram user {data['user_id']}")
+            except ConnectionRefusedError:
+                logging.error(f"Telegram WebSocket connection refused to ws://localhost:8001")
+            except Exception as e:
+                logging.error(f"Telegram WebSocket notification error: {e}")
+
+        elif platform == 'vk':
+            # Отправка уведомления VK боту через HTTP POST
+            try:
+                async with aiohttp.ClientSession() as session:
+                    await session.post(
+                        "http://localhost:8002/notify",
+                        json={
+                            "order_id": data['ID'],
+                            "status": status,
+                            "user_id": data['user_id'],
+                            "address": data['address'],
+                            "con_code": data['con_code']
+                        },
+                        headers={"X-Internal-Key": INTERNAL_API_KEY}
+                    )
+                    logging.info(f"Sent status '{status}' for order {order_id} to VK user {data['user_id']}")
+            except Exception as e:
+                logging.error(f"VK HTTP notification error: {e}")
+
+        else:
+            logging.warning(f"Unknown platform {platform} for order {order_id}")
+
     except Exception as e:
-        logging.error(f"WebSocket notification error for order {order_id}: {traceback.format_exc()}")
+        logging.error(f"Error in notify_bot: {traceback.format_exc()}")
 
 
 # Database configuration
@@ -297,136 +314,6 @@ async def get_franchise_id_by_shop(shop_id: int) -> int:
                 raise HTTPException(404, detail="Shop has no franchise assigned")
 
             return data['franchise_id']
-
-
-async def cancel_order(order_id: int, payment_id: Optional[str], shop_id: int, conn, cursor, notify_user: bool = True):
-    """
-    Отменяет заказ. Если есть payment_id, синхронизируется с ЮKassa:
-    - Если платёж успешен → переводит заказ в paid.
-    - Если платёж отменён → просто обновляет статус.
-    - Иначе пытается отменить платёж.
-    Отправляет соответствующее уведомление пользователю.
-    """
-    try:
-        final_status = 'canceled'
-        notification_status = 'expired'  # по умолчанию для таймаута
-
-        if payment_id:
-            # Получаем ключи франшизы для этого магазина
-            await cursor.execute("""
-                SELECT f.yk_shop_id, f.yk_secret_key
-                FROM shop s
-                JOIN franchise f ON s.franchise_id = f.id
-                WHERE s.ID_shop = %s
-            """, (shop_id,))
-            franchise = await cursor.fetchone()
-            if franchise:
-                try:
-                    secret_key = decrypt_value(franchise['yk_secret_key'])
-                    Configuration.account_id = franchise['yk_shop_id']
-                    Configuration.secret_key = secret_key
-
-                    # Асинхронно получаем актуальный статус платежа из ЮKassa
-                    payment = await asyncio.to_thread(Payment.find_one, payment_id)
-
-                    if payment.status == 'succeeded':
-                        # Платёж уже успешен → переводим заказ в paid
-                        final_status = 'paid'
-                        notification_status = 'paid'
-                        await cursor.execute("""
-                            UPDATE `order`
-                            SET status = 'paid',
-                                payment_status = 'succeeded',
-                                paid_at = NOW()
-                            WHERE ID = %s
-                        """, (order_id,))
-                        await conn.commit()
-                        try:
-                            await notify_bot(order_id, notification_status)
-                        except Exception as e:
-                            logging.error(f"Failed to send '{notification_status}' notification for order {order_id}: {e}")
-                        return  # Завершаем, заказ обработан
-
-                    elif payment.status == 'canceled':
-                        # Платёж уже отменён, просто обновим БД
-                        final_status = 'canceled'
-                        notification_status = 'expired'
-                    else:
-                        # Платёж в другом статусе (например, waiting_for_capture) – пытаемся отменить
-                        try:
-                            await asyncio.to_thread(Payment.cancel, payment_id)
-                            logging.info(f"Payment {payment_id} canceled in YooKassa")
-                        except Exception as e:
-                            logging.warning(f"YooKassa cancel failed: {e}")
-                        # В любом случае ставим статус canceled
-                        final_status = 'canceled'
-                        notification_status = 'expired'
-                except Exception as e:
-                    logging.error(f"Error processing payment {payment_id}: {e}")
-                    # При ошибке запроса к ЮKassa тоже отменяем заказ в БД
-                    final_status = 'canceled'
-                    notification_status = 'expired'
-            else:
-                # Франшиза не найдена – не можем проверить платёж, отменяем только в БД
-                final_status = 'canceled'
-                notification_status = 'expired'
-        else:
-            # Нет payment_id (заказ в статусе created) – просто отменяем
-            final_status = 'canceled'
-            notification_status = 'expired'
-
-        # Если заказ не стал paid, отменяем в БД
-        if final_status == 'canceled':
-            await cursor.execute("""
-                        UPDATE `order`
-                        SET status = 'canceled', payment_status = 'canceled'
-                        WHERE ID = %s
-                    """, (order_id,))
-            await conn.commit()
-
-            # Получаем file_path для удаления
-            await cursor.execute("SELECT file_path FROM `order` WHERE ID = %s", (order_id,))
-            file_data = await cursor.fetchone()
-            if file_data and file_data['file_path']:
-                try:
-                    await delete_order_file(order_id, file_data['file_path'])
-                except Exception as e:
-                    logging.error(f"Failed to delete file for order {order_id}: {e}")
-
-            if notify_user:
-                try:
-                    await notify_bot(order_id, notification_status)
-                except Exception as e:
-                    logging.error(f"Failed to send '{notification_status}' notification for order {order_id}: {e}")
-            logging.info(f"Order {order_id} canceled (notify_user={notify_user})")
-
-    except Exception as e:
-        logging.error(f"Error cancelling order {order_id}: {e}")
-        await conn.rollback()
-
-
-async def cancel_expired_orders():
-    """Проверяет просроченные заказы каждую минуту."""
-    while True:
-        try:
-            async with await get_db() as conn:
-                async with conn.cursor(aiomysql.DictCursor) as cursor:
-                    await cursor.execute("""
-                        SELECT ID, payment_id, ID_shop
-                        FROM `order`
-                        WHERE status = 'waiting_payment'
-                          AND created_at < NOW() - INTERVAL %s MINUTE
-                    """, (ORDER_TIMEOUT_MINUTES,))
-                    expired_orders = await cursor.fetchall()
-
-                    for order in expired_orders:
-                        logging.info(f"Expired order {order['ID']} found, cancelling...")
-                        await cancel_order(order['ID'], order['payment_id'], order['ID_shop'], conn, cursor)
-                        await asyncio.sleep(0.5)
-        except Exception as e:
-            logging.error(f"Error in cancel_expired_orders: {e}", exc_info=True)
-
-        await asyncio.sleep(60)  # интервал проверки — 1 минута
 
 
 async def delete_order_file(order_id: int, file_path: str) -> bool:
@@ -703,8 +590,6 @@ async def complete_order(order_id: int, current_shop: TokenData = Depends(verify
                         detail=f"Невозможно завершить заказ в статусе {current['status']}"
                     )
 
-                user_id_for_notification = current['user_id']
-
                 file_path = os.path.join(UPLOAD_FOLDER, current['file_path'])
                 try:
                     if os.path.exists(file_path):
@@ -732,6 +617,21 @@ async def complete_order(order_id: int, current_shop: TokenData = Depends(verify
         raise HTTPException(500, detail="Internal server error")
 
 
+@app.get("/users/{user_id}/active-order")
+async def get_active_order(user_id: str, x_api_key: str = Header(None)):
+    if x_api_key != INTERNAL_API_KEY:
+        raise HTTPException(403)
+    async with await get_db() as conn:
+        async with conn.cursor(aiomysql.DictCursor) as cursor:
+            await cursor.execute("""
+                SELECT ID, status FROM `order`
+                WHERE user_id = %s AND status = 'waiting_payment'
+                LIMIT 1
+            """, (user_id,))
+            order = await cursor.fetchone()
+            return order if order else None
+
+
 @app.post("/orders")
 async def create_order(
         file: UploadFile = File(...),
@@ -743,6 +643,7 @@ async def create_order(
         note: str = Form(''),
         con_code: int = Form(...),
         file_extension: str = Form(...),
+        platform: str = Form('telegram'),
         x_api_key: str = Header(None)
 ):
     if x_api_key != INTERNAL_API_KEY: raise HTTPException(403)
@@ -753,11 +654,11 @@ async def create_order(
                 await cursor.execute("""
                     INSERT INTO `order` (
                         ID_shop, price, note, con_code, color, status, 
-                        user_id, pages, file_extension, file_path
-                    ) VALUES (%s, %s, %s, %s, %s, 'created', %s, %s, %s, 'temp')
+                        user_id, pages, file_extension, file_path, platform
+                    ) VALUES (%s, %s, %s, %s, %s, 'created', %s, %s, %s, 'temp', %s)
                 """, (
                     ID_shop, price, note, con_code, color,
-                    user_id, pages, file_extension
+                    user_id, pages, file_extension, platform
                 ))
                 order_id = cursor.lastrowid
 
@@ -821,7 +722,7 @@ async def create_payment_endpoint(data: PaymentCreateRequest):
         "capture": True,
         "confirmation": {
             "type": "redirect",
-            "return_url": f"{API_URL}/payment-return"
+            "return_url": f"{API_URL}/payment-return?order_id={order['ID']}"
         },
         "metadata": {
             "order_id": str(order["ID"]),
@@ -1063,21 +964,25 @@ async def create_franchise(franchise: FranchiseCreate):
 
 
 @app.get("/users/all-ids")
-async def get_all_user_ids(x_api_key: str = Header(None)):
+async def get_all_user_ids(
+    x_api_key: str = Header(None),
+    platform: Optional[str] = Query(None, description="Фильтр по платформе (telegram или vk)")
+):
     if not INTERNAL_API_KEY or x_api_key != INTERNAL_API_KEY:
         logging.warning(f"Unauthorized access attempt to user IDs. Key: {x_api_key}")
         raise HTTPException(status_code=403, detail="Access denied")
 
     try:
         async with await get_db() as conn:
-            # Используем DictCursor, так как он у тебя в get_db по умолчанию
             async with conn.cursor(aiomysql.DictCursor) as cursor:
-                await cursor.execute("SELECT DISTINCT user_id FROM `order` WHERE user_id IS NOT NULL")
+                if platform:
+                    query = "SELECT DISTINCT user_id FROM `order` WHERE platform = %s AND user_id IS NOT NULL"
+                    await cursor.execute(query, (platform,))
+                else:
+                    query = "SELECT DISTINCT user_id FROM `order` WHERE user_id IS NOT NULL"
+                    await cursor.execute(query)
                 result = await cursor.fetchall()
-
-                # Обращаемся по имени колонки, а не по индексу
                 return [row['user_id'] for row in result]
-
     except Exception as e:
         logging.error(f"DB Error in get_all_user_ids: {traceback.format_exc()}")
         raise HTTPException(500, detail="Database error")
@@ -1129,7 +1034,6 @@ async def yookassa_webhook(request: Request):
         event_json = await request.json()
         notification_object = event_json.get("object", {})
         payment_id = notification_object.get("id")
-        event = event_json.get("event")  # Тип события, пригодится для фильтрации
 
         if not payment_id:
             return {"status": "ok"}
@@ -1139,7 +1043,7 @@ async def yookassa_webhook(request: Request):
             async with conn.cursor(aiomysql.DictCursor) as cursor:
                 # Исправленный запрос: связываем order → shop → franchise
                 await cursor.execute("""
-                    SELECT o.ID, o.ID_shop, o.status, o.payment_status,
+                    SELECT o.ID, o.ID_shop, o.status, o.payment_status, o.file_path,
                            f.yk_shop_id, f.yk_secret_key
                     FROM `order` o
                     JOIN shop s ON o.ID_shop = s.ID_shop
@@ -1197,7 +1101,7 @@ async def yookassa_webhook(request: Request):
                         try:
                             await notify_bot(order['ID'], "paid")
                         except Exception as e:
-                            logging.error(f"Failed to send 'paid' notification for order {order_id}: {e}")
+                            logging.error(f"Failed to send 'paid' notification for order {order['ID']}: {e}")
 
                 elif payment_from_yk.status == "canceled":
                     if order['status'] == 'waiting_payment':
@@ -1208,11 +1112,19 @@ async def yookassa_webhook(request: Request):
                             WHERE ID = %s
                         """, (order['ID'],))
                         await conn.commit()
-                        try:
-                            await notify_bot(order['ID'], "canceled")
-                        except Exception as e:
-                            logging.error(f"Failed to send 'canceled' notification for order {order_id}: {e}")
 
+                        if order.get('file_path'):
+                            await delete_order_file(order['ID'], order['file_path'])
+
+                        # Определяем причину отмены (если нужно различать)
+                        cancellation_details = getattr(payment_from_yk, 'cancellation_details', None)
+                        notify_status = 'canceled'
+                        if cancellation_details and cancellation_details.reason == 'expired_on_confirmation':
+                            notify_status = 'expired'
+                        try:
+                            await notify_bot(order['ID'], notify_status)
+                        except Exception as e:
+                            logging.error(f"Failed to send '{notify_status}' notification for order {order['ID']}: {e}")
         return {"status": "ok"}
 
     except Exception as e:
@@ -1220,71 +1132,71 @@ async def yookassa_webhook(request: Request):
         return {"status": "ok"}  # Всегда возвращаем 200 для ЮKassa
 
 
-@app.post("/orders/{order_id}/cancel-timeout")
-async def cancel_order_due_to_timeout(order_id: int):
+@app.post("/admin/orders/{order_id}/cancel")
+async def admin_cancel_order(order_id: int, x_api_key: str = Header(None)):
     """
-    Эндпоинт для отмены заказа по таймауту (вызывается вручную или фоновым процессом).
-    Использует общую функцию cancel_order, которая синхронизируется с ЮKassa и отправляет уведомления.
+    Эндпоинт для отмены заказа по запросу от бота (административный).
+    Используется для принудительной отмены заказа, если он не был отменён вебхуком.
     """
+    if not INTERNAL_API_KEY or x_api_key != INTERNAL_API_KEY:
+        logging.warning(f"Unauthorized access attempt to cancel order {order_id}. Key: {x_api_key}")
+        raise HTTPException(status_code=403, detail="Access denied")
+
     async with await get_db() as conn:
         async with conn.cursor(aiomysql.DictCursor) as cursor:
-            # Получаем данные заказа
-            await cursor.execute("""
-                SELECT payment_id, ID_shop, status
-                FROM `order`
-                WHERE ID = %s
-            """, (order_id,))
+            await cursor.execute("SELECT status, file_path FROM `order` WHERE ID = %s", (order_id,))
             order = await cursor.fetchone()
-
             if not order:
                 raise HTTPException(404, detail="Order not found")
 
-            # Если заказ уже не в ожидании оплаты, ничего не делаем (уже обработан)
             if order['status'] != 'waiting_payment':
                 return {"status": "already_processed", "current_status": order['status']}
 
-            # Вызываем общую функцию отмены заказа
-            await cancel_order(
-                order_id=order_id,
-                payment_id=order['payment_id'],
-                shop_id=order['ID_shop'],
-                conn=conn,
-                cursor=cursor
-            )
+            await cursor.execute("""
+                UPDATE `order`
+                SET status = 'canceled',
+                    payment_status = 'canceled'
+                WHERE ID = %s
+            """, (order_id,))
+            await conn.commit()
+
+            if order.get('file_path'):
+                await delete_order_file(order_id, order['file_path'])
+
+            try:
+                await notify_bot(order_id, "canceled")
+            except Exception as e:
+                logging.error(f"Failed to send 'canceled' notification for order {order_id}: {e}")
 
     return {"status": "canceled"}
 
 
 @app.get("/payment-return", response_class=RedirectResponse)
-async def payment_return():
+async def payment_return(order_id: int = Query(...)):
     """
     Этот эндпоинт принимает пользователя от YooKassa после оплаты
     и немедленно перенаправляет его в Telegram-бота.
     """
-    logging.info("User redirected back to the bot after payment attempt.")
-    return RedirectResponse(url=TELEGRAM_BOT_URL, status_code=302)
+    try:
+        async with await get_db() as conn:
+            async with conn.cursor(aiomysql.DictCursor) as cursor:
+                await cursor.execute("SELECT platform FROM `order` WHERE ID = %s", (order_id,))
+                order = await cursor.fetchone()
+                if not order:
+                    logging.warning(f"Order {order_id} not found, redirecting to Telegram by default")
+                    return JSONResponse(status_code=200, content={"status": "ok"})
+                platform = order.get("platform", "telegram")
+                if platform == "telegram":
+                    bot_url = TELEGRAM_BOT_URL
+                elif platform == "vk":
+                    bot_url = VK_BOT_URL
+                else:
+                    bot_url = TELEGRAM_BOT_URL
+                return RedirectResponse(url=bot_url, status_code=302)
 
-
-@app.post("/admin/orders/{order_id}/cancel")
-async def admin_cancel_order(order_id: int, x_api_key: str = Header(None)):
-    """
-    Эндпоинт для отмены заказа по запросу от бота (административный).
-    Использует существующую логику cancel_order_due_to_timeout.
-    """
-    if not INTERNAL_API_KEY or x_api_key != INTERNAL_API_KEY:
-        logging.warning(f"Unauthorized access attempt to user IDs. Key: {x_api_key}")
-        raise HTTPException(status_code=403, detail="Access denied")
-
-    async with await get_db() as conn:
-        async with conn.cursor(aiomysql.DictCursor) as cursor:
-            await cursor.execute("SELECT payment_id, ID_shop, status FROM `order` WHERE ID = %s", (order_id,))
-            order = await cursor.fetchone()
-            if not order:
-                raise HTTPException(404, detail="Order not found")
-            if order['status'] != 'waiting_payment':
-                return {"status": "already_processed"}
-            await cancel_order(order_id, order['payment_id'], order['ID_shop'], conn, cursor, notify_user=False)
-    return {"status": "canceled"}
+    except Exception as e:
+        logging.error(f"Error in payment-return: {e}")
+        return JSONResponse(status_code=200, content={"status": "ok"})
 
 
 if __name__ == "__main__":

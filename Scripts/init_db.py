@@ -95,6 +95,7 @@ def main():
             "     NOT NULL DEFAULT 'created',"
             "  `file_extension` varchar(10) NOT NULL,"
             "  `file_path` varchar(255) NOT NULL,"
+            "  `platform` varchar(10) DEFAULT 'telegram' NOT NULL,"
             "  `user_id` varchar(255) NOT NULL,"
             "  `pages` int NOT NULL,"
             "  `payment_id` varchar(64) DEFAULT NULL,"
