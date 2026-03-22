@@ -437,6 +437,29 @@ async def cmd_my_orders(message: types.Message):
     await message.answer(text)
 
 
+@dp.message(Command("show_stats"))
+async def cmd_my_stats(message: types.Message):
+    """Показывает количество заказов пользователя по статусам"""
+    async with aiohttp.ClientSession() as session:
+        try:
+            async with session.get(f"{API_URL}/orders/user/{message.chat.id}/stats") as resp:
+                if resp.status != 200:
+                    await message.answer("❌ Ошибка получения статистики. Попробуйте позже.")
+                    return
+                stats = await resp.json()
+        except aiohttp.ClientError:
+            await message.answer("❌ Ошибка соединения с сервером.")
+            return
+
+    text = (
+        f"📊 Ваша статистика заказов:\n\n"
+        f"📥 Принято: {stats.get('received', 0)}\n"
+        f"✅ Выполнено: {stats.get('completed', 0)}\n"
+        f"❌ Отменено: {stats.get('canceled', 0)}"
+    )
+    await message.answer(text, parse_mode="Markdown")
+
+
 @dp.message(Form.file_processing)
 async def process_file_invalid(message: types.Message):
     await message.answer(

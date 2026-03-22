@@ -57,8 +57,8 @@ security = HTTPBearer()
 # Настройка лимитера для защиты от DDoS
 limiter = Limiter(
     key_func=get_remote_address,
-    default_limits=["100/minute"],  # Общий лимит для всех эндпоинтов
-    storage_uri="memory://",  # Используем память для хранения счетчиков (можно заменить на redis://)
+    default_limits=["100/minute"],
+    storage_uri="memory://",
 )
 
 app = FastAPI()
@@ -330,6 +330,40 @@ async def create_order(
             os.remove(new_path)
         logging.error(f"Order creation error: {traceback.format_exc()}")
         raise HTTPException(500, detail=str(e))
+
+
+# Добавьте этот эндпоинт в файл api.py (после существующих эндпоинтов)
+@app.get("/orders/user/{user_id}/stats")
+@limiter.limit("30/minute")  # лимит запросов, можно настроить
+async def get_user_order_stats(
+    request: Request,
+    user_id: int
+):
+    """
+    Возвращает количество заказов пользователя по статусам:
+    received, completed, canceled
+    """
+    try:
+        async with await get_db() as conn:
+            async with conn.cursor(aiomysql.DictCursor) as cursor:
+                # Группируем по статусу
+                await cursor.execute("""
+                    SELECT status, COUNT(*) as count
+                    FROM `order`
+                    WHERE user_id = %s
+                    GROUP BY status
+                """, (user_id,))
+                rows = await cursor.fetchall()
+
+                # Преобразуем результат в словарь, добавляем нули для отсутствующих статусов
+                stats = {row['status']: row['count'] for row in rows}
+                for status in ['received', 'completed', 'canceled']:
+                    stats.setdefault(status, 0)
+
+                return stats
+    except Exception as e:
+        logging.error(f"Order stats error: {traceback.format_exc()}")
+        raise HTTPException(500, detail="Server error")
 
 
 # Защищённый доступ к файлам
