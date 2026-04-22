@@ -12,7 +12,7 @@ import hashlib
 import secrets
 from datetime import datetime, timedelta, timezone
 from fastapi import FastAPI, HTTPException, UploadFile, Form, File, Query, WebSocket, Depends, Header, Request
-from fastapi.responses import JSONResponse, FileResponse, RedirectResponse
+from fastapi.responses import JSONResponse, FileResponse, RedirectResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
@@ -74,8 +74,9 @@ LOGGING_CONFIG = {
         "uvicorn.access": {"handlers": ["access"], "level": "INFO", "propagate": False},
     },
 }
-
-TELEGRAM_BOT_URL = "https://t.me/print_there_bot"
+ 
+# TELEGRAM_BOT_URL = "https://t.me/print_there_bot"
+TELEGRAM_BOT_URL = "tg://resolve?domain=print_there_bot"
 VK_BOT_URL = "https://vk.com/im?sel=-236864741"
 
 env_path = os.path.join(os.path.dirname(__file__), 'config.env')
@@ -232,10 +233,26 @@ async def notify_bot(order_id: int, status: str):
                     logging.info(f"Sent status '{status}' for order {order_id} to VK user {data['user_id']}")
             except Exception as e:
                 logging.error(f"VK HTTP notification error: {e}")
-
+        elif platform == 'max':
+            # Отправка уведомления MAX боту через HTTP POST (как в VK)
+            try:
+                async with aiohttp.ClientSession() as session:
+                    await session.post(
+                        "http://localhost:8004/notify",
+                        json={
+                            "order_id": data['ID'],
+                            "status": status,
+                            "user_id": data['user_id'],
+                            "address": data['address'],
+                            "con_code": data['con_code']
+                        },
+                        headers={"X-Internal-Key": INTERNAL_API_KEY}
+                    )
+                    logging.info(f"Sent status '{status}' for order {order_id} to MAX user {data['user_id']}")
+            except Exception as e:
+                logging.error(f"MAX HTTP notification error: {e}")
         else:
             logging.warning(f"Unknown platform {platform} for order {order_id}")
-
     except Exception as e:
         logging.error(f"Error in notify_bot: {traceback.format_exc()}")
 
@@ -1186,8 +1203,34 @@ async def payment_return(order_id: int = Query(...)):
                     logging.warning(f"Order {order_id} not found, redirecting to Telegram by default")
                     return JSONResponse(status_code=200, content={"status": "ok"})
                 platform = order.get("platform", "telegram")
+                # if platform == "telegram":
+                #     bot_url = TELEGRAM_BOT_URL
                 if platform == "telegram":
-                    bot_url = TELEGRAM_BOT_URL
+                    bot_username = "print_there_bot"
+                    tg_url = f"tg://resolve?domain={bot_username}"
+                    web_url = f"https://t.me/{bot_username}"
+
+                    html_content = f"""<!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Перенаправление в Telegram</title>
+                    <meta http-equiv="refresh" content="0; url={tg_url}">
+                    <script>
+                        // Пытаемся открыть Telegram
+                        window.location.href = "{tg_url}";
+                        // Если через 1 секунду всё ещё на странице, переходим на веб-версию
+                        setTimeout(function() {{
+                            window.location.href = "{web_url}";
+                        }}, 1000);
+                    </script>
+                </head>
+                <body>
+                    <p>Перенаправление в Telegram... Если не открывается, <a href="{tg_url}">нажмите здесь</a>.</p>
+                    <p>Если Telegram не установлен, <a href="{web_url}">откройте в браузере</a>.</p>
+                </body>
+                </html>"""
+                    return HTMLResponse(content=html_content, status_code=302)
                 elif platform == "vk":
                     bot_url = VK_BOT_URL
                 else:

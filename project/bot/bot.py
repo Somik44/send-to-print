@@ -26,6 +26,7 @@ import docx
 from dotenv import load_dotenv
 from aiogram.utils.media_group import MediaGroupBuilder
 from aiogram.utils.keyboard import InlineKeyboardBuilder
+from aiogram.fsm.storage.base import StorageKey
 import pyclamd
 import magic
 import zipfile
@@ -67,6 +68,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 active_orders = {}
 payment_messages = {}
+processing_payment = set()
 
 
 def is_admin(message: types.Message):
@@ -108,6 +110,11 @@ async def handler(websocket):
                     if user_id in active_orders and active_orders[user_id] == order_id:
                         del active_orders[user_id]
                         logging.info(f"Removed order {order_id} from active_orders for user {user_id}")
+
+                    key = StorageKey(chat_id=user_id, user_id=user_id, bot_id=bot.id)
+                    await dp.storage.set_state(key=key, state=None)
+                    await dp.storage.set_data(key=key, data={})
+                    logging.info(f"Cleared FSM state for user {user_id}")
 
                 if status == 'paid':
                     await bot.send_message(
@@ -173,6 +180,7 @@ async def start_order_timer(chat_id: int, state: FSMContext):
     try:
         await asyncio.sleep(600)
         if chat_id in timers:
+            processing_payment.discard(chat_id)
             user_data = await state.get_data()
             await cleanup_order_data(user_data)
             await bot.send_message(chat_id, "❌ Время оформления заказа истекло, ваш заказ отменен", reply_markup=types.ReplyKeyboardRemove())
@@ -198,7 +206,7 @@ async def start_new_order_process(message: types.Message, state: FSMContext):
     temp_file = user_data.get('temp_file')
     if temp_file and os.path.exists(temp_file):
         os.remove(temp_file)
-
+    
     # Получаем список магазинов
     async with aiohttp.ClientSession() as session:
         async with session.get(f"{API_URL}/shops", headers={"x-api-key": INTERNAL_API_KEY}) as resp:
@@ -242,8 +250,10 @@ async def handle_cancel_and_start(callback: types.CallbackQuery, state: FSMConte
     if after_cancel == 'welcome':
         await callback.message.answer(
             f"Привет, {callback.from_user.first_name}! Рады приветствовать тебя на нашем сервисе по печати "
-            f"документов в любое удобное время! Чтобы начать новый заказ, используйте команду /new_order",
-            reply_markup=types.ReplyKeyboardRemove()
+            f"документов в любое удобное время! Чтобы начать новый заказ, используйте команду /new_order\n\n"
+            f"Продолжая пользование ботом вы принимаете условия пользования сервиса\n"
+            f"📚 <a href='https://disk.yandex.ru/d/Q-1xYZuSQFZNYA'>Документация сервиса Send to print and pick up!</a>",
+            parse_mode="HTML", disable_web_page_preview=True, reply_markup=types.ReplyKeyboardRemove()
         )
     elif after_cancel == 'new_order':
         await start_new_order_process(callback.message, state)
@@ -607,15 +617,15 @@ async def cmd_start(message: types.Message, state: FSMContext):
             del active_orders[user_id]
             await message.answer(
                 f"Привет, {message.from_user.first_name}! Рады приветствовать тебя на нашем сервисе по печати "
-                f"документов в любое удобное время! Чтобы начать новый заказ, используйте команду /new_order",
+                f"документов в любое удобное время! Чтобы начать новый заказ, используйте команду /new_order\n\n",
                 reply_markup=types.ReplyKeyboardRemove()
             )
             return
 
         # Заказ действительно активен – показываем только диалог отмены
         builder = InlineKeyboardBuilder()
-        builder.button(text="❌ Отменить и начать заново", callback_data="cancel_and_start_from_start")
         builder.button(text="✅ Продолжить текущий", callback_data="continue_current")
+        builder.button(text="❌ Отменить и начать заново", callback_data="cancel_and_start_from_start")
         await message.answer(
             "У вас есть незавершённый заказ (ожидает оплаты). Что хотите сделать?",
             reply_markup=builder.as_markup()
@@ -636,6 +646,7 @@ async def cmd_reset(message: types.Message, state: FSMContext):
     user_data = await state.get_data()
 
     try:
+        processing_payment.discard(user_id)
         await delete_payment_message(user_id)
 
         # Отменяем таймер, если есть
@@ -936,8 +947,8 @@ async def cmd_new_order(message: types.Message, state: FSMContext):
 
         # Заказ действительно активен – предлагаем отменить или продолжить
         builder = InlineKeyboardBuilder()
-        builder.button(text="✅ Отменить", callback_data="cancel_and_start_from_new_order")
-        builder.button(text="❌ Продолжить", callback_data="continue_current")
+        builder.button(text="✅ Продолжить", callback_data="continue_current")
+        builder.button(text="❌ Отменить", callback_data="cancel_and_start_from_new_order")
         await message.answer(
             "У вас есть незавершённый заказ (ожидает оплаты). Что хотите сделать?",
             reply_markup=builder.as_markup()
@@ -974,12 +985,36 @@ async def process_shop(message: types.Message, state: FSMContext):
 @dp.message(Form.file_processing, F.content_type == ContentType.DOCUMENT)
 async def process_file(message: types.Message, state: FSMContext):
     user_data = await state.get_data()
-    if user_data.get('temp_file'):
-        await message.answer(
-            "❌ Вы уже отправили файл. Дождитесь обработки или отмените текущий заказ командой /reset",
-            reply_markup=types.ReplyKeyboardRemove()
-        )
-        return
+    user_id = message.chat.id
+    # if user_data.get('temp_file'):
+    #     await message.answer(
+    #         "❌ Вы уже отправили файл. Дождитесь обработки или отмените текущий заказ командой /reset",
+    #         reply_markup=types.ReplyKeyboardRemove()
+    #     )
+    #     return
+
+    # 1. Принудительно сбрасываем локальные данные состояния (очищаем кэш)
+    # await state.set_data({})
+
+    # 2. Проверяем наличие активного заказа через active_orders + API
+    if user_id in active_orders:
+        order_id = active_orders[user_id]
+        if await is_order_active(order_id):
+            await message.answer(
+                "❌ У вас есть незавершённый заказ. Дождитесь обработки или отмените текущий заказ командой /reset",
+                reply_markup=types.ReplyKeyboardRemove()
+            )
+            return
+        else:
+            # Заказ числится, но не активен – чистим
+            del active_orders[user_id]
+            await state.clear()
+            await state.set_data({})
+
+    # 3. Удаляем старый временный файл, если он вдруг остался (на всякий случай)
+    old_temp = (await state.get_data()).get('temp_file')
+    if old_temp and os.path.exists(old_temp):
+        os.remove(old_temp)
 
     # Проверка на альбом (медиа-группу) – несколько файлов в одном сообщении
     if message.media_group_id:
@@ -1130,12 +1165,36 @@ async def process_file(message: types.Message, state: FSMContext):
 @dp.message(Form.file_processing, F.content_type == ContentType.PHOTO)
 async def process_photo(message: types.Message, state: FSMContext):
     user_data = await state.get_data()
-    if user_data.get('temp_file'):
-        await message.answer(
-            "❌ Вы уже отправили файл. Дождитесь обработки или отмените текущий заказ командой /reset",
-            reply_markup=types.ReplyKeyboardRemove()
-        )
-        return
+    user_id = message.chat.id
+    # if user_data.get('temp_file'):
+    #     await message.answer(
+    #         "❌ Вы уже отправили файл. Дождитесь обработки или отмените текущий заказ командой /reset",
+    #         reply_markup=types.ReplyKeyboardRemove()
+    #     )
+    #     return
+
+    # 1. Принудительно сбрасываем локальные данные состояния (очищаем кэш)
+    # await state.set_data({})
+
+    # 2. Проверяем наличие активного заказа через active_orders + API
+    if user_id in active_orders:
+        order_id = active_orders[user_id]
+        if await is_order_active(order_id):
+            await message.answer(
+                "❌ У вас есть незавершённый заказ. Дождитесь оплаты или используйте /reset",
+                reply_markup=types.ReplyKeyboardRemove()
+            )
+            return
+        else:
+            # Заказ числится, но не активен – чистим
+            del active_orders[user_id]
+            await state.clear()
+            await state.set_data({})
+
+    # 3. Удаляем старый временный файл, если он вдруг остался (на всякий случай)
+    old_temp = (await state.get_data()).get('temp_file')
+    if old_temp and os.path.exists(old_temp):
+        os.remove(old_temp)
 
     # Проверка на альбом (медиа-группу) – несколько фото в одном сообщении
     if message.media_group_id:
@@ -1330,35 +1389,42 @@ async def process_comment(message: types.Message, state: FSMContext):
 
 @dp.message(Form.confirmation)
 async def process_confirmation(message: types.Message, state: FSMContext):
-    if message.text not in ["💳 Оплатить", "Отменить"]:
-        markup = ReplyKeyboardMarkup(
-            keyboard=[[KeyboardButton(text="💳 Оплатить"), KeyboardButton(text="Отменить")]],
-            resize_keyboard=True
-        )
-        await message.answer("⚠️ Пожалуйста, используйте кнопки для оплаты:", reply_markup=markup)
+    user_id = message.chat.id
+    if user_id in processing_payment:
+        await message.answer("⏳ Ссылка создается, подождите...")
         return
 
-    if message.chat.id in timers:
-        timers[message.chat.id].cancel()
-        del timers[message.chat.id]
-
-    user_data = await state.get_data()
-    temp_file_path = user_data.get('temp_file')
-
-    if message.text == 'Отменить':
-        await message.answer("❌ Заказ отменен", reply_markup=types.ReplyKeyboardRemove())
-        if temp_file_path and os.path.exists(temp_file_path):
-            os.remove(temp_file_path)
-        await state.clear()
-        return
-
-    check_code = random.randint(1000, 9999)
-    processing_msg = await message.answer("⏳ Ссылка на оплату формируется, подождите пожалуйста...")
-
-    order_id = None
-    sent_message = None
+    processing_payment.add(user_id)
 
     try:
+        if message.text not in ["💳 Оплатить", "Отменить"]:
+            markup = ReplyKeyboardMarkup(
+                keyboard=[[KeyboardButton(text="💳 Оплатить"), KeyboardButton(text="Отменить")]],
+                resize_keyboard=True
+            )
+            await message.answer("⚠️ Пожалуйста, используйте кнопки для оплаты:", reply_markup=markup)
+            return
+
+        if message.chat.id in timers:
+            timers[message.chat.id].cancel()
+            del timers[message.chat.id]
+
+        user_data = await state.get_data()
+        temp_file_path = user_data.get('temp_file')
+
+        if message.text == 'Отменить':
+            await message.answer("❌ Заказ отменен", reply_markup=types.ReplyKeyboardRemove())
+            if temp_file_path and os.path.exists(temp_file_path):
+                os.remove(temp_file_path)
+            await state.clear()
+            return
+
+        check_code = random.randint(1000, 9999)
+        processing_msg = await message.answer("⏳ Ссылка на оплату формируется, подождите пожалуйста...")
+
+        order_id = None
+        sent_message = None
+
         async with aiohttp.ClientSession() as session:
             # 1. Создаём заказ в API
             form_data = aiohttp.FormData()
@@ -1446,6 +1512,7 @@ async def process_confirmation(message: types.Message, state: FSMContext):
             reply_markup=types.ReplyKeyboardRemove()
         )
     finally:
+        processing_payment.discard(user_id)
         # Удаляем сообщение "обработка..."
         try:
             await bot.delete_message(message.chat.id, processing_msg.message_id)
@@ -1468,6 +1535,26 @@ async def process_file_invalid(message: types.Message):
         "Используйте /reset для отмены заказа",
         reply_markup=types.ReplyKeyboardRemove()
     )
+
+
+@dp.message(Command("help"))
+async def cmd_help(message: types.Message):
+    """Отправляет контакты службы поддержки"""
+    text = (
+        "Если у вас возникли вопросы, проблемы с заказом или вам просто нужна консультация — обратитесь в нашу службу поддержки.\n\n"
+        "📞 Контакты:\n"
+        "• Telegram: @support_username\n"
+        "• Email: support@example.com\n"
+        "• Телефон: +7 (XXX) XXX-XX-XX\n\n"
+        "⏰ Время работы поддержки:\n"
+        "Пн–Пт: 09:00 – 20:00\n"
+        "Сб–Вс: 10:00 – 18:00\n\n"
+        "Мы обязательно вам поможем! 😊\n\n"
+        "💡 Совет: перед обращением попробуйте команду /reset, если заказ завис.\n\n"
+        "📚 <a href='https://disk.yandex.ru/d/Q-1xYZuSQFZNYA'>Документация сервиса Send to print and pick up!</a>"
+
+    )
+    await message.answer(text, parse_mode="HTML", disable_web_page_preview=True)
 
 
 @dp.message()

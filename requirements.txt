@@ -20,3 +20,5 @@ mysql-connector-python
 python-magic-bin
 pyclamd
 vkbottle
+maxapi
+Pillow
