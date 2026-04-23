@@ -95,6 +95,108 @@ class VKPrintBot:
     def is_admin(self, vk_id: int) -> bool:
         return vk_id in ADMIN_IDS
 
+    async def _get_onboarding_status(self, user_id: int) -> dict:
+        """Возвращает {'welcomed': bool, 'agreed': bool} или None при ошибке."""
+        headers = {"x-api-key": INTERNAL_API_KEY}
+        async with aiohttp.ClientSession() as session:
+            try:
+                async with session.get(
+                        f"{API_URL}/users/{user_id}/onboarding-status",
+                        params={"platform": "vk"},
+                        headers=headers
+                ) as resp:
+                    if resp.status == 200:
+                        return await resp.json()
+            except Exception as e:
+                logging.error(f"onboarding-status request failed: {e}")
+        return None
+
+    async def _mark_welcomed(self, user_id: int):
+        headers = {"x-api-key": INTERNAL_API_KEY}
+        async with aiohttp.ClientSession() as session:
+            try:
+                await session.post(
+                    f"{API_URL}/users/{user_id}/onboarding-welcome",
+                    params={"platform": "vk"},
+                    headers=headers
+                )
+            except Exception as e:
+                logging.error(f"mark_welcomed error: {e}")
+
+    async def _mark_agreed(self, user_id: int):
+        headers = {"x-api-key": INTERNAL_API_KEY}
+        async with aiohttp.ClientSession() as session:
+            try:
+                await session.post(
+                    f"{API_URL}/users/{user_id}/onboarding-agree",
+                    params={"platform": "vk"},
+                    headers=headers
+                )
+            except Exception as e:
+                logging.error(f"mark_agreed error: {e}")
+
+    async def ensure_onboarding(self, user_id: int) -> bool:
+        """Проверяет onboarding; если False – отправляет нужное сообщение и возвращает False."""
+        status = await self._get_onboarding_status(user_id)
+        if status is None:  # ошибка API – на всякий случай блокируем
+            return False
+
+        welcomed = status.get("welcomed", False)
+        agreed = status.get("agreed", False)
+
+        if not welcomed:
+            # Отмечаем, что приветствие отправлено (однократно)
+            await self._mark_welcomed(user_id)
+            # Отправляем приветствие + кнопку «Согласен»
+            await self._send_welcome_and_agreement(user_id)
+            return False
+
+        if not agreed:
+            # Приветствие уже было, но согласия нет – напоминаем
+            await self._request_agreement(user_id)
+            return False
+
+        return True
+
+    async def _send_welcome_and_agreement(self, user_id: int):
+        try:
+            full_name = await self.get_user_full_name(user_id)
+        except Exception:
+            full_name = "друг"
+
+        text = (
+            f"Привет, {full_name}! Рады приветствовать тебя на нашем сервисе по печати "
+            f"документов в любое удобное время! Прежде чем начать, пожалуйста, ознакомьтесь с правилами и нажмите кнопку ниже.\n\n"
+            "📚 Документация сервиса Send to print and pick up: https://disk.yandex.ru/d/Q-1xYZuSQFZNYA "
+        )
+        keyboard = Keyboard(inline=False)
+        keyboard.add(Text("✅ Согласен"), color=KeyboardButtonColor.POSITIVE)
+        await self.bot.api.messages.send(
+            user_id=user_id,
+            message=text,
+            keyboard=keyboard.get_json(),
+            random_id=random.randint(0, 2 ** 31 - 1)
+        )
+
+    async def _request_agreement(self, user_id: int):
+        keyboard = Keyboard(inline=False)
+        keyboard.add(Text("✅ Согласен"), color=KeyboardButtonColor.POSITIVE)
+        await self.bot.api.messages.send(
+            user_id=user_id,
+            message="Чтобы пользоваться ботом, необходимо принять условия. Нажмите кнопку ниже.",
+            keyboard=keyboard.get_json(),
+            random_id=random.randint(0, 2 ** 31 - 1)
+        )
+
+    async def agree_terms_handler(self, message: Message):
+        user_id = message.from_id
+        await self._mark_agreed(user_id)
+        await message.answer(
+            "Спасибо! Теперь вы можете пользоваться ботом.\n"
+            "Нажмите «🛎️ Новый заказ» для начала.",
+            keyboard=self.main_menu_keyboard(user_id).get_json()
+        )
+
     async def safe_state_delete(self, peer_id: int):
         """Безопасно удаляет состояние."""
         try:
@@ -116,6 +218,20 @@ class VKPrintBot:
         except Exception as e:
             logging.error(f"Error checking order status: {e}")
         return False
+
+    async def get_active_order_id(self, user_id: int) -> int | None:
+        """Возвращает ID активного заказа (waiting_payment) или None."""
+        try:
+            async with aiohttp.ClientSession() as session:
+                headers = {"X-API-Key": INTERNAL_API_KEY}
+                async with session.get(f"{API_URL}/users/{user_id}/active-order", headers=headers) as resp:
+                    if resp.status == 200:
+                        data = await resp.json()
+                        if data:
+                            return data["ID"]
+        except Exception as e:
+            logging.error(f"Error getting active order for user {user_id}: {e}")
+        return None
 
     async def cancel_order_via_api(self, order_id: int):
         """Отменяет заказ через API."""
@@ -285,6 +401,8 @@ class VKPrintBot:
     async def cancel_order_no_message(self, message: Message):
         user_id = message.from_id
         order_id = self.active_orders.pop(user_id, None)
+        if not order_id:
+            order_id = await self.get_active_order_id(user_id)
         if order_id:
             await self.cancel_order_via_api(order_id)
             await self.delete_payment_message(user_id)
@@ -361,6 +479,8 @@ class VKPrintBot:
         """Приветственное сообщение и главное меню."""
         user_id = message.from_id
         full_name = await self.get_user_full_name(user_id)
+        if not await self.ensure_onboarding(user_id):
+            return
 
         if await self.has_active_order(user_id):
             await message.answer(
@@ -380,29 +500,44 @@ class VKPrintBot:
 
     async def new_order_handler(self, message: Message):
         """Обработчик кнопки 'Новый заказ'."""
+        user_id = message.from_id
+        if not await self.ensure_onboarding(user_id):
+            return
         await self.start_new_order_process(message)
 
     async def reset_handler(self, message: Message):
         user_id = message.from_id
         order_id = self.active_orders.pop(user_id, None)
+        if not await self.ensure_onboarding(user_id):
+            return
+
+        if not order_id:
+            order_id = await self.get_active_order_id(user_id)
+
         if order_id:
             await self.cancel_order_via_api(order_id)
             await self.delete_payment_message(user_id)
+        else:
+            await message.answer(
+                "❌ Заказ отменен",
+                keyboard=self.main_menu_keyboard(user_id).get_json()
+            )
         await self.cleanup_local_data(user_id)
-        await message.answer("❌ Заказ отменен", keyboard=self.main_menu_keyboard(user_id).get_json())
 
     async def help_handler(self, message: Message):
         """Обработчик кнопки 'Помощь'."""
         await message.answer(
-            "📖 Помощь:\n"
-            "1. Нажмите '🛎️ Новый заказ' для начала.\n"
-            "2. Выберите точку печати.\n"
-            "3. Отправьте документ или фото.\n"
-            "4. Выберите тип печати (черно-белая или цветная).\n"
-            "5. При желании добавьте комментарий.\n"
-            "6. Подтвердите заказ и оплатите.\n"
-            "7. После оплаты заказ поступит в работу, вы получите уведомление о готовности.\n\n"
-            "Если возникнут вопросы, обращайтесь к администратору"
+            "Если у вас возникли вопросы, проблемы с заказом или вам просто нужна консультация — обратитесь в нашу службу поддержки.\n\n"
+            "📞 Контакты:\n"
+            "• Telegram: @support_username\n"
+            "• Email: support@example.com\n"
+            "• Телефон: +7 (XXX) XXX-XX-XX\n\n"
+            "⏰ Время работы поддержки:\n"
+            "Пн–Пт: 09:00 – 20:00\n"
+            "Сб–Вс: 10:00 – 18:00\n\n"
+            "Мы обязательно вам поможем! 😊\n\n"
+            "💡 Совет: перед обращением попробуйте команду /reset, если заказ завис.\n\n"
+            "📚 Документация сервиса Send to print and pick up: https://disk.yandex.ru/d/Q-1xYZuSQFZNYA"
         )
 
     async def broadcast_start(self, message: Message):
@@ -485,7 +620,7 @@ class VKPrintBot:
 
         async with aiohttp.ClientSession() as session:
             headers = {"X-API-Key": INTERNAL_API_KEY}
-            async with session.get(f"{API_URL}/users/all-ids?platform=vk", headers=headers) as resp:
+            async with session.get(f"{API_URL}/users/agreed-ids?platform=vk", headers=headers) as resp:
                 if resp.status != 200:
                     await message.answer("❌ Ошибка API.", keyboard=self.main_menu_keyboard(user_id).get_json())
                     return
@@ -540,6 +675,8 @@ class VKPrintBot:
     async def process_shop_selection(self, message: Message):
         user_id = message.from_id
         shop_name = message.text
+        if not await self.ensure_onboarding(user_id):
+            return
 
         if shop_name == "❌ Отменить":
             await self.reset_handler(message)
@@ -589,6 +726,8 @@ class VKPrintBot:
     # --------------------------
     async def process_file(self, message: Message):
         user_id = message.from_id
+        if not await self.ensure_onboarding(user_id):
+            return
 
         if message.text == "❌ Отменить":
             await self.reset_handler(message)
@@ -685,6 +824,8 @@ class VKPrintBot:
     # --------------------------
     async def process_color(self, message: Message):
         user_id = message.from_id
+        if not await self.ensure_onboarding(user_id):
+            return
 
         if message.text == "❌ Отменить":
             await self.reset_handler(message)
@@ -723,6 +864,8 @@ class VKPrintBot:
     async def process_comment(self, message: Message):
         user_id = message.from_id
         user_data = self.user_data.get(user_id, {})
+        if not await self.ensure_onboarding(user_id):
+            return
 
         if message.text == "❌ Отменить":
             await self.reset_handler(message)
@@ -758,6 +901,8 @@ class VKPrintBot:
     async def process_confirmation(self, message: Message):
         user_id = message.from_id
         user_data = self.user_data.get(user_id, {})
+        if not await self.ensure_onboarding(user_id):
+            return
 
         if message.text == "❌ Отменить":
             await self.reset_handler(message)
@@ -767,7 +912,16 @@ class VKPrintBot:
             await message.answer("⚠️ Пожалуйста, используйте кнопки для оплаты", keyboard=self.confirm_keyboard().get_json())
             return
 
+        # Защита от повторного нажатия
+        if user_data.get('processing'):
+            await message.answer("⏳ Ссылка создается, подождите...")
+            return
+
         await self.cancel_timer(user_id)
+
+        # Устанавливаем флаг обработки
+        user_data['processing'] = True
+        self.user_data[user_id] = user_data
 
         check_code = random.randint(1000, 9999)
         processing_msg = await message.answer("⏳ Ссылка на оплату формируется, подождите...")
@@ -832,6 +986,8 @@ class VKPrintBot:
             if order_id:
                 await self.cancel_order_via_api(order_id)
             await message.answer("❌ Произошла ошибка при создании заказа/платежа. Попробуйте позже", keyboard=self.main_menu_keyboard(user_id).get_json())
+            if user_id in self.user_data:
+                self.user_data[user_id].pop('processing', None)
         finally:
             try:
                 await self.bot.api.messages.delete(
@@ -916,6 +1072,7 @@ class VKPrintBot:
         self.bot.on.private_message(text=["📢 Рассылка"])(self.broadcast_start)
         self.bot.on.private_message(text=["❌ Отменить"])(self.reset_handler)
         self.bot.on.private_message(text=["❌ Отменить оплату"])(self.cancel_order_no_message)
+        self.bot.on.private_message(text=["✅ Согласен"])(self.agree_terms_handler)
 
         self.bot.on.private_message(state=States.SHOP_SELECTION)(self.process_shop_selection)
         self.bot.on.private_message(state=States.FILE_PROCESSING)(self.process_file)

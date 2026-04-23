@@ -250,10 +250,8 @@ async def handle_cancel_and_start(callback: types.CallbackQuery, state: FSMConte
     if after_cancel == 'welcome':
         await callback.message.answer(
             f"Привет, {callback.from_user.first_name}! Рады приветствовать тебя на нашем сервисе по печати "
-            f"документов в любое удобное время! Чтобы начать новый заказ, используйте команду /new_order\n\n"
-            f"Продолжая пользование ботом вы принимаете условия пользования сервиса\n"
-            f"📚 <a href='https://disk.yandex.ru/d/Q-1xYZuSQFZNYA'>Документация сервиса Send to print and pick up!</a>",
-            parse_mode="HTML", disable_web_page_preview=True, reply_markup=types.ReplyKeyboardRemove()
+            f"документов в любое удобное время! Чтобы начать новый заказ, используйте команду /new_order",
+            reply_markup=types.ReplyKeyboardRemove()
         )
     elif after_cancel == 'new_order':
         await start_new_order_process(callback.message, state)
@@ -288,6 +286,100 @@ async def delete_payment_message(user_id: int):
     else:
         # Полезно для отладки – выводим текущее состояние словаря
         logging.warning(f"No payment message found for user {user_id}, current_dict={payment_messages}")
+
+
+async def ensure_onboarding(bot_instance, user_id: str, platform: str):
+    """
+    Проверяет статус onboarding'а.
+    Если не welcomed -> отправляет приветствие + согласие, возвращает False.
+    Если welcomed, но не agreed -> отправляет кнопку согласия, возвращает False.
+    Иначе возвращает True (можно пользоваться).
+    """
+    headers = {"x-api-key": INTERNAL_API_KEY}
+    async with aiohttp.ClientSession() as session:
+        # 1. Узнаём текущий статус
+        async with session.get(
+            f"{API_URL}/users/{user_id}/onboarding-status",
+            params={"platform": platform},
+            headers=headers
+        ) as resp:
+            if resp.status != 200:
+                logging.error("onboarding-status request failed")
+                return False  # на всякий случай блокируем
+            data = await resp.json()
+            welcomed = data.get("welcomed", False)
+            agreed = data.get("agreed", False)
+
+        if not welcomed:
+            # 2. Отмечаем, что приветствие показано
+            async with session.post(
+                f"{API_URL}/users/{user_id}/onboarding-welcome",
+                params={"platform": platform},
+                headers=headers
+            ):
+                pass
+            # 3. Отправляем приветствие и сразу кнопку согласия
+            await send_welcome_and_agreement(bot_instance, user_id, platform)
+            return False
+
+        if not agreed:
+            # 4. Уже приветствовали, но согласия нет – напоминаем
+            await request_agreement(bot_instance, user_id, platform)
+            return False
+
+        return True
+
+
+async def mark_agreed(user_id: str, platform: str):
+    """Вызываем API, чтобы зафиксировать согласие."""
+    async with aiohttp.ClientSession() as session:
+        await session.post(
+            f"{API_URL}/users/{user_id}/onboarding-agree",
+            params={"platform": platform},
+            headers={"x-api-key": INTERNAL_API_KEY}
+        )
+
+
+async def send_welcome_and_agreement(bot_instance, user_id: str, platform: str):
+    try:
+        # Пытаемся получить имя пользователя через Telegram API
+        chat = await bot_instance.get_chat(int(user_id))
+        name = chat.first_name or "друг"
+    except Exception:
+        name = "друг"
+
+    text = (
+        f"Привет, {name}! Рады приветствовать тебя на нашем сервисе по печати "
+        f"документов в любое удобное время! Прежде чем начать, пожалуйста, ознакомьтесь с правилами и нажмите кнопку ниже.\n\n"
+        "📚 <a href='https://disk.yandex.ru/d/Q-1xYZuSQFZNYA'>Документация сервиса Send to print and pick up!</a>"
+    )
+    builder = InlineKeyboardBuilder()
+    builder.button(text="✅ Согласен", callback_data="agree_terms")
+    await bot_instance.send_message(chat_id=int(user_id), text=text, parse_mode="HTML", disable_web_page_preview=True,
+                                    reply_markup=builder.as_markup())
+
+
+async def request_agreement(bot_instance, user_id: str, platform: str):
+    builder = InlineKeyboardBuilder()
+    builder.button(text="✅ Согласен", callback_data="agree_terms")
+    await bot_instance.send_message(
+        chat_id=int(user_id),
+        text="Чтобы пользоваться ботом, необходимо принять условия. Нажмите кнопку ниже.",
+        reply_markup=builder.as_markup()
+    )
+
+
+@dp.callback_query(F.data == "agree_terms")
+async def agree_terms_handler(callback: types.CallbackQuery):
+    user_id = str(callback.from_user.id)
+    await mark_agreed(user_id, "telegram")
+    await callback.message.delete()
+    await callback.message.answer(
+        "Спасибо! Теперь вы можете пользоваться ботом.\n"
+        "Нажмите /new_order для начала.",
+        reply_markup=types.ReplyKeyboardRemove()
+    )
+    await callback.answer()
 
 
 def is_file_safe(file_path: str, ext: str) -> bool:
@@ -607,7 +699,9 @@ async def get_docx_page_count_metadata(file_path: str) -> int:
 @dp.message(Command("start"))
 async def cmd_start(message: types.Message, state: FSMContext):
     user_id = message.chat.id
-
+    user_id_str = str(message.chat.id)
+    if not await ensure_onboarding(bot, user_id_str, "telegram"):
+        return  # дальше не идём, ждём согласия
     # Проверяем наличие активного заказа в памяти
     if user_id in active_orders:
         order_id = active_orders[user_id]
@@ -644,6 +738,9 @@ async def cmd_start(message: types.Message, state: FSMContext):
 async def cmd_reset(message: types.Message, state: FSMContext):
     user_id = message.chat.id
     user_data = await state.get_data()
+    user_id_str = str(message.chat.id)
+    if not await ensure_onboarding(bot, user_id_str, "telegram"):
+        return  # дальше не идём, ждём согласия
 
     try:
         processing_payment.discard(user_id)
@@ -888,7 +985,7 @@ async def final_send_broadcast(callback: types.CallbackQuery, state: FSMContext)
     headers = {"X-API-Key": INTERNAL_API_KEY}
 
     async with aiohttp.ClientSession() as session:
-        async with session.get(f"{API_URL}/users/all-ids?platform=telegram", headers=headers) as resp:
+        async with session.get(f"{API_URL}/users/agreed-ids?platform=telegram", headers=headers) as resp:
             if resp.status != 200:
                 await callback.message.answer("❌ Ошибка API")
                 return
@@ -934,6 +1031,9 @@ async def cancel_broadcast(callback: types.CallbackQuery, state: FSMContext):
 @dp.message(Command("new_order"))
 async def cmd_new_order(message: types.Message, state: FSMContext):
     user_id = message.chat.id
+    user_id_str = str(message.chat.id)
+    if not await ensure_onboarding(bot, user_id_str, "telegram"):
+        return  # дальше не идём, ждём согласия
 
     # Проверяем наличие активного заказа в памяти
     if user_id in active_orders:
@@ -960,6 +1060,8 @@ async def cmd_new_order(message: types.Message, state: FSMContext):
 
 @dp.message(Form.shop_selection)
 async def process_shop(message: types.Message, state: FSMContext):
+    if not await ensure_onboarding(bot, str(chat_id), "telegram"):
+        return
     async with aiohttp.ClientSession() as session:
         async with session.get(f"{API_URL}/shops/{message.text}", headers={"x-api-key": INTERNAL_API_KEY}) as resp:
             if resp.status != 200:
@@ -986,6 +1088,9 @@ async def process_shop(message: types.Message, state: FSMContext):
 async def process_file(message: types.Message, state: FSMContext):
     user_data = await state.get_data()
     user_id = message.chat.id
+    user_id_str = str(message.chat.id)
+    if not await ensure_onboarding(bot, user_id_str, "telegram"):
+        return  # дальше не идём, ждём согласия
     # if user_data.get('temp_file'):
     #     await message.answer(
     #         "❌ Вы уже отправили файл. Дождитесь обработки или отмените текущий заказ командой /reset",
@@ -1166,6 +1271,10 @@ async def process_file(message: types.Message, state: FSMContext):
 async def process_photo(message: types.Message, state: FSMContext):
     user_data = await state.get_data()
     user_id = message.chat.id
+    user_id_str = str(message.chat.id)
+    if not await ensure_onboarding(bot, user_id_str, "telegram"):
+        return  # дальше не идём, ждём согласия
+
     # if user_data.get('temp_file'):
     #     await message.answer(
     #         "❌ Вы уже отправили файл. Дождитесь обработки или отмените текущий заказ командой /reset",
@@ -1311,6 +1420,10 @@ async def process_photo(message: types.Message, state: FSMContext):
 @dp.message(Form.color_selection)
 async def process_color(message: types.Message, state: FSMContext):
     user_data = await state.get_data()
+    user_id_str = str(message.chat.id)
+    if not await ensure_onboarding(bot, user_id_str, "telegram"):
+        return  # дальше не идём, ждём согласия
+
     color = message.text.lower()
     if color not in ['черно-белая', 'цветная']:
         markup = ReplyKeyboardMarkup(
@@ -1341,6 +1454,9 @@ async def process_color(message: types.Message, state: FSMContext):
 
 @dp.message(Form.comment, ~F.text.startswith("/"))
 async def process_comment(message: types.Message, state: FSMContext):
+    user_id_str = str(message.chat.id)
+    if not await ensure_onboarding(bot, user_id_str, "telegram"):
+        return  # дальше не идём, ждём согласия
     # Обрабатываем кнопку "Без комментария"
     if message.text == "Без комментария":
         comment = ''
@@ -1390,6 +1506,10 @@ async def process_comment(message: types.Message, state: FSMContext):
 @dp.message(Form.confirmation)
 async def process_confirmation(message: types.Message, state: FSMContext):
     user_id = message.chat.id
+    user_id_str = str(message.chat.id)
+    if not await ensure_onboarding(bot, user_id_str, "telegram"):
+        return  # дальше не идём, ждём согласия
+
     if user_id in processing_payment:
         await message.answer("⏳ Ссылка создается, подождите...")
         return

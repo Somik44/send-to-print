@@ -649,6 +649,80 @@ async def get_active_order(user_id: str, x_api_key: str = Header(None)):
             return order if order else None
 
 
+@app.get("/users/{user_id}/onboarding-status")
+async def get_onboarding_status(
+    user_id: str,
+    platform: str = Query(..., description="telegram, vk, max"),
+    x_api_key: str = Header(None)
+):
+    if x_api_key != INTERNAL_API_KEY:
+        raise HTTPException(403)
+    async with await get_db() as conn:
+        async with conn.cursor(aiomysql.DictCursor) as cursor:
+            await cursor.execute(
+                "SELECT welcomed, agreed FROM user_onboarding WHERE user_id=%s AND platform=%s",
+                (user_id, platform)
+            )
+            row = await cursor.fetchone()
+    return {"welcomed": row['welcomed'] if row else False,
+            "agreed": row['agreed'] if row else False}
+
+
+@app.post("/users/{user_id}/onboarding-welcome")
+async def set_onboarding_welcome(
+    user_id: str,
+    platform: str = Query(..., description="telegram, vk, max"),
+    x_api_key: str = Header(None)
+):
+    if x_api_key != INTERNAL_API_KEY:
+        raise HTTPException(403)
+    async with await get_db() as conn:
+        async with conn.cursor() as cursor:
+            await cursor.execute(
+                "INSERT INTO user_onboarding (user_id, platform, welcomed, welcomed_at) "
+                "VALUES (%s, %s, 1, NOW()) ON DUPLICATE KEY UPDATE welcomed=1, welcomed_at=NOW()",
+                (user_id, platform)
+            )
+            await conn.commit()
+    return {"status": "ok"}
+
+
+@app.post("/users/{user_id}/onboarding-agree")
+async def set_onboarding_agree(
+    user_id: str,
+    platform: str = Query(..., description="telegram, vk, max"),
+    x_api_key: str = Header(None)
+):
+    if x_api_key != INTERNAL_API_KEY:
+        raise HTTPException(403)
+    async with await get_db() as conn:
+        async with conn.cursor() as cursor:
+            await cursor.execute(
+                "INSERT INTO user_onboarding (user_id, platform, agreed, agreed_at) "
+                "VALUES (%s, %s, 1, NOW()) ON DUPLICATE KEY UPDATE agreed=1, agreed_at=NOW()",
+                (user_id, platform)
+            )
+            await conn.commit()
+    return {"status": "ok"}
+
+
+@app.get("/users/agreed-ids")
+async def get_agreed_user_ids(
+    platform: str = Query(..., description="Платформа: telegram, vk, max"),
+    x_api_key: str = Header(None)
+):
+    if x_api_key != INTERNAL_API_KEY:
+        raise HTTPException(status_code=403)
+    async with await get_db() as conn:
+        async with conn.cursor(aiomysql.DictCursor) as cursor:
+            await cursor.execute(
+                "SELECT user_id FROM user_onboarding WHERE platform = %s AND agreed = 1",
+                (platform,)
+            )
+            rows = await cursor.fetchall()
+    return [row['user_id'] for row in rows]
+
+
 @app.post("/orders")
 async def create_order(
         file: UploadFile = File(...),
