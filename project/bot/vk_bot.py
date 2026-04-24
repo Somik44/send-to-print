@@ -193,7 +193,7 @@ class VKPrintBot:
         await self._mark_agreed(user_id)
         await message.answer(
             "Спасибо! Теперь вы можете пользоваться ботом.\n"
-            "Нажмите «🛎️ Новый заказ» для начала.",
+            "Нажмите «🛒 Новый заказ» для начала.",
             keyboard=self.main_menu_keyboard(user_id).get_json()
         )
 
@@ -278,7 +278,7 @@ class VKPrintBot:
                     logging.info(f"[TIMER FIRED] user {user_id}, state={state_str}")
                     await self.bot.api.messages.send(
                         user_id=user_id,
-                        message="⌛ Время оформления заказа истекло. Чтобы начать новый заказ, нажмите кнопку '🛎️ Новый заказ'.",
+                        message="⌛ Время оформления заказа истекло. Чтобы начать новый заказ, нажмите кнопку '🛒 Новый заказ'.",
                         keyboard=self.main_menu_keyboard(user_id).get_json(),
                         random_id=random.randint(0, 2 ** 31 - 1)
                     )
@@ -414,7 +414,7 @@ class VKPrintBot:
     def main_menu_keyboard(self, user_id: int = None):
         """Главное меню."""
         kb = Keyboard(inline=False)
-        kb.add(Text("🛎️ Новый заказ"), color=KeyboardButtonColor.PRIMARY)
+        kb.add(Text("🛒 Новый заказ"), color=KeyboardButtonColor.PRIMARY)
         kb.row()
         kb.add(Text("ℹ️ Помощь"))
         if user_id and self.is_admin(user_id):
@@ -494,7 +494,7 @@ class VKPrintBot:
 
         await message.answer(
             f"Привет, {full_name}! Рады приветствовать тебя на нашем сервисе по печати документов в любое удобное время! "
-            f"Чтобы начать новый заказ, нажмите кнопку '🛎️ Новый заказ'",
+            f"Чтобы начать новый заказ, нажмите кнопку '🛒 Новый заказ'",
             keyboard=self.main_menu_keyboard(user_id).get_json()
         )
 
@@ -536,7 +536,6 @@ class VKPrintBot:
             "Пн–Пт: 09:00 – 20:00\n"
             "Сб–Вс: 10:00 – 18:00\n\n"
             "Мы обязательно вам поможем! 😊\n\n"
-            "💡 Совет: перед обращением попробуйте команду /reset, если заказ завис.\n\n"
             "📚 Документация сервиса Send to print and pick up: https://disk.yandex.ru/d/Q-1xYZuSQFZNYA"
         )
 
@@ -694,7 +693,7 @@ class VKPrintBot:
                                 keyboard=keyboard.get_json()
                             )
                         else:
-                            await message.answer("❌ Точка не найдена. Нажмите 'Новый заказ' для выбора заново")
+                            await message.answer("❌ Точка не найдена. Нажмите '🛒 Новый заказ' для выбора заново")
                             await self.safe_state_delete(user_id)
                             await self.show_main_menu(message)
                         return
@@ -833,7 +832,7 @@ class VKPrintBot:
 
         user_data = self.user_data.get(user_id, {})
         if not user_data.get('shop'):
-            await message.answer("❌ Ошибка: данные не найдены. Нажмите 'Новый заказ' для начала")
+            await message.answer("❌ Ошибка: данные не найдены. Нажмите '🛒 Новый заказ' для начала")
             await self.safe_state_delete(user_id)
             await self.show_main_menu(message)
             return
@@ -1067,7 +1066,7 @@ class VKPrintBot:
     # --------------------------
     def setup_handlers(self):
         self.bot.on.private_message(text=["Начать", "начать"])(self.start_handler)
-        self.bot.on.private_message(text=["🛎️ Новый заказ"])(self.new_order_handler)
+        self.bot.on.private_message(text=["🛒 Новый заказ"])(self.new_order_handler)
         self.bot.on.private_message(text=["ℹ️ Помощь"])(self.help_handler)
         self.bot.on.private_message(text=["📢 Рассылка"])(self.broadcast_start)
         self.bot.on.private_message(text=["❌ Отменить"])(self.reset_handler)
