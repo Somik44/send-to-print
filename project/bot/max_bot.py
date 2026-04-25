@@ -8,6 +8,7 @@ import random
 import traceback
 import aiofiles
 import magic
+import tempfile
 from logging.handlers import RotatingFileHandler
 from dotenv import load_dotenv
 from aiohttp import web
@@ -20,8 +21,10 @@ from maxapi.methods.send_message import SendMessage
 from maxapi.methods.delete_message import DeleteMessage
 from maxapi.enums import TextFormat
 from maxapi.enums.parse_mode import ParseMode
+from maxapi.types.input_media import InputMediaBuffer
 from PIL import Image
 import io
+from datetime import datetime, timezone
 from utils import (
     download_file_from_url,
     get_page_count,
@@ -61,7 +64,7 @@ order_timers = {}        # user_id -> asyncio.Task
 user_chat_mapping = {}   # user_id(str) -> chat_id(int)
 processing_payment = set()  # защита от повторного нажатия «Оплатить»
 processing_cancel = set()    # защита от повторного нажатия «Отменить оплату»
-
+broadcast_data = {}  # user_id -> {'text': str, 'photos': list[str]}
 
 # --------------------------
 # Вспомогательные функции
@@ -204,15 +207,19 @@ class Form(StatesGroup):
     color_selection = State()
     comment = State()
     confirmation = State()
+    admin_broadcast = State()
+    confirm_broadcast = State()
 
 
 # --------------------------
 # Клавиатуры
 # --------------------------
-def get_main_kb():
+def get_main_kb(user_id: str = None):
     builder = InlineKeyboardBuilder()
     builder.row(CallbackButton(text="🛒 Новый заказ", payload="new_order"))
     builder.row(CallbackButton(text="ℹ️ Помощь", payload="help"))
+    if user_id and is_admin(user_id):
+        builder.row(CallbackButton(text="📢 Рассылка", payload="broadcast"))
     return [builder.as_markup()]
 
 
@@ -263,6 +270,49 @@ def get_active_order_kb():
     builder.row(CallbackButton(text="✅ Продолжить текущий", payload="continue_current"))
     builder.row(CallbackButton(text="❌ Отменить и начать заново", payload="cancel_and_start"))
     return [builder.as_markup()]
+
+
+def get_broadcast_ready_kb():
+    """Клавиатура для режима накопления фото."""
+    builder = InlineKeyboardBuilder()
+    builder.row(CallbackButton(text="✅ Готово", payload="broadcast_ready"))
+    builder.row(CallbackButton(text="❌ Отменить", payload="reset_order"))
+    return [builder.as_markup()]
+
+
+def get_broadcast_confirm_kb():
+    """Клавиатура подтверждения рассылки."""
+    builder = InlineKeyboardBuilder()
+    builder.row(CallbackButton(text="✅ Отправить", payload="send_broadcast"))
+    builder.row(CallbackButton(text="❌ Отмена", payload="reset_order"))
+    return [builder.as_markup()]
+
+
+# --------------------------
+# Загрузка фото в MAX
+# --------------------------
+def extract_photo_url(event: MessageCreated) -> str:
+    """Извлекает URL самого большого изображения из сообщения MAX."""
+    try:
+        if hasattr(event.message, 'body') and event.message.body:
+            attachments = getattr(event.message.body, 'attachments', [])
+            for att in attachments:
+                # Проверяем тип вложения
+                att_type = getattr(att, 'type', '')
+                if att_type == 'image':
+                    payload = getattr(att, 'payload', None)
+                    if payload:
+                        url = getattr(payload, 'url', None)
+                        if url:
+                            return url
+        # Резервный вариант – через словарь (если объект не распарсился)
+        if hasattr(event.message, 'body') and isinstance(event.message.body, dict):
+            for att in event.message.body.get('attachments', []):
+                if att.get('type') == 'image':
+                    return att.get('payload', {}).get('url', '')
+    except Exception as e:
+        logging.error(f"extract_photo_url error: {e}")
+    return ""
 
 
 # --------------------------
@@ -394,7 +444,7 @@ async def reset_logic(user_id: str, context: MemoryContext, send_message=True, c
             pass
     await context.clear()
     if send_message:
-        await send_message_to_user(user_id, "❌ Заказ отменен", get_main_kb())
+        await send_message_to_user(user_id, "❌ Заказ отменен", get_main_kb(user_id))
 
 
 async def delete_message_for_user(user_id: str):
@@ -420,7 +470,7 @@ async def timer_task_coro(user_id: str, context: MemoryContext):
             await send_message_to_user(
                 user_id,
                 "⌛ Время оформления заказа истекло. Начните заново:",
-                get_main_kb()
+                get_main_kb(user_id)
             )
     except asyncio.CancelledError:
         logging.info(f"Timer for user {user_id} was cancelled.")
@@ -463,6 +513,83 @@ async def handle_messages(event: MessageCreated, context: MemoryContext):
             text = body.text
 
     link = extract_file_link(event)
+    photo_url = extract_photo_url(event)
+
+    # ========== РЕЖИМ РАССЫЛКИ (АДМИН) ==========
+    if state == Form.admin_broadcast and is_admin(user_id):
+        data = broadcast_data.setdefault(user_id, {
+            'text': '',
+            'photos': [],
+            'attachments': [],
+            'pending_task': None,
+            'media_group_id': None
+        })
+        pending_task = data.get('pending_task')
+
+        # --- Пришло фото ---
+        if photo_url:
+            group_id = getattr(event.message, 'media_group_id', None)
+            # Обновляем текст, если есть caption
+            if text:
+                data['text'] = text
+
+            # Добавляем фото в список
+            photos = data.setdefault('photos', [])
+            photos.append(photo_url)
+
+            if group_id:
+                # Альбом: обновляем group_id и запускаем отложенный показ
+                data['media_group_id'] = group_id
+                if pending_task and not pending_task.done():
+                    pending_task.cancel()
+                    try:
+                        await pending_task
+                    except asyncio.CancelledError:
+                        pass
+
+                async def delayed_show():
+                    await asyncio.sleep(1.0)  # ждём остальные фото альбома
+                    cur_data = broadcast_data.get(user_id, {})
+                    if cur_data.get('media_group_id') == group_id:
+                        await show_broadcast_preview(user_id, context)
+
+                task = asyncio.create_task(delayed_show())
+                data['pending_task'] = task
+            else:
+                # Одиночное фото: просто добавляем в список, ждём «Готово»
+                pass
+
+            await send_message_to_user(
+                user_id,
+                f"📷 Фото {len(photos)}/10 добавлено. Отправьте ещё или нажмите «Готово».",
+                get_broadcast_ready_kb()
+            )
+            return
+
+        # --- Пришёл текст (без фото) ---
+        if text:
+            if pending_task and not pending_task.done():
+                pending_task.cancel()
+                try:
+                    await pending_task
+                except asyncio.CancelledError:
+                    pass
+            data['text'] = text
+            data['pending_task'] = None
+            await send_message_to_user(
+                user_id,
+                "📝 Текст обновлён. Отправьте фото или нажмите «Готово».",
+                get_broadcast_ready_kb()
+            )
+            return
+
+        # Если ничего не подошло
+        await send_message_to_user(
+            user_id,
+            "📝 Пришлите текст или фото для рассылки.",
+            get_broadcast_ready_kb()
+        )
+        return
 
     if state == Form.file_processing:
         data = await context.get_data()
@@ -512,7 +639,7 @@ async def handle_messages(event: MessageCreated, context: MemoryContext):
         return
 
     # Если нет активного состояния – показываем меню
-    await send_message_to_user(user_id, "Используйте кнопки главного меню.", get_main_kb())
+    await send_message_to_user(user_id, "Используйте кнопки главного меню.", get_main_kb(user_id))
 
 
 async def process_summary(user_id: str, context: MemoryContext, comment_text: str):
@@ -537,6 +664,11 @@ async def process_summary(user_id: str, context: MemoryContext, comment_text: st
 # --------------------------
 @dp.message_callback()
 async def handle_callbacks(event: MessageCallback, context: MemoryContext):
+    try:
+        await event.answer()
+    except Exception:
+        return  # старый или битый колбэк — ничего не делаем
+
     # 1. Правильное получение идентификаторов через документированный get_ids()
     chat_id, user_id = event.get_ids()
     user_id = str(user_id)
@@ -547,10 +679,12 @@ async def handle_callbacks(event: MessageCallback, context: MemoryContext):
     if not payload:
         return
 
+    state = await context.get_state()
+
     # 2. Обработка кнопки согласия (ДО проверки онбординга)
     if payload == "agree_terms":
         # Подтверждаем получение callback
-        await event.answer()
+        # await event.answer()
         # Удаляем сообщение с кнопкой
         if event.message:
             try:
@@ -560,15 +694,54 @@ async def handle_callbacks(event: MessageCallback, context: MemoryContext):
         # Фиксируем согласие через API для правильного user_id
         await _mark_agreed(user_id)
         # Отправляем подтверждение и главное меню
-        await send_message_to_user(user_id, "✅ Спасибо! Теперь вы можете пользоваться ботом.\n Нажмите «🛒 Новый заказ» для начала.", get_main_kb())
+        await send_message_to_user(user_id, "✅ Спасибо! Теперь вы можете пользоваться ботом.\n Нажмите «🛒 Новый заказ» для начала.", get_main_kb(user_id))
         return
 
     # 3. Для всех остальных колбэков проверяем онбординг
     if not await ensure_onboarding(user_id):
-        await event.answer()
+        # await event.answer()
         return
 
-    state = await context.get_state()
+    if payload == "broadcast" and is_admin(user_id):
+        # Инициализируем данные для этого админа
+        broadcast_data[user_id] = {
+            'text': '',
+            'photos': [],
+            'attachments': [],
+            'pending_task': None,
+            'media_group_id': None
+        }
+        await context.set_state(Form.admin_broadcast)
+        await send_message_to_user(
+            user_id,
+            "📝 Пришлите текст сообщения (можно с фото).\nДля отмены: кнопка «❌ Отменить».",
+            get_cancel_kb()
+        )
+        return
+
+        # Действия в состоянии сбора рассылки
+    if state == Form.admin_broadcast:
+        if payload == "broadcast_ready":
+            # Пользователь нажал "Готово" – показываем превью
+            await show_broadcast_preview(user_id, context)
+            return
+        elif payload == "reset_order":
+            # Отмена рассылки
+            broadcast_data.pop(user_id, None)
+            await context.clear()
+            await send_message_to_user(user_id, "❌ Рассылка отменена.", get_main_kb(user_id))
+            return
+
+        # Действия в состоянии подтверждения рассылки
+    if state == Form.confirm_broadcast:
+        if payload == "send_broadcast":
+            await send_broadcast(user_id, context)
+            return
+        elif payload == "reset_order":
+            broadcast_data.pop(user_id, None)
+            await context.clear()
+            await send_message_to_user(user_id, "❌ Рассылка отменена.", get_main_kb(user_id))
+            return
 
     # Стандартные действия
     if payload == "cancel_and_start":
@@ -580,15 +753,16 @@ async def handle_callbacks(event: MessageCallback, context: MemoryContext):
         return
     if payload == "reset_order":
         if user_id in processing_cancel:
-            await event.answer()
+            # await event.answer()
             return
         processing_cancel.add(user_id)
         try:
+            broadcast_data.pop(user_id, None)
             active = user_id in active_orders
             await reset_logic(user_id, context, send_message=not active)
         finally:
             processing_cancel.discard(user_id)
-        await event.answer()
+        # await event.answer()
         return
     if payload == "help":
         text = (
@@ -605,9 +779,9 @@ async def handle_callbacks(event: MessageCallback, context: MemoryContext):
 
         )
         await send_message_to_user(
-            user_id, text, get_main_kb(), format=ParseMode.HTML
+            user_id, text, get_main_kb(user_id), format=ParseMode.HTML
         )
-        await event.answer()
+        # await event.answer()
         return
     if payload == "new_order" and state is None:
         await handle_new_order(user_id, context, event)
@@ -636,13 +810,13 @@ async def handle_callbacks(event: MessageCallback, context: MemoryContext):
                             await send_message_to_user(user_id, resp, get_cancel_kb())
                             restart_timer(user_id, context)
                         else:
-                            await send_message_to_user(user_id, "❌ Точка не найдена.", get_main_kb())
+                            await send_message_to_user(user_id, "❌ Точка не найдена.", get_main_kb(user_id))
                             await context.clear()
             except Exception as e:
                 logging.error(f"Error fetching shop: {e}")
-                await send_message_to_user(user_id, "❌ Ошибка при получении информации.", get_main_kb())
+                await send_message_to_user(user_id, "❌ Ошибка при получении информации.", get_main_kb(user_id))
         else:
-            await send_message_to_user(user_id, "❌ Точка не найдена.", get_main_kb())
+            await send_message_to_user(user_id, "❌ Точка не найдена.", get_main_kb(user_id))
             await context.clear()
         return
 
@@ -669,7 +843,7 @@ async def handle_callbacks(event: MessageCallback, context: MemoryContext):
     if state == Form.confirmation and payload == "confirm_order":
         # Защита от повторного нажатия
         if user_id in processing_payment:
-            await event.answer()  # просто подтверждаем, ничего не делаем
+            # await event.answer()  # просто подтверждаем, ничего не делаем
             return
 
         processing_payment.add(user_id)
@@ -734,7 +908,7 @@ async def handle_callbacks(event: MessageCallback, context: MemoryContext):
                 await cancel_order_via_api(order_id)
             await context.clear()
             await send_message_to_user(user_id, "❌ Произошла ошибка при создании заказа/платежа. Попробуйте позже",
-                                       get_main_kb())
+                                       get_main_kb(user_id))
         finally:
             processing_payment.discard(user_id)
             # Удаляем временное сообщение
@@ -765,10 +939,129 @@ async def handle_new_order(user_id: str, context: MemoryContext, event):
                     await send_message_to_user(user_id, "🏪 Выберите точку печати из списка:", get_shops_kb(shops))
                     restart_timer(user_id, context)
                 else:
-                    await send_message_to_user(user_id, "❌ Ошибка загрузки магазинов", get_main_kb())
+                    await send_message_to_user(user_id, "❌ Ошибка загрузки магазинов", get_main_kb(user_id))
     except Exception as e:
         logging.error(f"Error fetching shops: {e}")
-        await send_message_to_user(user_id, "❌ Ошибка соединения.", get_main_kb())
+        await send_message_to_user(user_id, "❌ Ошибка соединения.", get_main_kb(user_id))
+
+
+# --------------------------
+# Функции рассылки
+# --------------------------
+async def show_broadcast_preview(user_id: str, context: MemoryContext):
+    """Скачивает фото, формирует вложения и показывает красивое превью."""
+    data = broadcast_data.get(user_id, {})
+    text = data.get('text', '')
+    photos = data.get('photos', [])
+
+    # Отменяем отложенную задачу альбома, если есть
+    pending_task = data.get('pending_task')
+    if pending_task and not pending_task.done():
+        pending_task.cancel()
+        try:
+            await pending_task
+        except asyncio.CancelledError:
+            pass
+
+    data['pending_task'] = None
+    data['media_group_id'] = None
+    await context.set_state(Form.confirm_broadcast)
+
+    # Скачиваем фото и создаём вложения
+    attachments = []
+    for url in photos:
+        try:
+            photo_data = await download_file_from_url(url)
+            media = InputMediaBuffer(photo_data, filename="photo.jpg")
+            attachments.append(media)
+        except Exception as e:
+            logging.error(f"Preview download error: {e}")
+            await send_message_to_user(user_id, "❌ Ошибка загрузки фото.", get_main_kb(user_id))
+            return
+
+    # Сохраняем attachments для использования при отправке
+    data['attachments'] = attachments
+    broadcast_data[user_id] = data
+
+    # Формируем красивое текстовое превью
+    preview_lines = ["👇 Предпросмотр рассылки:", ""]
+    if text:
+        preview_lines.append(text)
+        preview_lines.append("")  # пустая строка для отступа
+    if photos:
+        preview_lines.append(f"📷 Фото: {len(photos)} шт.")
+        preview_lines.append("")
+    preview_lines.append("Отправить это сообщение всем пользователям?")
+    preview_text = "\n".join(preview_lines)
+
+    # Отправляем превью (текст + фото) одним сообщением
+    try:
+        await SendMessage(
+            bot,
+            chat_id=user_chat_mapping[user_id],
+            text=preview_text,
+            attachments=attachments
+        ).fetch()
+    except Exception as e:
+        logging.error(f"Preview send error: {e}")
+        await send_message_to_user(user_id, "❌ Ошибка отправки предпросмотра.", get_main_kb(user_id))
+        return
+
+    # Отправляем кнопки подтверждения отдельным сообщением
+    await send_message_to_user(
+        user_id,
+        "Подтвердите отправку:",
+        get_broadcast_confirm_kb()
+    )
+
+
+async def send_broadcast(user_id: str, context: MemoryContext):
+    """Рассылает сообщение всем согласившимся пользователям."""
+    data = broadcast_data.pop(user_id, {})
+    text = data.get('text', '')
+    attachments = data.get('attachments', [])
+
+    await context.clear()
+
+    # Получаем список согласившихся
+    headers = {"X-API-Key": INTERNAL_API_KEY}
+    async with aiohttp.ClientSession() as session:
+        async with session.get(f"{API_URL}/users/agreed-ids?platform=max", headers=headers) as resp:
+            if resp.status != 200:
+                await send_message_to_user(user_id, "❌ Ошибка получения списка пользователей.", get_main_kb(user_id))
+                return
+            user_ids = await resp.json()
+
+    total = len(user_ids)
+    if total == 0:
+        await send_message_to_user(user_id, "❌ Нет пользователей для рассылки.", get_main_kb(user_id))
+        return
+
+    await send_message_to_user(user_id, f"⏳ Начинаю рассылку для {total} получателей...")
+
+    sent, failed = 0, 0
+    for uid in user_ids:
+        try:
+            if attachments:
+                await SendMessage(
+                    bot,
+                    chat_id=user_chat_mapping.get(uid, int(uid)),
+                    text=text,
+                    attachments=attachments
+                ).fetch()
+            else:
+                await send_message_to_user(uid, text)
+            sent += 1
+            await asyncio.sleep(0.05)
+        except Exception as e:
+            logging.error(f"Broadcast to {uid} failed: {e}")
+            failed += 1
+
+    await send_message_to_user(
+        user_id,
+        f"📊 Итог рассылки:\n✅ Успешно: {sent}\n❌ Ошибок: {failed}",
+        get_main_kb(user_id)
+    )
 
 
 # --------------------------
@@ -801,7 +1094,7 @@ async def handle_notify(request: web.Request):
         elif status == 'canceled':
             text = f"❌ Платёж по заказу №{order_id} был отклонён или отменён.\nВы можете попробовать оплатить снова, создав новый заказ"
         if text:
-            await send_message_to_user(user_id, text, get_main_kb())
+            await send_message_to_user(user_id, text, get_main_kb(user_id))
         return web.Response(status=200)
     except Exception as e:
         logging.error(f"Notify Error: {traceback.format_exc()}")

@@ -78,7 +78,7 @@ LOGGING_CONFIG = {
 # TELEGRAM_BOT_URL = "https://t.me/print_there_bot"
 TELEGRAM_BOT_URL = "tg://resolve?domain=print_there_bot"
 VK_BOT_URL = "https://vk.com/im?sel=-236864741"
-
+MAX_BOT_URL = "https://max.ru/id526220392706_bot"
 env_path = os.path.join(os.path.dirname(__file__), 'config.env')
 load_dotenv(dotenv_path=env_path)
 
@@ -1307,6 +1307,8 @@ async def payment_return(order_id: int = Query(...)):
                     return HTMLResponse(content=html_content, status_code=302)
                 elif platform == "vk":
                     bot_url = VK_BOT_URL
+                elif platform == "max":
+                    bot_url = MAX_BOT_URL
                 else:
                     bot_url = TELEGRAM_BOT_URL
                 return RedirectResponse(url=bot_url, status_code=302)
