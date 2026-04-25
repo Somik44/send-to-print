@@ -115,16 +115,29 @@ def main():
             ") ENGINE=InnoDB"
         )
 
+        TABLES['user_onboarding'] = (
+            "CREATE TABLE `user_onboarding` ("
+            "  `user_id` varchar(64) NOT NULL,"
+            "  `platform` varchar(16) NOT NULL COMMENT 'telegram, vk, max',"
+            "  `welcomed` tinyint(1) NOT NULL DEFAULT 0,"
+            "  `agreed` tinyint(1) NOT NULL DEFAULT 0,"
+            "  `welcomed_at` timestamp NULL DEFAULT NULL,"
+            "  `agreed_at` timestamp NULL DEFAULT NULL,"
+            "  PRIMARY KEY (`user_id`, `platform`)"
+            ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci"
+        )
+
         # Удаляем таблицы в обратном порядке, чтобы избежать ошибок с foreign key
         print("Удаление существующих таблиц (если они есть)...")
         cursor.execute("SET FOREIGN_KEY_CHECKS = 0;")
         cursor.execute("DROP TABLE IF EXISTS `order`;")
         cursor.execute("DROP TABLE IF EXISTS `shop`;")
         cursor.execute("DROP TABLE IF EXISTS `franchise`;")
+        cursor.execute("DROP TABLE IF EXISTS `user_onboarding`;")
         cursor.execute("SET FOREIGN_KEY_CHECKS = 1;")
 
         # Создаем таблицы
-        for table_name in ['franchise', 'shop', 'order']:
+        for table_name in ['franchise', 'shop', 'order', 'user_onboarding']:
             table_description = TABLES[table_name]
             try:
                 print(f"Создание таблицы '{table_name}': ", end='')
