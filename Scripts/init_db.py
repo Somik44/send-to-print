@@ -90,7 +90,7 @@ def main():
             "  `price` decimal(10,2) NOT NULL,"
             "  `note` varchar(255) DEFAULT NULL,"
             "  `con_code` int NOT NULL,"
-            "  `color` enum('черно-белая','цветная') NOT NULL,"
+            "  `color` enum('Черно-белая','Цветная') NOT NULL,"
             "  `status` enum('created','waiting_payment','paid','in_progress','ready','completed','canceled') "
             "     NOT NULL DEFAULT 'created',"
             "  `file_extension` varchar(10) NOT NULL,"

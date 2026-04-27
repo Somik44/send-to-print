@@ -768,12 +768,8 @@ async def handle_callbacks(event: MessageCallback, context: MemoryContext):
         text = (
             "Если у вас возникли вопросы, проблемы с заказом или вам просто нужна консультация — обратитесь в нашу службу поддержки.\n\n"
             "📞 Контакты:\n"
-            "• Telegram: @support_username\n"
-            "• Email: support@example.com\n"
-            "• Телефон: +7 (XXX) XXX-XX-XX\n\n"
-            "⏰ Время работы поддержки:\n"
-            "Пн–Пт: 09:00 – 20:00\n"
-            "Сб–Вс: 10:00 – 18:00\n\n"
+            "• Email: send-to-print-and-pick-up@yandex.ru\n"
+            "❗ Время ответа от поддержки может занимать до 72 часов\n"
             "Мы обязательно вам поможем! 😊\n\n"
             "📚 <a href='https://disk.yandex.ru/d/Q-1xYZuSQFZNYA'>Документация сервиса Send to print and pick up!</a>"
 
